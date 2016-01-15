@@ -2,6 +2,7 @@ package razerdp.basepopup.widget;
 
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -10,9 +11,11 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.PopupWindow;
+import com.nineoldandroids.view.ViewHelper;
 import razerdp.basepopup.utils.InputMethodUtils;
 
 /**
@@ -65,6 +68,7 @@ public abstract class BasePopupWindow implements ViewCreate {
 
     //------------------------------------------抽象-----------------------------------------------
     public abstract Animation getAnimation();
+    public abstract AnimationSet getAnimationSet();
     public abstract View getInputView();
 
     //------------------------------------------showPopup-----------------------------------------------
@@ -115,6 +119,12 @@ public abstract class BasePopupWindow implements ViewCreate {
         }
         if (getAnimation() != null && getAnimaView() != null) {
             getAnimaView().startAnimation(getAnimation());
+        }
+        if (getAnimation() == null && getAnimationSet() != null && getAnimaView() != null &&
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            ViewHelper.setPivotX(getAnimaView(), getAnimaView().getMeasuredWidth() / 2.0f);
+            ViewHelper.setPivotY(getAnimaView(), getAnimaView().getMeasuredHeight() / 2.0f);
+            getAnimationSet().start();
         }
         //自动弹出键盘
         if (autoShowInputMethod && getInputView() != null) {
