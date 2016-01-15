@@ -13,11 +13,11 @@ import razerdp.basepopup.utils.ToastUtils;
  * Created by 大灯泡 on 2016/1/15.
  * 普通的popup
  */
-public class NormalPopup extends BasePopupWindow implements View.OnClickListener{
+public class ScalePopup extends BasePopupWindow implements View.OnClickListener{
 
     private View popupView;
 
-    public NormalPopup(Activity context) {
+    public ScalePopup(Activity context) {
         super(context);
         bindEvent();
     }

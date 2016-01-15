@@ -2,19 +2,18 @@ package razerdp.basepopup.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import razerdp.basepopup.R;
 import razerdp.basepopup.basepopup.BasePopupWindow;
-import razerdp.basepopup.widget.NormalPopup;
+import razerdp.basepopup.widget.ScalePopup;
 
 /**
  * Created by 大灯泡 on 2016/1/15.
  */
-public class NormalPopupFrag extends SimpleBaseFrag {
+public class ScalePopupFrag extends SimpleBaseFrag {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -24,7 +23,7 @@ public class NormalPopupFrag extends SimpleBaseFrag {
 
     @Override
     public BasePopupWindow getPopup() {
-        return new NormalPopup(mContext);
+        return new ScalePopup(mContext);
     }
 
     @Override
