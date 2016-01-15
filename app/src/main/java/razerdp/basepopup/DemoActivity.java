@@ -6,13 +6,12 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
-import razerdp.basepopup.fragment.NormalPopupFrag;
+import razerdp.basepopup.fragment.ScalePopupFrag;
 import razerdp.basepopup.fragment.SlideFromBottomPopupFrag;
-import razerdp.basepopup.widget.NormalPopup;
 
 public class DemoActivity extends FragmentActivity {
     private FragmentManager mFragmentManager;
-    private NormalPopupFrag mNormalPopupFrag;
+    private ScalePopupFrag mNormalPopupFrag;
     private SlideFromBottomPopupFrag mSlideFromBottomPopupFrag;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -20,7 +19,7 @@ public class DemoActivity extends FragmentActivity {
         setContentView(R.layout.activity_demo);
         mFragmentManager=getSupportFragmentManager();
 
-        mNormalPopupFrag=new NormalPopupFrag();
+        mNormalPopupFrag=new ScalePopupFrag();
         mSlideFromBottomPopupFrag=new SlideFromBottomPopupFrag();
     }
 

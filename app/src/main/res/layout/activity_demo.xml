@@ -14,6 +14,6 @@
         android:id="@+id/popup_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="razerdp.basepopup.fragment.NormalPopupFrag"
+        android:name="razerdp.basepopup.fragment.ScalePopupFrag"
         />
 </RelativeLayout>
