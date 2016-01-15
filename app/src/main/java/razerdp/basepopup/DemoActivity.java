@@ -3,15 +3,25 @@ package razerdp.basepopup;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import razerdp.basepopup.fragment.NormalPopupFrag;
+import razerdp.basepopup.fragment.SlideFromBottomPopupFrag;
+import razerdp.basepopup.widget.NormalPopup;
 
 public class DemoActivity extends FragmentActivity {
-
+    private FragmentManager mFragmentManager;
+    private NormalPopupFrag mNormalPopupFrag;
+    private SlideFromBottomPopupFrag mSlideFromBottomPopupFrag;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
+        mFragmentManager=getSupportFragmentManager();
+
+        mNormalPopupFrag=new NormalPopupFrag();
+        mSlideFromBottomPopupFrag=new SlideFromBottomPopupFrag();
     }
 
     @Override
@@ -28,8 +38,12 @@ public class DemoActivity extends FragmentActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()){
             case R.id.id_normal_popup:
-
+                mFragmentManager.beginTransaction().replace(R.id.parent,mNormalPopupFrag).commit();
                 break;
+            case R.id.id_slide_from_bottom_popup:
+                mFragmentManager.beginTransaction().replace(R.id.parent,mSlideFromBottomPopupFrag).commit();
+                break;
+
             default:
                 break;
 

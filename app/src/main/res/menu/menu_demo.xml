@@ -7,4 +7,9 @@
         android:title="normal popup"
         android:orderInCategory="100"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_slide_from_bottom_popup"
+        android:title="slide from bottom popup"
+        android:orderInCategory="101"
+        app:showAsAction="never"/>
 </menu>
