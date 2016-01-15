@@ -40,6 +40,11 @@ public class NormalPopup extends BasePopupWindow implements View.OnClickListener
     }
 
     @Override
+    public View getDismissView() {
+        return popupView.findViewById(R.id.click_to_dismiss);
+    }
+
+    @Override
     public View getPopupView() {
         popupView= LayoutInflater.from(mContext).inflate(R.layout.popup_normal,null);
         return popupView;

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <RelativeLayout
-        android:id="@+id/popup_parent"
+        android:id="@+id/click_to_dismiss"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/popup_bg"
