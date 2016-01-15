@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import razerdp.basepopup.R;
 import razerdp.basepopup.basepopup.BasePopupWindow;
-import razerdp.basepopup.widget.NormalPopup;
 import razerdp.basepopup.widget.SlideFromBottomPopup;
 
 /**
