@@ -1,5 +1,6 @@
-package razerdp.basepopup.basepopup;
+package razerdp.basepopup.base;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
@@ -17,7 +18,6 @@ import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.PopupWindow;
-import com.nineoldandroids.view.ViewHelper;
 import razerdp.basepopup.utils.InputMethodUtils;
 
 /**
@@ -100,7 +100,7 @@ public abstract class BasePopupWindow implements ViewCreate {
 
     //------------------------------------------抽象-----------------------------------------------
     public abstract Animation getAnimation();
-    public abstract AnimationSet getAnimationSet();
+    public abstract Animator getAnimator();
     public abstract View getInputView();
     public abstract View getDismissView();
 
@@ -108,7 +108,7 @@ public abstract class BasePopupWindow implements ViewCreate {
     public Animation getExitAnimation(){
         return null;
     }
-    public AnimationSet getExitAnimationSet(){
+    public Animator getExitAnimator(){
         return null;
     }
 
@@ -162,11 +162,9 @@ public abstract class BasePopupWindow implements ViewCreate {
             getAnimaView().startAnimation(getAnimation());
         }
         //ViewHelper.setPivotX是包nineoldAndroid的方法，用于兼容低版本的anima以及方便的view工具
-        if (getAnimation() == null && getAnimationSet() != null && getAnimaView() != null &&
+        if (getAnimation() == null && getAnimator() != null && getAnimaView() != null &&
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            ViewHelper.setPivotX(getAnimaView(), getAnimaView().getMeasuredWidth() / 2.0f);
-            ViewHelper.setPivotY(getAnimaView(), getAnimaView().getMeasuredHeight() / 2.0f);
-            getAnimationSet().start();
+            getAnimator().start();
         }
         //自动弹出键盘
         if (autoShowInputMethod && getInputView() != null) {

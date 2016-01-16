@@ -39,7 +39,7 @@ public class DemoActivity extends FragmentActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()){
-            case R.id.id_normal_popup:
+            case R.id.id_scale_popup:
                 mFragmentManager.beginTransaction().replace(R.id.parent,mNormalPopupFrag).commit();
                 break;
             case R.id.id_slide_from_bottom_popup:
