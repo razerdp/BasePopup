@@ -126,6 +126,12 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
     }
 
     @Override
+    public Animation getExitAnimation() {
+        return getScaleAnimation(1.0f, 0.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF, 1.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f);
+    }
+
+    @Override
     public View getPopupView() {
         return LayoutInflater.from(mContext).inflate(R.layout.popup_comment, null);
     }
