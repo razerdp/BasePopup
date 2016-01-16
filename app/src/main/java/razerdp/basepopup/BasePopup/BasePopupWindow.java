@@ -104,6 +104,14 @@ public abstract class BasePopupWindow implements ViewCreate {
     public abstract View getInputView();
     public abstract View getDismissView();
 
+
+    public Animation getExitAnimation(){
+        return null;
+    }
+    public AnimationSet getExitAnimationSet(){
+        return null;
+    }
+
     //------------------------------------------showPopup-----------------------------------------------
     public void showPopupWindow() {
         try {
@@ -214,12 +222,35 @@ public abstract class BasePopupWindow implements ViewCreate {
     //------------------------------------------状态控制-----------------------------------------------
     public void dismiss() {
         try {
-            mPopupWindow.dismiss();
+            if (getExitAnimation()!=null){
+                getExitAnimation().setAnimationListener(mAnimationListener);
+                getAnimaView().clearAnimation();
+                getAnimaView().startAnimation(getExitAnimation());
+            }else {
+                mPopupWindow.dismiss();
+            }
         } catch (Exception e) {
             Log.d(TAG, "dismiss error");
         }
     }
     //------------------------------------------Anima-----------------------------------------------
+
+    private Animation.AnimationListener mAnimationListener=new Animation.AnimationListener() {
+        @Override
+        public void onAnimationStart(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            mPopupWindow.dismiss();
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    };
     /**
      * 生成TranslateAnimation
      * @param durationMillis 动画显示时间
