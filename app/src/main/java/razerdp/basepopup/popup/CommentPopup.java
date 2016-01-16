@@ -1,5 +1,6 @@
-package razerdp.basepopup.widget;
+package razerdp.basepopup.popup;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.os.Handler;
 import android.util.Log;
@@ -16,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import razerdp.basepopup.R;
-import razerdp.basepopup.basepopup.BasePopupWindow;
+import razerdp.basepopup.base.BasePopupWindow;
 import razerdp.basepopup.utils.DimensUtils;
 
 /**
@@ -126,6 +127,11 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
     }
 
     @Override
+    public Animator getAnimator() {
+        return null;
+    }
+
+    @Override
     public Animation getExitAnimation() {
         return getScaleAnimation(1.0f, 0.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF, 1.0f,
                 Animation.RELATIVE_TO_SELF, 0.0f);
@@ -178,10 +184,6 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
     }
     //=============================================================abortMethods
 
-    @Override
-    public AnimationSet getAnimationSet() {
-        return null;
-    }
 
     @Override
     public View getInputView() {

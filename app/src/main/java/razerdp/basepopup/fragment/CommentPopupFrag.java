@@ -5,9 +5,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import razerdp.basepopup.R;
-import razerdp.basepopup.basepopup.BasePopupWindow;
+import razerdp.basepopup.base.BasePopupWindow;
 import razerdp.basepopup.utils.ToastUtils;
-import razerdp.basepopup.widget.CommentPopup;
+import razerdp.basepopup.popup.CommentPopup;
 
 /**
  * Created by 大灯泡 on 2016/1/16.
