@@ -12,4 +12,9 @@
         android:title="slide from bottom popup"
         android:orderInCategory="101"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_comment_popup"
+        android:title="comment_popup"
+        android:orderInCategory="102"
+        app:showAsAction="never"/>
 </menu>

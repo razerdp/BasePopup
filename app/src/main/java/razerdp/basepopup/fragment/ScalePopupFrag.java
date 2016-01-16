@@ -22,6 +22,11 @@ public class ScalePopupFrag extends SimpleBaseFrag {
     }
 
     @Override
+    public void bindEvent() {
+
+    }
+
+    @Override
     public BasePopupWindow getPopup() {
         return new ScalePopup(mContext);
     }

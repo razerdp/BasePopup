@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:background="@android:color/holo_red_light">
+
+    <LinearLayout
+        android:id="@+id/comment_popup_contianer"
+        android:layout_width="180dp"
+        android:orientation="horizontal"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_comment_popup"
+        android:weightSum="2"
+        android:clipChildren="false"
+        >
+        <RelativeLayout
+            android:id="@+id/item_like"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:clipChildren="false"
+            android:gravity="center"
+            >
+            <TextView
+                android:id="@+id/tv_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="赞  "
+                android:layout_centerInParent="true"
+                android:textColor="@color/comment_popup_tx_bg"
+                android:textSize="12sp"
+                android:drawablePadding="5dp"
+                />
+            <ImageView
+                android:id="@+id/iv_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_toLeftOf="@id/tv_like"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/ic_like"
+                />
+        </RelativeLayout>
+        <View
+            android:id="@+id/v_line"
+            android:layout_width="0.5dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="15dp"
+            android:background="#6c6c6c"
+            />
+        <RelativeLayout
+            android:id="@+id/item_comment"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            >
+            <TextView
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="评论"
+                android:drawableLeft="@drawable/ic_comment"
+                android:textColor="@color/comment_popup_tx_bg"
+                android:textSize="12sp"
+                android:drawablePadding="5dp"
+                android:layout_centerInParent="true"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

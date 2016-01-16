@@ -7,4 +7,6 @@
 
     <color name="popup_bg">#8f000000</color>
     <color name="line_bg">#CDCDCD</color>
+    <color name="comment_popup_bg">#292929</color>
+    <color name="comment_popup_tx_bg">#c7c7c7</color>
 </resources>

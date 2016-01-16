@@ -30,9 +30,11 @@ public abstract class SimpleBaseFrag extends Fragment implements View.OnClickLis
         mFragment=getFragment();
         this.mButton = getButton();
         if (mButton != null) mButton.setOnClickListener(this);
+        bindEvent();
         return mFragment;
     }
 
+    public abstract void bindEvent();
     public abstract BasePopupWindow getPopup();
     public abstract Button getButton();
     public abstract View getFragment();
