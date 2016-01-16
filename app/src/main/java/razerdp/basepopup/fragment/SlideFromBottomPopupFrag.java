@@ -22,6 +22,11 @@ public class SlideFromBottomPopupFrag extends SimpleBaseFrag {
     }
 
     @Override
+    public void bindEvent() {
+
+    }
+
+    @Override
     public BasePopupWindow getPopup() {
         return new SlideFromBottomPopup(mContext);
     }
