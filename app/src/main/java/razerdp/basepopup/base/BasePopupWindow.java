@@ -224,6 +224,9 @@ public abstract class BasePopupWindow implements ViewCreate {
                 getExitAnimation().setAnimationListener(mAnimationListener);
                 getAnimaView().clearAnimation();
                 getAnimaView().startAnimation(getExitAnimation());
+            }else if (getExitAnimator()!=null){
+                getExitAnimator().addListener(mAnimatorListener);
+                getExitAnimator().start();
             }else {
                 mPopupWindow.dismiss();
             }
@@ -232,6 +235,28 @@ public abstract class BasePopupWindow implements ViewCreate {
         }
     }
     //------------------------------------------Anima-----------------------------------------------
+
+    private Animator.AnimatorListener mAnimatorListener=new Animator.AnimatorListener() {
+        @Override
+        public void onAnimationStart(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            mPopupWindow.dismiss();
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+
+        }
+    };
 
     private Animation.AnimationListener mAnimationListener=new Animation.AnimationListener() {
         @Override
