@@ -14,8 +14,8 @@
 </br>
 click link to show more:</br>
 https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md
-</br>
-用法：</br>
+ </br>
+##用法（Sample）：</br>
 step 1:继承BasePopupWindow</br>
 step 2:对应实现抽象方法</br>
 ```java
