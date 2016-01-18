@@ -1,7 +1,6 @@
 package razerdp.basepopup.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import razerdp.basepopup.basepopup.BasePopupWindow;
+import razerdp.basepopup.base.BasePopupWindow;
 
 /**
  * Created by 大灯泡 on 2016/1/15.

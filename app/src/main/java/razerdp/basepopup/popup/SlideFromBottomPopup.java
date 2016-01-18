@@ -1,36 +1,33 @@
-package razerdp.basepopup.widget;
+package razerdp.basepopup.popup;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import razerdp.basepopup.R;
-import razerdp.basepopup.basepopup.BasePopupWindow;
+import razerdp.basepopup.base.BasePopupWindow;
 import razerdp.basepopup.utils.ToastUtils;
 
 /**
  * Created by 大灯泡 on 2016/1/15.
- * 普通的popup
+ * 从底部滑上来的popup
  */
-public class ScalePopup extends BasePopupWindow implements View.OnClickListener{
+public class SlideFromBottomPopup extends BasePopupWindow implements View.OnClickListener{
 
     private View popupView;
-
-    public ScalePopup(Activity context) {
+    public SlideFromBottomPopup(Activity context) {
         super(context);
         bindEvent();
     }
 
-
-
     @Override
     public Animation getAnimation() {
-        return getDefaultScaleAnimation();
+        return getTranslateAnimation(250*2,0,300);
     }
 
     @Override
-    public AnimationSet getAnimationSet() {
+    public Animator getAnimator() {
         return null;
     }
 
@@ -46,7 +43,7 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener{
 
     @Override
     public View getPopupView() {
-        popupView= LayoutInflater.from(mContext).inflate(R.layout.popup_normal,null);
+        popupView= LayoutInflater.from(mContext).inflate(R.layout.popup_slide_from_bottom,null);
         return popupView;
     }
 

@@ -3,8 +3,8 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".DemoActivity">
     <item
-        android:id="@+id/id_normal_popup"
-        android:title="normal popup"
+        android:id="@+id/id_scale_popup"
+        android:title="scale popup"
         android:orderInCategory="100"
         app:showAsAction="never"/>
     <item

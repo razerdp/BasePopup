@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import razerdp.basepopup.R;
-import razerdp.basepopup.basepopup.BasePopupWindow;
-import razerdp.basepopup.widget.ScalePopup;
+import razerdp.basepopup.base.BasePopupWindow;
+import razerdp.basepopup.popup.ScalePopup;
 
 /**
  * Created by 大灯泡 on 2016/1/15.
@@ -38,6 +38,6 @@ public class ScalePopupFrag extends SimpleBaseFrag {
 
     @Override
     public View getFragment() {
-        return mInflater.inflate(R.layout.frag_normal_popup,container,false);
+        return mInflater.inflate(R.layout.frag_scale_popup, container, false);
     }
 }
