@@ -4,16 +4,16 @@
 ###InputPopup.java:
 ![image](https://github.com/razerdp/BasePopup/blob/master/img/input_popup.gif)
 ##2016-01-16 增加仿朋友圈评论的popup</br>
-###同日的16:39 尝试添加了退出动画</br>
-解析:http://blog.csdn.net/mkfrank/article/details/50532956
+###同日的16:39 尝试添加了退出动画
 ![image](https://github.com/razerdp/BasePopup/blob/master/img/comment_popup_with_exitAnima.gif)
+解析:http://blog.csdn.net/mkfrank/article/details/50532956
 ###CommentPopup.java(该frag标题名字忘改回来了。。。录制了gif也就懒得动了):
 ![image](https://github.com/razerdp/BasePopup/blob/master/img/comment_popup.gif)
 ##2016-01-15 增加两种继承basepopup实现的常见Popup</br>
-###ScalePopup.java:</br>
-解析:http://blog.csdn.net/mkfrank/article/details/50523702
+###ScalePopup.java:
 ![image](https://github.com/razerdp/BasePopup/blob/master/img/scale_popup.gif)
-###SlideFromBottomPopup.java:</br>
-解析：http://blog.csdn.net/mkfrank/article/details/50527159
+解析:http://blog.csdn.net/mkfrank/article/details/50523702
+###SlideFromBottomPopup.java:
 ![image](https://github.com/razerdp/BasePopup/blob/master/img/slide_from_bottom_popup.gif)
+解析：http://blog.csdn.net/mkfrank/article/details/50527159
 
