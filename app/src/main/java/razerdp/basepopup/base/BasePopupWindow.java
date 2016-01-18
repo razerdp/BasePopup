@@ -18,7 +18,9 @@ import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 import razerdp.basepopup.utils.InputMethodUtils;
+import razerdp.basepopup.utils.ToastUtils;
 
 /**
  * Created by 大灯泡 on 2016/1/14.
@@ -168,7 +170,8 @@ public abstract class BasePopupWindow implements ViewCreate {
         }
         //自动弹出键盘
         if (autoShowInputMethod && getInputView() != null) {
-            InputMethodUtils.showInputMethod(getInputView(), 150);
+            getInputView().requestFocus();
+            InputMethodUtils.showInputMethod(getInputView(),150);
         }
     }
 
@@ -218,15 +221,20 @@ public abstract class BasePopupWindow implements ViewCreate {
     }
 
     //------------------------------------------状态控制-----------------------------------------------
+    private Animation curAnima;
+    private Animator curAnimator;
     public void dismiss() {
         try {
             if (getExitAnimation()!=null){
-                getExitAnimation().setAnimationListener(mAnimationListener);
+                curAnima=getExitAnimation();
+                curAnima.setAnimationListener(mAnimationListener);
                 getAnimaView().clearAnimation();
-                getAnimaView().startAnimation(getExitAnimation());
+                getAnimaView().startAnimation(curAnima);
             }else if (getExitAnimator()!=null){
-                getExitAnimator().addListener(mAnimatorListener);
-                getExitAnimator().start();
+                curAnimator=getExitAnimator();
+                curAnimator.removeListener(mAnimatorListener);
+                curAnimator.addListener(mAnimatorListener);
+                curAnimator.start();
             }else {
                 mPopupWindow.dismiss();
             }

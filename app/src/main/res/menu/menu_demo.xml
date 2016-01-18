@@ -14,7 +14,13 @@
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_comment_popup"
-        android:title="comment_popup"
+        android:title="comment popup"
         android:orderInCategory="102"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_input_popup"
+        android:title="input popup"
+        android:orderInCategory="103"
+        app:showAsAction="never"/>
+
 </menu>
