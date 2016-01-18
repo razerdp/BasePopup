@@ -6,5 +6,11 @@
 </br>
 ##Demo版本更新日志：</br>
   https://github.com/razerdp/BasePopup/blob/master/README.md</br>
-
+##Some Preview Img:</br>
+![image](https://github.com/razerdp/BasePopup/blob/master/img/comment_popup.gif)
+![image](https://github.com/razerdp/BasePopup/blob/master/img/scale_popup.gif)
+![image](https://github.com/razerdp/BasePopup/blob/master/img/slide_from_bottom_popup.gif)
+</br>
+click link to show more:</br>
+https://github.com/razerdp/BasePopup/blob/master/README.md
 
