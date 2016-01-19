@@ -8,19 +8,17 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.PopupWindow;
-import android.widget.Toast;
 import razerdp.basepopup.utils.InputMethodUtils;
-import razerdp.basepopup.utils.ToastUtils;
 
 /**
  * Created by 大灯泡 on 2016/1/14.
@@ -32,19 +30,35 @@ public abstract class BasePopupWindow implements ViewCreate {
     protected PopupWindow mPopupWindow;
     //popup视图
     protected View mPopupView;
+    protected View mAnimaView;
+    protected View mDismissView;
+    protected View mInputView;
     protected Activity mContext;
     //是否自动弹出输入框(default:false)
     private boolean autoShowInputMethod = false;
     private OnDismissListener mOnDismissListener;
+    //anima
+    private Animation curExitAnima;
+    private Animator curExitAnimator;
+    private Animation curAnima;
+    private Animator curAnimator;
 
     public BasePopupWindow(Activity context) {
+        initView(context,ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+    }
+
+    public BasePopupWindow(Activity context, int w, int h) {
+        initView(context,w,h);
+    }
+
+    private void initView(Activity context,int w,int h){
         mContext = context;
 
         mPopupView = getPopupView();
         mPopupView.setFocusableInTouchMode(true);
         //默认占满全屏
         mPopupWindow =
-            new PopupWindow(mPopupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            new PopupWindow(mPopupView, w, h);
         //指定透明背景，back键相关
         mPopupWindow.setBackgroundDrawable(new ColorDrawable());
         mPopupWindow.setFocusable(true);
@@ -53,51 +67,28 @@ public abstract class BasePopupWindow implements ViewCreate {
         mPopupWindow.setAnimationStyle(0);
 
         //=============================================================为外层的view添加点击事件，并设置点击消失
-        if (getDismissView()!=null) {
-            getDismissView().setOnClickListener(new View.OnClickListener() {
+        mAnimaView = getAnimaView();
+        mDismissView = getDismissView();
+        mInputView=getInputView();
+        if (mDismissView!=null) {
+            mDismissView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     dismiss();
                 }
             });
-            getAnimaView().setOnClickListener(new View.OnClickListener() {
+            mAnimaView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                 }
             });
         }
-    }
-
-    public BasePopupWindow(Activity context, int w, int h) {
-        mContext = context;
-
-        mPopupView = getPopupView();
-        mPopupView.setFocusableInTouchMode(true);
-        //默认占满全屏
-        mPopupWindow = new PopupWindow(mPopupView, w, h);
-        //指定透明背景，back键相关
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable());
-        mPopupWindow.setFocusable(true);
-        mPopupWindow.setOutsideTouchable(true);
-        //无需动画
-        mPopupWindow.setAnimationStyle(0);
-
-        //=============================================================为外层的view添加点击事件，并设置点击消失
-        if (getDismissView()!=null) {
-            getDismissView().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
-            getAnimaView().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-        }
+        //=============================================================元素获取
+        curAnima=getAnimation();
+        curAnimator=getAnimator();
+        curExitAnima=getExitAnimation();
+        curExitAnimator=getExitAnimator();
     }
 
     //------------------------------------------抽象-----------------------------------------------
@@ -160,18 +151,19 @@ public abstract class BasePopupWindow implements ViewCreate {
                                         0
             );
         }
-        if (getAnimation() != null && getAnimaView() != null) {
-            getAnimaView().startAnimation(getAnimation());
+        if (curAnima != null && mAnimaView != null) {
+            mAnimaView.clearAnimation();
+            mAnimaView.startAnimation(getAnimation());
         }
         //ViewHelper.setPivotX是包nineoldAndroid的方法，用于兼容低版本的anima以及方便的view工具
-        if (getAnimation() == null && getAnimator() != null && getAnimaView() != null &&
+        if (curAnima == null && curAnimator != null && mAnimaView != null &&
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            getAnimator().start();
+            curAnimator.start();
         }
         //自动弹出键盘
-        if (autoShowInputMethod && getInputView() != null) {
-            getInputView().requestFocus();
-            InputMethodUtils.showInputMethod(getInputView(),150);
+        if (autoShowInputMethod && mInputView != null) {
+            mInputView.requestFocus();
+            InputMethodUtils.showInputMethod(mInputView,150);
         }
     }
 
@@ -198,6 +190,13 @@ public abstract class BasePopupWindow implements ViewCreate {
             mPopupWindow.setBackgroundDrawable(null);
         }
     }
+    public View getPopupViewById(int resId){
+        if (resId!=0) {
+            return LayoutInflater.from(mContext).inflate(resId, null);
+        }else {
+            return null;
+        }
+    }
 
     //------------------------------------------Getter/Setter-----------------------------------------------
     public boolean isShowing() {
@@ -221,20 +220,16 @@ public abstract class BasePopupWindow implements ViewCreate {
     }
 
     //------------------------------------------状态控制-----------------------------------------------
-    private Animation curAnima;
-    private Animator curAnimator;
     public void dismiss() {
         try {
-            if (getExitAnimation()!=null){
-                curAnima=getExitAnimation();
-                curAnima.setAnimationListener(mAnimationListener);
-                getAnimaView().clearAnimation();
-                getAnimaView().startAnimation(curAnima);
-            }else if (getExitAnimator()!=null){
-                curAnimator=getExitAnimator();
-                curAnimator.removeListener(mAnimatorListener);
-                curAnimator.addListener(mAnimatorListener);
-                curAnimator.start();
+            if (curExitAnima!=null){
+                curExitAnima.setAnimationListener(mAnimationListener);
+                mAnimaView.clearAnimation();
+                mAnimaView.startAnimation(curExitAnima);
+            }else if (curExitAnimator!=null){
+                curExitAnimator.removeListener(mAnimatorListener);
+                curExitAnimator.addListener(mAnimatorListener);
+                curExitAnimator.start();
             }else {
                 mPopupWindow.dismiss();
             }
@@ -344,10 +339,10 @@ public abstract class BasePopupWindow implements ViewCreate {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
             set = new AnimatorSet();
 
-            if (getAnimaView() != null) {
+            if (mAnimaView != null) {
                 set.playTogether(
-                        ObjectAnimator.ofFloat(getAnimaView(), "translationY", 250, 0).setDuration(400),
-                        ObjectAnimator.ofFloat(getAnimaView(), "alpha", 0.4f, 1).setDuration(250 * 3 / 2));
+                        ObjectAnimator.ofFloat(mAnimaView, "translationY", 250, 0).setDuration(400),
+                        ObjectAnimator.ofFloat(mAnimaView, "alpha", 0.4f, 1).setDuration(250 * 3 / 2));
             }
         }
         return set;
