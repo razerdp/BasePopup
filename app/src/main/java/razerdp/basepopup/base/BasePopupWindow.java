@@ -77,12 +77,14 @@ public abstract class BasePopupWindow implements ViewCreate {
                     dismiss();
                 }
             });
-            mAnimaView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            if (mAnimaView!=null) {
+                mAnimaView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                }
-            });
+                    }
+                });
+            }
         }
         //=============================================================元素获取
         curAnima=getAnimation();
