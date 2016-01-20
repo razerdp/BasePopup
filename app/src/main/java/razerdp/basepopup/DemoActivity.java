@@ -8,8 +8,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import razerdp.basepopup.fragment.CommentPopupFrag;
 import razerdp.basepopup.fragment.InputPopupFrag;
+import razerdp.basepopup.fragment.ListPopupFrag;
 import razerdp.basepopup.fragment.ScalePopupFrag;
 import razerdp.basepopup.fragment.SlideFromBottomPopupFrag;
+import razerdp.basepopup.popup.ListPopup;
 
 public class DemoActivity extends FragmentActivity {
     private FragmentManager mFragmentManager;
@@ -17,6 +19,7 @@ public class DemoActivity extends FragmentActivity {
     private SlideFromBottomPopupFrag mSlideFromBottomPopupFrag;
     private CommentPopupFrag mCommentPopupFrag;
     private InputPopupFrag mInputPopupFrag;
+    private ListPopupFrag mListPopupFrag;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +30,7 @@ public class DemoActivity extends FragmentActivity {
         mSlideFromBottomPopupFrag=new SlideFromBottomPopupFrag();
         mCommentPopupFrag=new CommentPopupFrag();
         mInputPopupFrag=new InputPopupFrag();
+        mListPopupFrag=new ListPopupFrag();
     }
 
     @Override
@@ -54,7 +58,9 @@ public class DemoActivity extends FragmentActivity {
             case R.id.id_input_popup:
                 mFragmentManager.beginTransaction().replace(R.id.parent,mInputPopupFrag).commit();
                 break;
-
+            case R.id.id_list_popup:
+                mFragmentManager.beginTransaction().replace(R.id.parent,mListPopupFrag).commit();
+                break;
             default:
                 break;
 
