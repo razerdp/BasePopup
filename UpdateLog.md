@@ -1,5 +1,10 @@
 # BasePopup
 </br>
+##2016-01-20 增加了包含listview的popup，这个popup将采用builder模式构造，同时点击事件可以通过绑定clickTag
+##来建立一个映射关系，这样就不用判断点击的位置来执行对应的步骤（当然，点击位置这个传统的操作还是保留的）</br>
+###ListPopup.java:
+![image](https://github.com/razerdp/BasePopup/blob/master/img/list_popup.gif)
+##2016-01-19 稍微重构BasePopupWindow，在构造器把getXXX各种get方法赋值，防止每次调用的时候都new一个对象导致的性能问题&因为对象地址不对导致的各种奇葩问题</br>
 ##2016-01-18 增加了含有输入框的popup，同时修复了dismiss由于调用getExitAnima()但是setListener/addListener无效的问题（原因是getExitAnima()属于重新new出来的动画，调用多次后，listener指向的并非同一个对象，所以无效）</br>
 ###InputPopup.java:
 ![image](https://github.com/razerdp/BasePopup/blob/master/img/input_popup.gif)

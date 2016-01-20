@@ -22,5 +22,10 @@
         android:title="input popup"
         android:orderInCategory="103"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_list_popup"
+        android:title="list popup"
+        android:orderInCategory="104"
+        app:showAsAction="never"/>
 
 </menu>
