@@ -19,12 +19,18 @@ public class ListPopupFrag extends SimpleBaseFrag {
     @Override
     public void bindEvent() {
         ListPopup.Builder builder=new ListPopup.Builder(mContext);
-        builder.addItem(TAG_CREATE,"Create");
-        builder.addItem(TAG_MODIFY,"Modify");
-        builder.addItem(TAG_CREATE,"Create");
-        builder.addItem(TAG_DELETE,"Delete");
-        builder.addItem(TAG_MODIFY,"Modify");
-        builder.addItem(TAG_DELETE,"Delete");
+        builder.addItem(TAG_CREATE,"Create-01");
+        builder.addItem(TAG_MODIFY,"Modify-01");
+        builder.addItem(TAG_CREATE,"Create-02");
+        builder.addItem(TAG_DELETE,"Delete-01");
+        builder.addItem(TAG_MODIFY,"Modify-02");
+        builder.addItem(TAG_CREATE,"Create-03");
+        builder.addItem(TAG_DELETE,"Delete-02");
+        builder.addItem(TAG_MODIFY,"Modify-03");
+        builder.addItem(TAG_DELETE,"Delete-03");
+        builder.addItem(TAG_MODIFY,"Modify-04");
+        builder.addItem(TAG_DELETE,"Delete-04");
+        builder.addItem(TAG_CREATE,"Create-04");
         mListPopup=builder.build();
 
         mListPopup.setOnListPopupItemClickListener(new ListPopup.OnListPopupItemClickListener() {

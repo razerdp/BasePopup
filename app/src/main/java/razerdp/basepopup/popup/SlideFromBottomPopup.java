@@ -22,22 +22,22 @@ public class SlideFromBottomPopup extends BasePopupWindow implements View.OnClic
     }
 
     @Override
-    public Animation getAnimation() {
+    protected Animation getAnimation() {
         return getTranslateAnimation(250*2,0,300);
     }
 
     @Override
-    public Animator getAnimator() {
+    protected Animator getAnimator() {
         return null;
     }
 
     @Override
-    public View getInputView() {
+    protected View getInputView() {
         return null;
     }
 
     @Override
-    public View getDismissView() {
+    protected View getDismissView() {
         return popupView.findViewById(R.id.click_to_dismiss);
     }
 
