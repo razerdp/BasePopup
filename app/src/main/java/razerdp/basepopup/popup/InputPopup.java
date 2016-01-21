@@ -32,31 +32,33 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
         bindEvent();
     }
 
+    @Override
+    protected Animation getAnimation() {
+        return null;
+    }
+
     private void bindEvent() {
         mCancelButton.setOnClickListener(this);
         mCompeleteButton.setOnClickListener(this);
     }
 
     //=============================================================super methods
-    @Override
-    public Animation getAnimation() {
-        return null;
-    }
+
 
     @Override
-    public Animator getAnimator() {
+    protected Animator getAnimator() {
         ViewHelper.setPivotX(getAnimaView(),getAnimaView().getMeasuredWidth()/2);
         ViewHelper.setPivotY(getAnimaView(),getAnimaView().getMeasuredHeight()/2);
         return getDefaultSlideFromBottomAnimationSet();
     }
 
     @Override
-    public View getInputView() {
+    protected View getInputView() {
         return mInputEdittext;
     }
 
     @Override
-    public View getDismissView() {
+    protected View getDismissView() {
         return mPopupView;
     }
 
