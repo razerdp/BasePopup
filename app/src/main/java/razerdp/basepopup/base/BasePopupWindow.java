@@ -94,10 +94,10 @@ public abstract class BasePopupWindow implements ViewCreate {
     }
 
     //------------------------------------------抽象-----------------------------------------------
-    public abstract Animation getAnimation();
-    public abstract Animator getAnimator();
-    public abstract View getInputView();
-    public abstract View getDismissView();
+    protected abstract Animation getAnimation();
+    protected abstract Animator getAnimator();
+    protected abstract View getInputView();
+    protected abstract View getDismissView();
 
 
     public Animation getExitAnimation(){

@@ -26,22 +26,22 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener{
 
 
     @Override
-    public Animation getAnimation() {
+    protected Animation getAnimation() {
         return getDefaultScaleAnimation();
     }
 
     @Override
-    public Animator getAnimator() {
+    protected Animator getAnimator() {
         return null;
     }
 
     @Override
-    public View getInputView() {
+    protected View getInputView() {
         return null;
     }
 
     @Override
-    public View getDismissView() {
+    protected View getDismissView() {
         return popupView.findViewById(R.id.click_to_dismiss);
     }
 
