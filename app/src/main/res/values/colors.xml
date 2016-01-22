@@ -11,4 +11,6 @@
     <color name="comment_popup_tx_bg">#c7c7c7</color>
 
     <color name="click_bg">#c7c7c7</color>
+    <color name="menu_bg">#2b2b2b</color>
+    <color name="menu_click_bg">#515151</color>
 </resources>

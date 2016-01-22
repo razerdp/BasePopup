@@ -155,9 +155,8 @@ public abstract class BasePopupWindow implements ViewCreate {
         }
         if (curAnima != null && mAnimaView != null) {
             mAnimaView.clearAnimation();
-            mAnimaView.startAnimation(getAnimation());
+            mAnimaView.startAnimation(curAnima);
         }
-        //ViewHelper.setPivotX是包nineoldAndroid的方法，用于兼容低版本的anima以及方便的view工具
         if (curAnima == null && curAnimator != null && mAnimaView != null &&
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             curAnimator.start();
