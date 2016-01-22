@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        android:id="@+id/popup_contianer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/tx_1"
+            android:layout_width="180dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textColor="@color/comment_popup_tx_bg"
+            android:text="Item 1"
+            android:background="@drawable/selector_menu_popup"/>
+        <View
+            android:layout_width="180dp"
+            android:layout_height="0.5dp"
+            android:background="#6c6c6c"/>
+        <TextView
+            android:id="@+id/tx_2"
+            android:layout_width="180dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textColor="@color/comment_popup_tx_bg"
+            android:text="Item 2"
+            android:background="@drawable/selector_menu_popup"/>
+        <View
+            android:layout_width="180dp"
+            android:layout_height="0.5dp"
+            android:background="#6c6c6c"/>
+        <TextView
+            android:id="@+id/tx_3"
+            android:layout_width="180dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textColor="@color/comment_popup_tx_bg"
+            android:text="Item 3"
+            android:background="@drawable/selector_menu_popup"/>
+    </LinearLayout>
+
+</RelativeLayout>
