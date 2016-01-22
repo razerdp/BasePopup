@@ -27,5 +27,9 @@
         android:title="list popup"
         android:orderInCategory="104"
         app:showAsAction="never"/>
-
+    <item
+        android:id="@+id/id_menu_popup"
+        android:title="menu popup"
+        android:orderInCategory="105"
+        app:showAsAction="never"/>
 </menu>
