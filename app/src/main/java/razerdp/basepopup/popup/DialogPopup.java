@@ -24,7 +24,7 @@ public class DialogPopup extends BasePopupWindow{
     @Override
     protected Animation getAnimation() {
         AnimationSet set=new AnimationSet(false);
-        Animation shakeAnima=new RotateAnimation(0,45);
+        Animation shakeAnima=new RotateAnimation(0,15,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
         shakeAnima.setInterpolator(new CycleInterpolator(5));
         shakeAnima.setDuration(400);
         set.addAnimation(getDefaultAlphaAnimation());
