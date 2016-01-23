@@ -32,4 +32,9 @@
         android:title="menu popup"
         android:orderInCategory="105"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_dialog_popup"
+        android:title="dialog popup"
+        android:orderInCategory="106"
+        app:showAsAction="never"/>
 </menu>

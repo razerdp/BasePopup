@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import razerdp.basepopup.fragment.CommentPopupFrag;
+import razerdp.basepopup.fragment.DialogPopupFrag;
 import razerdp.basepopup.fragment.InputPopupFrag;
 import razerdp.basepopup.fragment.ListPopupFrag;
 import razerdp.basepopup.fragment.MenuPopupFrag;
@@ -22,6 +23,7 @@ public class DemoActivity extends FragmentActivity {
     private InputPopupFrag mInputPopupFrag;
     private ListPopupFrag mListPopupFrag;
     private MenuPopupFrag mMenuPopupFrag;
+    private DialogPopupFrag mDialogPopupFrag;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +36,7 @@ public class DemoActivity extends FragmentActivity {
         mInputPopupFrag=new InputPopupFrag();
         mListPopupFrag=new ListPopupFrag();
         mMenuPopupFrag=new MenuPopupFrag();
+        mDialogPopupFrag=new DialogPopupFrag();
     }
 
     @Override
@@ -66,6 +69,9 @@ public class DemoActivity extends FragmentActivity {
                 break;
             case R.id.id_menu_popup:
                 mFragmentManager.beginTransaction().replace(R.id.parent,mMenuPopupFrag).commit();
+                break;
+            case R.id.id_dialog_popup:
+                mFragmentManager.beginTransaction().replace(R.id.parent,mDialogPopupFrag).commit();
                 break;
             default:
                 break;
