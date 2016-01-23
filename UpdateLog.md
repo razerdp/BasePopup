@@ -1,5 +1,6 @@
 # BasePopup
 </br>
+##2016-01-23 忽然发现一直以来提交代码的帐号是我的子帐号，现在切换回来。。。。
 ##2016-01-22 增加了一个常见的菜单式的popup(demo)，关于动画问题，我配置的是简单的缩放和透明度变化，可以按照个人爱好定义,顺便修正了BasePopupWindow的一个小小的坑</br>
 ###MenuPopup.java:
 ![image](https://github.com/razerdp/BasePopup/blob/master/img/menu_popup.gif)
