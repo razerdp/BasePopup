@@ -32,7 +32,6 @@ public abstract class BasePopupWindow implements ViewCreate {
     protected View mPopupView;
     protected View mAnimaView;
     protected View mDismissView;
-    protected View mInputView;
     protected Activity mContext;
     //是否自动弹出输入框(default:false)
     private boolean autoShowInputMethod = false;
@@ -69,7 +68,6 @@ public abstract class BasePopupWindow implements ViewCreate {
         //=============================================================为外层的view添加点击事件，并设置点击消失
         mAnimaView = getAnimaView();
         mDismissView = getDismissView();
-        mInputView=getInputView();
         if (mDismissView!=null) {
             mDismissView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -162,9 +160,9 @@ public abstract class BasePopupWindow implements ViewCreate {
             curAnimator.start();
         }
         //自动弹出键盘
-        if (autoShowInputMethod && mInputView != null) {
-            mInputView.requestFocus();
-            InputMethodUtils.showInputMethod(mInputView,150);
+        if (autoShowInputMethod && getInputView() != null) {
+            getInputView().requestFocus();
+            InputMethodUtils.showInputMethod(getInputView(),150);
         }
     }
 

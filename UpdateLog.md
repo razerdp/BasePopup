@@ -1,5 +1,6 @@
 # BasePopup
 </br>
+##2016-01-25 修复了inputView无法自动弹出输入法的问题（原因可能是因为popup在show出来后才可以获取焦点，而我们的inputview一开始就findViewById出来了），所以可能是null。
 ##2016-01-25 增加了一个好玩的其实并无卵用的的dialog popup，看着好玩~gif图因为帧率问题，高帧慢，低帧丢细节，所以看起来效果不太好，实际效果很好玩的-V-</br>
 ###DialogPopup.java:
 ![image](https://github.com/razerdp/BasePopup/blob/master/img/dialog_popup.gif)
