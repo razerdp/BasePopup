@@ -46,14 +46,14 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
 
 
     @Override
-    protected Animator getShowAnimator() {
+    public Animator getShowAnimator() {
         ViewHelper.setPivotX(getAnimaView(),getAnimaView().getMeasuredWidth()/2);
         ViewHelper.setPivotY(getAnimaView(),getAnimaView().getMeasuredHeight()/2);
         return getDefaultSlideFromBottomAnimationSet();
     }
 
     @Override
-    protected View getInputView() {
+    public View getInputView() {
         return mInputEdittext;
     }
 

@@ -176,17 +176,12 @@ public class ListPopup extends BasePopupWindow {
     }
 
     @Override
-    protected Animator getShowAnimator() {
+    public Animator getShowAnimator() {
         AnimatorSet set = new AnimatorSet();
         set.playTogether(ObjectAnimator.ofFloat(mAnimaView, "rotationX", 90f, 0f).setDuration(400),
                 ObjectAnimator.ofFloat(mAnimaView, "translationY", 250f, 0f).setDuration(400),
                 ObjectAnimator.ofFloat(mAnimaView, "alpha", 0f, 1f).setDuration(400 * 3 / 2));
         return set;
-    }
-
-    @Override
-    protected View getInputView() {
-        return null;
     }
 
     @Override

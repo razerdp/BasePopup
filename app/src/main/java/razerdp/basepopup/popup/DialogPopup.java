@@ -33,16 +33,6 @@ public class DialogPopup extends BasePopupWindow{
     }
 
     @Override
-    protected Animator getShowAnimator() {
-        return null;
-    }
-
-    @Override
-    protected View getInputView() {
-        return null;
-    }
-
-    @Override
     protected View getClickToDismissView() {
         return mPopupView;
     }
