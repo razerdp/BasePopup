@@ -1,8 +1,6 @@
 package razerdp.basepopup.popup;
 
 import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.Build;
 import android.util.Log;
@@ -16,7 +14,6 @@ import android.widget.TextView;
 import com.nineoldandroids.view.ViewHelper;
 import razerdp.basepopup.R;
 import razerdp.basepopup.base.BasePopupWindow;
-import razerdp.basepopup.utils.DimensUtils;
 import razerdp.basepopup.utils.ToastUtils;
 
 /**
@@ -40,7 +37,7 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
     }
 
     @Override
-    protected Animation getAnimation() {
+    protected Animation getShowAnimation() {
         AnimationSet set=new AnimationSet(true);
         set.setInterpolator(new DecelerateInterpolator());
         set.addAnimation(getScaleAnimation(0,1,0,1,Animation.RELATIVE_TO_SELF,1,Animation.RELATIVE_TO_SELF,0));
@@ -50,7 +47,7 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
     }
 
     @Override
-    protected Animator getAnimator() {
+    protected Animator getShowAnimator() {
        /* AnimatorSet set=new AnimatorSet();
         set.playTogether(
                 ObjectAnimator.ofFloat(mAnimaView,"scaleX",0.0f,1.0f).setDuration(300),
@@ -65,15 +62,15 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
             v.getLocationOnScreen(viewLocation);
             mPopupWindow.showAtLocation(v, Gravity.RIGHT | Gravity.TOP, (int)(v.getWidth()*1.5),
                     viewLocation[1]+((v.getHeight()*2/3)));
-            if (getAnimation() != null && mAnimaView != null) {
+            if (getShowAnimation() != null && mAnimaView != null) {
                 mAnimaView.clearAnimation();
-                mAnimaView.startAnimation(getAnimation());
+                mAnimaView.startAnimation(getShowAnimation());
             }
-            if (getAnimation() == null && getAnimator() != null && mAnimaView != null &&
+            if (getShowAnimation() == null && getShowAnimator() != null && mAnimaView != null &&
                     Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 ViewHelper.setPivotX(mAnimaView,1);
                 ViewHelper.setPivotY(mAnimaView,0);
-                getAnimator().start();
+                getShowAnimator().start();
             }
         } catch (Exception e) {
             Log.w("error","error");
@@ -85,7 +82,7 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
     }
 
     @Override
-    protected View getDismissView() {
+    protected View getClickToDismissView() {
         return null;
     }
 

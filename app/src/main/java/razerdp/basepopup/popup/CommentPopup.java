@@ -112,8 +112,8 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
             mPopupWindow.showAtLocation(v, Gravity.RIGHT | Gravity.TOP, (int) (v.getWidth() * 1.8),
                     viewLocation[1] - DimensUtils.dipToPx(mContext,15f));
 
-            if (getAnimation() != null && getAnimaView() != null) {
-                getAnimaView().startAnimation(getAnimation());
+            if (getShowAnimation() != null && getAnimaView() != null) {
+                getAnimaView().startAnimation(getShowAnimation());
             }
         } catch (Exception e) {
             Log.w("error","error");
@@ -121,13 +121,13 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
     }
 
     @Override
-    protected Animation getAnimation() {
+    protected Animation getShowAnimation() {
         return getScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF, 1.0f,
                 Animation.RELATIVE_TO_SELF, 0.0f);
     }
 
     @Override
-    protected Animator getAnimator() {
+    protected Animator getShowAnimator() {
         return null;
     }
 
@@ -191,7 +191,7 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
     }
 
     @Override
-    protected View getDismissView() {
+    protected View getClickToDismissView() {
         return null;
     }
 }
