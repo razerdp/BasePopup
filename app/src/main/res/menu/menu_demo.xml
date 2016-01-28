@@ -37,4 +37,9 @@
         android:title="dialog popup"
         android:orderInCategory="106"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_custom_interpolator_popup"
+        android:title="custom interpolator popup"
+        android:orderInCategory="107"
+        app:showAsAction="never"/>
 </menu>
