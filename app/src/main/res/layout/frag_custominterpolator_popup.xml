@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="CustomInterpolator Popup"/>
+
+    <LinearLayout
+        android:layout_below="@id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/jelly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="jelly interpolator"
+            />
+        <Button
+            android:id="@+id/anti"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="anticipate interpolator"
+            />
+        <Button
+            android:id="@+id/anti2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="anticipateovershoot interpolator"
+            />
+        <Button
+            android:id="@+id/overshoot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="overshoot interpolator"
+            />
+        <Button
+            android:id="@+id/spring"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="spring interpolator"
+            />
+    </LinearLayout>
+</RelativeLayout>
