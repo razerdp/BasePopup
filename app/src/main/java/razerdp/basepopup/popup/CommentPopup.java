@@ -127,11 +127,6 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
     }
 
     @Override
-    protected Animator getShowAnimator() {
-        return null;
-    }
-
-    @Override
     public Animation getExitAnimation() {
         return getScaleAnimation(1.0f, 0.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF, 1.0f,
                 Animation.RELATIVE_TO_SELF, 0.0f);
@@ -183,12 +178,6 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
         void onCommentClick(View v);
     }
     //=============================================================abortMethods
-
-
-    @Override
-    protected View getInputView() {
-        return null;
-    }
 
     @Override
     protected View getClickToDismissView() {
