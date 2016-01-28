@@ -171,12 +171,12 @@ public class ListPopup extends BasePopupWindow {
     }
     //=============================================================super methods
     @Override
-    protected Animation getAnimation() {
+    protected Animation getShowAnimation() {
         return null;
     }
 
     @Override
-    protected Animator getAnimator() {
+    protected Animator getShowAnimator() {
         AnimatorSet set = new AnimatorSet();
         set.playTogether(ObjectAnimator.ofFloat(mAnimaView, "rotationX", 90f, 0f).setDuration(400),
                 ObjectAnimator.ofFloat(mAnimaView, "translationY", 250f, 0f).setDuration(400),
@@ -190,7 +190,7 @@ public class ListPopup extends BasePopupWindow {
     }
 
     @Override
-    protected View getDismissView() {
+    protected View getClickToDismissView() {
         return mPopupView;
     }
 
