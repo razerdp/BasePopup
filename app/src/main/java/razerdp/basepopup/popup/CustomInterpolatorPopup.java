@@ -30,16 +30,6 @@ public class CustomInterpolatorPopup extends BasePopupWindow implements View.OnC
     }
 
     @Override
-    protected Animator getShowAnimator() {
-        return null;
-    }
-
-    @Override
-    protected View getInputView() {
-        return null;
-    }
-
-    @Override
     protected View getClickToDismissView() {
         return popupView.findViewById(R.id.click_to_dismiss);
     }

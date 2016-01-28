@@ -47,7 +47,7 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
     }
 
     @Override
-    protected Animator getShowAnimator() {
+    public Animator getShowAnimator() {
        /* AnimatorSet set=new AnimatorSet();
         set.playTogether(
                 ObjectAnimator.ofFloat(mAnimaView,"scaleX",0.0f,1.0f).setDuration(300),
@@ -76,11 +76,6 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
             Log.w("error","error");
         }
     }
-    @Override
-    protected View getInputView() {
-        return null;
-    }
-
     @Override
     protected View getClickToDismissView() {
         return null;

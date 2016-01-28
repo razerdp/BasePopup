@@ -30,15 +30,6 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener{
         return getDefaultScaleAnimation();
     }
 
-    @Override
-    protected Animator getShowAnimator() {
-        return null;
-    }
-
-    @Override
-    protected View getInputView() {
-        return null;
-    }
 
     @Override
     protected View getClickToDismissView() {
