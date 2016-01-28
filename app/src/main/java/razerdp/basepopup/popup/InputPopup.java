@@ -33,7 +33,7 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
     }
 
     @Override
-    protected Animation getAnimation() {
+    protected Animation getShowAnimation() {
         return null;
     }
 
@@ -46,7 +46,7 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
 
 
     @Override
-    protected Animator getAnimator() {
+    protected Animator getShowAnimator() {
         ViewHelper.setPivotX(getAnimaView(),getAnimaView().getMeasuredWidth()/2);
         ViewHelper.setPivotY(getAnimaView(),getAnimaView().getMeasuredHeight()/2);
         return getDefaultSlideFromBottomAnimationSet();
@@ -58,7 +58,7 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
     }
 
     @Override
-    protected View getDismissView() {
+    protected View getClickToDismissView() {
         return mPopupView;
     }
 

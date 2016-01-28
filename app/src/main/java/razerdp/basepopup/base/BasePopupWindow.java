@@ -67,7 +67,7 @@ public abstract class BasePopupWindow implements ViewCreate {
 
         //=============================================================为外层的view添加点击事件，并设置点击消失
         mAnimaView = getAnimaView();
-        mDismissView = getDismissView();
+        mDismissView = getClickToDismissView();
         if (mDismissView!=null) {
             mDismissView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -85,23 +85,22 @@ public abstract class BasePopupWindow implements ViewCreate {
             }
         }
         //=============================================================元素获取
-        curAnima=getAnimation();
-        curAnimator=getAnimator();
+        curAnima= getShowAnimation();
+        curAnimator= getShowAnimator();
         curExitAnima=getExitAnimation();
         curExitAnimator=getExitAnimator();
     }
 
     //------------------------------------------抽象-----------------------------------------------
-    protected abstract Animation getAnimation();
-    protected abstract Animator getAnimator();
-    protected abstract View getInputView();
-    protected abstract View getDismissView();
+    protected abstract Animation getShowAnimation();
+    protected abstract View getClickToDismissView();
 
-
-    public Animation getExitAnimation(){
+    public Animator getShowAnimator(){ return null; }
+    public View getInputView() { return null; }
+    public Animation getExitAnimation() {
         return null;
     }
-    public Animator getExitAnimator(){
+    public Animator getExitAnimator() {
         return null;
     }
 

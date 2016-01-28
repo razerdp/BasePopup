@@ -25,12 +25,12 @@ public class CustomInterpolatorPopup extends BasePopupWindow implements View.OnC
 
 
     @Override
-    protected Animation getAnimation() {
+    protected Animation getShowAnimation() {
         return mAnimation;
     }
 
     @Override
-    protected Animator getAnimator() {
+    protected Animator getShowAnimator() {
         return null;
     }
 
@@ -40,7 +40,7 @@ public class CustomInterpolatorPopup extends BasePopupWindow implements View.OnC
     }
 
     @Override
-    protected View getDismissView() {
+    protected View getClickToDismissView() {
         return popupView.findViewById(R.id.click_to_dismiss);
     }
 
