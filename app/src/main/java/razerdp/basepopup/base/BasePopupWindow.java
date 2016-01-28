@@ -37,10 +37,10 @@ public abstract class BasePopupWindow implements ViewCreate {
     private boolean autoShowInputMethod = false;
     private OnDismissListener mOnDismissListener;
     //anima
-    private Animation curExitAnima;
-    private Animator curExitAnimator;
-    private Animation curAnima;
-    private Animator curAnimator;
+    protected Animation curExitAnima;
+    protected Animator curExitAnimator;
+    protected Animation curAnima;
+    protected Animator curAnimator;
 
     public BasePopupWindow(Activity context) {
         initView(context,ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
