@@ -1,6 +1,7 @@
 # BasePopup
 </br>
-##2016-01-28 因为好奇，研究了一下插值器，发现了一个很好玩的网站（http://inloop.github.io/interpolator/）这个网站有着可视化插值器和公式，于是这回就把公式集成了下来，做出了各种插值器的popup，但其实只有第一个最好玩，其他的马马虎虎。这次的自定义插值器是继承LinearInterpolator然后通过网站上的公式进行计算后复写对应接口实现的。同时将BasePopupWindow的一些anima变量改为protected。
+##2016-01-28 因为好奇，研究了一下插值器，发现了一个很好玩的网站http://inloop.github.io/interpolator/ </br>
+这个网站有着可视化插值器和公式，于是这回就把公式集成了下来，做出了各种插值器的popup，但其实只有第一个最好玩，其他的马马虎虎。这次的自定义插值器是继承LinearInterpolator然后通过网站上的公式进行计算后复写对应接口实现的。同时将BasePopupWindow的一些anima变量改为protected。
 ###CustomInterpolatorPopup.java:
 ![image](https://github.com/razerdp/BasePopup/blob/master/img/interpolator_popup.gif)
 ---
