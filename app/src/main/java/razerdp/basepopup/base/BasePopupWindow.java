@@ -1,5 +1,8 @@
 package razerdp.basepopup.base;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
@@ -14,9 +17,6 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.PopupWindow;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorSet;
-import com.nineoldandroids.animation.ObjectAnimator;
 import razerdp.basepopup.utils.InputMethodUtils;
 
 /**
