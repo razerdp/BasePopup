@@ -1,6 +1,5 @@
 package razerdp.basepopup.popup;
 
-import android.animation.Animator;
 import android.app.Activity;
 import android.view.View;
 import android.view.animation.Animation;

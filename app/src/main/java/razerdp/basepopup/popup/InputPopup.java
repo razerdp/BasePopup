@@ -9,13 +9,13 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
-import com.nineoldandroids.view.ViewHelper;
 import razerdp.basepopup.R;
 import razerdp.basepopup.base.BasePopupWindow;
 import razerdp.basepopup.utils.ToastUtils;
 
 /**
  * Created by 大灯泡 on 2016/1/18.
+ * 带输入法的popup
  */
 public class InputPopup extends BasePopupWindow implements View.OnClickListener{
     private Button mCancelButton;
@@ -47,8 +47,6 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
 
     @Override
     public Animator getShowAnimator() {
-        ViewHelper.setPivotX(getAnimaView(),getAnimaView().getMeasuredWidth()/2);
-        ViewHelper.setPivotY(getAnimaView(),getAnimaView().getMeasuredHeight()/2);
         return getDefaultSlideFromBottomAnimationSet();
     }
 
