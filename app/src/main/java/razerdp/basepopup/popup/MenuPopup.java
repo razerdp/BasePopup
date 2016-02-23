@@ -1,5 +1,6 @@
 package razerdp.basepopup.popup;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Gravity;
@@ -9,7 +10,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
-import com.nineoldandroids.animation.Animator;
 import razerdp.basepopup.R;
 import razerdp.basepopup.base.BasePopupWindow;
 import razerdp.basepopup.utils.ToastUtils;
