@@ -2,7 +2,6 @@ package razerdp.basepopup.popup;
 
 import android.animation.Animator;
 import android.app.Activity;
-import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
-import com.nineoldandroids.view.ViewHelper;
 import razerdp.basepopup.R;
 import razerdp.basepopup.base.BasePopupWindow;
 import razerdp.basepopup.utils.ToastUtils;
@@ -66,10 +64,7 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
                 mAnimaView.clearAnimation();
                 mAnimaView.startAnimation(getShowAnimation());
             }
-            if (getShowAnimation() == null && getShowAnimator() != null && mAnimaView != null &&
-                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                ViewHelper.setPivotX(mAnimaView,1);
-                ViewHelper.setPivotY(mAnimaView,0);
+            if (getShowAnimation() == null && getShowAnimator() != null && mAnimaView != null) {
                 getShowAnimator().start();
             }
         } catch (Exception e) {
