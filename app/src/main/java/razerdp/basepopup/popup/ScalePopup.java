@@ -1,11 +1,9 @@
 package razerdp.basepopup.popup;
 
-import android.animation.Animator;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
-import com.nineoldandroids.view.ViewHelper;
 import razerdp.basepopup.R;
 import razerdp.basepopup.base.BasePopupWindow;
 import razerdp.basepopup.utils.ToastUtils;

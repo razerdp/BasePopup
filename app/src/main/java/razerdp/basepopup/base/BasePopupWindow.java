@@ -5,7 +5,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -43,21 +42,20 @@ public abstract class BasePopupWindow implements ViewCreate {
     protected Animator curAnimator;
 
     public BasePopupWindow(Activity context) {
-        initView(context,ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+        initView(context, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
     public BasePopupWindow(Activity context, int w, int h) {
-        initView(context,w,h);
+        initView(context, w, h);
     }
 
-    private void initView(Activity context,int w,int h){
+    private void initView(Activity context, int w, int h) {
         mContext = context;
 
         mPopupView = getPopupView();
         mPopupView.setFocusableInTouchMode(true);
         //默认占满全屏
-        mPopupWindow =
-            new PopupWindow(mPopupView, w, h);
+        mPopupWindow = new PopupWindow(mPopupView, w, h);
         //指定透明背景，back键相关
         mPopupWindow.setBackgroundDrawable(new ColorDrawable());
         mPopupWindow.setFocusable(true);
@@ -68,14 +66,14 @@ public abstract class BasePopupWindow implements ViewCreate {
         //=============================================================为外层的view添加点击事件，并设置点击消失
         mAnimaView = getAnimaView();
         mDismissView = getClickToDismissView();
-        if (mDismissView!=null) {
+        if (mDismissView != null) {
             mDismissView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     dismiss();
                 }
             });
-            if (mAnimaView!=null) {
+            if (mAnimaView != null) {
                 mAnimaView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -85,21 +83,25 @@ public abstract class BasePopupWindow implements ViewCreate {
             }
         }
         //=============================================================元素获取
-        curAnima= getShowAnimation();
-        curAnimator= getShowAnimator();
-        curExitAnima=getExitAnimation();
-        curExitAnimator=getExitAnimator();
+        curAnima = getShowAnimation();
+        curAnimator = getShowAnimator();
+        curExitAnima = getExitAnimation();
+        curExitAnimator = getExitAnimator();
     }
 
     //------------------------------------------抽象-----------------------------------------------
     protected abstract Animation getShowAnimation();
+
     protected abstract View getClickToDismissView();
 
-    public Animator getShowAnimator(){ return null; }
+    public Animator getShowAnimator() { return null; }
+
     public View getInputView() { return null; }
+
     public Animation getExitAnimation() {
         return null;
     }
+
     public Animator getExitAnimator() {
         return null;
     }
@@ -136,39 +138,35 @@ public abstract class BasePopupWindow implements ViewCreate {
     private void tryToShowPopup(int res, View v) throws Exception {
         //传递了view
         if (res == 0 && v != null) {
-            mPopupWindow.showAtLocation(v, Gravity.RIGHT | Gravity.CENTER_HORIZONTAL, 0, 0);
+            mPopupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
         }
         //传递了res
         if (res != 0 && v == null) {
-            mPopupWindow.showAtLocation(mContext.findViewById(res), Gravity.RIGHT | Gravity.CENTER_HORIZONTAL, 0, 0);
+            mPopupWindow.showAtLocation(mContext.findViewById(res), Gravity.CENTER, 0, 0);
         }
         //什么都没传递，取顶级view的id
         if (res == 0 && v == null) {
-            mPopupWindow.showAtLocation(mContext.findViewById(android.R.id.content),
-                                        Gravity.RIGHT | Gravity.CENTER_HORIZONTAL,
-                                        0,
-                                        0
-            );
+            mPopupWindow.showAtLocation(mContext.findViewById(android.R.id.content), Gravity.CENTER, 0, 0);
         }
         if (curAnima != null && mAnimaView != null) {
             mAnimaView.clearAnimation();
             mAnimaView.startAnimation(curAnima);
         }
-        if (curAnima == null && curAnimator != null && mAnimaView != null &&
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (curAnima == null && curAnimator != null && mAnimaView != null) {
             curAnimator.start();
         }
         //自动弹出键盘
         if (autoShowInputMethod && getInputView() != null) {
             getInputView().requestFocus();
-            InputMethodUtils.showInputMethod(getInputView(),150);
+            InputMethodUtils.showInputMethod(getInputView(), 150);
         }
     }
 
     public void setAdjustInputMethod(boolean needAdjust) {
         if (needAdjust) {
             mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        } else {
+        }
+        else {
             mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         }
     }
@@ -177,21 +175,26 @@ public abstract class BasePopupWindow implements ViewCreate {
         this.autoShowInputMethod = autoShow;
         if (autoShow) {
             setAdjustInputMethod(true);
-        } else {
+        }
+        else {
             setAdjustInputMethod(false);
         }
     }
-    public void setBackPressEnable(boolean backPressEnable){
-        if (backPressEnable){
+
+    public void setBackPressEnable(boolean backPressEnable) {
+        if (backPressEnable) {
             mPopupWindow.setBackgroundDrawable(new ColorDrawable());
-        }else {
+        }
+        else {
             mPopupWindow.setBackgroundDrawable(null);
         }
     }
-    public View getPopupViewById(int resId){
-        if (resId!=0) {
+
+    public View getPopupViewById(int resId) {
+        if (resId != 0) {
             return LayoutInflater.from(mContext).inflate(resId, null);
-        }else {
+        }
+        else {
             return null;
         }
     }
@@ -207,7 +210,7 @@ public abstract class BasePopupWindow implements ViewCreate {
 
     public void setOnDismissListener(OnDismissListener onDismissListener) {
         mOnDismissListener = onDismissListener;
-        if (mOnDismissListener!=null){
+        if (mOnDismissListener != null) {
             mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 @Override
                 public void onDismiss() {
@@ -220,15 +223,17 @@ public abstract class BasePopupWindow implements ViewCreate {
     //------------------------------------------状态控制-----------------------------------------------
     public void dismiss() {
         try {
-            if (curExitAnima!=null){
+            if (curExitAnima != null) {
                 curExitAnima.setAnimationListener(mAnimationListener);
                 mAnimaView.clearAnimation();
                 mAnimaView.startAnimation(curExitAnima);
-            }else if (curExitAnimator!=null){
+            }
+            else if (curExitAnimator != null) {
                 curExitAnimator.removeListener(mAnimatorListener);
                 curExitAnimator.addListener(mAnimatorListener);
                 curExitAnimator.start();
-            }else {
+            }
+            else {
                 mPopupWindow.dismiss();
             }
         } catch (Exception e) {
@@ -237,7 +242,7 @@ public abstract class BasePopupWindow implements ViewCreate {
     }
     //------------------------------------------Anima-----------------------------------------------
 
-    private Animator.AnimatorListener mAnimatorListener=new Animator.AnimatorListener() {
+    private Animator.AnimatorListener mAnimatorListener = new Animator.AnimatorListener() {
         @Override
         public void onAnimationStart(Animator animation) {
 
@@ -259,7 +264,7 @@ public abstract class BasePopupWindow implements ViewCreate {
         }
     };
 
-    private Animation.AnimationListener mAnimationListener=new Animation.AnimationListener() {
+    private Animation.AnimationListener mAnimationListener = new Animation.AnimationListener() {
         @Override
         public void onAnimationStart(Animation animation) {
 
@@ -275,8 +280,10 @@ public abstract class BasePopupWindow implements ViewCreate {
 
         }
     };
+
     /**
      * 生成TranslateAnimation
+     *
      * @param durationMillis 动画显示时间
      * @param start 初始位置
      */
@@ -291,11 +298,9 @@ public abstract class BasePopupWindow implements ViewCreate {
     /**
      * 生成ScaleAnimation
      */
-    protected Animation getScaleAnimation(float fromX, float toX, float fromY, float toY,
-        int pivotXType, float pivotXValue, int pivotYType, float pivotYValue) {
-        Animation scaleAnimation =
-            new ScaleAnimation(fromX, toX, fromY, toY, pivotXType, pivotXValue, pivotYType,
-                               pivotYValue);
+    protected Animation getScaleAnimation(float fromX, float toX, float fromY, float toY, int pivotXType, float pivotXValue, int pivotYType, float pivotYValue) {
+        Animation scaleAnimation = new ScaleAnimation(fromX, toX, fromY, toY, pivotXType, pivotXValue, pivotYType,
+                pivotYValue);
         scaleAnimation.setDuration(300);
         scaleAnimation.setFillEnabled(true);
         scaleAnimation.setFillAfter(true);
@@ -306,21 +311,20 @@ public abstract class BasePopupWindow implements ViewCreate {
      * 生成自定义ScaleAnimation
      */
     protected Animation getDefaultScaleAnimation() {
-        Animation scaleAnimation =
-            new ScaleAnimation(0f, 1f, 0f, 1f, Animation.RELATIVE_TO_SELF, 0.5f,
-                               Animation.RELATIVE_TO_SELF, 0.5f);
+        Animation scaleAnimation = new ScaleAnimation(0f, 1f, 0f, 1f, Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
         scaleAnimation.setDuration(300);
         scaleAnimation.setInterpolator(new AccelerateInterpolator());
         scaleAnimation.setFillEnabled(true);
         scaleAnimation.setFillAfter(true);
         return scaleAnimation;
     }
+
     /**
      * 生成默认的AlphaAnimation
-     * */
+     */
     protected Animation getDefaultAlphaAnimation() {
-        Animation alphaAnimation =
-            new AlphaAnimation(0.0f, 1.0f);
+        Animation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
         alphaAnimation.setDuration(300);
         alphaAnimation.setInterpolator(new AccelerateInterpolator());
         alphaAnimation.setFillEnabled(true);
@@ -328,23 +332,19 @@ public abstract class BasePopupWindow implements ViewCreate {
         return alphaAnimation;
     }
 
-
     /**
      * 从下方滑动上来
      */
     protected AnimatorSet getDefaultSlideFromBottomAnimationSet() {
         AnimatorSet set = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-            set = new AnimatorSet();
-
-            if (mAnimaView != null) {
-                set.playTogether(
-                        ObjectAnimator.ofFloat(mAnimaView, "translationY", 250, 0).setDuration(400),
-                        ObjectAnimator.ofFloat(mAnimaView, "alpha", 0.4f, 1).setDuration(250 * 3 / 2));
-            }
+        set = new AnimatorSet();
+        if (mAnimaView != null) {
+            set.playTogether(ObjectAnimator.ofFloat(mAnimaView, "translationY", 250, 0).setDuration(400),
+                    ObjectAnimator.ofFloat(mAnimaView, "alpha", 0.4f, 1).setDuration(250 * 3 / 2));
         }
         return set;
     }
+
     //------------------------------------------Interface-----------------------------------------------
     public interface OnDismissListener {
         void onDismiss();
