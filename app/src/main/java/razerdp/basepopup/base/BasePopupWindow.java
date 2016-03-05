@@ -23,7 +23,7 @@ import razerdp.basepopup.utils.InputMethodUtils;
  * Created by 大灯泡 on 2016/1/14.
  * 通用的popupWindow
  */
-public abstract class BasePopupWindow implements ViewCreate {
+public abstract class BasePopupWindow implements BasePopup {
     private static final String TAG = "BasePopupWindow";
     //元素定义
     protected PopupWindow mPopupWindow;
