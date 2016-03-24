@@ -1,4 +1,4 @@
-package razerdp.basepopup.popup;
+package razerdp.demo.popup;
 
 import android.app.Activity;
 import android.os.Handler;
@@ -17,7 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.basepopup.utils.DimensUtils;
+import razerdp.demo.utils.DimensUtils;
 
 /**
  * Created by 大灯泡 on 2016/1/16.

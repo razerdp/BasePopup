@@ -1,4 +1,4 @@
-package razerdp.basepopup.interpolator;
+package razerdp.demo.interpolator;
 
 import android.view.animation.Interpolator;
 

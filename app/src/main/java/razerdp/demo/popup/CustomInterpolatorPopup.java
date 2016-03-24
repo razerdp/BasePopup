@@ -1,4 +1,4 @@
-package razerdp.basepopup.popup;
+package razerdp.demo.popup;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -6,28 +6,27 @@ import android.view.View;
 import android.view.animation.Animation;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.basepopup.utils.ToastUtils;
+import razerdp.demo.utils.ToastUtils;
 
 /**
  * Created by 大灯泡 on 2016/1/15.
- * 普通的popup
+ * 各种插值器的popup
  */
-public class ScalePopup extends BasePopupWindow implements View.OnClickListener{
+public class CustomInterpolatorPopup extends BasePopupWindow implements View.OnClickListener{
 
     private View popupView;
+    private Animation mAnimation;
 
-    public ScalePopup(Activity context) {
+    public CustomInterpolatorPopup(Activity context) {
         super(context);
         bindEvent();
     }
 
 
-
     @Override
     protected Animation getShowAnimation() {
-        return getDefaultScaleAnimation();
+        return mAnimation;
     }
-
 
     @Override
     protected View getClickToDismissView() {
@@ -51,7 +50,10 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener{
             popupView.findViewById(R.id.tx_2).setOnClickListener(this);
             popupView.findViewById(R.id.tx_3).setOnClickListener(this);
         }
+    }
 
+    public void setCustomAnimation(Animation anima){
+        curAnima=anima;
     }
 
     @Override
