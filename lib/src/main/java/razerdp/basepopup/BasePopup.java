@@ -1,4 +1,4 @@
-package razerdp.basepopup.base;
+package razerdp.basepopup;
 
 import android.view.View;
 

@@ -16,8 +16,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
+import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.basepopup.base.BasePopupWindow;
 
 /**
  * Created by 大灯泡 on 2016/1/20.

@@ -6,15 +6,15 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.RotateAnimation;
+import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.basepopup.base.BasePopupWindow;
 
 /**
  * Created by 大灯泡 on 2016/1/23.
  * dialogpopup :)
  * 客串一下dialog
  */
-public class DialogPopup extends BasePopupWindow{
+public class DialogPopup extends BasePopupWindow {
 
     public DialogPopup(Activity context) {
         super(context);

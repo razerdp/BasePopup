@@ -4,8 +4,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.basepopup.base.BasePopupWindow;
 import razerdp.basepopup.utils.ToastUtils;
 import razerdp.basepopup.popup.CommentPopup;
 
