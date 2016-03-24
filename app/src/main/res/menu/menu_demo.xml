@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".DemoActivity">
+      tools:context="razerdp.demo.DemoActivity">
     <item
         android:id="@+id/id_scale_popup"
         android:title="scale popup"

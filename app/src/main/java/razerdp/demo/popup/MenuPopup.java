@@ -1,4 +1,4 @@
-package razerdp.basepopup.popup;
+package razerdp.demo.popup;
 
 import android.animation.Animator;
 import android.app.Activity;
@@ -12,7 +12,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.basepopup.utils.ToastUtils;
+import razerdp.demo.utils.ToastUtils;
 
 /**
  * Created by 大灯泡 on 2016/1/22.

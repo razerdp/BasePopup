@@ -1,10 +1,10 @@
-package razerdp.basepopup.fragment;
+package razerdp.demo.fragment;
 
 import android.view.View;
 import android.widget.Button;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.basepopup.popup.InputPopup;
+import razerdp.demo.popup.InputPopup;
 
 /**
  * Created by 大灯泡 on 2016/1/18.

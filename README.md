@@ -1,6 +1,8 @@
 # BasePopup
 A abstract class for creating custom popupwindow easily.
 
+[中文介绍](https://github.com/razerdp/BasePopup/blob/master/README-CN.md)
+
 
 # Download 
 Click [here](https://github.com/razerdp/BasePopup/tree/master/lib/src/main/java/razerdp/basepopup) and copy three java to your project.
