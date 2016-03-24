@@ -1,4 +1,4 @@
-package razerdp.basepopup;
+package razerdp.demo;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -6,15 +6,15 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
-import razerdp.basepopup.fragment.CommentPopupFrag;
-import razerdp.basepopup.fragment.CustomInterpolatorPopupFrag;
-import razerdp.basepopup.fragment.DialogPopupFrag;
-import razerdp.basepopup.fragment.InputPopupFrag;
-import razerdp.basepopup.fragment.ListPopupFrag;
-import razerdp.basepopup.fragment.MenuPopupFrag;
-import razerdp.basepopup.fragment.ScalePopupFrag;
-import razerdp.basepopup.fragment.SlideFromBottomPopupFrag;
-import razerdp.basepopup.popup.ListPopup;
+import razerdp.basepopup.R;
+import razerdp.demo.fragment.CommentPopupFrag;
+import razerdp.demo.fragment.CustomInterpolatorPopupFrag;
+import razerdp.demo.fragment.DialogPopupFrag;
+import razerdp.demo.fragment.InputPopupFrag;
+import razerdp.demo.fragment.ListPopupFrag;
+import razerdp.demo.fragment.MenuPopupFrag;
+import razerdp.demo.fragment.ScalePopupFrag;
+import razerdp.demo.fragment.SlideFromBottomPopupFrag;
 
 public class DemoActivity extends FragmentActivity {
     private FragmentManager mFragmentManager;

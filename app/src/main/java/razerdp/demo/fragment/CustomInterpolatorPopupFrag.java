@@ -1,4 +1,4 @@
-package razerdp.basepopup.fragment;
+package razerdp.demo.fragment;
 
 import android.view.View;
 import android.view.animation.Animation;
@@ -8,8 +8,8 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.basepopup.interpolator.CustomInterpolatorFactory;
-import razerdp.basepopup.popup.CustomInterpolatorPopup;
+import razerdp.demo.interpolator.CustomInterpolatorFactory;
+import razerdp.demo.popup.CustomInterpolatorPopup;
 
 /**
  * Created by 大灯泡 on 2016/1/28.

@@ -1,4 +1,4 @@
-package razerdp.basepopup.fragment;
+package razerdp.demo.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.basepopup.popup.SlideFromBottomPopup;
+import razerdp.demo.popup.SlideFromBottomPopup;
 
 /**
  * Created by 大灯泡 on 2016/1/15.

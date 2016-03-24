@@ -1,4 +1,4 @@
-package razerdp.basepopup.popup;
+package razerdp.demo.popup;
 
 import android.app.Activity;
 import android.view.View;

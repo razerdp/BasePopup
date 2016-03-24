@@ -8,12 +8,12 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_demo"
-    tools:context=".DemoActivity"
+    tools:context="razerdp.demo.DemoActivity"
     >
     <fragment
         android:id="@+id/popup_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="razerdp.basepopup.fragment.ScalePopupFrag"
+        android:name="razerdp.demo.fragment.ScalePopupFrag"
         />
 </RelativeLayout>
