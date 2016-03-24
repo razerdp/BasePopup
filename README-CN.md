@@ -1,19 +1,33 @@
-package razerdp.basepopup.popup;
+# BasePopup
 
-import android.app.Activity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.animation.Animation;
-import razerdp.basepopup.BasePopupWindow;
-import razerdp.basepopup.R;
-import razerdp.basepopup.utils.ToastUtils;
+##通过继承顶级类BasePopupWindow来简便的实现各种类型的Popup</br>
+##代码解析：</br>
+  http://blog.csdn.net/mkfrank/article/details/50522666</br>
+</br>
+##Demo版本更新日志：</br>
+  https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md</br>
+##Some Preview Img:</br>
+![image](https://github.com/razerdp/BasePopup/blob/master/img/comment_popup_with_exitAnima.gif)
+![image](https://github.com/razerdp/BasePopup/blob/master/img/scale_popup.gif)
+![image](https://github.com/razerdp/BasePopup/blob/master/img/slide_from_bottom_popup.gif)
+![image](https://github.com/razerdp/BasePopup/blob/master/img/input_popup.gif)
+![image](https://github.com/razerdp/BasePopup/blob/master/img/list_popup.gif)
+![image](https://github.com/razerdp/BasePopup/blob/master/img/menu_popup.gif)
 
+more.....
+</br>
+click link to show more:</br>
+https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md
+ </br>
+##用法（Sample）：</br>
+step 1:继承BasePopupWindow</br>
+step 2:对应实现抽象方法</br>
+```java
 /**
  * Created by 大灯泡 on 2016/1/15.
  * 普通的popup
  */
 public class ScalePopup extends BasePopupWindow implements View.OnClickListener{
-
     private View popupView;
 
     public ScalePopup(Activity context) {
@@ -21,16 +35,23 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener{
         bindEvent();
     }
 
-
-
     @Override
-    protected Animation getShowAnimation() {
+    public Animation getAnimation() {
         return getDefaultScaleAnimation();
     }
 
+    @Override
+    public Animator getAnimator() {
+        return null;
+    }
 
     @Override
-    protected View getClickToDismissView() {
+    public View getInputView() {
+        return null;
+    }
+
+    @Override
+    public View getDismissView() {
         return popupView.findViewById(R.id.click_to_dismiss);
     }
 
@@ -51,7 +72,6 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener{
             popupView.findViewById(R.id.tx_2).setOnClickListener(this);
             popupView.findViewById(R.id.tx_3).setOnClickListener(this);
         }
-
     }
 
     @Override
@@ -69,6 +89,13 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener{
             default:
                 break;
         }
-
     }
 }
+```
+</br>
+step 3:在您需要用的地方 new出对象并调用 showPopup()或者其重载方法</br>
+```java
+new ScalePopup(context).showPopupWindow();
+```
+
+

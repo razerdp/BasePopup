@@ -6,8 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.basepopup.base.BasePopupWindow;
 import razerdp.basepopup.popup.ScalePopup;
 
 /**

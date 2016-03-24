@@ -6,10 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.basepopup.base.BasePopupWindow;
 import razerdp.basepopup.popup.DialogPopup;
-import razerdp.basepopup.popup.SlideFromBottomPopup;
 
 /**
  * Created by 大灯泡 on 2016/1/15.

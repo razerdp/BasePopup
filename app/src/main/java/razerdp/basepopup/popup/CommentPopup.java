@@ -15,8 +15,8 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.basepopup.base.BasePopupWindow;
 import razerdp.basepopup.utils.DimensUtils;
 
 /**
