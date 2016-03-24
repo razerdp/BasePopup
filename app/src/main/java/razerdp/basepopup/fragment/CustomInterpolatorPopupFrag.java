@@ -1,20 +1,15 @@
 package razerdp.basepopup.fragment;
 
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.basepopup.base.BasePopupWindow;
 import razerdp.basepopup.interpolator.CustomInterpolatorFactory;
-import razerdp.basepopup.popup.CommentPopup;
 import razerdp.basepopup.popup.CustomInterpolatorPopup;
-import razerdp.basepopup.utils.ToastUtils;
 
 /**
  * Created by 大灯泡 on 2016/1/28.

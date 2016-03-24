@@ -1,4 +1,4 @@
-package razerdp.basepopup.utils;
+package razerdp.basepopup;
 
 import android.content.Context;
 import android.os.Handler;

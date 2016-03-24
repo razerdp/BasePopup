@@ -1,4 +1,4 @@
-package razerdp.basepopup.base;
+package razerdp.basepopup;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -17,7 +17,6 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.PopupWindow;
-import razerdp.basepopup.utils.InputMethodUtils;
 
 /**
  * Created by 大灯泡 on 2016/1/14.
