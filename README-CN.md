@@ -2,7 +2,7 @@
 抽象出一个方便自定义的Basepopup类
 
 
-# 依赖
+# 依赖  [![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
 **Step 1.** 添加Jitpack到您的root gradle
 
 Add it in your root build.gradle at the end of repositories:
