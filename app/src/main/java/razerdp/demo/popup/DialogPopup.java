@@ -6,6 +6,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.TextView;
+import android.widget.Toast;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 
@@ -14,10 +16,18 @@ import razerdp.basepopup.R;
  * dialogpopup :)
  * 客串一下dialog
  */
-public class DialogPopup extends BasePopupWindow {
+public class DialogPopup extends BasePopupWindow implements View.OnClickListener{
+
+    private TextView ok;
+    private TextView cancel;
 
     public DialogPopup(Activity context) {
         super(context);
+
+        ok= (TextView) findViewById(R.id.ok);
+        cancel= (TextView) findViewById(R.id.cancel);
+
+        setViewClickListener(this,ok,cancel);
     }
 
     @Override
@@ -43,6 +53,21 @@ public class DialogPopup extends BasePopupWindow {
 
     @Override
     public View getAnimaView() {
-        return mPopupView.findViewById(R.id.popup_anima);
+        return findViewById(R.id.popup_anima);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.ok:
+                Toast.makeText(mContext,"click the ok button",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.cancel:
+                Toast.makeText(mContext,"click the cancel button",Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
+
     }
 }

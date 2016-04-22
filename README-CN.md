@@ -9,18 +9,116 @@
 ----------
 
 **Step 1:**
-新建一个类继承Basepopup
+像您平时定制activity布局文件一样定制您的popup布局
+
+etc.
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#8f000000">
+
+    <RelativeLayout
+        android:id="@+id/popup_anima"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_dialog"
+        android:layout_centerInParent="true"
+        android:layout_margin="25dp">
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:textColor="#3dd1a5"
+            android:text="This is title"
+            android:gravity="left|center_vertical"
+            android:textSize="18sp"
+            android:paddingLeft="15dp"
+            />
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#3dd1a5"
+            android:layout_below="@id/title"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/line"
+            android:paddingTop="20dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="15dp"
+            android:textSize="14sp"
+            android:textColor="#1a1a1a"
+            android:lineSpacingMultiplier="1.2"
+            android:text="Warning:nuclear silo detected.\nWarning:nuclear silo detected.\nWarning:nuclear silo detected."
+            />
+        <View
+            android:id="@+id/line2"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_below="@id/content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/line_bg"
+            android:layout_marginTop="15dp"/>
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:padding="3dp"
+            android:textColor="#bfbfbf"
+            android:textSize="14sp"
+            android:layout_below="@id/line2"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:text="CANCEL"/>
+        <TextView
+            android:id="@+id/ok"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:padding="3dp"
+            android:textColor="#3dd1a5"
+            android:textSize="14sp"
+            android:layout_below="@id/line2"
+            android:layout_toLeftOf="@id/cancel"
+            android:layout_marginRight="15dp"
+            android:text="OK"/>
+
+    </RelativeLayout>
+</RelativeLayout>
+```
+![image](https://github.com/razerdp/BasePopup/blob/master/img/etc.png)
+
 
 **Step 2:**
+新建一个类继承Basepopup
+
+**Step 3:**
 实现必要的几个方法
 
 例如
 
 ```java
-public class DialogPopup extends BasePopupWindow {
+public class DialogPopup extends BasePopupWindow implements View.OnClickListener{
+
+    private TextView ok;
+    private TextView cancel;
 
     public DialogPopup(Activity context) {
         super(context);
+
+        ok= (TextView) findViewById(R.id.ok);
+        cancel= (TextView) findViewById(R.id.cancel);
+
+        setViewClickListener(this,ok,cancel);
     }
 
     @Override
@@ -46,12 +144,27 @@ public class DialogPopup extends BasePopupWindow {
 
     @Override
     public View getAnimaView() {
-        return mPopupView.findViewById(R.id.popup_anima);
+        return findViewById(R.id.popup_anima);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.ok:
+                Toast.makeText(mContext,"click the ok button",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.cancel:
+                Toast.makeText(mContext,"click the cancel button",Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
+
     }
 }
 ```
 
-**Step 3:**把您刚才实现的popup给new出来并调用show方法
+**Step 4:**把您刚才实现的popup给new出来并调用show方法
 
 例如
 
@@ -87,6 +200,7 @@ https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md
 	+ setAutoShowInputMethod()：是否自动弹出输入法
 	+ setAdjustInputMethod()：popup是否随着输入法弹出而自适应
 	+ getPopupViewById()：工具方法，不用写那么多LayoutInflate.from(context)
+	+ setViewClickListener()：工具方法，用于方便您设置onClickListener（多个View共用一个listener哦）
  - show方法：
 	+ showPopupWindow():默认将popup显示到当前窗口
 	+ showPopupWindow(int res)：将popup显示到对应的id控件上
