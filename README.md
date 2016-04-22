@@ -8,18 +8,21 @@ A abstract class for creating custom popupwindow easily.
 **Step 1.** Add the JitPack repository to your build file
 
 Add it in your root build.gradle at the end of repositories:
+```xml
 	allprojects {
 		repositories {
 			...
 			maven { url "https://jitpack.io" }
 		}
 	}
+```	
 
 **Step 2.** Add the dependency
-dependencies {
+```xml
+	dependencies {
 	        compile 'com.github.razerdp:BasePopup:v1.1.1'
 	}
-
+```
 
 # HowToUse
 
