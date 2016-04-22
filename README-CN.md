@@ -6,17 +6,21 @@
 **Step 1.** 添加Jitpack到您的root gradle
 
 Add it in your root build.gradle at the end of repositories:
+```xml
 	allprojects {
 		repositories {
 			...
 			maven { url "https://jitpack.io" }
 		}
 	}
+```
 
 **Step 2.** 添加依赖
-dependencies {
+```xml
+	dependencies {
 	        compile 'com.github.razerdp:BasePopup:v1.1.1'
 	}
+```	
 
 
 # 使用方法
