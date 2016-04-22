@@ -3,7 +3,22 @@
 
 
 # 依赖
-点击 [here](https://github.com/razerdp/BasePopup/tree/master/lib/src/main/java/razerdp/basepopup) 然后复制里面的三个文件到您的工程中，因为并非什么大项目，所以就没有发布上去了。
+**Step 1.** 添加Jitpack到您的root gradle
+
+Add it in your root build.gradle at the end of repositories:
+	allprojects {
+		repositories {
+			...
+			maven { url "https://jitpack.io" }
+		}
+	}
+
+**Step 2.** 添加依赖
+dependencies {
+	        compile 'com.github.razerdp:BasePopup:v1.1.1'
+	}
+
+
 # 使用方法
 
 ----------
