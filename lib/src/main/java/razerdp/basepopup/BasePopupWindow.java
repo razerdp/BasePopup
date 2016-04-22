@@ -20,7 +20,7 @@ import android.widget.PopupWindow;
 
 /**
  * Created by 大灯泡 on 2016/1/14.
- * 通用的popupWindow
+ * 抽象通用popupwindow的父类
  */
 public abstract class BasePopupWindow implements BasePopup {
     private static final String TAG = "BasePopupWindow";
@@ -89,23 +89,52 @@ public abstract class BasePopupWindow implements BasePopup {
     }
 
     //------------------------------------------抽象-----------------------------------------------
+
+    /**
+     * PopupWindow展示出来后，需要执行动画的View.一般为蒙层之上的View
+     * @return
+     */
     protected abstract Animation getShowAnimation();
 
+    /**
+     * 设置一个点击后触发dismiss PopupWindow的View，一般为蒙层
+     * @return
+     */
     protected abstract View getClickToDismissView();
 
+    /**
+     * 设置展示动画View的属性动画
+     * @return
+     */
     public Animator getShowAnimator() { return null; }
 
+    /**
+     * 设置一个拥有输入功能的View，一般为EditTextView
+     * @return
+     */
     public View getInputView() { return null; }
 
+    /**
+     * 设置PopupWindow销毁时的退出动画
+     * @return
+     */
     public Animation getExitAnimation() {
         return null;
     }
 
+    /**
+     * 设置PopupWindow销毁时的退出属性动画
+     * @return
+     */
     public Animator getExitAnimator() {
         return null;
     }
 
     //------------------------------------------showPopup-----------------------------------------------
+
+    /**
+     * 调用此方法时，PopupWindow将会显示在DecorView
+     */
     public void showPopupWindow() {
         try {
             tryToShowPopup(0, null);
@@ -161,6 +190,12 @@ public abstract class BasePopupWindow implements BasePopup {
         }
     }
 
+    /**
+     * PopupWindow是否需要自适应输入法，为输入法弹出让出区域
+     * @param needAdjust <br>
+     *                   ture for "SOFT_INPUT_ADJUST_RESIZE" mode<br>
+     *                   false for "SOFT_INPUT_ADJUST_NOTHING" mode
+     */
     public void setAdjustInputMethod(boolean needAdjust) {
         if (needAdjust) {
             mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -170,6 +205,11 @@ public abstract class BasePopupWindow implements BasePopup {
         }
     }
 
+    /**
+     * 当PopupWindow展示的时候，这个参数决定了是否自动弹出输入法
+     * 如果使用这个方法，您必须保证通过 <strong>getInputView()<strong/>得到一个EditTextView
+     * @param autoShow
+     */
     public void setAutoShowInputMethod(boolean autoShow) {
         this.autoShowInputMethod = autoShow;
         if (autoShow) {
@@ -180,6 +220,10 @@ public abstract class BasePopupWindow implements BasePopup {
         }
     }
 
+    /**
+     * 这个参数决定点击返回键是否可以取消掉PopupWindow
+     * @param backPressEnable
+     */
     public void setBackPressEnable(boolean backPressEnable) {
         if (backPressEnable) {
             mPopupWindow.setBackgroundDrawable(new ColorDrawable());
@@ -189,6 +233,11 @@ public abstract class BasePopupWindow implements BasePopup {
         }
     }
 
+    /**
+     * 这个方法封装了LayoutInflater.from(context).inflate，方便您设置PopupWindow所用的xml
+     * @param resId reference of layout
+     * @return root View of the layout
+     */
     public View getPopupViewById(int resId) {
         if (resId != 0) {
             return LayoutInflater.from(mContext).inflate(resId, null);
@@ -198,7 +247,32 @@ public abstract class BasePopupWindow implements BasePopup {
         }
     }
 
+    protected View findViewById(int id) {
+        if (mPopupView != null && id != 0) {
+            return mPopupView.findViewById(id);
+        }
+        return null;
+    }
+
+    /**
+     * 这个方法用于简化您为View设置OnClickListener事件，多个View将会使用同一个点击事件
+     * @param listener
+     * @param views
+     */
+    protected void setViewClickListener(View.OnClickListener listener, View... views) {
+        for (View view : views) {
+            if (view != null && listener != null) {
+                view.setOnClickListener(listener);
+            }
+        }
+    }
+
     //------------------------------------------Getter/Setter-----------------------------------------------
+
+    /**
+     * PopupWindow是否处于展示状态
+     * @return
+     */
     public boolean isShowing() {
         return mPopupWindow.isShowing();
     }
@@ -220,6 +294,10 @@ public abstract class BasePopupWindow implements BasePopup {
     }
 
     //------------------------------------------状态控制-----------------------------------------------
+
+    /**
+     * 取消一个PopupWindow，如果有退出动画，PopupWindow的消失将会在动画结束后执行
+     */
     public void dismiss() {
         try {
             if (curExitAnima != null) {
