@@ -3,6 +3,7 @@ A abstract class for creating custom popupwindow easily.
 
 [中文介绍](https://github.com/razerdp/BasePopup/blob/master/README-CN.md)
 
+### MinSDK : API 11
 
 # Download  [![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
 **Step 1.** Add the JitPack repository to your build file
@@ -20,7 +21,7 @@ Add it in your root build.gradle at the end of repositories:
 **Step 2.** Add the dependency
 ```xml
 	dependencies {
-	        compile 'com.github.razerdp:BasePopup:v1.1.1'
+	        compile 'com.github.razerdp:BasePopup:v1.1.2'
 	}
 ```
 
