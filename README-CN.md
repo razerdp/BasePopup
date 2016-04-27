@@ -2,8 +2,10 @@
 抽象出一个方便自定义的Basepopup类
 
 
+### 最低SDK版本要求 : API 11
+
 # 依赖  [![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
-**Step 1.** 添加Jitpack到您的root gradle
+**Step 1.**  添加Jitpack到您的root gradle
 
 Add it in your root build.gradle at the end of repositories:
 ```xml
@@ -13,15 +15,14 @@ Add it in your root build.gradle at the end of repositories:
 			maven { url "https://jitpack.io" }
 		}
 	}
-```
+```	
 
 **Step 2.** 添加依赖
 ```xml
 	dependencies {
-	        compile 'com.github.razerdp:BasePopup:v1.1.1'
+	        compile 'com.github.razerdp:BasePopup:v1.1.2'
 	}
-```	
-
+```
 
 # 使用方法
 
