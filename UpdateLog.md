@@ -1,6 +1,9 @@
 # BasePopup
 </br>
+##2016-05-18
+降低最高版本要求23->21，因为开发过程中发现有时候需要dismiss动画有时候不需要，因此增加dismissWithOutAnima方法
 
+***
 ##2016-03-05
 修改名字ViewCreate->BasePopup
 
