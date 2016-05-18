@@ -300,7 +300,7 @@ public abstract class BasePopupWindow implements BasePopup {
      */
     public void dismiss() {
         try {
-            if (curExitAnima != null) {
+            if (curExitAnima != null && mAnimaView != null) {
                 curExitAnima.setAnimationListener(mAnimationListener);
                 mAnimaView.clearAnimation();
                 mAnimaView.startAnimation(curExitAnima);
@@ -313,6 +313,18 @@ public abstract class BasePopupWindow implements BasePopup {
             else {
                 mPopupWindow.dismiss();
             }
+        } catch (Exception e) {
+            Log.d(TAG, "dismiss error");
+        }
+    }
+    /**
+     * 直接消掉popup而不需要动画
+     */
+    public void dismissWithOutAnima() {
+        try {
+            if (curExitAnima != null && mAnimaView != null) mAnimaView.clearAnimation();
+            if (curExitAnimator != null) curExitAnimator.removeAllListeners();
+            mPopupWindow.dismiss();
         } catch (Exception e) {
             Log.d(TAG, "dismiss error");
         }
