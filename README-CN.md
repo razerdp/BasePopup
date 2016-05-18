@@ -20,7 +20,7 @@ Add it in your root build.gradle at the end of repositories:
 **Step 2.** 添加依赖
 ```xml
 	dependencies {
-	        compile 'com.github.razerdp:BasePopup:v1.1.2'
+	        compile 'com.github.razerdp:BasePopup:v1.1.5'
 	}
 ```
 
