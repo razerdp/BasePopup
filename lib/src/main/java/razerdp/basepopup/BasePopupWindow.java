@@ -40,6 +40,9 @@ public abstract class BasePopupWindow implements BasePopup {
     protected Animation curAnima;
     protected Animator curAnimator;
 
+    private boolean isExitAnimaPlaying = false;
+
+
     public BasePopupWindow(Activity context) {
         initView(context, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
@@ -301,14 +304,20 @@ public abstract class BasePopupWindow implements BasePopup {
     public void dismiss() {
         try {
             if (curExitAnima != null && mAnimaView != null) {
-                curExitAnima.setAnimationListener(mAnimationListener);
-                mAnimaView.clearAnimation();
-                mAnimaView.startAnimation(curExitAnima);
+                if (!isExitAnimaPlaying) {
+                    curExitAnima.setAnimationListener(mAnimationListener);
+                    mAnimaView.clearAnimation();
+                    mAnimaView.startAnimation(curExitAnima);
+                    isExitAnimaPlaying = true;
+                }
             }
             else if (curExitAnimator != null) {
-                curExitAnimator.removeListener(mAnimatorListener);
-                curExitAnimator.addListener(mAnimatorListener);
-                curExitAnimator.start();
+                if (!isExitAnimaPlaying) {
+                    curExitAnimator.removeListener(mAnimatorListener);
+                    curExitAnimator.addListener(mAnimatorListener);
+                    curExitAnimator.start();
+                    isExitAnimaPlaying = true;
+                }
             }
             else {
                 mPopupWindow.dismiss();
@@ -340,11 +349,12 @@ public abstract class BasePopupWindow implements BasePopup {
         @Override
         public void onAnimationEnd(Animator animation) {
             mPopupWindow.dismiss();
+            isExitAnimaPlaying = false;
         }
 
         @Override
         public void onAnimationCancel(Animator animation) {
-
+            isExitAnimaPlaying = false;
         }
 
         @Override
@@ -362,6 +372,7 @@ public abstract class BasePopupWindow implements BasePopup {
         @Override
         public void onAnimationEnd(Animation animation) {
             mPopupWindow.dismiss();
+            isExitAnimaPlaying = false;
         }
 
         @Override
