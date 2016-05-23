@@ -1,0 +1,8 @@
+<resources>
+
+    <style name="PopupAnimaFade" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/basepopup_fade_in</item>
+        <item name="android:windowExitAnimation">@anim/basepopup_fade_out</item>
+    </style>
+
+</resources>

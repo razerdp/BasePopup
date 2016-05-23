@@ -18,6 +18,8 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.PopupWindow;
 
+import razerdp.library.R;
+
 /**
  * Created by 大灯泡 on 2016/1/14.
  * 抽象通用popupwindow的父类
@@ -42,6 +44,8 @@ public abstract class BasePopupWindow implements BasePopup {
 
     private boolean isExitAnimaPlaying = false;
 
+    private boolean needPopupFadeAnima = true;
+
 
     public BasePopupWindow(Activity context) {
         initView(context, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -63,7 +67,7 @@ public abstract class BasePopupWindow implements BasePopup {
         mPopupWindow.setFocusable(true);
         mPopupWindow.setOutsideTouchable(true);
         //无需动画
-        mPopupWindow.setAnimationStyle(0);
+        mPopupWindow.setAnimationStyle(R.style.PopupAnimaFade);
 
         //=============================================================为外层的view添加点击事件，并设置点击消失
         mAnimaView = getAnimaView();
@@ -131,6 +135,29 @@ public abstract class BasePopupWindow implements BasePopup {
      */
     public Animator getExitAnimator() {
         return null;
+    }
+
+    /**
+     * popupwindow是否需要淡入淡出
+     * @param needPopupFadeAnima
+     */
+    public void setNeedPopupFade(boolean needPopupFadeAnima) {
+        this.needPopupFadeAnima = needPopupFadeAnima;
+        mPopupWindow.setAnimationStyle(needPopupFadeAnima ? R.style.PopupAnimaFade : 0);
+    }
+
+    public boolean getNeedPopupFade() {
+        return this.needPopupFadeAnima;
+    }
+
+    /**
+     * 设置popup的动画style
+     * @param animaStyleRes
+     */
+    public void setPopupAnimaStyle(int animaStyleRes) {
+        if (animaStyleRes > 0) {
+            mPopupWindow.setAnimationStyle(animaStyleRes);
+        }
     }
 
     //------------------------------------------showPopup-----------------------------------------------

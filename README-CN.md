@@ -20,7 +20,7 @@ Add it in your root build.gradle at the end of repositories:
 **Step 2.** 添加依赖
 ```xml
 	dependencies {
-	        compile 'com.github.razerdp:BasePopup:v1.1.6'
+	        compile 'com.github.razerdp:BasePopup:v1.1.7'
 	}
 ```
 
@@ -221,6 +221,8 @@ https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md
 	+ setAdjustInputMethod()：popup是否随着输入法弹出而自适应
 	+ getPopupViewById()：工具方法，不用写那么多LayoutInflate.from(context)
 	+ setViewClickListener()：工具方法，用于方便您设置onClickListener（多个View共用一个listener哦）
+	+ setNeedPopupFade()：设置popup是否淡入淡出，默认为淡入淡出(这个参数将会对整个popup动画哦)
+	+ setPopupAnimaStyle()：设定您喜欢的popup动画style(就跟您平时使用popup一样弄得动画style)
  - show方法：
 	+ showPopupWindow():默认将popup显示到当前窗口
 	+ showPopupWindow(int res)：将popup显示到对应的id控件上
