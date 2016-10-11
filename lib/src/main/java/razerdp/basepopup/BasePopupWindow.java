@@ -294,9 +294,9 @@ public abstract class BasePopupWindow implements BasePopup {
     private void fitPopupWindowOverStatusBar() {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             try {
-                Field mClippingEnabled = PopupWindow.class.getDeclaredField("mClippingEnabled");
-                mClippingEnabled.setAccessible(true);
-                mClippingEnabled.set(mPopupWindow, false);
+                Field mLayoutInScreen = PopupWindow.class.getDeclaredField("mLayoutInScreen");
+                mLayoutInScreen.setAccessible(true);
+                mLayoutInScreen.set(mPopupWindow, true);
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
