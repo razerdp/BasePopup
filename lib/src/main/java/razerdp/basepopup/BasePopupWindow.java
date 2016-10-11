@@ -296,7 +296,7 @@ public abstract class BasePopupWindow implements BasePopup {
     }
 
     private void fitPopupWindowOverStatusBar(boolean needFullScreen) {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             try {
                 Field mLayoutInScreen = PopupWindow.class.getDeclaredField("mLayoutInScreen");
                 mLayoutInScreen.setAccessible(true);
