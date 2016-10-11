@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_demo"
     tools:context="razerdp.demo.DemoActivity"
-    >
+    tools:showIn="@layout/activity_demo">
+
     <fragment
         android:id="@+id/popup_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:name="razerdp.demo.fragment.ScalePopupFrag"
-        />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </RelativeLayout>

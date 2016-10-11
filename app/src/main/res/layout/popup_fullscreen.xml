@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#88ff0000"
+    >
+
+    <RelativeLayout
+        android:id="@+id/popup_anima"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="25dp"
+        android:background="@drawable/bg_dialog">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:padding="40dp"
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="该popup用于测试全屏的popup在API21以上是否会被statusbar挡住的情况"
+            android:textColor="#3dd1a5"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+</RelativeLayout>
