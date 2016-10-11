@@ -227,6 +227,8 @@ https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md
 	+ showPopupWindow():默认将popup显示到当前窗口
 	+ showPopupWindow(int res)：将popup显示到对应的id控件上
 	+ showPopupWindow(View v)：将popup显示到view上
+ - 一些别的方法：
+ 	+ setPopupWindowFullScreen(boolean)：popup是否可以覆盖状态栏（全屏）
 
 # 代码解析：
 http://www.jianshu.com/p/069f57e14a9c

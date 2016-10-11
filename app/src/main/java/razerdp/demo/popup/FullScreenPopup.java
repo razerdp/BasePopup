@@ -20,6 +20,8 @@ public class FullScreenPopup extends BasePopupWindow {
 
     public FullScreenPopup(Activity context) {
         super(context);
+        /**全屏popup*/
+        setPopupWindowFullScreen(true);
     }
 
     @Override protected Animation getShowAnimation() {
