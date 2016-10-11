@@ -69,9 +69,6 @@ public abstract class BasePopupWindow implements BasePopup {
         mPopupWindow.setOutsideTouchable(true);
         //默认是渐入动画
         mPopupWindow.setAnimationStyle(R.style.PopupAnimaFade);
-        mPopupWindow.setClippingEnabled(false);
-        //修正api>21情况下的popupwindow在statusbar下的问题
-        fitPopupWindowOverStatusBar();
 
         //=============================================================为外层的view添加点击事件，并设置点击消失
         mAnimaView = getAnimaView();
@@ -281,6 +278,13 @@ public abstract class BasePopupWindow implements BasePopup {
     }
 
     /**
+     * 是否允许popupwindow覆盖屏幕（包含状态栏）
+     */
+    public void setPopupWindowFullScreen(boolean needFullScreen) {
+        fitPopupWindowOverStatusBar(needFullScreen);
+    }
+
+    /**
      * 这个方法用于简化您为View设置OnClickListener事件，多个View将会使用同一个点击事件
      */
     protected void setViewClickListener(View.OnClickListener listener, View... views) {
@@ -291,12 +295,12 @@ public abstract class BasePopupWindow implements BasePopup {
         }
     }
 
-    private void fitPopupWindowOverStatusBar() {
+    private void fitPopupWindowOverStatusBar(boolean needFullScreen) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             try {
                 Field mLayoutInScreen = PopupWindow.class.getDeclaredField("mLayoutInScreen");
                 mLayoutInScreen.setAccessible(true);
-                mLayoutInScreen.set(mPopupWindow, true);
+                mLayoutInScreen.set(mPopupWindow, needFullScreen);
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {

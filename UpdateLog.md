@@ -1,7 +1,7 @@
 # BasePopup
 </br>
 ##2016-10-11
-修正api>21下出现的popup无法突破状态栏的问题
+修正api>21下出现的popup无法突破状态栏的问题(method:setPopupWindowFullScreen(boolean))
 
 ***
 ##2016-05-20
