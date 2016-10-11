@@ -1,0 +1,62 @@
+package razerdp.demo.popup;
+
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.app.Activity;
+import android.view.View;
+import android.view.animation.Animation;
+import razerdp.basepopup.BasePopupWindow;
+import razerdp.basepopup.R;
+import razerdp.demo.interpolator.OverShootInterpolator;
+
+/**
+ * Created by 大灯泡 on 2016/10/11.
+ *
+ * 全屏的popup
+ */
+
+public class FullScreenPopup extends BasePopupWindow {
+
+    public FullScreenPopup(Activity context) {
+        super(context);
+    }
+
+    @Override protected Animation getShowAnimation() {
+        return null;
+    }
+
+    @Override
+    public Animator getShowAnimator() {
+        AnimatorSet set;
+        set = new AnimatorSet();
+        ObjectAnimator transAnimator = ObjectAnimator.ofFloat(mAnimaView, "translationY", 250, 0).setDuration(600);
+        transAnimator.setInterpolator(new OverShootInterpolator());
+        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mAnimaView, "alpha", 0.4f, 1).setDuration(250 * 3 / 2);
+        set.playTogether(transAnimator, alphaAnimator);
+        return set;
+    }
+
+    @Override
+    public Animator getExitAnimator() {
+        AnimatorSet set;
+        set = new AnimatorSet();
+        ObjectAnimator transAnimator = ObjectAnimator.ofFloat(mAnimaView, "translationY", 0, 250).setDuration(600);
+        transAnimator.setInterpolator(new OverShootInterpolator(-6));
+        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mAnimaView, "alpha", 1f, 0).setDuration(800);
+        set.playTogether(transAnimator, alphaAnimator);
+        return set;
+    }
+
+    @Override protected View getClickToDismissView() {
+        return mPopupView;
+    }
+
+    @Override public View getPopupView() {
+        return getPopupViewById(R.layout.popup_fullscreen);
+    }
+
+    @Override public View getAnimaView() {
+        return findViewById(R.id.popup_anima);
+    }
+}
