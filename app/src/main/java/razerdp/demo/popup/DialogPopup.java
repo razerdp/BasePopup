@@ -43,11 +43,11 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 
     @Override
     protected View getClickToDismissView() {
-        return mPopupView;
+        return getPopupRootView();
     }
 
     @Override
-    public View getPopupView() {
+    public View getPopupRootView() {
         return getPopupViewById(R.layout.popup_dialog);
     }
 
@@ -60,10 +60,10 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.ok:
-                Toast.makeText(mContext,"click the ok button",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "click the ok button", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.cancel:
-                Toast.makeText(mContext,"click the cancel button",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "click the cancel button", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;

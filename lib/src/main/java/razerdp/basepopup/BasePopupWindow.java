@@ -31,10 +31,10 @@ public abstract class BasePopupWindow implements BasePopup {
     //元素定义
     protected PopupWindow mPopupWindow;
     //popup视图
-    protected View mPopupView;
+    private View mPopupView;
     protected View mAnimaView;
     protected View mDismissView;
-    protected Activity mContext;
+    private Activity mContext;
     //是否自动弹出输入框(default:false)
     private boolean autoShowInputMethod = false;
     private OnDismissListener mOnDismissListener;
@@ -59,10 +59,10 @@ public abstract class BasePopupWindow implements BasePopup {
     private void initView(Activity context, int w, int h) {
         mContext = context;
 
-        mPopupView = getPopupView();
-        mPopupView.setFocusableInTouchMode(true);
+        mPopupView = getPopupRootView();
+        getPopupRootView().setFocusableInTouchMode(true);
         //默认占满全屏
-        mPopupWindow = new PopupWindow(mPopupView, w, h);
+        mPopupWindow = new PopupWindow(getPopupRootView(), w, h);
         //指定透明背景，back键相关
         mPopupWindow.setBackgroundDrawable(new ColorDrawable());
         mPopupWindow.setFocusable(true);
@@ -197,11 +197,11 @@ public abstract class BasePopupWindow implements BasePopup {
         }
         //传递了res
         if (res != 0 && v == null) {
-            mPopupWindow.showAtLocation(mContext.findViewById(res), Gravity.CENTER, 0, 0);
+            mPopupWindow.showAtLocation(getContext().findViewById(res), Gravity.CENTER, 0, 0);
         }
         //什么都没传递，取顶级view的id
         if (res == 0 && v == null) {
-            mPopupWindow.showAtLocation(mContext.findViewById(android.R.id.content), Gravity.CENTER, 0, 0);
+            mPopupWindow.showAtLocation(getContext().findViewById(android.R.id.content), Gravity.CENTER, 0, 0);
         }
         if (curAnima != null && mAnimaView != null) {
             mAnimaView.clearAnimation();
@@ -264,15 +264,15 @@ public abstract class BasePopupWindow implements BasePopup {
      */
     public View getPopupViewById(int resId) {
         if (resId != 0) {
-            return LayoutInflater.from(mContext).inflate(resId, null);
+            return LayoutInflater.from(getContext()).inflate(resId, null);
         } else {
             return null;
         }
     }
 
     protected View findViewById(int id) {
-        if (mPopupView != null && id != 0) {
-            return mPopupView.findViewById(id);
+        if (getPopupRootView() != null && id != 0) {
+            return getPopupRootView().findViewById(id);
         }
         return null;
     }
@@ -331,6 +331,16 @@ public abstract class BasePopupWindow implements BasePopup {
                 }
             });
         }
+    }
+
+
+    public Activity getContext() {
+        return mContext;
+    }
+
+
+    public View getPopupRootView() {
+        return mPopupView;
     }
 
     //------------------------------------------状态控制-----------------------------------------------

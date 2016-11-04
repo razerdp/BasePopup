@@ -51,10 +51,10 @@ public class FullScreenPopup extends BasePopupWindow {
     }
 
     @Override protected View getClickToDismissView() {
-        return mPopupView;
+        return getPopupRootView();
     }
 
-    @Override public View getPopupView() {
+    @Override public View getPopupRootView() {
         return getPopupViewById(R.layout.popup_fullscreen);
     }
 
