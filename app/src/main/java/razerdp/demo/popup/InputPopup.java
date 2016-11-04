@@ -24,9 +24,9 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
 
     public InputPopup(Activity context) {
         super(context);
-        mCancelButton= (Button) mPopupView.findViewById(R.id.btn_cancel);
-        mCompeleteButton= (Button) mPopupView.findViewById(R.id.btn_Compelete);
-        mInputEdittext= (EditText) mPopupView.findViewById(R.id.ed_input);
+        mCancelButton= (Button) getPopupRootView().findViewById(R.id.btn_cancel);
+        mCompeleteButton= (Button) getPopupRootView().findViewById(R.id.btn_Compelete);
+        mInputEdittext= (EditText) getPopupRootView().findViewById(R.id.ed_input);
 
         setAutoShowInputMethod(true);
         bindEvent();
@@ -57,17 +57,17 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
 
     @Override
     protected View getClickToDismissView() {
-        return mPopupView;
+        return getPopupRootView();
     }
 
     @Override
-    public View getPopupView() {
-        return LayoutInflater.from(mContext).inflate(R.layout.popup_input,null);
+    public View getPopupRootView() {
+        return LayoutInflater.from(getContext()).inflate(R.layout.popup_input, null);
     }
 
     @Override
     public View getAnimaView() {
-        return mPopupView.findViewById(R.id.popup_anima);
+        return getPopupRootView().findViewById(R.id.popup_anima);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
                 dismiss();
                 break;
             case R.id.btn_Compelete:
-                ToastUtils.ToastMessage(mContext,mInputEdittext.getText().toString());
+                ToastUtils.ToastMessage(getContext(), mInputEdittext.getText().toString());
                 dismiss();
                 break;
             default:

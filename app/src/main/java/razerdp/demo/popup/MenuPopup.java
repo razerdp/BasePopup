@@ -29,9 +29,9 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
     public MenuPopup(Activity context) {
         super(context, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         viewLocation=new int[2];
-        mPopupView.findViewById(R.id.tx_1).setOnClickListener(this);
-        mPopupView.findViewById(R.id.tx_2).setOnClickListener(this);
-        mPopupView.findViewById(R.id.tx_3).setOnClickListener(this);
+        getPopupRootView().findViewById(R.id.tx_1).setOnClickListener(this);
+        getPopupRootView().findViewById(R.id.tx_2).setOnClickListener(this);
+        getPopupRootView().findViewById(R.id.tx_3).setOnClickListener(this);
     }
 
     @Override
@@ -77,26 +77,26 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
     }
 
     @Override
-    public View getPopupView() {
+    public View getPopupRootView() {
         return getPopupViewById(R.layout.popup_menu);
     }
 
     @Override
     public View getAnimaView() {
-        return mPopupView.findViewById(R.id.popup_contianer);
+        return getPopupRootView().findViewById(R.id.popup_contianer);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.tx_1:
-                ToastUtils.ToastMessage(mContext,"click tx_1");
+                ToastUtils.ToastMessage(getContext(), "click tx_1");
                 break;
             case R.id.tx_2:
-                ToastUtils.ToastMessage(mContext,"click tx_2");
+                ToastUtils.ToastMessage(getContext(), "click tx_2");
                 break;
             case R.id.tx_3:
-                ToastUtils.ToastMessage(mContext,"click tx_3");
+                ToastUtils.ToastMessage(getContext(), "click tx_3");
                 break;
             default:
                 break;
