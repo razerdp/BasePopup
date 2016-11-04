@@ -33,7 +33,7 @@ public class ListPopup extends BasePopupWindow {
     }
     private ListPopup(Activity context,Builder builder){
         this(context);
-        mListView= (ListView) mPopupView.findViewById(R.id.popup_list);
+        mListView= (ListView) getPopupRootView().findViewById(R.id.popup_list);
         setAdapter(context,builder);
     }
 
@@ -186,17 +186,17 @@ public class ListPopup extends BasePopupWindow {
 
     @Override
     protected View getClickToDismissView() {
-        return mPopupView;
+        return getPopupRootView();
     }
 
     @Override
-    public View getPopupView() {
+    public View getPopupRootView() {
         return getPopupViewById(R.layout.popup_list);
     }
 
     @Override
     public View getAnimaView() {
-        return mPopupView.findViewById(R.id.popup_anima);
+        return getPopupRootView().findViewById(R.id.popup_anima);
     }
 
     @Override

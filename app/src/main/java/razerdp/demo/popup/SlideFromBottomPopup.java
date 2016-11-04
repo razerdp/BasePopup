@@ -31,8 +31,8 @@ public class SlideFromBottomPopup extends BasePopupWindow implements View.OnClic
     }
 
     @Override
-    public View getPopupView() {
-        popupView= LayoutInflater.from(mContext).inflate(R.layout.popup_slide_from_bottom,null);
+    public View getPopupRootView() {
+        popupView= LayoutInflater.from(getContext()).inflate(R.layout.popup_slide_from_bottom, null);
         return popupView;
     }
 
@@ -54,13 +54,13 @@ public class SlideFromBottomPopup extends BasePopupWindow implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.tx_1:
-                ToastUtils.ToastMessage(mContext,"click tx_1");
+                ToastUtils.ToastMessage(getContext(), "click tx_1");
                 break;
             case R.id.tx_2:
-                ToastUtils.ToastMessage(mContext,"click tx_2");
+                ToastUtils.ToastMessage(getContext(), "click tx_2");
                 break;
             case R.id.tx_3:
-                ToastUtils.ToastMessage(mContext,"click tx_3");
+                ToastUtils.ToastMessage(getContext(), "click tx_3");
                 break;
             default:
                 break;

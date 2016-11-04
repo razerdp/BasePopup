@@ -46,11 +46,11 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
         viewLocation = new int[2];
         mHandler=new Handler();
 
-        mLikeAnimaView = (ImageView) mPopupView.findViewById(R.id.iv_like);
-        mLikeText = (TextView) mPopupView.findViewById(R.id.tv_like);
+        mLikeAnimaView = (ImageView) getPopupRootView().findViewById(R.id.iv_like);
+        mLikeText = (TextView) getPopupRootView().findViewById(R.id.tv_like);
 
-        mLikeClikcLayout = (RelativeLayout) mPopupView.findViewById(R.id.item_like);
-        mCommentClickLayout = (RelativeLayout) mPopupView.findViewById(R.id.item_comment);
+        mLikeClikcLayout = (RelativeLayout) getPopupRootView().findViewById(R.id.item_like);
+        mCommentClickLayout = (RelativeLayout) getPopupRootView().findViewById(R.id.item_comment);
 
         mLikeClikcLayout.setOnClickListener(this);
         mCommentClickLayout.setOnClickListener(this);
@@ -109,7 +109,7 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
             //参照点为view的右上角，偏移值为：x方向距离参照view的一定倍数距离
             //垂直方向自身减去popup自身高度的一半（确保在中间）
             mPopupWindow.showAtLocation(v, Gravity.RIGHT | Gravity.TOP, (int) (v.getWidth() * 1.8),
-                    viewLocation[1] - DimensUtils.dipToPx(mContext,15f));
+                    viewLocation[1] - DimensUtils.dipToPx(getContext(), 15f));
 
             if (getShowAnimation() != null && getAnimaView() != null) {
                 getAnimaView().startAnimation(getShowAnimation());
@@ -132,13 +132,13 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
     }
 
     @Override
-    public View getPopupView() {
-        return LayoutInflater.from(mContext).inflate(R.layout.popup_comment, null);
+    public View getPopupRootView() {
+        return LayoutInflater.from(getContext()).inflate(R.layout.popup_comment, null);
     }
 
     @Override
     public View getAnimaView() {
-        return mPopupView.findViewById(R.id.comment_popup_contianer);
+        return getPopupRootView().findViewById(R.id.comment_popup_contianer);
     }
     //=============================================================Getter/Setter
 
