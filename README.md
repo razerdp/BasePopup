@@ -178,7 +178,7 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
     }
 
     @Override
-    protected Animation getShowAnimation() {
+    protected Animation initShowAnimation() {
         AnimationSet set=new AnimationSet(false);
         Animation shakeAnima=new RotateAnimation(0,15,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
         shakeAnima.setInterpolator(new CycleInterpolator(5));
