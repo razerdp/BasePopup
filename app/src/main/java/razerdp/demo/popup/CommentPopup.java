@@ -46,11 +46,11 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
         viewLocation = new int[2];
         mHandler=new Handler();
 
-        mLikeAnimaView = (ImageView) getPopupRootView().findViewById(R.id.iv_like);
-        mLikeText = (TextView) getPopupRootView().findViewById(R.id.tv_like);
+        mLikeAnimaView = (ImageView) findViewById(R.id.iv_like);
+        mLikeText = (TextView) findViewById(R.id.tv_like);
 
-        mLikeClikcLayout = (RelativeLayout) getPopupRootView().findViewById(R.id.item_like);
-        mCommentClickLayout = (RelativeLayout) getPopupRootView().findViewById(R.id.item_comment);
+        mLikeClikcLayout = (RelativeLayout) findViewById(R.id.item_like);
+        mCommentClickLayout = (RelativeLayout) findViewById(R.id.item_comment);
 
         mLikeClikcLayout.setOnClickListener(this);
         mCommentClickLayout.setOnClickListener(this);
@@ -109,10 +109,10 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
             //参照点为view的右上角，偏移值为：x方向距离参照view的一定倍数距离
             //垂直方向自身减去popup自身高度的一半（确保在中间）
             mPopupWindow.showAtLocation(v, Gravity.RIGHT | Gravity.TOP, (int) (v.getWidth() * 1.8),
-                    viewLocation[1] - DimensUtils.dipToPx(getContext(), 15f));
+                    viewLocation[1] - DimensUtils.dipToPx(getContext(),15f));
 
-            if (getShowAnimation() != null && getAnimaView() != null) {
-                getAnimaView().startAnimation(getShowAnimation());
+            if (initShowAnimation() != null && initAnimaView() != null) {
+                initAnimaView().startAnimation(initShowAnimation());
             }
         } catch (Exception e) {
             Log.w("error","error");
@@ -120,25 +120,25 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
     }
 
     @Override
-    protected Animation getShowAnimation() {
+    protected Animation initShowAnimation() {
         return getScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF, 1.0f,
                 Animation.RELATIVE_TO_SELF, 0.0f);
     }
 
     @Override
-    public Animation getExitAnimation() {
+    public Animation initExitAnimation() {
         return getScaleAnimation(1.0f, 0.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF, 1.0f,
                 Animation.RELATIVE_TO_SELF, 0.0f);
     }
 
     @Override
-    public View getPopupRootView() {
+    public View onCreatePopupView() {
         return LayoutInflater.from(getContext()).inflate(R.layout.popup_comment, null);
     }
 
     @Override
-    public View getAnimaView() {
-        return getPopupRootView().findViewById(R.id.comment_popup_contianer);
+    public View initAnimaView() {
+        return getPopupWindowView().findViewById(R.id.comment_popup_contianer);
     }
     //=============================================================Getter/Setter
 
@@ -179,7 +179,7 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
     //=============================================================abortMethods
 
     @Override
-    protected View getClickToDismissView() {
+    public View getClickToDismissView() {
         return null;
     }
 }

@@ -33,7 +33,7 @@ public class ListPopup extends BasePopupWindow {
     }
     private ListPopup(Activity context,Builder builder){
         this(context);
-        mListView= (ListView) getPopupRootView().findViewById(R.id.popup_list);
+        mListView= (ListView) findViewById(R.id.popup_list);
         setAdapter(context,builder);
     }
 
@@ -171,12 +171,12 @@ public class ListPopup extends BasePopupWindow {
     }
     //=============================================================super methods
     @Override
-    protected Animation getShowAnimation() {
+    protected Animation initShowAnimation() {
         return null;
     }
 
     @Override
-    public Animator getShowAnimator() {
+    public Animator initShowAnimator() {
         AnimatorSet set = new AnimatorSet();
         set.playTogether(ObjectAnimator.ofFloat(mAnimaView, "rotationX", 90f, 0f).setDuration(400),
                 ObjectAnimator.ofFloat(mAnimaView, "translationY", 250f, 0f).setDuration(400),
@@ -185,22 +185,22 @@ public class ListPopup extends BasePopupWindow {
     }
 
     @Override
-    protected View getClickToDismissView() {
-        return getPopupRootView();
+    public View getClickToDismissView() {
+        return getPopupWindowView();
     }
 
     @Override
-    public View getPopupRootView() {
-        return getPopupViewById(R.layout.popup_list);
+    public View onCreatePopupView() {
+        return createPopupById(R.layout.popup_list);
     }
 
     @Override
-    public View getAnimaView() {
-        return getPopupRootView().findViewById(R.id.popup_anima);
+    public View initAnimaView() {
+        return findViewById(R.id.popup_anima);
     }
 
     @Override
-    public Animator getExitAnimator() {
+    public Animator initExitAnimator() {
         AnimatorSet set = new AnimatorSet();
         set.playTogether(ObjectAnimator.ofFloat(mAnimaView, "rotationX", 0f, 90f).setDuration(400),
                 ObjectAnimator.ofFloat(mAnimaView, "translationY", 0f, 250f).setDuration(400),

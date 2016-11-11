@@ -2,6 +2,25 @@
 抽象出一个方便自定义的Basepopup类
 
 
+##请注意：
+
+因为在使用过程中发现了一些方法的命名存在误导性，这个问题是因为在初期写下了方法名之后一直忘了改，因此在 **v 1.3.0**之后这些名字将会改变，具体改动如下：
+
+| 原方法名 | 现方法名 | 备注 |
+| -------- | :-----------: | :---------: |
+| getPopupView() | onCreatePopupView() | 本方法改名为的是减少误导性 |
+| getAnimaView() | initAnimaView() | 理由同上 |
+| mContext | getContext() | context将会改为private，需要使用方法获取 |
+| mPopupView | getPopupWindowView() | mPopupView将会改为private，需要用方法获取 |
+| getShowAnimation()/getExitAnimation() |**【protect】** initShowAnimation()/initExitAnimation() | getShowAnimation()/getExitAnimation()将会改为获取进行过初始化的animation |
+| getShowAnimator()/getExitAnimator() |**【protect】** initShowAnimator()/initExitAnimator() | getShowAnimator()/getExitAnimator()将会改为获取进行过初始化的animator |
+
+
+事实上在下也清楚有很多方法命名还是不太好，如果您有更好的命名欢迎提交pr，同时这次的改动对您的使用造成万分不便，在下深表歉意，希望得到您的谅解。
+
+
+---
+
 ### 最低SDK版本要求 : API 11
 
 # 依赖  [![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
@@ -20,7 +39,7 @@ Add it in your root build.gradle at the end of repositories:
 **Step 2.** 添加依赖
 ```xml
 	dependencies {
-	        compile 'com.github.razerdp:BasePopup:v1.2.0'
+	        compile 'com.github.razerdp:BasePopup:v1.3.0'
 	}
 ```
 
@@ -154,16 +173,16 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 
     @Override
     protected View getClickToDismissView() {
-        return mPopupView;
+        return getPopupWindowView();
     }
 
     @Override
-    public View getPopupView() {
-        return getPopupViewById(R.layout.popup_dialog);
+    public View onCreatePopupView() {
+        return createPopupById(R.layout.popup_dialog);
     }
 
     @Override
-    public View getAnimaView() {
+    public View initAnimaView() {
         return findViewById(R.id.popup_anima);
     }
 
@@ -171,10 +190,10 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.ok:
-                Toast.makeText(mContext,"click the ok button",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"click the ok button",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.cancel:
-                Toast.makeText(mContext,"click the cancel button",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"click the cancel button",Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
@@ -189,7 +208,8 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 例如
 
 ```java
- new DialogPopup(context).showPopupWindow();
+    DialogPopup popup = new DialogPopup(context);
+    popup.showPopupWindow();
 ```
 
 # 一些例子
@@ -208,21 +228,22 @@ https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md
 本项目拥有的方法如下：
 
  - 必须实现的抽象方法：
-	+ getPopupView()：得到popupwindow的主体，一般是在xml文件写好然后inflate出来并返回
-	+ getAnimaView()：得到用于展示动画的view，一般为了做到蒙层效果，我们的xml都会给一个灰色半透明的底层然后才是给定展示的popup（详情见demo）
-	+ getShowAnimation()：展示popup的动画
+	+ onCreatePopupView()：得到popupwindow的主体，一般是在xml文件写好然后inflate出来并返回，推荐使用createPopupById()方法以减少代码
+	+ initAnimaView()：得到用于展示动画的view，一般为了做到蒙层效果，我们的xml都会给一个灰色半透明的底层然后才是给定展示的popup（详情见demo）
+	+ initShowAnimation()：展示popup的动画
 	+ getClickToDismissView()：点击触发dismiss的view
  - 非必须实现的公有方法：
-	+ getShowAnimator()：同getShowAnimation，不过有些时候用animator更加的丰富
+	+ initShowAnimator()：同getShowAnimation，不过有些时候用animator更加的丰富
 	+ getInputView()：得到给定需要输入的view，一般用于包含edittext的popup
-	+ getExitAnimation()：popup执行dismiss时的退出动画
-	+ getExitAnimator()：同上
+	+ initExitAnimation()：popup执行dismiss时的退出动画
+	+ initExitAnimator()：同上
 	+ setAutoShowInputMethod()：是否自动弹出输入法
 	+ setAdjustInputMethod()：popup是否随着输入法弹出而自适应
 	+ getPopupViewById()：工具方法，不用写那么多LayoutInflate.from(context)
 	+ setViewClickListener()：工具方法，用于方便您设置onClickListener（多个View共用一个listener哦）
 	+ setNeedPopupFade()：设置popup是否淡入淡出，默认为淡入淡出(这个参数将会对整个popup动画哦)
 	+ setPopupAnimaStyle()：设定您喜欢的popup动画style(就跟您平时使用popup一样弄得动画style)
+	+ 以及各种getter/setter
  - show方法：
 	+ showPopupWindow():默认将popup显示到当前窗口
 	+ showPopupWindow(int res)：将popup显示到对应的id控件上

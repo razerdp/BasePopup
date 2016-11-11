@@ -24,24 +24,24 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener{
 
 
     @Override
-    protected Animation getShowAnimation() {
+    protected Animation initShowAnimation() {
         return getDefaultScaleAnimation();
     }
 
 
     @Override
-    protected View getClickToDismissView() {
+    public View getClickToDismissView() {
         return popupView.findViewById(R.id.click_to_dismiss);
     }
 
     @Override
-    public View getPopupRootView() {
-        popupView= LayoutInflater.from(getContext()).inflate(R.layout.popup_normal, null);
+    public View onCreatePopupView() {
+        popupView= LayoutInflater.from(getContext()).inflate(R.layout.popup_normal,null);
         return popupView;
     }
 
     @Override
-    public View getAnimaView() {
+    public View initAnimaView() {
         return popupView.findViewById(R.id.popup_anima);
     }
 
@@ -58,13 +58,13 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.tx_1:
-                ToastUtils.ToastMessage(getContext(), "click tx_1");
+                ToastUtils.ToastMessage(getContext(),"click tx_1");
                 break;
             case R.id.tx_2:
-                ToastUtils.ToastMessage(getContext(), "click tx_2");
+                ToastUtils.ToastMessage(getContext(),"click tx_2");
                 break;
             case R.id.tx_3:
-                ToastUtils.ToastMessage(getContext(), "click tx_3");
+                ToastUtils.ToastMessage(getContext(),"click tx_3");
                 break;
             default:
                 break;
