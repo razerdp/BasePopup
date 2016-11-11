@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.util.Log;
@@ -20,6 +21,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.PopupWindow;
 
 import java.lang.reflect.Field;
+
 import razerdp.library.R;
 
 /**
@@ -32,17 +34,18 @@ public abstract class BasePopupWindow implements BasePopup {
     protected PopupWindow mPopupWindow;
     //popup视图
     private View mPopupView;
+    private Activity mContext;
     protected View mAnimaView;
     protected View mDismissView;
-    private Activity mContext;
     //是否自动弹出输入框(default:false)
     private boolean autoShowInputMethod = false;
     private OnDismissListener mOnDismissListener;
     //anima
-    protected Animation curExitAnima;
-    protected Animator curExitAnimator;
-    protected Animation curAnima;
-    protected Animator curAnimator;
+
+    private Animation mShowAnimation;
+    private Animator mShowAnimator;
+    private Animation mExitAnimation;
+    private Animator mExitAnimator;
 
     private boolean isExitAnimaPlaying = false;
 
@@ -59,10 +62,10 @@ public abstract class BasePopupWindow implements BasePopup {
     private void initView(Activity context, int w, int h) {
         mContext = context;
 
-        mPopupView = getPopupRootView();
-        getPopupRootView().setFocusableInTouchMode(true);
+        mPopupView = onCreatePopupView();
+        mPopupView.setFocusableInTouchMode(true);
         //默认占满全屏
-        mPopupWindow = new PopupWindow(getPopupRootView(), w, h);
+        mPopupWindow = new PopupWindow(mPopupView, w, h);
         //指定透明背景，back键相关
         mPopupWindow.setBackgroundDrawable(new ColorDrawable());
         mPopupWindow.setFocusable(true);
@@ -71,7 +74,7 @@ public abstract class BasePopupWindow implements BasePopup {
         mPopupWindow.setAnimationStyle(R.style.PopupAnimaFade);
 
         //=============================================================为外层的view添加点击事件，并设置点击消失
-        mAnimaView = getAnimaView();
+        mAnimaView = initAnimaView();
         mDismissView = getClickToDismissView();
         if (mDismissView != null) {
             mDismissView.setOnClickListener(new View.OnClickListener() {
@@ -90,10 +93,10 @@ public abstract class BasePopupWindow implements BasePopup {
             }
         }
         //=============================================================元素获取
-        curAnima = getShowAnimation();
-        curAnimator = getShowAnimator();
-        curExitAnima = getExitAnimation();
-        curExitAnimator = getExitAnimator();
+        mShowAnimation = initShowAnimation();
+        mShowAnimator = initShowAnimator();
+        mExitAnimation = initExitAnimation();
+        mExitAnimator = initExitAnimator();
     }
 
     //------------------------------------------抽象-----------------------------------------------
@@ -101,17 +104,17 @@ public abstract class BasePopupWindow implements BasePopup {
     /**
      * PopupWindow展示出来后，需要执行动画的View.一般为蒙层之上的View
      */
-    protected abstract Animation getShowAnimation();
+    protected abstract Animation initShowAnimation();
 
     /**
      * 设置一个点击后触发dismiss PopupWindow的View，一般为蒙层
      */
-    protected abstract View getClickToDismissView();
+    public abstract View getClickToDismissView();
 
     /**
      * 设置展示动画View的属性动画
      */
-    public Animator getShowAnimator() {
+    protected Animator initShowAnimator() {
         return null;
     }
 
@@ -125,14 +128,14 @@ public abstract class BasePopupWindow implements BasePopup {
     /**
      * 设置PopupWindow销毁时的退出动画
      */
-    public Animation getExitAnimation() {
+    protected Animation initExitAnimation() {
         return null;
     }
 
     /**
      * 设置PopupWindow销毁时的退出属性动画
      */
-    public Animator getExitAnimator() {
+    protected Animator initExitAnimator() {
         return null;
     }
 
@@ -197,18 +200,18 @@ public abstract class BasePopupWindow implements BasePopup {
         }
         //传递了res
         if (res != 0 && v == null) {
-            mPopupWindow.showAtLocation(getContext().findViewById(res), Gravity.CENTER, 0, 0);
+            mPopupWindow.showAtLocation(mContext.findViewById(res), Gravity.CENTER, 0, 0);
         }
         //什么都没传递，取顶级view的id
         if (res == 0 && v == null) {
-            mPopupWindow.showAtLocation(getContext().findViewById(android.R.id.content), Gravity.CENTER, 0, 0);
+            mPopupWindow.showAtLocation(mContext.findViewById(android.R.id.content), Gravity.CENTER, 0, 0);
         }
-        if (curAnima != null && mAnimaView != null) {
+        if (mShowAnimation != null && mAnimaView != null) {
             mAnimaView.clearAnimation();
-            mAnimaView.startAnimation(curAnima);
+            mAnimaView.startAnimation(mShowAnimation);
         }
-        if (curAnima == null && curAnimator != null && mAnimaView != null) {
-            curAnimator.start();
+        if (mShowAnimation == null && mShowAnimator != null && mAnimaView != null) {
+            mShowAnimator.start();
         }
         //自动弹出键盘
         if (autoShowInputMethod && getInputView() != null) {
@@ -221,8 +224,8 @@ public abstract class BasePopupWindow implements BasePopup {
      * PopupWindow是否需要自适应输入法，为输入法弹出让出区域
      *
      * @param needAdjust <br>
-     * ture for "SOFT_INPUT_ADJUST_RESIZE" mode<br>
-     * false for "SOFT_INPUT_ADJUST_NOTHING" mode
+     *                   ture for "SOFT_INPUT_ADJUST_RESIZE" mode<br>
+     *                   false for "SOFT_INPUT_ADJUST_NOTHING" mode
      */
     public void setAdjustInputMethod(boolean needAdjust) {
         if (needAdjust) {
@@ -262,17 +265,17 @@ public abstract class BasePopupWindow implements BasePopup {
      * @param resId reference of layout
      * @return root View of the layout
      */
-    public View getPopupViewById(int resId) {
+    public View createPopupById(int resId) {
         if (resId != 0) {
-            return LayoutInflater.from(getContext()).inflate(resId, null);
+            return LayoutInflater.from(mContext).inflate(resId, null);
         } else {
             return null;
         }
     }
 
     protected View findViewById(int id) {
-        if (getPopupRootView() != null && id != 0) {
-            return getPopupRootView().findViewById(id);
+        if (mPopupView != null && id != 0) {
+            return mPopupView.findViewById(id);
         }
         return null;
     }
@@ -333,15 +336,65 @@ public abstract class BasePopupWindow implements BasePopup {
         }
     }
 
+    public void setShowAnimation(Animation showAnimation) {
+        if (mShowAnimation != null && mAnimaView != null) {
+            mAnimaView.clearAnimation();
+            mShowAnimation.cancel();
+        }
+        if (showAnimation != null && showAnimation != mShowAnimation) {
+            mShowAnimation = showAnimation;
+        }
+    }
 
-    public Activity getContext() {
+    public Animation getShowAnimation(){
+        return mShowAnimation;
+    }
+
+    public void setShowAnimator(Animator showAnimator) {
+        if (mShowAnimator != null) mShowAnimator.cancel();
+        if (showAnimator != null && showAnimator != mShowAnimator) {
+            mShowAnimator = showAnimator;
+        }
+    }
+
+    public Animator getShowAnimator(){
+        return mShowAnimator;
+    }
+
+    public void setExitAnimation(Animation exitAnimation){
+        if (mExitAnimation != null && mAnimaView != null) {
+            mAnimaView.clearAnimation();
+            mExitAnimation.cancel();
+        }
+        if (exitAnimation != null && exitAnimation != mExitAnimation) {
+            mExitAnimation = exitAnimation;
+        }
+    }
+
+    public Animation getExitAnimation(){
+        return mExitAnimation;
+    }
+
+    public void setExitAnimator(Animator exitAnimator) {
+        if (mExitAnimator != null) mExitAnimator.cancel();
+        if (exitAnimator != null && exitAnimator != mExitAnimator) {
+            mExitAnimator = exitAnimator;
+        }
+    }
+
+    public Animator getExitAnimator(){
+        return mExitAnimator;
+    }
+
+    public Context getContext() {
         return mContext;
     }
 
-
-    public View getPopupRootView() {
+    public View getPopupWindowView() {
         return mPopupView;
     }
+
+
 
     //------------------------------------------状态控制-----------------------------------------------
 
@@ -350,18 +403,18 @@ public abstract class BasePopupWindow implements BasePopup {
      */
     public void dismiss() {
         try {
-            if (curExitAnima != null && mAnimaView != null) {
+            if (mExitAnimation != null && mAnimaView != null) {
                 if (!isExitAnimaPlaying) {
-                    curExitAnima.setAnimationListener(mAnimationListener);
+                    mExitAnimation.setAnimationListener(mAnimationListener);
                     mAnimaView.clearAnimation();
-                    mAnimaView.startAnimation(curExitAnima);
+                    mAnimaView.startAnimation(mExitAnimation);
                     isExitAnimaPlaying = true;
                 }
-            } else if (curExitAnimator != null) {
+            } else if (mExitAnimator != null) {
                 if (!isExitAnimaPlaying) {
-                    curExitAnimator.removeListener(mAnimatorListener);
-                    curExitAnimator.addListener(mAnimatorListener);
-                    curExitAnimator.start();
+                    mExitAnimator.removeListener(mAnimatorListener);
+                    mExitAnimator.addListener(mAnimatorListener);
+                    mExitAnimator.start();
                     isExitAnimaPlaying = true;
                 }
             } else {
@@ -377,8 +430,8 @@ public abstract class BasePopupWindow implements BasePopup {
      */
     public void dismissWithOutAnima() {
         try {
-            if (curExitAnima != null && mAnimaView != null) mAnimaView.clearAnimation();
-            if (curExitAnimator != null) curExitAnimator.removeAllListeners();
+            if (mExitAnimation != null && mAnimaView != null) mAnimaView.clearAnimation();
+            if (mExitAnimator != null) mExitAnimator.removeAllListeners();
             mPopupWindow.dismiss();
         } catch (Exception e) {
             Log.d(TAG, "dismiss error");
@@ -431,7 +484,7 @@ public abstract class BasePopupWindow implements BasePopup {
      * 生成TranslateAnimation
      *
      * @param durationMillis 动画显示时间
-     * @param start 初始位置
+     * @param start          初始位置
      */
     protected Animation getTranslateAnimation(int start, int end, int durationMillis) {
         Animation translateAnimation = new TranslateAnimation(0, 0, start, end);
@@ -495,9 +548,9 @@ public abstract class BasePopupWindow implements BasePopup {
         set = new AnimatorSet();
         if (mAnimaView != null) {
             set.playTogether(
-                ObjectAnimator.ofFloat(mAnimaView, "translationY", 250, 0).setDuration(400),
-                ObjectAnimator.ofFloat(mAnimaView, "alpha", 0.4f, 1).setDuration(250 * 3 / 2)
-            );
+                    ObjectAnimator.ofFloat(mAnimaView, "translationY", 250, 0).setDuration(400),
+                    ObjectAnimator.ofFloat(mAnimaView, "alpha", 0.4f, 1).setDuration(250 * 3 / 2)
+                            );
         }
         return set;
     }

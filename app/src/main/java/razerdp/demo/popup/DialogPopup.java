@@ -31,7 +31,7 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
     }
 
     @Override
-    protected Animation getShowAnimation() {
+    protected Animation initShowAnimation() {
         AnimationSet set=new AnimationSet(false);
         Animation shakeAnima=new RotateAnimation(0,15,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
         shakeAnima.setInterpolator(new CycleInterpolator(5));
@@ -42,17 +42,17 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
     }
 
     @Override
-    protected View getClickToDismissView() {
-        return getPopupRootView();
+    public View getClickToDismissView() {
+        return getPopupWindowView();
     }
 
     @Override
-    public View getPopupRootView() {
-        return getPopupViewById(R.layout.popup_dialog);
+    public View onCreatePopupView() {
+        return createPopupById(R.layout.popup_dialog);
     }
 
     @Override
-    public View getAnimaView() {
+    public View initAnimaView() {
         return findViewById(R.id.popup_anima);
     }
 
@@ -60,10 +60,10 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.ok:
-                Toast.makeText(getContext(), "click the ok button", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"click the ok button",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.cancel:
-                Toast.makeText(getContext(), "click the cancel button", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"click the cancel button",Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;

@@ -24,16 +24,16 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
 
     public InputPopup(Activity context) {
         super(context);
-        mCancelButton= (Button) getPopupRootView().findViewById(R.id.btn_cancel);
-        mCompeleteButton= (Button) getPopupRootView().findViewById(R.id.btn_Compelete);
-        mInputEdittext= (EditText) getPopupRootView().findViewById(R.id.ed_input);
+        mCancelButton= (Button) findViewById(R.id.btn_cancel);
+        mCompeleteButton= (Button) findViewById(R.id.btn_Compelete);
+        mInputEdittext= (EditText) findViewById(R.id.ed_input);
 
         setAutoShowInputMethod(true);
         bindEvent();
     }
 
     @Override
-    protected Animation getShowAnimation() {
+    protected Animation initShowAnimation() {
         return null;
     }
 
@@ -46,7 +46,7 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
 
 
     @Override
-    public Animator getShowAnimator() {
+    public Animator initShowAnimator() {
         return getDefaultSlideFromBottomAnimationSet();
     }
 
@@ -56,29 +56,29 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
     }
 
     @Override
-    protected View getClickToDismissView() {
-        return getPopupRootView();
+    public View getClickToDismissView() {
+        return getPopupWindowView();
     }
 
     @Override
-    public View getPopupRootView() {
-        return LayoutInflater.from(getContext()).inflate(R.layout.popup_input, null);
+    public View onCreatePopupView() {
+        return LayoutInflater.from(getContext()).inflate(R.layout.popup_input,null);
     }
 
     @Override
-    public View getAnimaView() {
-        return getPopupRootView().findViewById(R.id.popup_anima);
+    public View initAnimaView() {
+        return findViewById(R.id.popup_anima);
     }
 
     @Override
-    public Animator getExitAnimator() {
+    public Animator initExitAnimator() {
         AnimatorSet set = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
             set = new AnimatorSet();
-            if (getAnimaView() != null) {
+            if (initAnimaView() != null) {
                 set.playTogether(
-                        ObjectAnimator.ofFloat(getAnimaView(), "translationY", 0, 250).setDuration(400),
-                        ObjectAnimator.ofFloat(getAnimaView(), "alpha", 1, 0.4f).setDuration(250 * 3 / 2));
+                        ObjectAnimator.ofFloat(initAnimaView(), "translationY", 0, 250).setDuration(400),
+                        ObjectAnimator.ofFloat(initAnimaView(), "alpha", 1, 0.4f).setDuration(250 * 3 / 2));
             }
         }
         return set;
@@ -92,7 +92,7 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
                 dismiss();
                 break;
             case R.id.btn_Compelete:
-                ToastUtils.ToastMessage(getContext(), mInputEdittext.getText().toString());
+                ToastUtils.ToastMessage(getContext(),mInputEdittext.getText().toString());
                 dismiss();
                 break;
             default:
