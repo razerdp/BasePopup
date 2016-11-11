@@ -10,6 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
+
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.utils.ToastUtils;
@@ -27,25 +28,25 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
     private int[] viewLocation;
 
     public MenuPopup(Activity context) {
-        super(context, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-        viewLocation=new int[2];
-        getPopupRootView().findViewById(R.id.tx_1).setOnClickListener(this);
-        getPopupRootView().findViewById(R.id.tx_2).setOnClickListener(this);
-        getPopupRootView().findViewById(R.id.tx_3).setOnClickListener(this);
+        super(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        viewLocation = new int[2];
+        findViewById(R.id.tx_1).setOnClickListener(this);
+        findViewById(R.id.tx_2).setOnClickListener(this);
+        findViewById(R.id.tx_3).setOnClickListener(this);
     }
 
     @Override
-    protected Animation getShowAnimation() {
-        AnimationSet set=new AnimationSet(true);
+    protected Animation initShowAnimation() {
+        AnimationSet set = new AnimationSet(true);
         set.setInterpolator(new DecelerateInterpolator());
-        set.addAnimation(getScaleAnimation(0,1,0,1,Animation.RELATIVE_TO_SELF,1,Animation.RELATIVE_TO_SELF,0));
+        set.addAnimation(getScaleAnimation(0, 1, 0, 1, Animation.RELATIVE_TO_SELF, 1, Animation.RELATIVE_TO_SELF, 0));
         set.addAnimation(getDefaultAlphaAnimation());
         return set;
         //return null;
     }
 
     @Override
-    public Animator getShowAnimator() {
+    public Animator initShowAnimator() {
        /* AnimatorSet set=new AnimatorSet();
         set.playTogether(
                 ObjectAnimator.ofFloat(mAnimaView,"scaleX",0.0f,1.0f).setDuration(300),
@@ -58,37 +59,38 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
     public void showPopupWindow(View v) {
         try {
             v.getLocationOnScreen(viewLocation);
-            mPopupWindow.showAtLocation(v, Gravity.RIGHT | Gravity.TOP, (int)(v.getWidth()*1.5),
-                    viewLocation[1]+((v.getHeight()*2/3)));
-            if (getShowAnimation() != null && mAnimaView != null) {
+            mPopupWindow.showAtLocation(v, Gravity.RIGHT | Gravity.TOP, (int) (v.getWidth() * 1.5),
+                                        viewLocation[1] + ((v.getHeight() * 2 / 3)));
+            if (initShowAnimation() != null && mAnimaView != null) {
                 mAnimaView.clearAnimation();
-                mAnimaView.startAnimation(getShowAnimation());
+                mAnimaView.startAnimation(initShowAnimation());
             }
-            if (getShowAnimation() == null && getShowAnimator() != null && mAnimaView != null) {
-                getShowAnimator().start();
+            if (initShowAnimation() == null && initShowAnimator() != null && mAnimaView != null) {
+                initShowAnimator().start();
             }
         } catch (Exception e) {
-            Log.w("error","error");
+            Log.w("error", "error");
         }
     }
+
     @Override
-    protected View getClickToDismissView() {
+    public View getClickToDismissView() {
         return null;
     }
 
     @Override
-    public View getPopupRootView() {
-        return getPopupViewById(R.layout.popup_menu);
+    public View onCreatePopupView() {
+        return createPopupById(R.layout.popup_menu);
     }
 
     @Override
-    public View getAnimaView() {
-        return getPopupRootView().findViewById(R.id.popup_contianer);
+    public View initAnimaView() {
+        return getPopupWindowView().findViewById(R.id.popup_contianer);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.tx_1:
                 ToastUtils.ToastMessage(getContext(), "click tx_1");
                 break;

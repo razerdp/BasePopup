@@ -24,12 +24,12 @@ public class FullScreenPopup extends BasePopupWindow {
         setPopupWindowFullScreen(true);
     }
 
-    @Override protected Animation getShowAnimation() {
+    @Override protected Animation initShowAnimation() {
         return null;
     }
 
     @Override
-    public Animator getShowAnimator() {
+    public Animator initShowAnimator() {
         AnimatorSet set;
         set = new AnimatorSet();
         ObjectAnimator transAnimator = ObjectAnimator.ofFloat(mAnimaView, "translationY", 250, 0).setDuration(600);
@@ -40,7 +40,7 @@ public class FullScreenPopup extends BasePopupWindow {
     }
 
     @Override
-    public Animator getExitAnimator() {
+    public Animator initExitAnimator() {
         AnimatorSet set;
         set = new AnimatorSet();
         ObjectAnimator transAnimator = ObjectAnimator.ofFloat(mAnimaView, "translationY", 0, 250).setDuration(600);
@@ -50,15 +50,16 @@ public class FullScreenPopup extends BasePopupWindow {
         return set;
     }
 
-    @Override protected View getClickToDismissView() {
-        return getPopupRootView();
+    @Override
+    public View getClickToDismissView() {
+        return getPopupWindowView();
     }
 
-    @Override public View getPopupRootView() {
-        return getPopupViewById(R.layout.popup_fullscreen);
+    @Override public View onCreatePopupView() {
+        return createPopupById(R.layout.popup_fullscreen);
     }
 
-    @Override public View getAnimaView() {
+    @Override public View initAnimaView() {
         return findViewById(R.id.popup_anima);
     }
 }
