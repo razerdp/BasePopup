@@ -29,7 +29,7 @@ Add it in your root build.gradle at the end of repositories:
 **Step 2.** Add the dependency
 ```xml
 	dependencies {
-	        compile 'com.github.razerdp:BasePopup:v1.3.0'
+	        compile 'com.github.razerdp:BasePopup:v1.3.1'
 	}
 ```
 
