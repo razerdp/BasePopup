@@ -132,6 +132,7 @@ etc.
 
 **Step 3:**
 实现必要的几个方法：
+
 `initShowAnimation()`:初始化一个进入动画，该动画将会用到`initAnimaView()`返回的view
 
 `onCreatePopupView()`:初始化您的popupwindow界面，建议直接使用`createPopupById()`
