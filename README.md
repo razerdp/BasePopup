@@ -3,41 +3,12 @@ An abstract class for creating custom popupwindow easily.
 
 [中文介绍](https://github.com/razerdp/BasePopup/blob/master/README-CN.md)
 
-##请注意：
-
-因为在使用过程中发现了一些方法的命名存在误导性，这个问题是因为在初期写下了方法名之后一直忘了改，因此在 **v 1.3.0**之后这些名字将会改变，具体改动如下：
-
-| 原方法名 | 现方法名 | 备注 |
-| -------- | :-----------: | :---------: |
-| getPopupView() | onCreatePopupView() | 本方法改名为的是减少误导性 |
-| getAnimaView() | initAnimaView() | 理由同上 |
-| mContext | getContext() | context将会改为private，需要使用方法获取 |
-| mPopupView | getPopupWindowView() | mPopupView将会改为private，需要用方法获取 |
-| getShowAnimation()/getExitAnimation() |**【protect】** initShowAnimation()/initExitAnimation() | getShowAnimation()/getExitAnimation()将会改为获取进行过初始化的animation |
-| getShowAnimator()/getExitAnimator() |**【protect】** initShowAnimator()/initExitAnimator() | getShowAnimator()/getExitAnimator()将会改为获取进行过初始化的animator |
-
-
-事实上在下也清楚有很多方法命名还是不太好，如果您有更好的命名欢迎提交pr，同时这次的改动对您的使用造成万分不便，在下深表歉意，希望得到您的谅解。
-
-
 ---
 
 ##ATTENTION:
 
-Because of some methods' name are misleading,we will change them after **ver 1.3.0**
-
-commit details:
-
-| Old name | New name | Note |
-| -------- | :-----------: | :---------: |
-| getPopupView() | onCreatePopupView() | getPopupView() will be **Deprecated** |
-| getAnimaView() | initAnimaView() | getAnimaView will be **Deprecated**  |
-| mContext | getContext() | the **mContext** field will be changed to **private**,use `getContext()` instead  |
-| mPopupView | getPopupWindowView() | the **mPopupView ** field will be changed to **private**,use `getPopupWindowView()` instead |
-| getShowAnimation()/getExitAnimation() |**【protect】** initShowAnimation()/initExitAnimation() | getShowAnimation()/getExitAnimation() will return animation whitch has been initialized |
-| getShowAnimator()/getExitAnimator() |**【protect】** initShowAnimator()/initExitAnimator() | getShowAnimator()/getExitAnimator() will return animator whitch has been initialized |
-
-Please forgive us for the inconvenience brought to you.
+**If you're upgrading from a version < v1.3.0, please check the changelog of the v1.3.0 version, there are some breaking changes!**
+[CHANGELOG](https://github.com/razerdp/BasePopup/blob/master/CHANGELOG.md)
 
 ### MinSDK : API 11
 
@@ -65,7 +36,7 @@ Add it in your root build.gradle at the end of repositories:
 
 ----------
 **Step 1:**
-create xml file for the popup
+create xml file for the popupwindow
 
 etc.
 ```xml
@@ -155,7 +126,7 @@ etc.
 
 
 **Step 2:**
-Create a class whitch extend BasePopupWindow
+Create a class extend BasePopupWindow
 
 **Step 3:**
 override some methods
