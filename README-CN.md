@@ -133,7 +133,9 @@ etc.
 **Step 3:**
 实现必要的几个方法：
 `initShowAnimation()`:初始化一个进入动画，该动画将会用到`initAnimaView()`返回的view
+
 `onCreatePopupView()`:初始化您的popupwindow界面，建议直接使用`createPopupById()`
+
 `getClickToDismissView()`:如果有需要的话，可以使用这个方法返回一个点击dismiss popupwindow的view(也许是遮罩层也许是某个view，这个随您喜欢)
 
 例如
