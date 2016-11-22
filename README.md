@@ -8,6 +8,7 @@ An abstract class for creating custom popupwindow easily.
 ##ATTENTION:
 
 **If you're upgrading from a version < v1.3.0, please check the changelog of the v1.3.0 version, there are some breaking changes!**
+
 [CHANGELOG](https://github.com/razerdp/BasePopup/blob/master/CHANGELOG.md)
 
 ### MinSDK : API 11

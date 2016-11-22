@@ -6,6 +6,7 @@
 ##请注意：
 
 **如果您是从低于v1.3.0版本升级过来的，请查看改动日志，从v1.3.0版本开始，对于一些误导性的问题和方法名字进行了改动，这将会导致该版本前的方法需要重新复写**
+
 [改动日志](https://github.com/razerdp/BasePopup/blob/master/CHANGELOG-CN.md)
 
 ---
