@@ -1,5 +1,22 @@
 # BasePopup
 </br>
+##2016-11-23
+增加了一些方法：
+
+- `setRelativePivot()`：该方法用于设置popup的参考中心点（相对于anchorView左上角）,使用注解，@RelativePivot
+    + 在上述方法的前提下，增加了偏移量的方法
+        + `setOffsetX()`:x偏移量，跟中心点有关,假如参考点在右边，那么正数则是远离参考view，负数相反，类似于margin
+        + `setOffsetX()`:y偏移量，同上
+
+- `setAutoLocatePopup()`:设置popup是否自适配屏幕，当popup显示位置不足以支撑其完整显示的时候，将会自动调整(比如上方正常显示，在下方无法显示的时候则显示在上方)
+    + 此时同样可以使用上述方法`setRelativePivot()`等
+
+- `getPopupViewWidth()/getPopupViewHeight()`:在创建view的时候就进行了view.measure，但是不能保证这两个值是完全可信的(比如popup内部是个listview?)
+- `setRelativeToAnchorView()`:是否参考锚点view，事实上，如果使用了`setRelativePivot()`，该值自动为ture
+- `setPopupGravity()`:设置poup的gravity，虽然一般情况下不建议设置，毕竟它的gravity很多时候都是相对于整个rootView来说的，容易混乱
+
+
+
 ##2016-10-11
 修正api>21下出现的popup无法突破状态栏的问题(method:setPopupWindowFullScreen(boolean))
 

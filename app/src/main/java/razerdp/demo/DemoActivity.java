@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import razerdp.basepopup.R;
+import razerdp.demo.fragment.AutoLocatedPopupFrag;
 import razerdp.demo.fragment.CommentPopupFrag;
 import razerdp.demo.fragment.CustomInterpolatorPopupFrag;
 import razerdp.demo.fragment.DialogPopupFrag;
@@ -28,6 +29,7 @@ public class DemoActivity extends FragmentActivity {
     private DialogPopupFrag mDialogPopupFrag;
     private CustomInterpolatorPopupFrag mInterpolatorPopupFrag;
     private FullScreenPopupFrag mFullScreenPopupFrag;
+    private AutoLocatedPopupFrag mAutoLocatedPopupFrag;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class DemoActivity extends FragmentActivity {
         mDialogPopupFrag = new DialogPopupFrag();
         mInterpolatorPopupFrag = new CustomInterpolatorPopupFrag();
         mFullScreenPopupFrag = new FullScreenPopupFrag();
+        mAutoLocatedPopupFrag=new AutoLocatedPopupFrag();
     }
 
     @Override
@@ -85,6 +88,9 @@ public class DemoActivity extends FragmentActivity {
                 break;
             case R.id.id_full_screen_popup:
                 mFragmentManager.beginTransaction().replace(R.id.parent, mFullScreenPopupFrag).commit();
+                break;
+            case R.id.id_auto_located_popup:
+                mFragmentManager.beginTransaction().replace(R.id.parent, mAutoLocatedPopupFrag).commit();
                 break;
             default:
                 break;

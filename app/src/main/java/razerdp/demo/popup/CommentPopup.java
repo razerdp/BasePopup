@@ -15,6 +15,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.utils.DimensUtils;
@@ -31,11 +32,11 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
     private RelativeLayout mLikeClikcLayout;
     private RelativeLayout mCommentClickLayout;
 
-    private int[] viewLocation;
 
     private OnCommentPopupClickListener mOnCommentPopupClickListener;
 
     private Handler mHandler;
+
     public CommentPopup(Activity context) {
         this(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
@@ -43,8 +44,7 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
     public CommentPopup(Activity context, int w, int h) {
         super(context, w, h);
 
-        viewLocation = new int[2];
-        mHandler=new Handler();
+        mHandler = new Handler();
 
         mLikeAnimaView = (ImageView) findViewById(R.id.iv_like);
         mLikeText = (TextView) findViewById(R.id.tv_like);
@@ -62,7 +62,7 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
 
     private void buildAnima() {
         ScaleAnimation mScaleAnimation = new ScaleAnimation(1f, 2f, 1f, 2f, Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f);
+                                                            Animation.RELATIVE_TO_SELF, 0.5f);
         mScaleAnimation.setDuration(200);
         mScaleAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
         mScaleAnimation.setFillAfter(false);
@@ -72,7 +72,7 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
         mAlphaAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
         mAlphaAnimation.setFillAfter(false);
 
-        mAnimationSet=new AnimationSet(false);
+        mAnimationSet = new AnimationSet(false);
         mAnimationSet.setDuration(400);
         mAnimationSet.addAnimation(mScaleAnimation);
         mAnimationSet.addAnimation(mAlphaAnimation);
@@ -102,33 +102,22 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
 
     @Override
     public void showPopupWindow(View v) {
-        try {
-            //得到v的位置
-            v.getLocationOnScreen(viewLocation);
-            //展示位置：
-            //参照点为view的右上角，偏移值为：x方向距离参照view的一定倍数距离
-            //垂直方向自身减去popup自身高度的一半（确保在中间）
-            mPopupWindow.showAtLocation(v, Gravity.RIGHT | Gravity.TOP, (int) (v.getWidth() * 1.8),
-                    viewLocation[1] - DimensUtils.dipToPx(getContext(),15f));
-
-            if (initShowAnimation() != null && initAnimaView() != null) {
-                initAnimaView().startAnimation(initShowAnimation());
-            }
-        } catch (Exception e) {
-            Log.w("error","error");
-        }
+        setRelativeToAnchorView(true);
+        setRelativePivot(RelativePivot.RIGHT | RelativePivot.CENTER_Y);
+        setOffsetX(v.getWidth() / 2);
+        super.showPopupWindow(v);
     }
 
     @Override
     protected Animation initShowAnimation() {
         return getScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF, 1.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f);
+                                 Animation.RELATIVE_TO_SELF, 0.0f);
     }
 
     @Override
     public Animation initExitAnimation() {
         return getScaleAnimation(1.0f, 0.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF, 1.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f);
+                                 Animation.RELATIVE_TO_SELF, 0.0f);
     }
 
     @Override

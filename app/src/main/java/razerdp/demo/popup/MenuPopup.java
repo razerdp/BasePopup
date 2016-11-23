@@ -25,11 +25,9 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
     private TextView tx2;
     private TextView tx3;
 
-    private int[] viewLocation;
 
     public MenuPopup(Activity context) {
         super(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        viewLocation = new int[2];
         findViewById(R.id.tx_1).setOnClickListener(this);
         findViewById(R.id.tx_2).setOnClickListener(this);
         findViewById(R.id.tx_3).setOnClickListener(this);
@@ -57,20 +55,10 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
 
     @Override
     public void showPopupWindow(View v) {
-        try {
-            v.getLocationOnScreen(viewLocation);
-            mPopupWindow.showAtLocation(v, Gravity.RIGHT | Gravity.TOP, (int) (v.getWidth() * 1.5),
-                                        viewLocation[1] + ((v.getHeight() * 2 / 3)));
-            if (initShowAnimation() != null && mAnimaView != null) {
-                mAnimaView.clearAnimation();
-                mAnimaView.startAnimation(initShowAnimation());
-            }
-            if (initShowAnimation() == null && initShowAnimator() != null && mAnimaView != null) {
-                initShowAnimator().start();
-            }
-        } catch (Exception e) {
-            Log.w("error", "error");
-        }
+        setRelativeToAnchorView(true);
+        setRelativePivot(RelativePivot.RIGHT);
+        setOffsetY(v.getHeight() / 2);
+        super.showPopupWindow(v);
     }
 
     @Override
