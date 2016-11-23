@@ -14,9 +14,10 @@
 ### 最低SDK版本要求 : API 11
 
 # 依赖  [![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
-**Step 1.**  添加Jitpack到您的root gradle
+**Step 1.**
 
-Add it in your root build.gradle at the end of repositories:
+**添加Jitpack到您的root gradle，如果无法导包，一般情况下都是这个原因，请仔细检查**
+
 ```xml
 	allprojects {
 		repositories {
@@ -24,9 +25,12 @@ Add it in your root build.gradle at the end of repositories:
 			maven { url "https://jitpack.io" }
 		}
 	}
-```	
+```
 
-**Step 2.** 添加依赖
+**Step 2.**
+
+添加依赖
+
 ```xml
 	dependencies {
 	        compile 'com.github.razerdp:BasePopup:v1.3.1'
@@ -38,6 +42,7 @@ Add it in your root build.gradle at the end of repositories:
 ----------
 
 **Step 1:**
+
 像您平时定制activity布局文件一样定制您的popup布局
 
 etc.
@@ -128,9 +133,11 @@ etc.
 
 
 **Step 2:**
+
 新建一个类继承Basepopup
 
 **Step 3:**
+
 实现必要的几个方法：
 
 `initShowAnimation()`:初始化一个进入动画，该动画将会用到`initAnimaView()`返回的view
@@ -221,7 +228,7 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md
 
 # 方法介绍：
-本项目拥有的方法如下：
+本项目拥有的方法如下(后续的更新没有在这里写了，详情看demo或者更新日志，demo一般情况下都会包括各种情况)：
 
  - 必须实现的抽象方法：
 	+ onCreatePopupView()：得到popupwindow的主体，一般是在xml文件写好然后inflate出来并返回，推荐使用createPopupById()方法以减少代码

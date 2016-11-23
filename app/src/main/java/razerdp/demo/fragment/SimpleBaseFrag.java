@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
 import razerdp.basepopup.BasePopupWindow;
 
 /**
@@ -19,14 +20,15 @@ public abstract class SimpleBaseFrag extends Fragment implements View.OnClickLis
     protected View mFragment;
     protected LayoutInflater mInflater;
     protected ViewGroup container;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.mContext = getActivity();
-        this.mInflater=inflater;
-        this.container=container;
-        mFragment=getFragment();
+        this.mInflater = inflater;
+        this.container = container;
+        mFragment = getFragment();
         this.mButton = getButton();
         if (mButton != null) mButton.setOnClickListener(this);
         bindEvent();
@@ -34,14 +36,21 @@ public abstract class SimpleBaseFrag extends Fragment implements View.OnClickLis
     }
 
     public abstract void bindEvent();
+
     public abstract BasePopupWindow getPopup();
+
     public abstract Button getButton();
+
     public abstract View getFragment();
+
+    protected final View findViewById(int id) {
+        return mFragment.findViewById(id);
+    }
 
     @Override
     public void onClick(View v) {
         if (v == mButton) {
-            if (getPopup()!=null){
+            if (getPopup() != null) {
                 getPopup().showPopupWindow();
             }
         }

@@ -47,4 +47,9 @@
         android:title="full screen popup"
         android:orderInCategory="108"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_auto_located_popup"
+        android:title="auto located popup"
+        android:orderInCategory="109"
+        app:showAsAction="never"/>
 </menu>

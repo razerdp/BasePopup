@@ -43,6 +43,8 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.PopupWindow;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 
 import razerdp.library.R;
@@ -65,15 +67,27 @@ public abstract class BasePopupWindow implements BasePopup {
     private boolean autoShowInputMethod = false;
     private OnDismissListener mOnDismissListener;
     //anima
-
     private Animation mShowAnimation;
     private Animator mShowAnimator;
     private Animation mExitAnimation;
     private Animator mExitAnimator;
 
     private boolean isExitAnimaPlaying = false;
-
     private boolean needPopupFadeAnima = true;
+
+    //option
+    private int popupGravity = Gravity.NO_GRAVITY;
+    private int offsetX;
+    private int offsetY;
+    private int popupViewWidth;
+    private int popupViewHeight;
+    private int popupRelativePivot;
+    //锚点view的location
+    private int[] mAnchorViewLocation;
+    //是否参考锚点
+    private boolean relativeToAnchorView;
+    //是否自动适配popup的位置
+    private boolean isAutoLocatePopup;
 
     public BasePopupWindow(Activity context) {
         initView(context, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -87,6 +101,11 @@ public abstract class BasePopupWindow implements BasePopup {
         mContext = context;
 
         mPopupView = onCreatePopupView();
+        if (mPopupView != null) {
+            mPopupView.measure(w, h);
+            popupViewWidth = mPopupView.getMeasuredWidth();
+            popupViewHeight = mPopupView.getMeasuredHeight();
+        }
         mPopupView.setFocusableInTouchMode(true);
         //默认占满全屏
         mPopupWindow = new PopupWindow(mPopupView, w, h);
@@ -121,6 +140,8 @@ public abstract class BasePopupWindow implements BasePopup {
         mShowAnimator = initShowAnimator();
         mExitAnimation = initExitAnimation();
         mExitAnimator = initExitAnimator();
+
+        mAnchorViewLocation = new int[2];
     }
 
     //------------------------------------------抽象-----------------------------------------------
@@ -218,17 +239,21 @@ public abstract class BasePopupWindow implements BasePopup {
 
     //------------------------------------------Methods-----------------------------------------------
     private void tryToShowPopup(int res, View v) throws Exception {
+        int offset[] = {offsetX, offsetY};
         //传递了view
         if (res == 0 && v != null) {
-            mPopupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+            offset = calcuateOffset(v);
+            mPopupWindow.showAtLocation(v, popupGravity, offset[0], offset[1]);
         }
         //传递了res
         if (res != 0 && v == null) {
-            mPopupWindow.showAtLocation(mContext.findViewById(res), Gravity.CENTER, 0, 0);
+            View anchorView = mContext.findViewById(res);
+            offset = calcuateOffset(anchorView);
+            mPopupWindow.showAtLocation(anchorView, popupGravity, offset[0], offset[1]);
         }
         //什么都没传递，取顶级view的id
         if (res == 0 && v == null) {
-            mPopupWindow.showAtLocation(mContext.findViewById(android.R.id.content), Gravity.CENTER, 0, 0);
+            mPopupWindow.showAtLocation(mContext.findViewById(android.R.id.content), popupGravity, offsetX, offsetY);
         }
         if (mShowAnimation != null && mAnimaView != null) {
             mAnimaView.clearAnimation();
@@ -242,6 +267,81 @@ public abstract class BasePopupWindow implements BasePopup {
             getInputView().requestFocus();
             InputMethodUtils.showInputMethod(getInputView(), 150);
         }
+    }
+
+
+    /**
+     * 暂时还不是很稳定，需要进一步测试优化
+     *
+     * @param v
+     * @return
+     */
+    private int[] calcuateOffset(View v) {
+        int[] result = {offsetX, offsetY};
+        v.getLocationOnScreen(mAnchorViewLocation);
+        switch (popupRelativePivot) {
+            case RelativePivot.LEFT:
+            case RelativePivot.LEFT | RelativePivot.TOP:
+                //左上
+                result[0] = mAnchorViewLocation[0] - result[0];
+                result[1] += mAnchorViewLocation[1];
+                break;
+            case RelativePivot.RIGHT:
+            case RelativePivot.RIGHT | RelativePivot.TOP:
+                //右上
+                result[0] = mAnchorViewLocation[0] - result[0] - popupViewWidth;
+                result[1] += mAnchorViewLocation[1];
+                break;
+
+            case RelativePivot.BOTTOM:
+            case RelativePivot.LEFT | RelativePivot.BOTTOM:
+                //左下
+                result[0] = mAnchorViewLocation[0] - result[0];
+                result[1] += mAnchorViewLocation[1] + popupViewHeight;
+                break;
+            case RelativePivot.RIGHT | RelativePivot.BOTTOM:
+                //右下
+                result[0] = mAnchorViewLocation[0] - result[0] - popupViewWidth;
+                result[1] += mAnchorViewLocation[1] + popupViewHeight;
+                break;
+            case RelativePivot.CENTER_X:
+            case RelativePivot.TOP | RelativePivot.CENTER_X:
+                //左中
+                result[0] = mAnchorViewLocation[0] - result[0] - popupViewWidth / 2;
+                result[1] += mAnchorViewLocation[1];
+                break;
+            case RelativePivot.LEFT | RelativePivot.CENTER_Y:
+            case RelativePivot.CENTER_Y:
+                //垂直中间
+                result[0] = mAnchorViewLocation[0] - result[0];
+                result[1] += mAnchorViewLocation[1] - popupViewHeight / 2;
+                break;
+            case RelativePivot.RIGHT | RelativePivot.CENTER_Y:
+                //右边中间
+                result[0] = mAnchorViewLocation[0] - result[0] - popupViewWidth;
+                result[1] += mAnchorViewLocation[1] - popupViewHeight / 2;
+                break;
+            case RelativePivot.CENTER_X | RelativePivot.CENTER_Y:
+                //中心
+                result[0] = mAnchorViewLocation[0] - result[0] - popupViewWidth / 2;
+                result[1] += mAnchorViewLocation[1] - popupViewHeight / 2;
+                break;
+            default:
+                Log.i(TAG, "calcuate default");
+                break;
+        }
+
+        if (isAutoLocatePopup) {
+            final boolean onTop = (getScreenHeight() - result[1] < popupViewHeight);
+            if (onTop) {
+                result[1] = result[1] - popupViewHeight - offsetY;
+                showOnTop(mPopupView);
+            }
+        } else {
+            showOnDown(mPopupView);
+        }
+        return result;
+
     }
 
     /**
@@ -414,10 +514,101 @@ public abstract class BasePopupWindow implements BasePopup {
         return mContext;
     }
 
+    /**
+     * 获取popupwindow的根布局
+     *
+     * @return
+     */
     public View getPopupWindowView() {
         return mPopupView;
     }
 
+    public int getOffsetX() {
+        return offsetX;
+    }
+
+    /**
+     * 设定x位置的偏移量(中心点在popup的左上角)
+     * <p>
+     *
+     * @param offsetX
+     */
+    public void setOffsetX(int offsetX) {
+        this.offsetX = offsetX;
+    }
+
+    public int getOffsetY() {
+        return offsetY;
+    }
+
+    /**
+     * 设定y位置的偏移量(中心点在popup的左上角)
+     *
+     * @param offsetY
+     */
+    public void setOffsetY(int offsetY) {
+        this.offsetY = offsetY;
+    }
+
+    public int getPopupGravity() {
+        return popupGravity;
+    }
+
+    /**
+     * 设置参考点，一般情况下，参考对象指的不是指定的view，而是它的windoToken，可以看作为整个screen
+     *
+     * @param popupGravity
+     */
+    public void setPopupGravity(int popupGravity) {
+        if (relativeToAnchorView) {
+            popupGravity = Gravity.LEFT | Gravity.TOP;
+        }
+        this.popupGravity = popupGravity;
+    }
+
+    public boolean isRelativeToAnchorView() {
+        return relativeToAnchorView;
+    }
+
+    /**
+     * 是否参考锚点view，如果是true，则会显示到跟指定view的x,y一样的位置(如果空间足够的话)
+     *
+     * @param relativeToAnchorView
+     */
+    public void setRelativeToAnchorView(boolean relativeToAnchorView) {
+        if (relativeToAnchorView) {
+            //强制左上为参考点
+            popupGravity = Gravity.LEFT | Gravity.TOP;
+        }
+        this.relativeToAnchorView = relativeToAnchorView;
+    }
+
+    public boolean isAutoLocatePopup() {
+        return isAutoLocatePopup;
+    }
+
+    public void setAutoLocatePopup(boolean autoLocatePopup) {
+        if (autoLocatePopup) {
+            //强制左上为参考点
+            popupGravity = Gravity.LEFT | Gravity.TOP;
+        }
+        isAutoLocatePopup = autoLocatePopup;
+    }
+
+    /**
+     * 这个值是在创建view时进行测量的，并不能当作一个完全准确的值
+     * @return
+     */
+    public int getPopupViewWidth(){
+        return popupViewWidth;
+    }
+    /**
+     * 这个值是在创建view时进行测量的，并不能当作一个完全准确的值
+     * @return
+     */
+    public int getPopupViewHeight(){
+        return popupViewHeight;
+    }
 
     //------------------------------------------状态控制-----------------------------------------------
 
@@ -460,6 +651,24 @@ public abstract class BasePopupWindow implements BasePopup {
             Log.d(TAG, "dismiss error");
         }
     }
+
+    //------------------------------------------Option-----------------------------------------------
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface RelativePivot {
+        int LEFT = 0x0001;
+        int TOP = 0x0003;
+        int RIGHT = 0x0005;
+        int BOTTOM = 0x0010;
+        int CENTER_X = (LEFT | RIGHT) << 4;
+        int CENTER_Y = (TOP | BOTTOM) << 4;
+    }
+
+    public void setRelativePivot(@RelativePivot int pivot) {
+        this.relativeToAnchorView = true;
+        this.popupRelativePivot = pivot;
+    }
+
+
     //------------------------------------------Anima-----------------------------------------------
 
     private Animator.AnimatorListener mAnimatorListener = new Animator.AnimatorListener() {
@@ -577,6 +786,30 @@ public abstract class BasePopupWindow implements BasePopup {
         }
         return set;
     }
+
+    /**
+     * 获取屏幕高度(px)
+     */
+    public int getScreenHeight() {
+        return getContext().getResources().getDisplayMetrics().heightPixels;
+    }
+
+    /**
+     * 获取屏幕宽度(px)
+     */
+    public int getScreenWidth() {
+        return getContext().getResources().getDisplayMetrics().widthPixels;
+    }
+
+    //------------------------------------------callback-----------------------------------------------
+    protected void showOnTop(View mPopupView) {
+
+    }
+
+    protected void showOnDown(View mPopupView) {
+
+    }
+
 
     //------------------------------------------Interface-----------------------------------------------
     public interface OnDismissListener {
