@@ -33,7 +33,7 @@
 
 ```xml
 	dependencies {
-	        compile 'com.github.razerdp:BasePopup:v1.3.1'
+	        compile 'com.github.razerdp:BasePopup:v1.4.0'
 	}
 ```
 
