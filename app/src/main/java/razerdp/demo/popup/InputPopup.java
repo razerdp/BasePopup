@@ -51,7 +51,7 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
     }
 
     @Override
-    public View getInputView() {
+    public EditText getInputView() {
         return mInputEdittext;
     }
 
