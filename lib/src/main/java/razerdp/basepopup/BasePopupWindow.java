@@ -41,6 +41,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
+import android.widget.EditText;
 import android.widget.PopupWindow;
 
 import java.lang.annotation.Retention;
@@ -166,7 +167,7 @@ public abstract class BasePopupWindow implements BasePopup {
     /**
      * 设置一个拥有输入功能的View，一般为EditTextView
      */
-    public View getInputView() {
+    public EditText getInputView() {
         return null;
     }
 
