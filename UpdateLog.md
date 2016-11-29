@@ -1,6 +1,10 @@
 # BasePopup
 </br>
 ##2016-11-23
+
+构造方法的view点击事件设置问题修复
+
+##2016-11-23
 增加了一些方法：
 
 - `setRelativePivot()`：该方法用于设置popup的参考中心点（相对于anchorView左上角）,使用注解，@RelativePivot

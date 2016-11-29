@@ -126,14 +126,14 @@ public abstract class BasePopupWindow implements BasePopup {
                     dismiss();
                 }
             });
-            if (mAnimaView != null) {
-                mAnimaView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+        }
+        if (mAnimaView != null) {
+            mAnimaView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                    }
-                });
-            }
+                }
+            });
         }
         //=============================================================元素获取
         mShowAnimation = initShowAnimation();
