@@ -55,7 +55,7 @@ import razerdp.library.R;
  * <p>
  * 抽象通用popupwindow的父类
  */
-public abstract class BasePopupWindow implements BasePopup {
+public abstract class BasePopupWindow implements BasePopup,PopupWindow.OnDismissListener{
     private static final String TAG = "BasePopupWindow";
     //元素定义
     protected PopupWindow mPopupWindow;
@@ -116,6 +116,7 @@ public abstract class BasePopupWindow implements BasePopup {
         mPopupWindow.setOutsideTouchable(true);
         //默认是渐入动画
         mPopupWindow.setAnimationStyle(R.style.PopupAnimaFade);
+        mPopupWindow.setOnDismissListener(this);
 
         //=============================================================为外层的view添加点击事件，并设置点击消失
         mAnimaView = initAnimaView();
@@ -451,14 +452,6 @@ public abstract class BasePopupWindow implements BasePopup {
 
     public void setOnDismissListener(OnDismissListener onDismissListener) {
         mOnDismissListener = onDismissListener;
-        if (mOnDismissListener != null) {
-            mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                @Override
-                public void onDismiss() {
-                    mOnDismissListener.onDismiss();
-                }
-            });
-        }
     }
 
     public void setShowAnimation(Animation showAnimation) {
@@ -811,6 +804,12 @@ public abstract class BasePopupWindow implements BasePopup {
 
     }
 
+    @Override
+    public void onDismiss() {
+        if (mOnDismissListener != null) {
+            mOnDismissListener.onDismiss();
+        }
+    }
 
     //------------------------------------------Interface-----------------------------------------------
     public interface OnDismissListener {
