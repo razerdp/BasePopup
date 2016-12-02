@@ -1,5 +1,10 @@
 # BasePopup
 </br>
+##2016-12-02
+
+修复setOnDismissListener的错误 [#issue9](https://github.com/razerdp/BasePopup/issues/9)
+
+
 ##2016-11-23
 
 构造方法的view点击事件设置问题修复/getInputView必须返回edittext

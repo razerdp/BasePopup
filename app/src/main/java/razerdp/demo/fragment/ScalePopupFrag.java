@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
+
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.popup.ScalePopup;
@@ -14,6 +16,10 @@ import razerdp.demo.popup.ScalePopup;
  * Created by 大灯泡 on 2016/1/15.
  */
 public class ScalePopupFrag extends SimpleBaseFrag {
+
+    private ScalePopup scalePopup;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -23,12 +29,19 @@ public class ScalePopupFrag extends SimpleBaseFrag {
 
     @Override
     public void bindEvent() {
+        scalePopup=new ScalePopup(mContext);
+        scalePopup.setOnDismissListener(new BasePopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                Toast.makeText(mContext,"dismiss",Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
     @Override
     public BasePopupWindow getPopup() {
-        return new ScalePopup(mContext);
+        return scalePopup;
     }
 
     @Override
