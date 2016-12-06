@@ -1,6 +1,5 @@
 package razerdp.demo.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -28,7 +27,7 @@ public class AutoLocatedPopupFrag extends SimpleBaseFrag implements View.OnClick
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        autoLocatedPopup = new AutoLocatedPopup((Activity) getContext());
+        autoLocatedPopup = new AutoLocatedPopup(getActivity());
         autoLocatedPopup.setAutoLocatePopup(true);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
