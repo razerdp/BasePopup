@@ -10,9 +10,8 @@
     tools:context="razerdp.demo.DemoActivity"
     tools:showIn="@layout/activity_demo">
 
-    <fragment
+    <FrameLayout
         android:id="@+id/popup_fragment"
-        android:name="razerdp.demo.fragment.ScalePopupFrag"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </RelativeLayout>

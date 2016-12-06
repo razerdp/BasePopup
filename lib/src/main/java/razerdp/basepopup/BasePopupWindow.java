@@ -44,8 +44,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 
 import razerdp.library.R;
@@ -284,76 +282,29 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     /**
      * 暂时还不是很稳定，需要进一步测试优化
      *
-     * @param v
+     * @param anchorView
      * @return
      */
-    private int[] calcuateOffset(View v) {
-        int[] result = {offsetX, offsetY};
-        v.getLocationOnScreen(mAnchorViewLocation);
+    private int[] calcuateOffset(View anchorView) {
+        int[] offset = {0, 0};
+        anchorView.getLocationOnScreen(mAnchorViewLocation);
+        //当参考了anchorView，那么意味着必定使用showAsDropDown，此时popup初始显示位置在anchorView的底部
+        //因此需要先将popupview与anchorView的左上角对齐
         if (relativeToAnchorView) {
-            switch (popupRelativePivot) {
-                case RelativePivot.LEFT:
-                case RelativePivot.LEFT | RelativePivot.TOP:
-                    //左上
-                    result[0] = mAnchorViewLocation[0] - result[0];
-                    result[1] += mAnchorViewLocation[1];
-                    break;
-                case RelativePivot.RIGHT:
-                case RelativePivot.RIGHT | RelativePivot.TOP:
-                    //右上
-                    result[0] = mAnchorViewLocation[0] - result[0] - popupViewWidth;
-                    result[1] += mAnchorViewLocation[1];
-                    break;
-
-                case RelativePivot.BOTTOM:
-                case RelativePivot.LEFT | RelativePivot.BOTTOM:
-                    //左下
-                    result[0] = mAnchorViewLocation[0] - result[0];
-                    result[1] += mAnchorViewLocation[1] + popupViewHeight;
-                    break;
-                case RelativePivot.RIGHT | RelativePivot.BOTTOM:
-                    //右下
-                    result[0] = mAnchorViewLocation[0] - result[0] - popupViewWidth;
-                    result[1] += mAnchorViewLocation[1] + popupViewHeight;
-                    break;
-                case RelativePivot.CENTER_X:
-                case RelativePivot.TOP | RelativePivot.CENTER_X:
-                    //左中
-                    result[0] = mAnchorViewLocation[0] - result[0] - popupViewWidth / 2;
-                    result[1] += mAnchorViewLocation[1];
-                    break;
-                case RelativePivot.LEFT | RelativePivot.CENTER_Y:
-                case RelativePivot.CENTER_Y:
-                    //垂直中间
-                    result[0] = mAnchorViewLocation[0] - result[0];
-                    result[1] += mAnchorViewLocation[1] - popupViewHeight / 2;
-                    break;
-                case RelativePivot.RIGHT | RelativePivot.CENTER_Y:
-                    //右边中间
-                    result[0] = mAnchorViewLocation[0] - result[0] - popupViewWidth;
-                    result[1] += mAnchorViewLocation[1] - popupViewHeight / 2;
-                    break;
-                case RelativePivot.CENTER_X | RelativePivot.CENTER_Y:
-                    //中心
-                    result[0] = mAnchorViewLocation[0] - result[0] - popupViewWidth / 2;
-                    result[1] += mAnchorViewLocation[1] - popupViewHeight / 2;
-                    break;
-                default:
-                    Log.i(TAG, "calcuate default");
-                    break;
-            }
+            offset[0] = offset[0] + offsetX;
+            offset[1] = -anchorView.getHeight() + offsetY;
         }
 
         if (isAutoLocatePopup) {
-            final boolean onTop = (getScreenHeight() - result[1] < popupViewHeight);
+            final boolean onTop = (getScreenHeight() - mAnchorViewLocation[1] + offset[1] < popupViewHeight);
             if (onTop) {
-                result[1] = result[1] - popupViewHeight - offsetY;
+                offset[1] = offset[1] - popupViewHeight + offsetY;
                 showOnTop(mPopupView);
             } else {
                 showOnDown(mPopupView);
             }
         }
-        return result;
+        return offset;
 
     }
 
@@ -574,9 +525,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param popupGravity
      */
     public void setPopupGravity(int popupGravity) {
-        if (relativeToAnchorView) {
-            popupGravity = Gravity.NO_GRAVITY;
-        }
         this.popupGravity = popupGravity;
     }
 
@@ -590,9 +538,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param relativeToAnchorView
      */
     public void setRelativeToAnchorView(boolean relativeToAnchorView) {
-        if (relativeToAnchorView) {
-            popupGravity = Gravity.NO_GRAVITY;
-        }
+        setShowAtDown(true);
         this.relativeToAnchorView = relativeToAnchorView;
     }
 
@@ -601,10 +547,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     public void setAutoLocatePopup(boolean autoLocatePopup) {
-        if (autoLocatePopup) {
-            //强制左上为参考点
-            popupGravity = Gravity.LEFT | Gravity.TOP;
-        }
+        setShowAtDown(true);
         isAutoLocatePopup = autoLocatePopup;
     }
 
@@ -633,6 +576,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     /**
      * 决定使用showAtLocation还是showAsDropDown
      * decide showAtLocation/showAsDropDown
+     *
      * @param showAtDown
      */
     public void setShowAtDown(boolean showAtDown) {
@@ -641,7 +585,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     /**
      * 点击外部是否消失
-     *
+     * <p>
      * dismiss popup when touch ouside from popup
      *
      * @param dismissWhenTouchOuside true for dismiss
@@ -650,13 +594,13 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         this.dismissWhenTouchOuside = dismissWhenTouchOuside;
         if (dismissWhenTouchOuside) {
             //指定透明背景，back键相关
-            mPopupWindow.setBackgroundDrawable(new ColorDrawable());
             mPopupWindow.setFocusable(true);
             mPopupWindow.setOutsideTouchable(true);
+            mPopupWindow.setBackgroundDrawable(new ColorDrawable());
         } else {
-            getPopupWindow().setFocusable(false);
-            getPopupWindow().setBackgroundDrawable(null);
-            getPopupWindow().setOutsideTouchable(false);
+            mPopupWindow.setFocusable(false);
+            mPopupWindow.setOutsideTouchable(false);
+            mPopupWindow.setBackgroundDrawable(null);
         }
 
     }
@@ -701,22 +645,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         } catch (Exception e) {
             Log.d(TAG, "dismiss error");
         }
-    }
-
-    //------------------------------------------Option-----------------------------------------------
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface RelativePivot {
-        int LEFT = 0x0001;
-        int TOP = 0x0003;
-        int RIGHT = 0x0005;
-        int BOTTOM = 0x0010;
-        int CENTER_X = (LEFT | RIGHT) << 4;
-        int CENTER_Y = (TOP | BOTTOM) << 4;
-    }
-
-    public void setRelativePivot(@RelativePivot int pivot) {
-        this.relativeToAnchorView = true;
-        this.popupRelativePivot = pivot;
     }
 
 

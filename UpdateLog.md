@@ -6,6 +6,8 @@
 
 另外增加一个点击popup外部不消失的方法，默认点击外部消失`setDismissWhenTouchOuside()`
 
+去除复杂的setRelativePivot方法，更新demo工程
+
 
 ##2016-12-02
 

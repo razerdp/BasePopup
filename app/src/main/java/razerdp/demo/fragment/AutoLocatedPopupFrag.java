@@ -28,7 +28,6 @@ public class AutoLocatedPopupFrag extends SimpleBaseFrag implements View.OnClick
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         autoLocatedPopup = new AutoLocatedPopup(getActivity());
-        autoLocatedPopup.setAutoLocatePopup(true);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
