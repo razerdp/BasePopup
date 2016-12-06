@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import razerdp.basepopup.R;
 import razerdp.demo.fragment.AutoLocatedPopupFrag;
 import razerdp.demo.fragment.CommentPopupFrag;
@@ -16,7 +17,9 @@ import razerdp.demo.fragment.InputPopupFrag;
 import razerdp.demo.fragment.ListPopupFrag;
 import razerdp.demo.fragment.MenuPopupFrag;
 import razerdp.demo.fragment.ScalePopupFrag;
+import razerdp.demo.fragment.SelectFromTopPopupFrag;
 import razerdp.demo.fragment.SlideFromBottomPopupFrag;
+import razerdp.demo.popup.SelectFromTopPopup;
 
 public class DemoActivity extends FragmentActivity {
     private FragmentManager mFragmentManager;
@@ -30,6 +33,7 @@ public class DemoActivity extends FragmentActivity {
     private CustomInterpolatorPopupFrag mInterpolatorPopupFrag;
     private FullScreenPopupFrag mFullScreenPopupFrag;
     private AutoLocatedPopupFrag mAutoLocatedPopupFrag;
+    private SelectFromTopPopupFrag mSelectFromTopPopupFrag;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,7 +50,8 @@ public class DemoActivity extends FragmentActivity {
         mDialogPopupFrag = new DialogPopupFrag();
         mInterpolatorPopupFrag = new CustomInterpolatorPopupFrag();
         mFullScreenPopupFrag = new FullScreenPopupFrag();
-        mAutoLocatedPopupFrag=new AutoLocatedPopupFrag();
+        mAutoLocatedPopupFrag = new AutoLocatedPopupFrag();
+        mSelectFromTopPopupFrag = new SelectFromTopPopupFrag();
     }
 
     @Override
@@ -91,6 +96,9 @@ public class DemoActivity extends FragmentActivity {
                 break;
             case R.id.id_auto_located_popup:
                 mFragmentManager.beginTransaction().replace(R.id.parent, mAutoLocatedPopupFrag).commit();
+                break;
+            case R.id.id_select_from_top_popup:
+                mFragmentManager.beginTransaction().replace(R.id.parent, mSelectFromTopPopupFrag).commit();
                 break;
             default:
                 break;
