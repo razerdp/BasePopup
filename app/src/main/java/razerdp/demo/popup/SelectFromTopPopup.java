@@ -32,7 +32,7 @@ public class SelectFromTopPopup extends BasePopupWindow {
 
     public SelectFromTopPopup(Activity context) {
         super(context);
-        setShowAtDown(true);
+        setRelativeToAnchorView(true);
         setBackPressEnable(false);
         testList = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
@@ -43,14 +43,14 @@ public class SelectFromTopPopup extends BasePopupWindow {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(),testList.get(position),Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), testList.get(position), Toast.LENGTH_LONG).show();
             }
         });
     }
 
     @Override
     protected Animation initShowAnimation() {
-        TranslateAnimation translateAnimation = new TranslateAnimation(0f, 0f, -DimensUtils.dipToPx(getContext(),350f), 0);
+        TranslateAnimation translateAnimation = new TranslateAnimation(0f, 0f, -DimensUtils.dipToPx(getContext(), 350f), 0);
         translateAnimation.setDuration(450);
         translateAnimation.setInterpolator(new OvershootInterpolator(2));
         return translateAnimation;
@@ -58,7 +58,7 @@ public class SelectFromTopPopup extends BasePopupWindow {
 
     @Override
     protected Animation initExitAnimation() {
-        TranslateAnimation translateAnimation = new TranslateAnimation(0f, 0f, 0, -DimensUtils.dipToPx(getContext(),350f));
+        TranslateAnimation translateAnimation = new TranslateAnimation(0f, 0f, 0, -DimensUtils.dipToPx(getContext(), 350f));
         translateAnimation.setDuration(450);
         translateAnimation.setInterpolator(new OvershootInterpolator(-4));
         return translateAnimation;
@@ -77,6 +77,12 @@ public class SelectFromTopPopup extends BasePopupWindow {
     @Override
     public View initAnimaView() {
         return findViewById(R.id.popup_anima);
+    }
+
+    @Override
+    public void showPopupWindow(View v) {
+        setOffsetY(v.getHeight());
+        super.showPopupWindow(v);
     }
 
     //=============================================================adapter
