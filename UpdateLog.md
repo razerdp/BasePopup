@@ -1,5 +1,12 @@
 # BasePopup
 </br>
+##2016-12-06
+
+因为某些情况下需要用到showAsDropDown，因此增加dropdown方法`setShowAtDown()`详情看issue:[#issue10](https://github.com/razerdp/BasePopup/issues/10)
+
+另外增加一个点击popup外部不消失的方法，默认点击外部消失`setDismissWhenTouchOuside()`
+
+
 ##2016-12-02
 
 修复setOnDismissListener的错误 [#issue9](https://github.com/razerdp/BasePopup/issues/9)
