@@ -79,12 +79,6 @@ public class SelectFromTopPopup extends BasePopupWindow {
         return findViewById(R.id.popup_anima);
     }
 
-    @Override
-    public void showPopupWindow(View v) {
-        setRelativeToAnchorView(true);
-        super.showPopupWindow(v);
-    }
-
     //=============================================================adapter
     private static class InnerPopupAdapter extends BaseAdapter {
         private LayoutInflater mInflater;

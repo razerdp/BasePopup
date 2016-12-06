@@ -31,6 +31,7 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
         findViewById(R.id.tx_1).setOnClickListener(this);
         findViewById(R.id.tx_2).setOnClickListener(this);
         findViewById(R.id.tx_3).setOnClickListener(this);
+        setRelativeToAnchorView(true);
     }
 
     @Override
@@ -55,8 +56,7 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
 
     @Override
     public void showPopupWindow(View v) {
-        setRelativeToAnchorView(true);
-        setRelativePivot(RelativePivot.RIGHT);
+        setOffsetX(-(getPopupViewWidth() - v.getWidth() / 2));
         setOffsetY(v.getHeight() / 2);
         super.showPopupWindow(v);
     }

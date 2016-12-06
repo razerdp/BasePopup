@@ -22,6 +22,7 @@ public class AutoLocatedPopup extends BasePopupWindow implements View.OnClickLis
 
     public AutoLocatedPopup(Activity context) {
         super(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        setAutoLocatePopup(true);
         bindEvent();
     }
 
@@ -59,9 +60,6 @@ public class AutoLocatedPopup extends BasePopupWindow implements View.OnClickLis
 
     @Override
     public void showPopupWindow(View v) {
-        setRelativeToAnchorView(true);
-        setRelativePivot(RelativePivot.LEFT);
-        setOffsetY(v.getHeight());
         super.showPopupWindow(v);
     }
 

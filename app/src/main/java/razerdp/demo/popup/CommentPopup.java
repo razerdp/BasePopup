@@ -103,8 +103,8 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
     @Override
     public void showPopupWindow(View v) {
         setRelativeToAnchorView(true);
-        setRelativePivot(RelativePivot.RIGHT | RelativePivot.CENTER_Y);
-        setOffsetX(v.getWidth() / 2);
+        setOffsetX(-getPopupViewWidth()-v.getWidth()/2);
+        setOffsetY(-v.getHeight());
         super.showPopupWindow(v);
     }
 
