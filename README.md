@@ -34,7 +34,7 @@ Add the dependency
 
 ```xml
 	dependencies {
-	        compile 'com.github.razerdp:BasePopup:v1.4.5'
+	        compile 'com.github.razerdp:BasePopup:v1.5.0'
 	}
 ```
 
@@ -200,9 +200,9 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 }
 ```
 
-**Step 4:
+**Step 4:**
 
-**create the object and show
+create the object and show
 
 etc.
 

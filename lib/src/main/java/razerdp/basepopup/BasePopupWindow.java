@@ -53,7 +53,7 @@ import razerdp.library.R;
  * <p>
  * 抽象通用popupwindow的父类
  */
-public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismissListener {
+public abstract class BasePopupWindow implements BasePopup {
     private static final String TAG = "BasePopupWindow";
     //元素定义
     private PopupWindow mPopupWindow;
@@ -115,7 +115,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         setDismissWhenTouchOuside(true);
         //默认是渐入动画
         setNeedPopupFade(Build.VERSION.SDK_INT <= 22);
-        mPopupWindow.setOnDismissListener(this);
 
         //=============================================================为外层的view添加点击事件，并设置点击消失
         mAnimaView = initAnimaView();
@@ -414,6 +413,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     public void setOnDismissListener(OnDismissListener onDismissListener) {
         mOnDismissListener = onDismissListener;
+        mPopupWindow.setOnDismissListener(onDismissListener);
     }
 
     public void setShowAnimation(Animation showAnimation) {
@@ -611,6 +611,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 取消一个PopupWindow，如果有退出动画，PopupWindow的消失将会在动画结束后执行
      */
     public void dismiss() {
+        if (!checkPerformDismiss()) return;
         try {
             if (mExitAnimation != null && mAnimaView != null) {
                 if (!isExitAnimaPlaying) {
@@ -638,6 +639,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 直接消掉popup而不需要动画
      */
     public void dismissWithOutAnima() {
+        if (!checkPerformDismiss()) return;
         try {
             if (mExitAnimation != null && mAnimaView != null) mAnimaView.clearAnimation();
             if (mExitAnimator != null) mExitAnimator.removeAllListeners();
@@ -647,6 +649,14 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
     }
 
+
+    private boolean checkPerformDismiss() {
+        boolean callDismiss = true;
+        if (mOnDismissListener != null) {
+            callDismiss = callDismiss && mOnDismissListener.onBeforeDismiss();
+        }
+        return callDismiss;
+    }
 
     //------------------------------------------Anima-----------------------------------------------
 
@@ -789,15 +799,16 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     }
 
-    @Override
-    public void onDismiss() {
-        if (mOnDismissListener != null) {
-            mOnDismissListener.onDismiss();
-        }
-    }
-
     //------------------------------------------Interface-----------------------------------------------
-    public interface OnDismissListener {
-        void onDismiss();
+    public static abstract class OnDismissListener implements PopupWindow.OnDismissListener {
+        /**
+         *
+         * <b>return ture for perform dismiss</b>
+         *
+         * @return
+         */
+        public boolean onBeforeDismiss() {
+            return true;
+        }
     }
 }

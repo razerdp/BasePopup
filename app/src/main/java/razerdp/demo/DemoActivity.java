@@ -4,12 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import razerdp.basepopup.R;
@@ -22,23 +20,12 @@ import razerdp.demo.fragment.InputPopupFrag;
 import razerdp.demo.fragment.ListPopupFrag;
 import razerdp.demo.fragment.MenuPopupFrag;
 import razerdp.demo.fragment.ScalePopupFrag;
-import razerdp.demo.fragment.SelectFromTopPopupFrag;
+import razerdp.demo.fragment.SlideFromTopPopupFrag;
 import razerdp.demo.fragment.SimpleBaseFrag;
 import razerdp.demo.fragment.SlideFromBottomPopupFrag;
 
 public class DemoActivity extends FragmentActivity {
     private FragmentManager mFragmentManager;
-    private ScalePopupFrag mNormalPopupFrag;
-    private SlideFromBottomPopupFrag mSlideFromBottomPopupFrag;
-    private CommentPopupFrag mCommentPopupFrag;
-    private InputPopupFrag mInputPopupFrag;
-    private ListPopupFrag mListPopupFrag;
-    private MenuPopupFrag mMenuPopupFrag;
-    private DialogPopupFrag mDialogPopupFrag;
-    private CustomInterpolatorPopupFrag mInterpolatorPopupFrag;
-    private FullScreenPopupFrag mFullScreenPopupFrag;
-    private AutoLocatedPopupFrag mAutoLocatedPopupFrag;
-    private SelectFromTopPopupFrag mSelectFromTopPopupFrag;
 
     private Map<Integer, SimpleBaseFrag> fragMap;
 
@@ -50,8 +37,6 @@ public class DemoActivity extends FragmentActivity {
 
         fragMap = new HashMap<>();
 
-
-        mNormalPopupFrag = new ScalePopupFrag();
         fragMap.put(R.id.id_scale_popup, new ScalePopupFrag());
         fragMap.put(R.id.id_slide_from_bottom_popup, new SlideFromBottomPopupFrag());
         fragMap.put(R.id.id_comment_popup, new CommentPopupFrag());
@@ -62,11 +47,11 @@ public class DemoActivity extends FragmentActivity {
         fragMap.put(R.id.id_custom_interpolator_popup, new CustomInterpolatorPopupFrag());
         fragMap.put(R.id.id_full_screen_popup, new FullScreenPopupFrag());
         fragMap.put(R.id.id_auto_located_popup, new AutoLocatedPopupFrag());
-        fragMap.put(R.id.id_select_from_top_popup, new SelectFromTopPopupFrag());
+        fragMap.put(R.id.id_slide_from_top_popup, new SlideFromTopPopupFrag());
 
 
-        SimpleBaseFrag simpleBaseFrag = fragMap.get(R.id.id_scale_popup);
-        mFragmentManager.beginTransaction().replace(R.id.popup_fragment, simpleBaseFrag).commit();
+        SimpleBaseFrag firstShowFrag = fragMap.get(R.id.id_scale_popup);
+        mFragmentManager.beginTransaction().replace(R.id.popup_fragment, firstShowFrag).commit();
     }
 
     @Override
