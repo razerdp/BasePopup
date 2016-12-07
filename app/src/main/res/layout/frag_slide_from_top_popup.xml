@@ -18,14 +18,27 @@
             android:text="取消"
             android:textSize="16sp"/>
 
-        <TextView
-            android:id="@+id/tv_select_title"
+        <LinearLayout
+            android:id="@+id/ll_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:padding="8dp"
-            android:text="相机胶卷"
-            android:textSize="16sp"/>
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="相机胶卷"
+                android:textSize="16sp"/>
+
+            <ImageView
+                android:id="@+id/iv_arrow"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_arrow_weibo_popup"/>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_next_step"

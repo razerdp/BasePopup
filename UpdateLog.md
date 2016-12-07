@@ -1,5 +1,13 @@
 # BasePopup
 </br>
+##2016-12-07
+
+`ondismissListener`增加`onBeforeDismiss()`方法，在执行dismiss之前根据该值确定是否执行dismiss
+
+也可以在执行dismiss前执行一些操作，详情操作请看`SlideFromTopPopupFrag.java`
+
+
+
 ##2016-12-06
 
 因为某些情况下需要用到showAsDropDown，因此增加dropdown方法`setShowAtDown()`详情看issue:[#issue10](https://github.com/razerdp/BasePopup/issues/10)

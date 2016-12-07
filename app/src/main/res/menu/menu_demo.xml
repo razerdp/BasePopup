@@ -53,8 +53,8 @@
         android:orderInCategory="109"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/id_select_from_top_popup"
-        android:title="select from top popup"
+        android:id="@+id/id_slide_from_top_popup"
+        android:title="slide from top popup"
         android:orderInCategory="110"
         app:showAsAction="never"/>
 </menu>
