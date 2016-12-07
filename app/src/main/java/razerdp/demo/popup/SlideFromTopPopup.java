@@ -11,6 +11,8 @@ import android.view.animation.OvershootInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,13 +26,15 @@ import razerdp.demo.utils.DimensUtils;
 
 /**
  * Created by 大灯泡 on 2016/12/6.
+ * <p>
+ * 从顶部下滑的Poup
  */
 
-public class SelectFromTopPopup extends BasePopupWindow {
+public class SlideFromTopPopup extends BasePopupWindow {
 
     private List<String> testList;
 
-    public SelectFromTopPopup(Activity context) {
+    public SlideFromTopPopup(Activity context) {
         super(context);
         setRelativeToAnchorView(true);
         setBackPressEnable(false);
@@ -52,7 +56,7 @@ public class SelectFromTopPopup extends BasePopupWindow {
     protected Animation initShowAnimation() {
         TranslateAnimation translateAnimation = new TranslateAnimation(0f, 0f, -DimensUtils.dipToPx(getContext(), 350f), 0);
         translateAnimation.setDuration(450);
-        translateAnimation.setInterpolator(new OvershootInterpolator(2));
+        translateAnimation.setInterpolator(new OvershootInterpolator(1));
         return translateAnimation;
     }
 
