@@ -70,7 +70,7 @@ public class AutoLocatedPopupFrag extends SimpleBaseFrag implements View.OnClick
 
     @Override
     public BasePopupWindow getPopup() {
-        return new SlideFromBottomPopup(mContext);
+        return null;
     }
 
     @Override
