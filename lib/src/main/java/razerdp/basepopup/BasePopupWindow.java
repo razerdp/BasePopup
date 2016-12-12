@@ -65,6 +65,7 @@ public abstract class BasePopupWindow implements BasePopup {
     //是否自动弹出输入框(default:false)
     private boolean autoShowInputMethod = false;
     private OnDismissListener mOnDismissListener;
+    private OnBeforeShowCallback mOnBeforeShowCallback;
     //anima
     private Animation mShowAnimation;
     private Animator mShowAnimator;
@@ -80,7 +81,6 @@ public abstract class BasePopupWindow implements BasePopup {
     private int offsetY;
     private int popupViewWidth;
     private int popupViewHeight;
-    private int popupRelativePivot;
     //锚点view的location
     private int[] mAnchorViewLocation;
     //是否参考锚点
@@ -211,69 +211,62 @@ public abstract class BasePopupWindow implements BasePopup {
      * 调用此方法时，PopupWindow将会显示在DecorView
      */
     public void showPopupWindow() {
-        try {
-            tryToShowPopup(0, null);
-        } catch (Exception e) {
-            Log.e(TAG, "show error");
-            e.printStackTrace();
+        if (checkPerformShow(null)) {
+            tryToShowPopup(null);
         }
     }
 
-    public void showPopupWindow(int res) {
-        try {
-            tryToShowPopup(res, null);
-        } catch (Exception e) {
-            Log.e(TAG, "show error");
-            e.printStackTrace();
-        }
+    /**
+     * 调用此方法时，PopupWindow左上角将会与anchorview左上角对齐
+     * @param anchorViewResid
+     */
+    public void showPopupWindow(int anchorViewResid) {
+        View v = mContext.findViewById(anchorViewResid);
+        showPopupWindow(v);
     }
 
+    /**
+     * 调用此方法时，PopupWindow左上角将会与anchorview左上角对齐
+     * @param v
+     */
     public void showPopupWindow(View v) {
-        try {
-            tryToShowPopup(0, v);
-        } catch (Exception e) {
-            Log.e(TAG, "show error");
-            e.printStackTrace();
+        if (checkPerformShow(v)) {
+            setRelativeToAnchorView(true);
+            tryToShowPopup(v);
         }
     }
 
     //------------------------------------------Methods-----------------------------------------------
-    private void tryToShowPopup(int res, View v) throws Exception {
-        int offset[];
-        //传递了view
-        if (res == 0 && v != null) {
-            offset = calcuateOffset(v);
-            if (showAtDown) {
-                mPopupWindow.showAsDropDown(v, offset[0], offset[1]);
+    private void tryToShowPopup(View v) {
+        try {
+            int offset[];
+            //传递了view
+            if (v != null) {
+                offset = calcuateOffset(v);
+                if (showAtDown) {
+                    mPopupWindow.showAsDropDown(v, offset[0], offset[1]);
+                } else {
+                    mPopupWindow.showAtLocation(v, popupGravity, offset[0], offset[1]);
+                }
             } else {
-                mPopupWindow.showAtLocation(v, popupGravity, offset[0], offset[1]);
+                //什么都没传递，取顶级view的id
+                mPopupWindow.showAtLocation(mContext.findViewById(android.R.id.content), popupGravity, offsetX, offsetY);
             }
-        }
-        //传递了res
-        if (res != 0 && v == null) {
-            View anchorView = mContext.findViewById(res);
-            offset = calcuateOffset(anchorView);
-            if (showAtDown) {
-                mPopupWindow.showAsDropDown(anchorView, offset[0], offset[1]);
-            } else {
-                mPopupWindow.showAtLocation(anchorView, popupGravity, offset[0], offset[1]);
+            if (mShowAnimation != null && mAnimaView != null) {
+                mAnimaView.clearAnimation();
+                mAnimaView.startAnimation(mShowAnimation);
             }
-        }
-        //什么都没传递，取顶级view的id
-        if (res == 0 && v == null) {
-            mPopupWindow.showAtLocation(mContext.findViewById(android.R.id.content), popupGravity, offsetX, offsetY);
-        }
-        if (mShowAnimation != null && mAnimaView != null) {
-            mAnimaView.clearAnimation();
-            mAnimaView.startAnimation(mShowAnimation);
-        }
-        if (mShowAnimation == null && mShowAnimator != null && mAnimaView != null) {
-            mShowAnimator.start();
-        }
-        //自动弹出键盘
-        if (autoShowInputMethod && getInputView() != null) {
-            getInputView().requestFocus();
-            InputMethodUtils.showInputMethod(getInputView(), 150);
+            if (mShowAnimation == null && mShowAnimator != null && mAnimaView != null) {
+                mShowAnimator.start();
+            }
+            //自动弹出键盘
+            if (autoShowInputMethod && getInputView() != null) {
+                getInputView().requestFocus();
+                InputMethodUtils.showInputMethod(getInputView(), 150);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "show error");
+            e.printStackTrace();
         }
     }
 
@@ -414,6 +407,14 @@ public abstract class BasePopupWindow implements BasePopup {
     public void setOnDismissListener(OnDismissListener onDismissListener) {
         mOnDismissListener = onDismissListener;
         mPopupWindow.setOnDismissListener(onDismissListener);
+    }
+
+    public OnBeforeShowCallback getOnBeforeShowCallback() {
+        return mOnBeforeShowCallback;
+    }
+
+    public void setOnBeforeShowCallback(OnBeforeShowCallback mOnBeforeShowCallback) {
+        this.mOnBeforeShowCallback = mOnBeforeShowCallback;
     }
 
     public void setShowAnimation(Animation showAnimation) {
@@ -653,9 +654,17 @@ public abstract class BasePopupWindow implements BasePopup {
     private boolean checkPerformDismiss() {
         boolean callDismiss = true;
         if (mOnDismissListener != null) {
-            callDismiss = callDismiss && mOnDismissListener.onBeforeDismiss();
+            callDismiss = mOnDismissListener.onBeforeDismiss();
         }
         return callDismiss;
+    }
+
+    private boolean checkPerformShow(View v) {
+        boolean result = true;
+        if (mOnBeforeShowCallback != null) {
+            result = mOnBeforeShowCallback.onBeforeShow(mPopupView, v, this.mShowAnimation != null || this.mShowAnimator != null);
+        }
+        return result;
     }
 
     //------------------------------------------Anima-----------------------------------------------
@@ -771,7 +780,7 @@ public abstract class BasePopupWindow implements BasePopup {
             set.playTogether(
                     ObjectAnimator.ofFloat(mAnimaView, "translationY", 250, 0).setDuration(400),
                     ObjectAnimator.ofFloat(mAnimaView, "alpha", 0.4f, 1).setDuration(250 * 3 / 2)
-                            );
+            );
         }
         return set;
     }
@@ -800,9 +809,19 @@ public abstract class BasePopupWindow implements BasePopup {
     }
 
     //------------------------------------------Interface-----------------------------------------------
+    public interface OnBeforeShowCallback {
+        /**
+         * <b>return ture for perform show</b>
+         *
+         * @return
+         */
+        boolean onBeforeShow(View popupRootView, View anchorView, boolean hasShowAnima);
+
+
+    }
+
     public static abstract class OnDismissListener implements PopupWindow.OnDismissListener {
         /**
-         *
          * <b>return ture for perform dismiss</b>
          *
          * @return

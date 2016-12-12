@@ -36,7 +36,6 @@ public class SlideFromTopPopup extends BasePopupWindow {
 
     public SlideFromTopPopup(Activity context) {
         super(context);
-        setRelativeToAnchorView(true);
         setBackPressEnable(false);
         testList = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
@@ -81,12 +80,6 @@ public class SlideFromTopPopup extends BasePopupWindow {
     @Override
     public View initAnimaView() {
         return findViewById(R.id.popup_anima);
-    }
-
-    @Override
-    public void showPopupWindow(View v) {
-        setOffsetY(v.getHeight());
-        super.showPopupWindow(v);
     }
 
     //=============================================================adapter

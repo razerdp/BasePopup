@@ -102,7 +102,6 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
 
     @Override
     public void showPopupWindow(View v) {
-        setRelativeToAnchorView(true);
         setOffsetX(-getPopupViewWidth()-v.getWidth()/2);
         setOffsetY(-v.getHeight());
         super.showPopupWindow(v);

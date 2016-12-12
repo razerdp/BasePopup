@@ -34,7 +34,7 @@ Add the dependency
 
 ```xml
 	dependencies {
-	        compile 'com.github.razerdp:BasePopup:v1.5.0'
+	        compile 'com.github.razerdp:BasePopup:v1.5.1'
 	}
 ```
 

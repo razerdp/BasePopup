@@ -11,6 +11,14 @@
 
 ---
 
+##最新改动：
+
+v1.5.1:
+
+现在`showPopupWindow(View v)`或者`showPopupWindow(int resid)`将会把popupwindow与anchorView挂钩哦，左上角会对齐（width=match_parent除外）
+
+另外增加一个执行popup前的回调`OnBeforeShowCallback`，与beforedismiss一样，返回false则不执行showpopup，另外在这里可以先实现offsetX或者offsetY哦~
+
 ### 最低SDK版本要求 : API 11
 
 # 依赖  [![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
@@ -33,7 +41,7 @@
 
 ```xml
 	dependencies {
-	        compile 'com.github.razerdp:BasePopup:v1.5.0'
+	        compile 'com.github.razerdp:BasePopup:v1.5.1'
 	}
 ```
 
