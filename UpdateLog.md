@@ -1,5 +1,14 @@
 # BasePopup
 </br>
+
+##2016-12-12
+
+现在`showPopupWindow(View v)`或者`showPopupWindow(int resid)`将会把popupwindow与anchorView挂钩哦，左上角会对齐（width=match_parent除外）
+
+另外增加一个执行popup前的回调`OnBeforeShowCallback`，与beforedismiss一样，返回false则不执行showpopup，另外在这里可以先实现offsetX或者offsetY哦~
+
+详情看[issue11](https://github.com/razerdp/BasePopup/issues/11)
+
 ##2016-12-07
 
 `ondismissListener`增加`onBeforeDismiss()`方法，在执行dismiss之前根据该值确定是否执行dismiss

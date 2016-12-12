@@ -31,7 +31,6 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
         findViewById(R.id.tx_1).setOnClickListener(this);
         findViewById(R.id.tx_2).setOnClickListener(this);
         findViewById(R.id.tx_3).setOnClickListener(this);
-        setRelativeToAnchorView(true);
     }
 
     @Override

@@ -59,11 +59,6 @@ public class AutoLocatedPopup extends BasePopupWindow implements View.OnClickLis
     }
 
     @Override
-    public void showPopupWindow(View v) {
-        super.showPopupWindow(v);
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tx_1:
