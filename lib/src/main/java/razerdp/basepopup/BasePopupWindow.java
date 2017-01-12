@@ -56,7 +56,7 @@ import razerdp.library.R;
 public abstract class BasePopupWindow implements BasePopup {
     private static final String TAG = "BasePopupWindow";
     //元素定义
-    private PopupWindow mPopupWindow;
+    private PopupWindowProxy mPopupWindow;
     //popup视图
     private View mPopupView;
     private Activity mContext;
@@ -111,7 +111,8 @@ public abstract class BasePopupWindow implements BasePopup {
             mPopupView.setFocusableInTouchMode(true);
         }
         //默认占满全屏
-        mPopupWindow = new PopupWindow(mPopupView, w, h);
+        mPopupWindow = new PopupWindowProxy(mPopupView, w, h);
+        mPopupWindow.setOnPopupProxyBeforeDismissListener(onPopupProxyBeforeDismissListener);
         setDismissWhenTouchOuside(true);
         //默认是渐入动画
         setNeedPopupFade(Build.VERSION.SDK_INT <= 22);
@@ -614,12 +615,27 @@ public abstract class BasePopupWindow implements BasePopup {
     public void dismiss() {
         if (!checkPerformDismiss()) return;
         try {
+            if (mPopupWindow.getOnPopupProxyBeforeDismissListener() == null) {
+                mPopupWindow.setOnPopupProxyBeforeDismissListener(onPopupProxyBeforeDismissListener);
+            }
+            mPopupWindow.dismiss();
+        } catch (Exception e) {
+            Log.d(TAG, "dismiss error");
+        }
+    }
+
+
+    private PopupWindowProxy.OnPopupProxyBeforeDismissListener onPopupProxyBeforeDismissListener = new PopupWindowProxy.OnPopupProxyBeforeDismissListener() {
+        @Override
+        public boolean onBeforeDismiss() {
+            boolean hasAnima = false;
             if (mExitAnimation != null && mAnimaView != null) {
                 if (!isExitAnimaPlaying) {
                     mExitAnimation.setAnimationListener(mAnimationListener);
                     mAnimaView.clearAnimation();
                     mAnimaView.startAnimation(mExitAnimation);
                     isExitAnimaPlaying = true;
+                    hasAnima = true;
                 }
             } else if (mExitAnimator != null) {
                 if (!isExitAnimaPlaying) {
@@ -627,14 +643,13 @@ public abstract class BasePopupWindow implements BasePopup {
                     mExitAnimator.addListener(mAnimatorListener);
                     mExitAnimator.start();
                     isExitAnimaPlaying = true;
+                    hasAnima = true;
                 }
-            } else {
-                mPopupWindow.dismiss();
             }
-        } catch (Exception e) {
-            Log.d(TAG, "dismiss error");
+            //如果有动画，则不立刻执行dismiss
+            return !hasAnima;
         }
-    }
+    };
 
     /**
      * 直接消掉popup而不需要动画
@@ -644,7 +659,7 @@ public abstract class BasePopupWindow implements BasePopup {
         try {
             if (mExitAnimation != null && mAnimaView != null) mAnimaView.clearAnimation();
             if (mExitAnimator != null) mExitAnimator.removeAllListeners();
-            mPopupWindow.dismiss();
+            mPopupWindow.callSuperDismiss();
         } catch (Exception e) {
             Log.d(TAG, "dismiss error");
         }
@@ -677,7 +692,7 @@ public abstract class BasePopupWindow implements BasePopup {
 
         @Override
         public void onAnimationEnd(Animator animation) {
-            mPopupWindow.dismiss();
+            mPopupWindow.callSuperDismiss();
             isExitAnimaPlaying = false;
         }
 
@@ -700,7 +715,7 @@ public abstract class BasePopupWindow implements BasePopup {
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            mPopupWindow.dismiss();
+            mPopupWindow.callSuperDismiss();
             isExitAnimaPlaying = false;
         }
 

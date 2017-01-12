@@ -1,6 +1,10 @@
 # BasePopup
 </br>
 
+##2017/01/12
+
+使用PopupWindowProxy，覆写dismiss();
+
 ##2016-12-12
 
 现在`showPopupWindow(View v)`或者`showPopupWindow(int resid)`将会把popupwindow与anchorView挂钩哦，左上角会对齐（width=match_parent除外）
