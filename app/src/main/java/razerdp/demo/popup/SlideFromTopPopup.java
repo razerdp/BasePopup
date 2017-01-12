@@ -37,6 +37,7 @@ public class SlideFromTopPopup extends BasePopupWindow {
     public SlideFromTopPopup(Activity context) {
         super(context);
         setBackPressEnable(false);
+        setDismissWhenTouchOuside(true);
         testList = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
             testList.add("position - " + i);
