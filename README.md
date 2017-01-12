@@ -1,24 +1,35 @@
 # BasePopup
-An abstract class for creating custom popupwindow easily.
-
-[中文介绍](https://github.com/razerdp/BasePopup/blob/master/README-CN.md)
+抽象出一个方便自定义的Basepopup类，更加方便的创建出一个popup以及动画效果
 
 ---
 
-##ATTENTION:
+##请注意：
 
-**If you're upgrading from a version < v1.3.0, please check the changelog of the v1.3.0 version, there are some breaking changes!**
+**如果您是从低于v1.3.0版本升级过来的，请查看改动日志，从v1.3.0版本开始，对于一些误导性的问题和方法名字进行了改动，这将会导致该版本前的方法需要重新复写**
 
-[CHANGELOG](https://github.com/razerdp/BasePopup/blob/master/CHANGELOG.md)
+[改动日志](https://github.com/razerdp/BasePopup/blob/master/CHANGELOG-CN.md)
 
-### MinSDK : API 11
+---
 
-# Download  [![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
+##最新改动：
+
+v1.5.2:
+
+现在的PopupWindow将会改成使用继承的PopupWindowProxy，用于覆写dismiss()方法，使之调用的时候适配退出动画。
+
+v1.5.1:
+
+现在`showPopupWindow(View v)`或者`showPopupWindow(int resid)`将会把popupwindow与anchorView挂钩哦，左上角会对齐（width=match_parent除外）
+
+另外增加一个执行popup前的回调`OnBeforeShowCallback`，与beforedismiss一样，返回false则不执行showpopup，另外在这里可以先实现offsetX或者offsetY哦~
+
+### 最低SDK版本要求 : API 11
+
+# 依赖  [![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
 **Step 1.**
 
-Add the JitPack repository to your build file
+**添加Jitpack到您的root gradle，如果无法导包，一般情况下都是这个原因，请仔细检查**
 
-Add it in your root build.gradle at the end of repositories:
 ```xml
 	allprojects {
 		repositories {
@@ -30,20 +41,21 @@ Add it in your root build.gradle at the end of repositories:
 
 **Step 2.**
 
-Add the dependency
+添加依赖
 
 ```xml
 	dependencies {
-	        compile 'com.github.razerdp:BasePopup:v1.5.1'
+	        compile 'com.github.razerdp:BasePopup:v1.5.2'
 	}
 ```
 
-# HowToUse
+# 使用方法
 
 ----------
+
 **Step 1:**
 
-create xml for the popupwindow
+像您平时定制activity布局文件一样定制您的popup布局
 
 etc.
 ```xml
@@ -134,13 +146,19 @@ etc.
 
 **Step 2:**
 
-Create a class extend BasePopupWindow
+新建一个类继承Basepopup
 
 **Step 3:**
 
-override some methods
+实现必要的几个方法：
 
-etc.
+`initShowAnimation()`:初始化一个进入动画，该动画将会用到`initAnimaView()`返回的view
+
+`onCreatePopupView()`:初始化您的popupwindow界面，建议直接使用`createPopupById()`
+
+`getClickToDismissView()`:如果有需要的话，可以使用这个方法返回一个点击dismiss popupwindow的view(也许是遮罩层也许是某个view，这个随您喜欢)
+
+例如
 
 ```java
 public class DialogPopup extends BasePopupWindow implements View.OnClickListener{
@@ -202,16 +220,16 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 
 **Step 4:**
 
-create the object and show
+把您刚才实现的popup给new出来并调用show方法
 
-etc.
+例如
 
 ```java
     DialogPopup popup = new DialogPopup(context);
     popup.showPopupWindow();
 ```
 
-# Some Example
+# 一些例子
 ![image](https://github.com/razerdp/BasePopup/blob/master/img/comment_popup_with_exitAnima.gif)
 ![image](https://github.com/razerdp/BasePopup/blob/master/img/scale_popup.gif)
 ![image](https://github.com/razerdp/BasePopup/blob/master/img/slide_from_bottom_popup.gif)
@@ -219,9 +237,39 @@ etc.
 ![image](https://github.com/razerdp/BasePopup/blob/master/img/list_popup.gif)
 ![image](https://github.com/razerdp/BasePopup/blob/master/img/menu_popup.gif)
 
-click the link to show more:
+例子更新日志:
 
 https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md
+
+# 方法介绍：
+本项目拥有的方法如下(后续的更新没有在这里写了，详情看demo或者更新日志，demo一般情况下都会包括各种情况)：
+
+ - 必须实现的抽象方法：
+	+ onCreatePopupView()：得到popupwindow的主体，一般是在xml文件写好然后inflate出来并返回，推荐使用createPopupById()方法以减少代码
+	+ initAnimaView()：得到用于展示动画的view，一般为了做到蒙层效果，我们的xml都会给一个灰色半透明的底层然后才是给定展示的popup（详情见demo）
+	+ initShowAnimation()：展示popup的动画
+	+ getClickToDismissView()：点击触发dismiss的view
+ - 非必须实现的公有方法：
+	+ initShowAnimator()：同getShowAnimation，不过有些时候用animator更加的丰富
+	+ getInputView()：得到给定需要输入的view，一般用于包含edittext的popup
+	+ initExitAnimation()：popup执行dismiss时的退出动画
+	+ initExitAnimator()：同上
+	+ setAutoShowInputMethod()：是否自动弹出输入法
+	+ setAdjustInputMethod()：popup是否随着输入法弹出而自适应
+	+ getPopupViewById()：工具方法，不用写那么多LayoutInflate.from(context)
+	+ setViewClickListener()：工具方法，用于方便您设置onClickListener（多个View共用一个listener哦）
+	+ setNeedPopupFade()：设置popup是否淡入淡出，默认为淡入淡出(这个参数将会对整个popup动画哦)
+	+ setPopupAnimaStyle()：设定您喜欢的popup动画style(就跟您平时使用popup一样弄得动画style)
+	+ 以及各种getter/setter
+ - show方法：
+	+ showPopupWindow():默认将popup显示到当前窗口
+	+ showPopupWindow(int res)：将popup显示到对应的id控件上
+	+ showPopupWindow(View v)：将popup显示到view上
+ - 一些别的方法：
+ 	+ setPopupWindowFullScreen(boolean)：popup是否可以覆盖状态栏（全屏）
+
+# 代码解析：
+http://www.jianshu.com/p/069f57e14a9c
 
 #License
 MIT
