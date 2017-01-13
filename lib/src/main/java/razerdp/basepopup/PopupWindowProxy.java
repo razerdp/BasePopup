@@ -7,61 +7,66 @@ import android.widget.PopupWindow;
 
 /**
  * Created by 大灯泡 on 2017/1/12.
+ *
+ * 与basePopupWindow强引用(或者说与PopupController强引用)
  */
 
 public class PopupWindowProxy extends PopupWindow {
 
-    public PopupWindowProxy(Context context) {
+
+    private PopupController mController;
+
+    public PopupWindowProxy(Context context, PopupController mController) {
         super(context);
+        this.mController = mController;
     }
 
-    public PopupWindowProxy(Context context, AttributeSet attrs) {
+    public PopupWindowProxy(Context context, AttributeSet attrs, PopupController mController) {
         super(context, attrs);
+        this.mController = mController;
     }
 
-    public PopupWindowProxy(Context context, AttributeSet attrs, int defStyleAttr) {
+    public PopupWindowProxy(Context context, AttributeSet attrs, int defStyleAttr, PopupController mController) {
         super(context, attrs, defStyleAttr);
+        this.mController = mController;
     }
 
-    public PopupWindowProxy(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public PopupWindowProxy(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes, PopupController mController) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        this.mController = mController;
     }
 
-    public PopupWindowProxy() {
+    public PopupWindowProxy(PopupController mController) {
+        this.mController = mController;
     }
 
-    public PopupWindowProxy(View contentView) {
+    public PopupWindowProxy(View contentView, PopupController mController) {
         super(contentView);
+        this.mController = mController;
     }
 
-    public PopupWindowProxy(int width, int height) {
+    public PopupWindowProxy(int width, int height, PopupController mController) {
         super(width, height);
+        this.mController = mController;
     }
 
-    public PopupWindowProxy(View contentView, int width, int height) {
+    public PopupWindowProxy(View contentView, int width, int height, PopupController mController) {
         super(contentView, width, height);
+        this.mController = mController;
     }
 
-    public PopupWindowProxy(View contentView, int width, int height, boolean focusable) {
+    public PopupWindowProxy(View contentView, int width, int height, boolean focusable, PopupController mController) {
         super(contentView, width, height, focusable);
-    }
-
-    private OnPopupProxyBeforeDismissListener onPopupProxyBeforeDismissListener;
-
-    public OnPopupProxyBeforeDismissListener getOnPopupProxyBeforeDismissListener() {
-        return onPopupProxyBeforeDismissListener;
-    }
-
-    public void setOnPopupProxyBeforeDismissListener(OnPopupProxyBeforeDismissListener onPopupProxyBeforeDismissListener) {
-        this.onPopupProxyBeforeDismissListener = onPopupProxyBeforeDismissListener;
+        this.mController = mController;
     }
 
     @Override
     public void dismiss() {
-        boolean dismissAtOnce = true;
-        if (onPopupProxyBeforeDismissListener != null) {
-            dismissAtOnce = onPopupProxyBeforeDismissListener.onBeforeDismiss();
-        }
+        if (mController == null) return;
+
+        boolean performDismiss = mController.onBeforeDismiss();
+        if (!performDismiss) return;
+        boolean dismissAtOnce = mController.callDismissAtOnce();
         if (dismissAtOnce) {
             callSuperDismiss();
         }
@@ -71,15 +76,4 @@ public class PopupWindowProxy extends PopupWindow {
         super.dismiss();
     }
 
-
-    public interface OnPopupProxyBeforeDismissListener {
-        /**
-         * dismiss at once
-         * <p>
-         * true for at once
-         *
-         * @return
-         */
-        boolean onBeforeDismiss();
-    }
 }
