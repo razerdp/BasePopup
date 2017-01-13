@@ -13,6 +13,11 @@
 
 ##最新改动：
 
+v1.6.0:
+
+ - 将PopupWindow的dismiss逻辑完全迁移到proxy控制[#issue 14](https://github.com/razerdp/BasePopup/issues/14)
+ - 修复Android 4.4以下因为popupView的measure导致的空指针问题
+
 v1.5.2:
 
 现在的PopupWindow将会改成使用继承的PopupWindowProxy，用于覆写dismiss()方法，使之调用的时候适配退出动画。
@@ -45,7 +50,7 @@ v1.5.1:
 
 ```xml
 	dependencies {
-	        compile 'com.github.razerdp:BasePopup:v1.5.2'
+	        compile 'com.github.razerdp:BasePopup:v1.6.0'
 	}
 ```
 

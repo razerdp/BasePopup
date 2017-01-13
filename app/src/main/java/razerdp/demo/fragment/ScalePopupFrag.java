@@ -1,5 +1,6 @@
 package razerdp.demo.fragment;
 
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;

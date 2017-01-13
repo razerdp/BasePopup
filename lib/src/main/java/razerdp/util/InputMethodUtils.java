@@ -1,7 +1,6 @@
-package razerdp.basepopup;
+package razerdp.util;
 
 import android.content.Context;
-import android.os.Handler;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
