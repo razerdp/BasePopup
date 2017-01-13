@@ -25,7 +25,6 @@ package razerdp.basepopup;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
@@ -36,24 +35,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 
 import java.lang.reflect.Field;
 
 import razerdp.library.R;
+import razerdp.util.InputMethodUtils;
+import razerdp.util.SimpleAnimUtil;
 
 /**
  * Created by 大灯泡 on 2016/1/14.
  * <p>
  * 抽象通用popupwindow的父类
  */
-public abstract class BasePopupWindow implements BasePopup {
+public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismissListener, PopupController {
     private static final String TAG = "BasePopupWindow";
     //元素定义
     private PopupWindowProxy mPopupWindow;
@@ -104,16 +101,26 @@ public abstract class BasePopupWindow implements BasePopup {
         mContext = context;
 
         mPopupView = onCreatePopupView();
+        //默认占满全屏
+        mPopupWindow = new PopupWindowProxy(mPopupView, w, h, this);
+        mPopupWindow.setOnDismissListener(this);
+        setDismissWhenTouchOuside(true);
+
+        //修复可能出现的android 4.2的measure空指针问题
         if (mPopupView != null) {
+            int contentViewHeight = ViewGroup.LayoutParams.MATCH_PARENT;
+            final ViewGroup.LayoutParams layoutParams = mPopupView.getLayoutParams();
+            if (layoutParams != null && layoutParams.height == ViewGroup.LayoutParams.WRAP_CONTENT) {
+                contentViewHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
+            }
+            ViewGroup.LayoutParams p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, contentViewHeight);
+            mPopupView.setLayoutParams(p);
             mPopupView.measure(w, h);
             popupViewWidth = mPopupView.getMeasuredWidth();
             popupViewHeight = mPopupView.getMeasuredHeight();
             mPopupView.setFocusableInTouchMode(true);
         }
-        //默认占满全屏
-        mPopupWindow = new PopupWindowProxy(mPopupView, w, h);
-        mPopupWindow.setOnPopupProxyBeforeDismissListener(onPopupProxyBeforeDismissListener);
-        setDismissWhenTouchOuside(true);
+
         //默认是渐入动画
         setNeedPopupFade(Build.VERSION.SDK_INT <= 22);
 
@@ -219,6 +226,7 @@ public abstract class BasePopupWindow implements BasePopup {
 
     /**
      * 调用此方法时，PopupWindow左上角将会与anchorview左上角对齐
+     *
      * @param anchorViewResid
      */
     public void showPopupWindow(int anchorViewResid) {
@@ -228,6 +236,7 @@ public abstract class BasePopupWindow implements BasePopup {
 
     /**
      * 调用此方法时，PopupWindow左上角将会与anchorview左上角对齐
+     *
      * @param v
      */
     public void showPopupWindow(View v) {
@@ -407,7 +416,6 @@ public abstract class BasePopupWindow implements BasePopup {
 
     public void setOnDismissListener(OnDismissListener onDismissListener) {
         mOnDismissListener = onDismissListener;
-        mPopupWindow.setOnDismissListener(onDismissListener);
     }
 
     public OnBeforeShowCallback getOnBeforeShowCallback() {
@@ -607,49 +615,51 @@ public abstract class BasePopupWindow implements BasePopup {
 
     }
 
+    public boolean isDismissWhenTouchOuside() {
+        return dismissWhenTouchOuside;
+    }
+
     //------------------------------------------状态控制-----------------------------------------------
 
     /**
      * 取消一个PopupWindow，如果有退出动画，PopupWindow的消失将会在动画结束后执行
      */
     public void dismiss() {
-        if (!checkPerformDismiss()) return;
         try {
-            if (mPopupWindow.getOnPopupProxyBeforeDismissListener() == null) {
-                mPopupWindow.setOnPopupProxyBeforeDismissListener(onPopupProxyBeforeDismissListener);
-            }
             mPopupWindow.dismiss();
         } catch (Exception e) {
-            Log.d(TAG, "dismiss error");
+            Log.e(TAG, "dismiss error");
         }
     }
 
+    @Override
+    public boolean onBeforeDismiss() {
+        return checkPerformDismiss();
+    }
 
-    private PopupWindowProxy.OnPopupProxyBeforeDismissListener onPopupProxyBeforeDismissListener = new PopupWindowProxy.OnPopupProxyBeforeDismissListener() {
-        @Override
-        public boolean onBeforeDismiss() {
-            boolean hasAnima = false;
-            if (mExitAnimation != null && mAnimaView != null) {
-                if (!isExitAnimaPlaying) {
-                    mExitAnimation.setAnimationListener(mAnimationListener);
-                    mAnimaView.clearAnimation();
-                    mAnimaView.startAnimation(mExitAnimation);
-                    isExitAnimaPlaying = true;
-                    hasAnima = true;
-                }
-            } else if (mExitAnimator != null) {
-                if (!isExitAnimaPlaying) {
-                    mExitAnimator.removeListener(mAnimatorListener);
-                    mExitAnimator.addListener(mAnimatorListener);
-                    mExitAnimator.start();
-                    isExitAnimaPlaying = true;
-                    hasAnima = true;
-                }
+    @Override
+    public boolean callDismissAtOnce() {
+        boolean hasAnima = false;
+        if (mExitAnimation != null && mAnimaView != null) {
+            if (!isExitAnimaPlaying) {
+                mExitAnimation.setAnimationListener(mAnimationListener);
+                mAnimaView.clearAnimation();
+                mAnimaView.startAnimation(mExitAnimation);
+                isExitAnimaPlaying = true;
+                hasAnima = true;
             }
-            //如果有动画，则不立刻执行dismiss
-            return !hasAnima;
+        } else if (mExitAnimator != null) {
+            if (!isExitAnimaPlaying) {
+                mExitAnimator.removeListener(mAnimatorListener);
+                mExitAnimator.addListener(mAnimatorListener);
+                mExitAnimator.start();
+                isExitAnimaPlaying = true;
+                hasAnima = true;
+            }
         }
-    };
+        //如果有动画，则不立刻执行dismiss
+        return !hasAnima;
+    }
 
     /**
      * 直接消掉popup而不需要动画
@@ -661,7 +671,7 @@ public abstract class BasePopupWindow implements BasePopup {
             if (mExitAnimator != null) mExitAnimator.removeAllListeners();
             mPopupWindow.callSuperDismiss();
         } catch (Exception e) {
-            Log.d(TAG, "dismiss error");
+            Log.e(TAG, "dismiss error");
         }
     }
 
@@ -671,7 +681,7 @@ public abstract class BasePopupWindow implements BasePopup {
         if (mOnDismissListener != null) {
             callDismiss = mOnDismissListener.onBeforeDismiss();
         }
-        return callDismiss;
+        return callDismiss && !isExitAnimaPlaying;
     }
 
     private boolean checkPerformShow(View v) {
@@ -732,15 +742,13 @@ public abstract class BasePopupWindow implements BasePopup {
      * @param start          初始位置
      */
     protected Animation getTranslateAnimation(int start, int end, int durationMillis) {
-        Animation translateAnimation = new TranslateAnimation(0, 0, start, end);
-        translateAnimation.setDuration(durationMillis);
-        translateAnimation.setFillEnabled(true);
-        translateAnimation.setFillAfter(true);
-        return translateAnimation;
+        return SimpleAnimUtil.getTranslateAnimation(start, end, durationMillis);
     }
 
     /**
      * 生成ScaleAnimation
+     * <p>
+     * time=300
      */
     protected Animation getScaleAnimation(float fromX,
                                           float toX,
@@ -750,54 +758,28 @@ public abstract class BasePopupWindow implements BasePopup {
                                           float pivotXValue,
                                           int pivotYType,
                                           float pivotYValue) {
-        Animation scaleAnimation = new ScaleAnimation(fromX, toX, fromY, toY, pivotXType, pivotXValue, pivotYType,
-                                                      pivotYValue
-        );
-        scaleAnimation.setDuration(300);
-        scaleAnimation.setFillEnabled(true);
-        scaleAnimation.setFillAfter(true);
-        return scaleAnimation;
+        return SimpleAnimUtil.getScaleAnimation(fromX, toX, fromY, toY, pivotXType, pivotXValue, pivotYType, pivotYValue);
     }
 
     /**
      * 生成自定义ScaleAnimation
      */
     protected Animation getDefaultScaleAnimation() {
-        Animation scaleAnimation = new ScaleAnimation(0f, 1f, 0f, 1f, Animation.RELATIVE_TO_SELF, 0.5f,
-                                                      Animation.RELATIVE_TO_SELF, 0.5f
-        );
-        scaleAnimation.setDuration(300);
-        scaleAnimation.setInterpolator(new AccelerateInterpolator());
-        scaleAnimation.setFillEnabled(true);
-        scaleAnimation.setFillAfter(true);
-        return scaleAnimation;
+        return SimpleAnimUtil.getDefaultScaleAnimation();
     }
 
     /**
      * 生成默认的AlphaAnimation
      */
     protected Animation getDefaultAlphaAnimation() {
-        Animation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-        alphaAnimation.setDuration(300);
-        alphaAnimation.setInterpolator(new AccelerateInterpolator());
-        alphaAnimation.setFillEnabled(true);
-        alphaAnimation.setFillAfter(true);
-        return alphaAnimation;
+        return SimpleAnimUtil.getDefaultAlphaAnimation();
     }
 
     /**
      * 从下方滑动上来
      */
     protected AnimatorSet getDefaultSlideFromBottomAnimationSet() {
-        AnimatorSet set = null;
-        set = new AnimatorSet();
-        if (mAnimaView != null) {
-            set.playTogether(
-                    ObjectAnimator.ofFloat(mAnimaView, "translationY", 250, 0).setDuration(400),
-                    ObjectAnimator.ofFloat(mAnimaView, "alpha", 0.4f, 1).setDuration(250 * 3 / 2)
-            );
-        }
-        return set;
+        return SimpleAnimUtil.getDefaultSlideFromBottomAnimationSet(mAnimaView);
     }
 
     /**
@@ -822,6 +804,15 @@ public abstract class BasePopupWindow implements BasePopup {
     protected void showOnDown(View mPopupView) {
 
     }
+
+    @Override
+    public void onDismiss() {
+        if (mOnDismissListener != null) {
+            mOnDismissListener.onDismiss();
+        }
+        isExitAnimaPlaying = false;
+    }
+
 
     //------------------------------------------Interface-----------------------------------------------
     public interface OnBeforeShowCallback {
