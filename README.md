@@ -13,6 +13,10 @@
 
 ##最新改动：
 
+v1.6.1:
+ - 适配androidN popupwindow的showAsDropDown问题。[googleCode](https://code.google.com/p/android/issues/detail?id=221001)
+ - thanks for [CJJ](https://github.com/android-cjj)
+
 v1.6.0:
 
  - 将PopupWindow的dismiss逻辑完全迁移到proxy控制[#issue 14](https://github.com/razerdp/BasePopup/issues/14)
@@ -46,11 +50,11 @@ v1.5.1:
 
 **Step 2.**
 
-添加依赖
+添加依赖（请把最新版替换成上面的jitpack标签所示版本）
 
 ```xml
 	dependencies {
-	        compile 'com.github.razerdp:BasePopup:v1.6.0'
+	        compile 'com.github.razerdp:BasePopup:最新版'
 	}
 ```
 
