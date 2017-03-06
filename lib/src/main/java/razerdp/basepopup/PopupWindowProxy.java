@@ -77,14 +77,8 @@ public class PopupWindowProxy extends PopupWindow {
     @Override
     public void showAsDropDown(View anchor, int xoff, int yoff, int gravity) {
         if (isOverAndroidN && anchor != null) {
-            // FIXME: 2017/3/6 这个方案其实我个人觉得并不是非常的好。。。。，这里似乎高度的测量模式有关
-            /**
-             * 具体定位到父类的showAsDropDown的
-             *
-             *   if (mHeightMode < 0) p.height = mLastHeight = mHeightMode;
-             *   if (mWidthMode < 0) p.width = mLastWidth = mWidthMode;
-             */
-            setWindowLayoutMode(getWidth(), ViewGroup.LayoutParams.WRAP_CONTENT);
+            // FIXME: 在api>=24时，如果popup的高度是match_parent，那么无法准确定位到某个anchor下，这里的bug似乎高度的测量模式有关,说实话，下面这个解决方案其实我个人觉得并不是非常的好。。。。，
+            setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         }
         super.showAsDropDown(anchor, xoff, yoff, gravity);
     }
