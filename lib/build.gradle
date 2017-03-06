@@ -4,7 +4,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 group='com.github.razerdp'
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 25
     buildToolsVersion '25.0.0'
 
     defaultConfig {
