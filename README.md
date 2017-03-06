@@ -13,6 +13,9 @@
 
 ##最新改动：
 
+v1.6.2:
+ - 再次修复N的showAsDropDown问题。。。。
+
 v1.6.1:
  - 适配androidN popupwindow的showAsDropDown问题。[googleCode](https://code.google.com/p/android/issues/detail?id=221001)
  - thanks for [CJJ](https://github.com/android-cjj)
