@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.PopupWindow;
 
 /**
@@ -65,9 +66,8 @@ public class PopupWindowProxy extends PopupWindow {
 
     /**
      * fix showAsDropDown when android api ver is over N
-     *
+     * <p>
      * https://code.google.com/p/android/issues/detail?id=221001
-     *
      *
      * @param anchor
      * @param xoff
@@ -77,12 +77,16 @@ public class PopupWindowProxy extends PopupWindow {
     @Override
     public void showAsDropDown(View anchor, int xoff, int yoff, int gravity) {
         if (isOverAndroidN && anchor != null) {
-            int[] location = new int[2];
-            anchor.getLocationInWindow(location);
-            super.showAtLocation(anchor, gravity, xoff, location[1] + anchor.getHeight() + yoff);
-        } else {
-            super.showAsDropDown(anchor, xoff, yoff, gravity);
+            // FIXME: 2017/3/6 这个方案其实我个人觉得并不是非常的好。。。。，这里似乎高度的测量模式有关
+            /**
+             * 具体定位到父类的showAsDropDown的
+             *
+             *   if (mHeightMode < 0) p.height = mLastHeight = mHeightMode;
+             *   if (mWidthMode < 0) p.width = mLastWidth = mWidthMode;
+             */
+            setWindowLayoutMode(getWidth(), ViewGroup.LayoutParams.WRAP_CONTENT);
         }
+        super.showAsDropDown(anchor, xoff, yoff, gravity);
     }
 
     @Override
