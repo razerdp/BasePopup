@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 razerdp
+ * Copyright (c) 2017 razerdp
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,6 +37,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 
 import java.lang.reflect.Field;
@@ -101,6 +102,12 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         mContext = context;
 
         mPopupView = onCreatePopupView();
+        mAnimaView = initAnimaView();
+        //处理popupview与animaview相同的情况
+        //当popupView与animaView相同的时候，处理位置信息会出问题，因此这里需要对mAnimaView再包裹一层
+        if (mPopupView != null && mAnimaView != null && mPopupView == mAnimaView) {
+            throw new IllegalArgumentException("The animaView must be a childView of popupView,please check onCreatePopupView() and initAnimaView()");
+        }
         //默认占满全屏
         mPopupWindow = new PopupWindowProxy(mPopupView, w, h, this);
         mPopupWindow.setOnDismissListener(this);
@@ -108,13 +115,15 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
         //修复可能出现的android 4.2的measure空指针问题
         if (mPopupView != null) {
-            int contentViewHeight = ViewGroup.LayoutParams.MATCH_PARENT;
-            final ViewGroup.LayoutParams layoutParams = mPopupView.getLayoutParams();
-            if (layoutParams != null && layoutParams.height == ViewGroup.LayoutParams.WRAP_CONTENT) {
-                contentViewHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                int contentViewHeight = ViewGroup.LayoutParams.MATCH_PARENT;
+                final ViewGroup.LayoutParams layoutParams = mPopupView.getLayoutParams();
+                if (layoutParams != null && layoutParams.height == ViewGroup.LayoutParams.WRAP_CONTENT) {
+                    contentViewHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
+                }
+                ViewGroup.LayoutParams p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, contentViewHeight);
+                mPopupView.setLayoutParams(p);
             }
-            ViewGroup.LayoutParams p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, contentViewHeight);
-            mPopupView.setLayoutParams(p);
             mPopupView.measure(w, h);
             popupViewWidth = mPopupView.getMeasuredWidth();
             popupViewHeight = mPopupView.getMeasuredHeight();
@@ -125,7 +134,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         setNeedPopupFade(Build.VERSION.SDK_INT <= 22);
 
         //=============================================================为外层的view添加点击事件，并设置点击消失
-        mAnimaView = initAnimaView();
         mDismissView = getClickToDismissView();
         if (mDismissView != null) {
             mDismissView.setOnClickListener(new View.OnClickListener() {
@@ -819,6 +827,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         /**
          * <b>return ture for perform show</b>
          *
+         * @param popupRootView The rootView of popup,it's usually be your layout
+         * @param anchorView    The anchorView whitch popup show
+         * @param hasShowAnima  Check if show your popup with anima?
          * @return
          */
         boolean onBeforeShow(View popupRootView, View anchorView, boolean hasShowAnima);
