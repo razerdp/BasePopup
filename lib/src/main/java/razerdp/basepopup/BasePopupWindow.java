@@ -27,9 +27,12 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.XmlResourceParser;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Xml;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +42,8 @@ import android.view.animation.Animation;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
+
+import org.xmlpull.v1.XmlPullParser;
 
 import java.lang.reflect.Field;
 
@@ -90,6 +95,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     //点击popup外部是否消失
     private boolean dismissWhenTouchOuside;
 
+    private int popupLayoutid;
+
     public BasePopupWindow(Activity context) {
         initView(context, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
@@ -103,32 +110,14 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
         mPopupView = onCreatePopupView();
         mAnimaView = initAnimaView();
-        //处理popupview与animaview相同的情况
-        //当popupView与animaView相同的时候，处理位置信息会出问题，因此这里需要对mAnimaView再包裹一层
-        if (mPopupView != null && mAnimaView != null && mPopupView == mAnimaView) {
-            throw new IllegalArgumentException("The animaView must be a childView of popupView,please check onCreatePopupView() and initAnimaView()");
-        }
+        checkPopupAnimaView();
+
         //默认占满全屏
         mPopupWindow = new PopupWindowProxy(mPopupView, w, h, this);
         mPopupWindow.setOnDismissListener(this);
         setDismissWhenTouchOuside(true);
 
-        //修复可能出现的android 4.2的measure空指针问题
-        if (mPopupView != null) {
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                int contentViewHeight = ViewGroup.LayoutParams.MATCH_PARENT;
-                final ViewGroup.LayoutParams layoutParams = mPopupView.getLayoutParams();
-                if (layoutParams != null && layoutParams.height == ViewGroup.LayoutParams.WRAP_CONTENT) {
-                    contentViewHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
-                }
-                ViewGroup.LayoutParams p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, contentViewHeight);
-                mPopupView.setLayoutParams(p);
-            }
-            mPopupView.measure(w, h);
-            popupViewWidth = mPopupView.getMeasuredWidth();
-            popupViewHeight = mPopupView.getMeasuredHeight();
-            mPopupView.setFocusableInTouchMode(true);
-        }
+        preMeasurePopupView(w, h);
 
         //默认是渐入动画
         setNeedPopupFade(Build.VERSION.SDK_INT <= 22);
@@ -159,6 +148,43 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
         mAnchorViewLocation = new int[2];
     }
+
+    private void checkPopupAnimaView() {
+        //处理popupview与animaview相同的情况
+        //当popupView与animaView相同的时候，处理位置信息会出问题，因此这里需要对mAnimaView再包裹一层
+        if (mPopupView != null && mAnimaView != null && mPopupView == mAnimaView) {
+            try {
+                mPopupView = new FrameLayout(getContext());
+                if (popupLayoutid == 0) {
+                    ((FrameLayout) mPopupView).addView(mAnimaView);
+                } else {
+                    mAnimaView = View.inflate(getContext(), popupLayoutid, (FrameLayout) mPopupView);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void preMeasurePopupView(int w, int h) {
+        if (mPopupView != null) {
+            //修复可能出现的android 4.2的measure空指针问题
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                int contentViewHeight = ViewGroup.LayoutParams.MATCH_PARENT;
+                final ViewGroup.LayoutParams layoutParams = mPopupView.getLayoutParams();
+                if (layoutParams != null && layoutParams.height == ViewGroup.LayoutParams.WRAP_CONTENT) {
+                    contentViewHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
+                }
+                ViewGroup.LayoutParams p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, contentViewHeight);
+                mPopupView.setLayoutParams(p);
+            }
+            mPopupView.measure(w, h);
+            popupViewWidth = mPopupView.getMeasuredWidth();
+            popupViewHeight = mPopupView.getMeasuredHeight();
+            mPopupView.setFocusableInTouchMode(true);
+        }
+    }
+
 
     //------------------------------------------抽象-----------------------------------------------
 
@@ -216,9 +242,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 设置popup的动画style
      */
     public void setPopupAnimaStyle(int animaStyleRes) {
-        if (animaStyleRes > 0) {
-            mPopupWindow.setAnimationStyle(animaStyleRes);
-        }
+        mPopupWindow.setAnimationStyle(animaStyleRes);
     }
 
     //------------------------------------------showPopup-----------------------------------------------
@@ -365,6 +389,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public View createPopupById(int resId) {
         if (resId != 0) {
+            popupLayoutid = resId;
             return LayoutInflater.from(mContext).inflate(resId, null);
         } else {
             return null;
@@ -705,7 +730,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private Animator.AnimatorListener mAnimatorListener = new Animator.AnimatorListener() {
         @Override
         public void onAnimationStart(Animator animation) {
-
+            isExitAnimaPlaying = true;
         }
 
         @Override
@@ -728,7 +753,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private Animation.AnimationListener mAnimationListener = new Animation.AnimationListener() {
         @Override
         public void onAnimationStart(Animation animation) {
-
+            isExitAnimaPlaying = true;
         }
 
         @Override
