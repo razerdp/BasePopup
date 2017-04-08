@@ -1,8 +1,10 @@
 package razerdp.basepopup;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
@@ -14,7 +16,8 @@ import android.widget.PopupWindow;
  */
 
 public class PopupWindowProxy extends PopupWindow {
-    private final boolean isOverAndroidN = Build.VERSION.SDK_INT >= 24;
+    private final boolean isFixAndroidN = Build.VERSION.SDK_INT == 24;
+    private final boolean isOverAndroidN = Build.VERSION.SDK_INT > 24;
 
 
     private PopupController mController;
@@ -76,11 +79,17 @@ public class PopupWindowProxy extends PopupWindow {
      */
     @Override
     public void showAsDropDown(View anchor, int xoff, int yoff, int gravity) {
-        if (isOverAndroidN && anchor != null) {
-            // FIXME: 在api>=24时，如果popup的高度是match_parent，那么无法准确定位到某个anchor下，这里的bug似乎高度的测量模式有关,说实话，下面这个解决方案其实我个人觉得并不是非常的好。。。。，
-            setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (isFixAndroidN && anchor != null) {
+            int[] a = new int[2];
+            anchor.getLocationInWindow(a);
+            Activity activity = (Activity) anchor.getContext();
+            super.showAtLocation((activity).getWindow().getDecorView(), Gravity.NO_GRAVITY, 0, a[1] + anchor.getHeight());
+        } else {
+            if (isOverAndroidN){
+                setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+            }
+            super.showAsDropDown(anchor, xoff, yoff, gravity);
         }
-        super.showAsDropDown(anchor, xoff, yoff, gravity);
     }
 
     @Override

@@ -13,6 +13,11 @@
 
 ## 最新改动：
 
+v1.7.0:
+ - 因为受到抛出异常的吐槽，所以这次就集中修复了animaView和popupView相同的情况，内部已经做了处理。
+    + ps:强烈建议`initPopupView`使用`createPopupById`方法，因为这样我才可以处理的时候把animaView的marginLayoutParams考虑进去
+ - 再次修复N的showAsDropDown问题，这次在虚拟机已经测试过了，N和N+都没有问题，详见demo·SlideFromTopPopupFrag·
+
 v1.6.3:
  - 强制animaView不能与popupView相同，前者必须是后者的子view
 
