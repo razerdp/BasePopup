@@ -39,6 +39,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
@@ -124,7 +125,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
         //=============================================================为外层的view添加点击事件，并设置点击消失
         mDismissView = getClickToDismissView();
-        if (mDismissView != null) {
+        if (mDismissView != null && !(mDismissView instanceof AdapterView)) {
             mDismissView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -132,7 +133,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 }
             });
         }
-        if (mAnimaView != null) {
+        if (mAnimaView != null && !(mAnimaView instanceof AdapterView)) {
             mAnimaView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
