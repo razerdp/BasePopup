@@ -13,6 +13,9 @@
 
 ## 最新改动：
 
+v1.7.1:
+ - 修复当`animaViwe`或`dismissView`为`adapterView`时会出错的问题
+
 v1.7.0:
  - 因为受到抛出异常的吐槽，所以这次就集中修复了animaView和popupView相同的情况，内部已经做了处理。
     + ps:强烈建议`initPopupView`使用`createPopupById`方法，因为这样我才可以处理的时候把animaView的marginLayoutParams考虑进去
@@ -28,20 +31,6 @@ v1.6.1:
  - 适配androidN popupwindow的showAsDropDown问题。[googleCode](https://code.google.com/p/android/issues/detail?id=221001)
  - thanks for [CJJ](https://github.com/android-cjj)
 
-v1.6.0:
-
- - 将PopupWindow的dismiss逻辑完全迁移到proxy控制[#issue 14](https://github.com/razerdp/BasePopup/issues/14)
- - 修复Android 4.4以下因为popupView的measure导致的空指针问题
-
-v1.5.2:
-
-现在的PopupWindow将会改成使用继承的PopupWindowProxy，用于覆写dismiss()方法，使之调用的时候适配退出动画。
-
-v1.5.1:
-
-现在`showPopupWindow(View v)`或者`showPopupWindow(int resid)`将会把popupwindow与anchorView挂钩哦，左上角会对齐（width=match_parent除外）
-
-另外增加一个执行popup前的回调`OnBeforeShowCallback`，与beforedismiss一样，返回false则不执行showpopup，另外在这里可以先实现offsetX或者offsetY哦~
 
 ### 最低SDK版本要求 : API 11
 
