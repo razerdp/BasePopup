@@ -2,6 +2,7 @@ package razerdp.basepopup;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -82,7 +83,7 @@ public class PopupWindowProxy extends PopupWindow {
         if (isFixAndroidN && anchor != null) {
             int[] a = new int[2];
             anchor.getLocationInWindow(a);
-            Activity activity = (Activity) anchor.getContext();
+            Activity activity = scanForActivity(anchor.getContext());
             super.showAtLocation((activity).getWindow().getDecorView(), Gravity.NO_GRAVITY, 0, a[1] + anchor.getHeight());
         } else {
             if (isOverAndroidN){
@@ -90,6 +91,17 @@ public class PopupWindowProxy extends PopupWindow {
             }
             super.showAsDropDown(anchor, xoff, yoff, gravity);
         }
+    }
+
+    private Activity scanForActivity(Context cont) {
+        if (cont == null)
+            return null;
+        else if (cont instanceof Activity)
+            return (Activity)cont;
+        else if (cont instanceof ContextWrapper)
+            return scanForActivity(((ContextWrapper)cont).getBaseContext());
+
+        return null;
     }
 
     @Override
