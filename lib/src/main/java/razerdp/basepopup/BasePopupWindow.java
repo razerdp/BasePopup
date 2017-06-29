@@ -170,7 +170,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private void preMeasurePopupView(int w, int h) {
         if (mPopupView != null) {
             //修复可能出现的android 4.2的measure空指针问题
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 int contentViewHeight = ViewGroup.LayoutParams.MATCH_PARENT;
                 final ViewGroup.LayoutParams layoutParams = mPopupView.getLayoutParams();
                 if (layoutParams != null && layoutParams.height == ViewGroup.LayoutParams.WRAP_CONTENT) {

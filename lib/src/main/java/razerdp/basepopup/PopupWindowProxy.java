@@ -84,23 +84,24 @@ public class PopupWindowProxy extends PopupWindow {
             int[] a = new int[2];
             anchor.getLocationInWindow(a);
             Activity activity = scanForActivity(anchor.getContext());
+            if (activity==null)return;
             super.showAtLocation((activity).getWindow().getDecorView(), Gravity.NO_GRAVITY, 0, a[1] + anchor.getHeight());
         } else {
-            if (isOverAndroidN){
+            if (isOverAndroidN) {
                 setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
             }
             super.showAsDropDown(anchor, xoff, yoff, gravity);
         }
     }
 
-    private Activity scanForActivity(Context cont) {
-        if (cont == null)
+    private Activity scanForActivity(Context context) {
+        if (context == null) {
             return null;
-        else if (cont instanceof Activity)
-            return (Activity)cont;
-        else if (cont instanceof ContextWrapper)
-            return scanForActivity(((ContextWrapper)cont).getBaseContext());
-
+        } else if (context instanceof Activity) {
+            return (Activity) context;
+        } else if (context instanceof ContextWrapper) {
+            return scanForActivity(((ContextWrapper) context).getBaseContext());
+        }
         return null;
     }
 
