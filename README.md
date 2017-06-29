@@ -9,9 +9,20 @@
 
 [改动日志](https://github.com/razerdp/BasePopup/blob/master/CHANGELOG-CN.md)
 
+
+**针对Android 7.0的问题，官方对于popup在7.0确实是有问题的，具体是showAsDropDown方法有问题**
+
+**@link https://code.google.com/p/android/issues/detail?id=221001**
+
+
 ---
 
 ## 最新改动：
+
+v1.7.2:
+ - 目前仅加了针对4.3的崩溃修复
+ - 感谢@hshare 提交的pr
+ - 对于issue里面的问题，感谢各位的反馈，最近有点忙，稍后会集中处理的-V-感谢大家的支持
 
 v1.7.1:
  - 修复当`animaViwe`或`dismissView`为`adapterView`时会出错的问题
