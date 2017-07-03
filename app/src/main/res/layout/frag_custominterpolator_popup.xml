@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="CustomInterpolator Popup"/>
+        android:text="乱玩的。。。各种插值器而已。。"/>
 
     <LinearLayout
         android:layout_below="@id/title"

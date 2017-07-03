@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -75,16 +74,6 @@ public class SlideFromTopPopupFrag extends SimpleBaseFrag {
         titleParent = (RelativeLayout) findViewById(R.id.rl_title);
         mSlideFromTopPopup = new SlideFromTopPopup(mContext);
         mSlideFromTopPopup.setOnDismissListener(onDismissListener);
-        mSlideFromTopPopup.setOnBeforeShowCallback(new BasePopupWindow.OnBeforeShowCallback() {
-            @Override
-            public boolean onBeforeShow(View popupRootView, View anchorView, boolean hasShowAnima) {
-                if (anchorView!=null) {
-                    mSlideFromTopPopup.setOffsetY(anchorView.getHeight());
-                    return true;
-                }
-                return false;
-            }
-        });
         arrow = (ImageView) findViewById(R.id.iv_arrow);
 
         findViewById(R.id.ll_title).setOnClickListener(new View.OnClickListener() {

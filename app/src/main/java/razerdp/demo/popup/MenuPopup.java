@@ -2,8 +2,6 @@ package razerdp.demo.popup;
 
 import android.animation.Animator;
 import android.app.Activity;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -55,8 +53,8 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
 
     @Override
     public void showPopupWindow(View v) {
-        setOffsetX(-(getPopupViewWidth() - v.getWidth() / 2));
-        setOffsetY(v.getHeight() / 2);
+        setOffsetX(-(getWidth() - v.getWidth() / 2));
+        setOffsetY(-v.getHeight() / 2);
         super.showPopupWindow(v);
     }
 

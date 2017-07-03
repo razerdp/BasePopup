@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.Transformation;
 
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
@@ -42,6 +41,12 @@ public class AutoLocatedPopup extends BasePopupWindow implements View.OnClickLis
     public View onCreatePopupView() {
         popupView = LayoutInflater.from(getContext()).inflate(R.layout.popup_menu, null);
         return popupView;
+    }
+
+    @Override
+    public void showPopupWindow(View v) {
+        setOffsetY(250);
+        super.showPopupWindow(v);
     }
 
     @Override

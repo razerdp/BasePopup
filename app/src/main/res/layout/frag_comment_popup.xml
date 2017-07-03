@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Comment popup"
+        android:text="评论popup\n主要依靠offset，其中popup的高度是评论view的三倍，这样比较美观，因此offsetY是取的popup高度除以1.5"
         />
 
 

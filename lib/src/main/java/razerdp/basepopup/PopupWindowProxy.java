@@ -2,7 +2,6 @@ package razerdp.basepopup;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -81,28 +80,20 @@ public class PopupWindowProxy extends PopupWindow {
     @Override
     public void showAsDropDown(View anchor, int xoff, int yoff, int gravity) {
         if (isFixAndroidN && anchor != null) {
-            int[] a = new int[2];
-            anchor.getLocationInWindow(a);
-            Activity activity = scanForActivity(anchor.getContext());
-            if (activity==null)return;
-            super.showAtLocation((activity).getWindow().getDecorView(), Gravity.NO_GRAVITY, 0, a[1] + anchor.getHeight());
+            int[] anchorLocation = new int[2];
+            anchor.getLocationInWindow(anchorLocation);
+            Activity activity = (Activity) anchor.getContext();
+
+            xoff = anchorLocation[0] + xoff;
+            yoff = anchorLocation[1] + anchor.getHeight() + yoff ;
+
+            super.showAtLocation((activity).getWindow().getDecorView(), Gravity.NO_GRAVITY, xoff, yoff);
         } else {
             if (isOverAndroidN) {
                 setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
             }
             super.showAsDropDown(anchor, xoff, yoff, gravity);
         }
-    }
-
-    private Activity scanForActivity(Context context) {
-        if (context == null) {
-            return null;
-        } else if (context instanceof Activity) {
-            return (Activity) context;
-        } else if (context instanceof ContextWrapper) {
-            return scanForActivity(((ContextWrapper) context).getBaseContext());
-        }
-        return null;
     }
 
     @Override
@@ -120,5 +111,4 @@ public class PopupWindowProxy extends PopupWindow {
     void callSuperDismiss() {
         super.dismiss();
     }
-
 }
