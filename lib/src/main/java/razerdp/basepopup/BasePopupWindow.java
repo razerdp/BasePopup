@@ -26,13 +26,9 @@ package razerdp.basepopup;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.app.Activity;
-import android.content.Context;
-import android.content.res.XmlResourceParser;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.util.Xml;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,8 +39,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
-
-import org.xmlpull.v1.XmlPullParser;
 
 import java.lang.reflect.Field;
 
@@ -111,6 +105,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
         mPopupView = onCreatePopupView();
         mAnimaView = initAnimaView();
+        if (mAnimaView != null) {
+            popupLayoutid = mAnimaView.getId();
+        }
         checkPopupAnimaView();
 
         //默认占满全屏
@@ -169,7 +166,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     private void preMeasurePopupView(int w, int h) {
         if (mPopupView != null) {
-            //修复可能出现的android 4.2的measure空指针问题
+            //修复可能出现的android 4.3的measure空指针问题
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 int contentViewHeight = ViewGroup.LayoutParams.MATCH_PARENT;
                 final ViewGroup.LayoutParams layoutParams = mPopupView.getLayoutParams();
@@ -253,6 +250,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public void showPopupWindow() {
         if (checkPerformShow(null)) {
+            this.showAtDown = false;
+            this.relativeToAnchorView = false;
             tryToShowPopup(null);
         }
     }
@@ -274,7 +273,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public void showPopupWindow(View v) {
         if (checkPerformShow(v)) {
-            setRelativeToAnchorView(true);
+            this.showAtDown = true;
+            this.relativeToAnchorView = true;
             tryToShowPopup(v);
         }
     }
@@ -319,21 +319,15 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *
      * @param anchorView
      * @return
+     * @see #showPopupWindow(View)
      */
     private int[] calcuateOffset(View anchorView) {
-        int[] offset = {0, 0};
+        int[] offset = {offsetX, offsetY};
         anchorView.getLocationOnScreen(mAnchorViewLocation);
-        //当参考了anchorView，那么意味着必定使用showAsDropDown，此时popup初始显示位置在anchorView的底部
-        //因此需要先将popupview与anchorView的左上角对齐
-        if (relativeToAnchorView) {
-            offset[0] = offset[0] + offsetX;
-            offset[1] = -anchorView.getHeight() + offsetY;
-        }
-
         if (isAutoLocatePopup) {
-            final boolean onTop = (getScreenHeight() - mAnchorViewLocation[1] + offset[1] < popupViewHeight);
+            final boolean onTop = (getScreenHeight() - (mAnchorViewLocation[1] + offset[1]) < getHeight());
             if (onTop) {
-                offset[1] = offset[1] - popupViewHeight + offsetY;
+                offset[1] = -anchorView.getHeight() - getHeight() - offset[1];
                 showOnTop(mPopupView);
             } else {
                 showOnDown(mPopupView);
@@ -510,7 +504,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return mExitAnimator;
     }
 
-    public Context getContext() {
+    public Activity getContext() {
         return mContext;
     }
 
@@ -580,6 +574,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 是否参考锚点view，如果是true，则会显示到跟指定view的x,y一样的位置(如果空间足够的话)
      *
      * @param relativeToAnchorView
+     * @deprecated
      */
     public void setRelativeToAnchorView(boolean relativeToAnchorView) {
         setShowAtDown(true);
@@ -596,21 +591,23 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     /**
-     * 这个值是在创建view时进行测量的，并不能当作一个完全准确的值
+     * 获取poupwindow的高度，当popupwindow没show出来的时候高度会是0，此时则返回pre measure的高度，不一定精准
      *
      * @return
      */
-    public int getPopupViewWidth() {
-        return popupViewWidth;
+    public int getHeight() {
+        int height = mPopupView.getHeight();
+        return height <= 0 ? popupViewHeight : height;
     }
 
     /**
-     * 这个值是在创建view时进行测量的，并不能当作一个完全准确的值
+     * 获取poupwindow的宽度，当popupwindow没show出来的时候高度会是0，此时则返回pre measure的宽度，不一定精准
      *
      * @return
      */
-    public int getPopupViewHeight() {
-        return popupViewHeight;
+    public int getWidth() {
+        int width = mPopupView.getWidth();
+        return width <= 0 ? popupViewWidth : width;
     }
 
     public boolean isShowAtDown() {
@@ -622,6 +619,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * decide showAtLocation/showAsDropDown
      *
      * @param showAtDown
+     * @deprecated
      */
     public void setShowAtDown(boolean showAtDown) {
         this.showAtDown = showAtDown;

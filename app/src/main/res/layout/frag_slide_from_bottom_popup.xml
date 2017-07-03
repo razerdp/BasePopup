@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Slid From Bottom Popup"/>
+        android:text="从底部上升的popup，常见于菜单选项"/>
 
     <Button
         android:id="@+id/popup_show"

@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Dialog Popup"
+        android:text="模拟dialog的popup"
         />
     <Button
         android:id="@+id/popup_show"
