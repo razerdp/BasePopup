@@ -1,5 +1,8 @@
 # BasePopup
 </br>
+## 2017/07/03
+
+集中修复了offset计算问题、7.0的showAsDropDown的问题，如果您还有什么疑问，请在issue里面提出
 
 ## 2017/01/12
 

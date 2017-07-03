@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:text="Full Screen Popup"
+    android:text="全屏popup\n似乎在api 23后，popup不能突破到状态栏，导致了状态栏颜色与popup的颜色有鲜明对比\n因此提供了setPopupWindowFullScreen(boolean)来设定是否需要全屏化"
     />
     <Button
         android:id="@+id/popup_show"

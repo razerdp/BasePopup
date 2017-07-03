@@ -56,8 +56,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#aac6c6c6"
-        android:gravity="center"
-        android:text="内容区"
-        android:textSize="80sp"/>
+        android:gravity="left"
+        android:text="该popup主要是用来测试针对7.0系统谜一样的bug，现在经过测试已经修复了7.0系统蛋疼的showAsDropDown的问题了。。。具体在PopupWindowProxy有相关逻辑"
+        android:textSize="25sp"/>
 
 </LinearLayout>

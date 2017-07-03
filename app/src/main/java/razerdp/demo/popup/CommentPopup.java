@@ -2,8 +2,6 @@ package razerdp.demo.popup;
 
 import android.app.Activity;
 import android.os.Handler;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +16,6 @@ import android.widget.TextView;
 
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.demo.utils.DimensUtils;
 
 /**
  * Created by 大灯泡 on 2016/1/16.
@@ -62,7 +59,7 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
 
     private void buildAnima() {
         ScaleAnimation mScaleAnimation = new ScaleAnimation(1f, 2f, 1f, 2f, Animation.RELATIVE_TO_SELF, 0.5f,
-                                                            Animation.RELATIVE_TO_SELF, 0.5f);
+                Animation.RELATIVE_TO_SELF, 0.5f);
         mScaleAnimation.setDuration(200);
         mScaleAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
         mScaleAnimation.setFillAfter(false);
@@ -102,21 +99,21 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
 
     @Override
     public void showPopupWindow(View v) {
-        setOffsetX(-getPopupViewWidth()-v.getWidth()/2);
-        setOffsetY(-v.getHeight());
+        setOffsetX(-getWidth() - v.getWidth() / 2);
+        setOffsetY((int) (-getHeight() / 1.5));
         super.showPopupWindow(v);
     }
 
     @Override
     protected Animation initShowAnimation() {
         return getScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF, 1.0f,
-                                 Animation.RELATIVE_TO_SELF, 0.0f);
+                Animation.RELATIVE_TO_SELF, 0.0f);
     }
 
     @Override
     public Animation initExitAnimation() {
         return getScaleAnimation(1.0f, 0.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF, 1.0f,
-                                 Animation.RELATIVE_TO_SELF, 0.0f);
+                Animation.RELATIVE_TO_SELF, 0.0f);
     }
 
     @Override
