@@ -241,6 +241,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public void setPopupAnimaStyle(int animaStyleRes) {
         mPopupWindow.setAnimationStyle(animaStyleRes);
+        mPopupWindow.update();
     }
 
     //------------------------------------------showPopup-----------------------------------------------
@@ -345,8 +346,12 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *                   false for "SOFT_INPUT_ADJUST_NOTHING" mode
      */
     public void setAdjustInputMethod(boolean needAdjust) {
+        setAdjustInputMethod(needAdjust, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+    }
+
+    public void setAdjustInputMethod(boolean needAdjust, int flag) {
         if (needAdjust) {
-            mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+            mPopupWindow.setSoftInputMode(flag);
         } else {
             mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         }
@@ -425,6 +430,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }catch (Exception e){
                 e.printStackTrace();
             }
         }
@@ -620,6 +627,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *
      * @param showAtDown
      * @deprecated
+     * @hide
      */
     public void setShowAtDown(boolean showAtDown) {
         this.showAtDown = showAtDown;

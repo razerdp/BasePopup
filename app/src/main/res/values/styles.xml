@@ -3,6 +3,10 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="@android:style/Theme.Holo.Light"/>
 
+    <style name="AppTheme.FUllScreen" parent="AppTheme">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
     <style name="line_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0.5dp</item>
