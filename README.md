@@ -19,31 +19,18 @@
 
 ## 最新改动：
 
+1.8.1:
+  - 取消版本号带"v"的问题
+  - 修复了展示popupWindow时会导致退出沉浸状态的问题
+  - 部分问题暂时无法修复（如input method和full screen的冲突导致无法重新适应布局的问题）
+
 v1.8.0:
  - 集中修复了offset计算问题、7.0的showAsDropDown的问题，如果您还有什么疑问，请在issue里面提出
 
 v1.7.2:
  - 目前仅加了针对4.3的崩溃修复
- - 感谢@hshare 提交的pr
+ - 感谢[@hshare](https://github.com/hshare) 提交的pr
  - 对于issue里面的问题，感谢各位的反馈，最近有点忙，稍后会集中处理的-V-感谢大家的支持
-
-v1.7.1:
- - 修复当`animaViwe`或`dismissView`为`adapterView`时会出错的问题
-
-v1.7.0:
- - 因为受到抛出异常的吐槽，所以这次就集中修复了animaView和popupView相同的情况，内部已经做了处理。
-    + ps:强烈建议`initPopupView`使用`createPopupById`方法，因为这样我才可以处理的时候把animaView的marginLayoutParams考虑进去
- - 再次修复N的showAsDropDown问题，这次在虚拟机已经测试过了，N和N+都没有问题，详见demo:`SlideFromTopPopupFrag`
-
-v1.6.3:
- - 强制animaView不能与popupView相同，前者必须是后者的子view
-
-v1.6.2:
- - 再次修复N的showAsDropDown问题。。。。
-
-v1.6.1:
- - 适配androidN popupwindow的showAsDropDown问题。[googleCode](https://code.google.com/p/android/issues/detail?id=221001)
- - thanks for [CJJ](https://github.com/android-cjj)
 
 
 ### 最低SDK版本要求 : API 11
@@ -64,7 +51,7 @@ v1.6.1:
 
 **Step 2.**
 
-添加依赖（请把最新版替换成上面的jitpack标签所示版本）
+添加依赖（请把最新版替换成上面的jitpack标签所示版本【1.8.1之前记得带"v"，如"v1.8.0"，1.8.1之后不需要】）
 
 ```xml
 	dependencies {
@@ -293,6 +280,11 @@ https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md
 
 # 代码解析：
 http://www.jianshu.com/p/069f57e14a9c
+
+# 打赏（您的支持是我维护的动力-V-愿意的话，给个零食呗）
+![wechat](https://github.com/razerdp/BasePopup/blob/master/img/wechat.jpg)
+
+
 
 # License
 MIT
