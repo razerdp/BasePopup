@@ -36,6 +36,8 @@ v1.7.2:
 ### 最低SDK版本要求 : API 11
 
 # 依赖  [![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
+#### 请注意【1.8.1之前记得带"v"，如"v1.8.0"，1.8.1之后不需要】
+
 **Step 1.**
 
 **添加Jitpack到您的root gradle，如果无法导包，一般情况下都是这个原因，请仔细检查**
@@ -51,7 +53,7 @@ v1.7.2:
 
 **Step 2.**
 
-添加依赖（请把最新版替换成上面的jitpack标签所示版本【1.8.1之前记得带"v"，如"v1.8.0"，1.8.1之后不需要】）
+添加依赖（请把最新版替换成上面的jitpack标签所示版本）
 
 ```xml
 	dependencies {
@@ -281,10 +283,10 @@ https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md
 # 代码解析：
 http://www.jianshu.com/p/069f57e14a9c
 
-# 打赏（您的支持是我维护的动力-V-愿意的话，给个零食呗）
+### 打赏（您的支持是我维护的动力-V-愿意的话，给个零食呗）
 ![wechat](https://github.com/razerdp/BasePopup/blob/master/img/wechat.jpg)
 
 
 
-# License
+### License
 MIT
