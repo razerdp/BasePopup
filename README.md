@@ -234,4 +234,4 @@ http://www.jianshu.com/p/069f57e14a9c
 
 
 ### License
-MIT
+Apache-2.0
