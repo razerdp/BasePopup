@@ -3,6 +3,8 @@
 
 ---
 
+[![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
+
 ## 请注意：
 
 **如果您是从低于v1.3.0版本升级过来的，请查看改动日志，从v1.3.0版本开始，对于一些误导性的问题和方法名字进行了改动，这将会导致该版本前的方法需要重新复写**
@@ -72,11 +74,14 @@ v1.7.2:
 etc.
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--根布局，常用作蒙层（就是变暗的背景）-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#8f000000">
-
+    
+    <!--播放动画的内容，可以认为是popup的主要内容布局-->
     <RelativeLayout
         android:id="@+id/popup_anima"
         android:layout_width="wrap_content"
@@ -84,71 +89,11 @@ etc.
         android:background="@drawable/bg_dialog"
         android:layout_centerInParent="true"
         android:layout_margin="25dp">
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:textColor="#3dd1a5"
-            android:text="This is title"
-            android:gravity="left|center_vertical"
-            android:textSize="18sp"
-            android:paddingLeft="15dp"
-            />
-        <View
-            android:id="@+id/line"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#3dd1a5"
-            android:layout_below="@id/title"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"/>
-        <TextView
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/line"
-            android:paddingTop="20dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingBottom="15dp"
-            android:textSize="14sp"
-            android:textColor="#1a1a1a"
-            android:lineSpacingMultiplier="1.2"
-            android:text="Warning:nuclear silo detected.\nWarning:nuclear silo detected.\nWarning:nuclear silo detected."
-            />
-        <View
-            android:id="@+id/line2"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_below="@id/content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:background="@color/line_bg"
-            android:layout_marginTop="15dp"/>
-        <TextView
-            android:id="@+id/cancel"
-            android:layout_width="60dp"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:padding="3dp"
-            android:textColor="#bfbfbf"
-            android:textSize="14sp"
-            android:layout_below="@id/line2"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
-            android:text="CANCEL"/>
-        <TextView
-            android:id="@+id/ok"
-            android:layout_width="60dp"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:padding="3dp"
-            android:textColor="#3dd1a5"
-            android:textSize="14sp"
-            android:layout_below="@id/line2"
-            android:layout_toLeftOf="@id/cancel"
-            android:layout_marginRight="15dp"
-            android:text="OK"/>
+        
+        
+        <... many views>
+        
+        
 
     </RelativeLayout>
 </RelativeLayout>
