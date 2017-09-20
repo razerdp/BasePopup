@@ -44,12 +44,6 @@ public class AutoLocatedPopup extends BasePopupWindow implements View.OnClickLis
     }
 
     @Override
-    public void showPopupWindow(View v) {
-        setOffsetY(250);
-        super.showPopupWindow(v);
-    }
-
-    @Override
     public View initAnimaView() {
         return popupView.findViewById(R.id.popup_anima);
     }
