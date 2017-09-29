@@ -2,8 +2,10 @@ package razerdp.basepopup;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +18,11 @@ import android.widget.PopupWindow;
  */
 
 public class PopupWindowProxy extends PopupWindow {
+    private static final String TAG = "PopupWindowProxy";
     private final boolean isFixAndroidN = Build.VERSION.SDK_INT == 24;
     private final boolean isOverAndroidN = Build.VERSION.SDK_INT > 24;
+    private static final int MAX_SCAN_ACTIVITY_COUNT = 50;
+    private volatile int tryScanActivityCount = 0;
 
 
     private PopupController mController;
@@ -82,7 +87,11 @@ public class PopupWindowProxy extends PopupWindow {
         if (isFixAndroidN && anchor != null) {
             int[] anchorLocation = new int[2];
             anchor.getLocationInWindow(anchorLocation);
-            Activity activity = (Activity) anchor.getContext();
+            Activity activity = scanForActivity(anchor.getContext());
+            if (activity == null) {
+                Log.e(TAG, "please make sure that context is instance of activity");
+                return;
+            }
 
             xoff = anchorLocation[0] + xoff;
             yoff = anchorLocation[1] + anchor.getHeight() + yoff;
@@ -110,6 +119,33 @@ public class PopupWindowProxy extends PopupWindow {
         initSystemBar(getContentView());
         setFocusable(true);
         update();
+    }
+
+    /**
+     * fix context cast exception
+     * <p>
+     * android.view.ContextThemeWrapper
+     * <p>
+     * https://github.com/razerdp/BasePopup/pull/26
+     *
+     * @param cont
+     * @return
+     * @author: hshare
+     */
+    private Activity scanForActivity(Context cont) {
+        if (cont == null) {
+            return null;
+        } else if (cont instanceof Activity) {
+            return (Activity) cont;
+        } else if (cont instanceof ContextWrapper) {
+            if (tryScanActivityCount > MAX_SCAN_ACTIVITY_COUNT) {
+                //break endless loop
+                return null;
+            }
+            tryScanActivityCount++;
+            return scanForActivity(((ContextWrapper) cont).getBaseContext());
+        }
+        return null;
     }
 
     /**
