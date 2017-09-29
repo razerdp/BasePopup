@@ -21,18 +21,21 @@
 
 ## 最新改动：
 
-1.8.3:
+##### 1.8.4:
+  - 补充PopupWindowProxy的scanForActivity方法（不知明原因在merged后丢失了）
+
+##### 1.8.3:
   - 构造器不再限定为activity，context采用弱引用
 
-1.8.1~1.8.2:
+##### 1.8.1~1.8.2:
   - 取消版本号带"v"的问题
   - 修复了展示popupWindow时会导致退出沉浸状态的问题
   - 部分问题暂时无法修复（如input method和full screen的冲突导致无法重新适应布局的问题）
 
-v1.8.0:
+##### v1.8.0:
  - 集中修复了offset计算问题、7.0的showAsDropDown的问题，如果您还有什么疑问，请在issue里面提出
 
-v1.7.2:
+##### v1.7.2:
  - 目前仅加了针对4.3的崩溃修复
  - 感谢[@hshare](https://github.com/hshare) 提交的pr
  - 对于issue里面的问题，感谢各位的反馈，最近有点忙，稍后会集中处理的-V-感谢大家的支持
@@ -202,31 +205,9 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md
 
 # 方法介绍：
-本项目拥有的方法如下(后续的更新没有在这里写了，详情看demo或者更新日志，demo一般情况下都会包括各种情况)：
+请看wiki（陆续完善中）
 
- - 必须实现的抽象方法：
-	+ onCreatePopupView()：得到popupwindow的主体，一般是在xml文件写好然后inflate出来并返回，推荐使用createPopupById()方法以减少代码
-	+ initAnimaView()：得到用于展示动画的view，一般为了做到蒙层效果，我们的xml都会给一个灰色半透明的底层然后才是给定展示的popup（详情见demo）
-	+ initShowAnimation()：展示popup的动画
-	+ getClickToDismissView()：点击触发dismiss的view
- - 非必须实现的公有方法：
-	+ initShowAnimator()：同getShowAnimation，不过有些时候用animator更加的丰富
-	+ getInputView()：得到给定需要输入的view，一般用于包含edittext的popup
-	+ initExitAnimation()：popup执行dismiss时的退出动画
-	+ initExitAnimator()：同上
-	+ setAutoShowInputMethod()：是否自动弹出输入法
-	+ setAdjustInputMethod()：popup是否随着输入法弹出而自适应
-	+ getPopupViewById()：工具方法，不用写那么多LayoutInflate.from(context)
-	+ setViewClickListener()：工具方法，用于方便您设置onClickListener（多个View共用一个listener哦）
-	+ setNeedPopupFade()：设置popup是否淡入淡出，默认为淡入淡出(这个参数将会对整个popup动画哦)
-	+ setPopupAnimaStyle()：设定您喜欢的popup动画style(就跟您平时使用popup一样弄得动画style)
-	+ 以及各种getter/setter
- - show方法：
-	+ showPopupWindow():默认将popup显示到当前窗口
-	+ showPopupWindow(int res)：将popup显示到对应的id控件上
-	+ showPopupWindow(View v)：将popup显示到view上
- - 一些别的方法：
- 	+ setPopupWindowFullScreen(boolean)：popup是否可以覆盖状态栏（全屏）
+**Link👉**[WIKI](https://github.com/razerdp/BasePopup/wiki)
 
 # 代码解析：
 http://www.jianshu.com/p/069f57e14a9c
