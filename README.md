@@ -21,7 +21,7 @@
 
 ## 最新改动：
 
-##### 1.8.5
+##### 1.8.5.1
   - 现在可以在onCreate里面showPopup啦~
   - set方法返回`BasePopupWindow`，可以来个“伪链式”调用哈哈
   - 针对诸位提出的setBackPress在6.0以上失效的问题，请查看这份[MD](https://github.com/razerdp/BasePopup/blob/master/%E5%85%B3%E4%BA%8EAndorid%20M%E4%BB%A5%E4%B8%8AsetBackPressEnable()%E5%A4%B1%E6%95%88%E7%9A%84%E9%97%AE%E9%A2%98%E7%9A%84%E5%88%86%E6%9E%90.md)文件（没错，暂时无法修复）
