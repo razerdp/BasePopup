@@ -23,6 +23,7 @@ import razerdp.demo.fragment.ScalePopupFrag;
 import razerdp.demo.fragment.SlideFromTopPopupFrag;
 import razerdp.demo.fragment.SimpleBaseFrag;
 import razerdp.demo.fragment.SlideFromBottomPopupFrag;
+import razerdp.demo.popup.ScalePopup;
 
 public class DemoActivity extends FragmentActivity {
     private FragmentManager mFragmentManager;
@@ -34,6 +35,9 @@ public class DemoActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
         mFragmentManager = getSupportFragmentManager();
+        ScalePopup scalePopup=new ScalePopup(this);
+        scalePopup.setBackPressEnable(false);
+        scalePopup.showPopupWindow();
 
         fragMap = new HashMap<>();
 
