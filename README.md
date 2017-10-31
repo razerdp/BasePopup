@@ -21,6 +21,11 @@
 
 ## 最新改动：
 
+##### 1.8.5
+  - 现在可以在onCreate里面showPopup啦~
+  - set方法返回`BasePopupWindow`，可以来个“伪链式”调用哈哈
+  - 针对诸位提出的setBackPress在6.0以上失效的问题，请查看这份MD文件（没错，暂时无法修复）
+
 ##### 1.8.4:
   - 补充PopupWindowProxy的scanForActivity方法（不知明原因在merged后丢失了）
 

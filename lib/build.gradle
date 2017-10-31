@@ -5,7 +5,7 @@ group='com.github.razerdp'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         minSdkVersion 11
