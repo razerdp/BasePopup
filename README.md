@@ -6,6 +6,7 @@
 [![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
 [![Download](https://api.bintray.com/packages/razerdp/maven/basepopup/images/download.svg)](https://bintray.com/razerdp/maven/basepopup/_latestVersion)
 [![API](https://img.shields.io/badge/API-11%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=11)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b07b0bfb43f74c49a4d7cb5b18e328ce)](https://www.codacy.com/app/razerdp/BasePopup?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=razerdp/BasePopup&amp;utm_campaign=Badge_Grade)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/razerdp/BasePopup/blob/master/LICENSE)
 [![Author](https://img.shields.io/badge/Author-razerdp-blue.svg)](https://github.com/razerdp) 
 
