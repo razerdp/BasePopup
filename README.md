@@ -6,7 +6,7 @@
 [![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
 [![Download](https://api.bintray.com/packages/razerdp/maven/basepopup/images/download.svg)](https://bintray.com/razerdp/maven/basepopup/_latestVersion)
 [![API](https://img.shields.io/badge/API-11%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=11)
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/razerdp/BasePopup/blob/master/LICENSE)[![GitHub closed issues](https://img.shields.io/github/issues-closed/badges/shields.svg)](https://github.com/razerdp/BasePopup/issues?q=is%3Aissue+is%3Aclosed)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/razerdp/BasePopup/blob/master/LICENSE)
 [![Author](https://img.shields.io/badge/Author-razerdp-blue.svg)](https://github.com/razerdp) 
 
 ## 请注意：
