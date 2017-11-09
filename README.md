@@ -4,22 +4,19 @@
 ---
 
 [![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
+[![Download](https://api.bintray.com/packages/razerdp/maven/basepopup/images/download.svg)](https://bintray.com/razerdp/maven/basepopup/_latestVersion)
+ 
 
 ## 请注意：
 
-**如果您是从低于v1.3.0版本升级过来的，请查看改动日志，从v1.3.0版本开始，对于一些误导性的问题和方法名字进行了改动，这将会导致该版本前的方法需要重新复写**
-
-[改动日志](https://github.com/razerdp/BasePopup/blob/master/CHANGELOG-CN.md)
-
-
-**针对Android 7.0的问题，官方对于popup在7.0确实是有问题的，具体是showAsDropDown方法有问题**
-
-**@link https://code.google.com/p/android/issues/detail?id=221001**
-
+**在1.8.6版本之前，请使用JitPack，从1.8.6开始，将使用Jcenter**
 
 ---
 
-## 最新改动：
+## 更新日志：
+
+##### 1.8.6 
+  - 使用Jcenter代替JitPack
 
 ##### 1.8.5.1
   - 现在可以在onCreate里面showPopup啦~
@@ -30,26 +27,14 @@
 ##### 1.8.4:
   - 补充PopupWindowProxy的scanForActivity方法（不知明原因在merged后丢失了）
 
-##### 1.8.3:
-  - 构造器不再限定为activity，context采用弱引用
-
-##### 1.8.1~1.8.2:
-  - 取消版本号带"v"的问题
-  - 修复了展示popupWindow时会导致退出沉浸状态的问题
-  - 部分问题暂时无法修复（如input method和full screen的冲突导致无法重新适应布局的问题）
-
-##### v1.8.0:
- - 集中修复了offset计算问题、7.0的showAsDropDown的问题，如果您还有什么疑问，请在issue里面提出
-
-##### v1.7.2:
- - 目前仅加了针对4.3的崩溃修复
- - 感谢[@hshare](https://github.com/hshare) 提交的pr
- - 对于issue里面的问题，感谢各位的反馈，最近有点忙，稍后会集中处理的-V-感谢大家的支持
-
 
 ### 最低SDK版本要求 : API 11
 
-# 依赖  [![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
+# 依赖 
+
+### Before 1.8.6:
+ 
+[![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
 #### 请注意【1.8.1之前记得带"v"，如"v1.8.0"，1.8.1之后不需要】
 
 **Step 1.**
@@ -67,11 +52,21 @@
 
 **Step 2.**
 
-添加依赖（请把最新版替换成上面的jitpack标签所示版本）
+添加依赖（请把{latestVersion}替换成上面的jitpack标签所示版本）
 
 ```xml
 	dependencies {
-	        compile 'com.github.razerdp:BasePopup:最新版'
+	        compile 'com.github.razerdp:BasePopup:{latestVersion}'
+	}
+```
+
+### After 1.8.6:
+[![Download](https://api.bintray.com/packages/razerdp/maven/basepopup/images/download.svg)](https://bintray.com/razerdp/maven/basepopup/_latestVersion)
+
+添加依赖（请把{latestVersion}替换成上面的jitpack标签所示版本）
+```xml
+	dependencies {
+	        compile 'com.github.razerdp:BasePopup:{latestVersion}'
 	}
 ```
 
@@ -198,6 +193,10 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
     popup.showPopupWindow();
 ```
 
+### 打赏（您的支持是我维护的动力-V-愿意的话，给个零食呗）
+![wechat](https://github.com/razerdp/BasePopup/blob/master/img/wechat.jpg)
+
+
 # 一些例子
 ![image](https://github.com/razerdp/BasePopup/blob/master/img/comment_popup_with_exitAnima.gif)
 ![image](https://github.com/razerdp/BasePopup/blob/master/img/scale_popup.gif)
@@ -217,10 +216,6 @@ https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md
 
 # 代码解析：
 http://www.jianshu.com/p/069f57e14a9c
-
-### 打赏（您的支持是我维护的动力-V-愿意的话，给个零食呗）
-![wechat](https://github.com/razerdp/BasePopup/blob/master/img/wechat.jpg)
-
 
 
 ### License
