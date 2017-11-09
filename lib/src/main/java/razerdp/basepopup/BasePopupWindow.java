@@ -372,16 +372,20 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     /**
      * PopupWindow展示出来后，需要执行动画的View.一般为蒙层之上的View
+     *
+     * @return 展示的动画
      */
     protected abstract Animation initShowAnimation();
 
     /**
      * 设置一个点击后触发dismiss PopupWindow的View，一般为蒙层
+     * @return 点击dismiss的控件
      */
     public abstract View getClickToDismissView();
 
     /**
      * 设置展示动画View的属性动画
+     * @return
      */
     protected Animator initShowAnimator() {
         return null;
