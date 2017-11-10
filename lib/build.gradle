@@ -30,7 +30,7 @@ dependencies {
 publish {
     userOrg = 'razerdp'
     groupId = 'com.github.razerdp'
-    artifactId = 'basepopup'
+    artifactId = 'BasePopup'
     publishVersion = '1.8.6'
 }
 
