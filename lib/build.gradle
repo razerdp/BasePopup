@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 25
-        versionCode 10
-        versionName "1.8.4"
+        versionCode 11
+        versionName "1.8.6.1"
     }
     buildTypes {
         release {
@@ -31,7 +31,7 @@ publish {
     userOrg = 'razerdp'
     groupId = 'com.github.razerdp'
     artifactId = 'BasePopup'
-    publishVersion = '1.8.6'
+    publishVersion = '1.8.6.1'
     desc = '打造一个通用的Popup'
     website = 'https://github.com/razerdp/BasePopup'
 }

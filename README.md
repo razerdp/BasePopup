@@ -4,20 +4,19 @@
 ---
 
 [![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
-[ ![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg?version=1.8.6) ](https://bintray.com/razerdp/maven/BasePopup/1.8.6/link)[![API](https://img.shields.io/badge/API-11%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=11)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b07b0bfb43f74c49a4d7cb5b18e328ce)](https://www.codacy.com/app/razerdp/BasePopup?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=razerdp/BasePopup&amp;utm_campaign=Badge_Grade)
+[ ![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion)[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b07b0bfb43f74c49a4d7cb5b18e328ce)](https://www.codacy.com/app/razerdp/BasePopup?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=razerdp/BasePopup&amp;utm_campaign=Badge_Grade)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/razerdp/BasePopup/blob/master/LICENSE)
 [![Author](https://img.shields.io/badge/Author-razerdp-blue.svg)](https://github.com/razerdp) 
 
 ## 请注意：
 
-**在1.8.6版本之前，请使用JitPack，从1.8.6开始，将使用Jcenter**
+**在1.8.6.1版本之前，请使用JitPack，从1.8.6.1开始，将使用Jcenter**
 
 ---
 
 ## 更新日志：
 
-##### 1.8.6 
+##### 1.8.6.1 
   - 使用Jcenter代替JitPack
 
 ##### 1.8.5.1
@@ -34,9 +33,10 @@
 
 # 依赖 
 
-### Before 1.8.6:
+### Before 1.8.6.1:
  
 [![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
+
 #### 请注意【1.8.1之前记得带"v"，如"v1.8.0"，1.8.1之后不需要】
 
 **Step 1.**
@@ -62,8 +62,8 @@
 	}
 ```
 
-### After 1.8.6:
-[ ![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg?version=1.8.6) ](https://bintray.com/razerdp/maven/BasePopup/1.8.6/link)
+### After 1.8.6.1:
+[ ![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion)
 
 添加依赖（请把{latestVersion}替换成上面的jitpack标签所示版本）
 ```xml
