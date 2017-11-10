@@ -4,8 +4,9 @@
 ---
 
 [![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
-[ ![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion)[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b07b0bfb43f74c49a4d7cb5b18e328ce)](https://www.codacy.com/app/razerdp/BasePopup?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=razerdp/BasePopup&amp;utm_campaign=Badge_Grade)
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/razerdp/BasePopup/blob/master/LICENSE)
+[![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b07b0bfb43f74c49a4d7cb5b18e328ce)](https://www.codacy.com/app/razerdp/BasePopup?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=razerdp/BasePopup&amp;utm_campaign=Badge_Grade)
+[![license](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://github.com/razerdp/BasePopup/blob/master/LICENSE)
 [![Author](https://img.shields.io/badge/Author-razerdp-blue.svg)](https://github.com/razerdp) 
 
 ## 请注意：
