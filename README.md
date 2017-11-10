@@ -64,6 +64,7 @@
 
 ### After 1.8.6:
 [ ![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg?version=1.8.6) ](https://bintray.com/razerdp/maven/BasePopup/1.8.6/link)
+
 添加依赖（请把{latestVersion}替换成上面的jitpack标签所示版本）
 ```xml
 	dependencies {
