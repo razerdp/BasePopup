@@ -1,4 +1,4 @@
-## 关于Andorid M（6.0）及以上setBackPressEnable()失效的问题的分析
+## 关于Andorid M（6.0）及以上setBackPressEnable()失效的问题的分析以及不完美解决方法
 
 ---
 
@@ -292,5 +292,10 @@ private class PopupBackgroundView extends FrameLayout {
 同时因为G大大们直接在dispatchKeyEvent里面写的，，，暂时，，没有好的解决方法呢
 
 
+---  
+
+不完美解决方法
+
+在 Issue :[#33](https://github.com/razerdp/BasePopup/issues/33)里，有朋友给出了一个不完美的解决方法，感谢他的思路[@zl277287818](https://github.com/zl277287818)，如果不是他的评论，我都忘了我写过这个回调了哈哈。
 
 
