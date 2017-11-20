@@ -92,6 +92,8 @@ public class PopupWindowProxy extends PopupWindow {
                 Log.e(TAG, "please make sure that context is instance of activity");
                 return;
             }
+            //复位重试次数#issue 45(https://github.com/razerdp/BasePopup/issues/45)
+            tryScanActivityCount = 0;
 
             xoff = anchorLocation[0] + xoff;
             yoff = anchorLocation[1] + anchor.getHeight() + yoff;
