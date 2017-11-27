@@ -5,7 +5,6 @@
 
 [![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
 [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b07b0bfb43f74c49a4d7cb5b18e328ce)](https://www.codacy.com/app/razerdp/BasePopup?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=razerdp/BasePopup&amp;utm_campaign=Badge_Grade)
 [![license](https://img.shields.io/badge/license-Apache--2.0-blue.svg )](https://github.com/razerdp/BasePopup/blob/master/LICENSE)
 [![Author](https://img.shields.io/badge/Author-razerdp-blue.svg)](https://github.com/razerdp) 
 
@@ -17,6 +16,16 @@
 
 ## 更新日志：
 
+#### 1.8.7
+  - 抽取`PopupWindowProxy`->`BasePopupWindowProxy`
+  - 归类各种蛋疼的`showAsDropDown`适配->`PopupCompatManager`
+  - 修正部分命名和方法名以及注释名错误的问题
+       + 感谢简书小伙伴的评论，否则我还真发现不了。。。
+       + 评论地址：[点我](http://www.jianshu.com/p/069f57e14a9c#comment-17669137)
+       + 根据简书id，只能猜测他的github id：(Chenley)[https://github.com/Chenley]，如果您见到并发现我这个猜测是错的，请及时联系我-V- 
+       + 非常感谢你们的issue
+  - 修复部分issue：[#46](https://github.com/razerdp/BasePopup/issues/46)
+  
 ##### 1.8.6.1 
   - 使用Jcenter代替JitPack
 
