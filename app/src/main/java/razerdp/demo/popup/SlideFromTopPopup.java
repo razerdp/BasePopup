@@ -11,8 +11,6 @@ import android.view.animation.OvershootInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +35,7 @@ public class SlideFromTopPopup extends BasePopupWindow {
     public SlideFromTopPopup(Activity context) {
         super(context);
         setBackPressEnable(false);
-        setDismissWhenTouchOuside(true);
+        setDismissWhenTouchOutside(true);
         testList = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
             testList.add("position - " + i);

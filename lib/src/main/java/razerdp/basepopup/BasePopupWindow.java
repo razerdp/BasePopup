@@ -272,7 +272,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     //点击popup外部是否消失
     private boolean dismissWhenTouchOuside;
 
-    private int popupLayoutid;
+    private int mPopupLayoutId;
     //重试次数
     private volatile int retryCounter;
 
@@ -290,14 +290,14 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         mPopupView = onCreatePopupView();
         mAnimaView = initAnimaView();
         if (mAnimaView != null) {
-            popupLayoutid = mAnimaView.getId();
+            mPopupLayoutId = mAnimaView.getId();
         }
         checkPopupAnimaView();
 
         //默认占满全屏
         mPopupWindow = new PopupWindowProxy(mPopupView, w, h, this);
         mPopupWindow.setOnDismissListener(this);
-        setDismissWhenTouchOuside(true);
+        setDismissWhenTouchOutside(true);
 
         preMeasurePopupView(w, h);
 
@@ -337,10 +337,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         if (mPopupView != null && mAnimaView != null && mPopupView == mAnimaView) {
             try {
                 mPopupView = new FrameLayout(getContext());
-                if (popupLayoutid == 0) {
+                if (mPopupLayoutId == 0) {
                     ((FrameLayout) mPopupView).addView(mAnimaView);
                 } else {
-                    mAnimaView = View.inflate(getContext(), popupLayoutid, (FrameLayout) mPopupView);
+                    mAnimaView = View.inflate(getContext(), mPopupLayoutId, (FrameLayout) mPopupView);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -477,10 +477,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     //------------------------------------------Methods-----------------------------------------------
     private void tryToShowPopup(View v) {
         try {
-            int offset[];
+            int[] offset;
             //传递了view
             if (v != null) {
-                offset = calcuateOffset(v);
+                offset = calculateOffset(v);
                 if (showAtDown) {
                     mPopupWindow.showAsDropDown(v, offset[0], offset[1]);
                 } else {
@@ -530,13 +530,13 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         Context context = getContext();
         if (context instanceof Activity) {
             Activity act = (Activity) context;
-            boolean activityValided;
+            boolean availabled;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                activityValided = !act.isFinishing() && !act.isDestroyed();
+                availabled = !act.isFinishing() && !act.isDestroyed();
             } else {
-                activityValided = !act.isFinishing();
+                availabled = !act.isFinishing();
             }
-            if (activityValided) {
+            if (availabled) {
                 View rootView = act.findViewById(android.R.id.content);
                 if (rootView == null) return;
                 rootView.postDelayed(new Runnable() {
@@ -559,7 +559,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @return
      * @see #showPopupWindow(View)
      */
-    private int[] calcuateOffset(View anchorView) {
+    private int[] calculateOffset(View anchorView) {
         int[] offset = {offsetX, offsetY};
         anchorView.getLocationOnScreen(mAnchorViewLocation);
         if (isAutoLocatePopup) {
@@ -579,7 +579,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * PopupWindow是否需要自适应输入法，为输入法弹出让出区域
      *
      * @param needAdjust <br>
-     *                   ture for "SOFT_INPUT_ADJUST_RESIZE" mode<br>
+     *                   true for "SOFT_INPUT_ADJUST_RESIZE" mode<br>
      *                   false for "SOFT_INPUT_ADJUST_NOTHING" mode
      */
     public BasePopupWindow setAdjustInputMethod(boolean needAdjust) {
@@ -635,7 +635,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public View createPopupById(int resId) {
         if (resId != 0) {
-            popupLayoutid = resId;
+            mPopupLayoutId = resId;
             return LayoutInflater.from(getContext()).inflate(resId, null);
         } else {
             return null;
@@ -881,11 +881,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * <p>
      * dismiss popup when touch ouside from popup
      *
-     * @param dismissWhenTouchOuside true for dismiss
+     * @param dismissWhenTouchOutside true for dismiss
      */
-    public BasePopupWindow setDismissWhenTouchOuside(boolean dismissWhenTouchOuside) {
-        this.dismissWhenTouchOuside = dismissWhenTouchOuside;
-        if (dismissWhenTouchOuside) {
+    public BasePopupWindow setDismissWhenTouchOutside(boolean dismissWhenTouchOutside) {
+        this.dismissWhenTouchOuside = dismissWhenTouchOutside;
+        if (dismissWhenTouchOutside) {
             //指定透明背景，back键相关
             mPopupWindow.setFocusable(true);
             mPopupWindow.setOutsideTouchable(true);
@@ -1102,7 +1102,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     //------------------------------------------Interface-----------------------------------------------
     public interface OnBeforeShowCallback {
         /**
-         * <b>return ture for perform show</b>
+         * <b>return true for perform show</b>
          *
          * @param popupRootView The rootView of popup,it's usually be your layout
          * @param anchorView    The anchorView whitch popup show
@@ -1116,7 +1116,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     public static abstract class OnDismissListener implements PopupWindow.OnDismissListener {
         /**
-         * <b>return ture for perform dismiss</b>
+         * <b>return true for perform dismiss</b>
          *
          * @return
          */
