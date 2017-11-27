@@ -22,7 +22,7 @@
   - 修正部分命名和方法名以及注释名错误的问题
        + 感谢简书小伙伴的评论，否则我还真发现不了。。。
        + 评论地址：[点我](http://www.jianshu.com/p/069f57e14a9c#comment-17669137)
-       + 根据简书id，只能猜测他的github id：(Chenley)[https://github.com/Chenley]，如果您见到并发现我这个猜测是错的，请及时联系我-V- 
+       + 根据简书id，只能猜测他的github id：[Chenley](https://github.com/Chenley)，如果您见到并发现我这个猜测是错的，请及时联系我-V- 
        + 非常感谢你们的issue
   - 修复部分issue：[#46](https://github.com/razerdp/BasePopup/issues/46)
   
