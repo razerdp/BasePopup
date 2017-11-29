@@ -15,7 +15,7 @@ import android.widget.PopupWindow;
  * BasePopup代理
  */
 
-public abstract class BasePopupWindowProxy extends PopupWindow {
+abstract class BasePopupWindowProxy extends PopupWindow {
     private static final String TAG = "BasePopupWindowProxy";
 
     private static final int MAX_SCAN_ACTIVITY_COUNT = 50;
