@@ -9,7 +9,7 @@ import android.view.View;
  * 与basePopupWindow强引用(或者说与PopupController强引用)
  */
 
-public class PopupWindowProxy extends BasePopupWindowProxy {
+class PopupWindowProxy extends BasePopupWindowProxy {
     private static final String TAG = "PopupWindowProxy";
 
     public PopupWindowProxy(View contentView, int width, int height, PopupController mController) {
