@@ -16,6 +16,9 @@
 
 ## 更新日志：
 
+#### 1.8.8（未发布，等到解决别的issue后一同发布）
+  - `BasePopupWindowProxy`和`PopupWindowProxy`权限收拢，不暴露放开
+  
 #### 1.8.7
   - 抽取`PopupWindowProxy`->`BasePopupWindowProxy`
   - 归类各种蛋疼的`showAsDropDown`适配->`PopupCompatManager`
