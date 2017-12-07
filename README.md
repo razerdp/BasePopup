@@ -3,14 +3,13 @@
 
 ---
 
-[![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
 [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion)
 [![license](https://img.shields.io/badge/license-Apache--2.0-blue.svg )](https://github.com/razerdp/BasePopup/blob/master/LICENSE)
 [![Author](https://img.shields.io/badge/Author-razerdp-blue.svg)](https://github.com/razerdp) 
 
 ## 请注意：
 
-**在1.8.6.1版本之前，请使用JitPack，从1.8.6.1开始，将使用Jcenter**
+**从1.8.6.1开始，将不再支持Jitpack**
 
 ---
 
@@ -44,39 +43,7 @@
 
 ### 最低SDK版本要求 : API 11
 
-# 依赖 
-
-### Before 1.8.6.1:
- 
-[![](https://jitpack.io/v/razerdp/BasePopup.svg)](https://jitpack.io/#razerdp/BasePopup)
-
-#### 请注意【1.8.1之前记得带"v"，如"v1.8.0"，1.8.1之后不需要】
-
-**Step 1.**
-
-**添加Jitpack到您的root gradle，如果无法导包，一般情况下都是这个原因，请仔细检查**
-
-```xml
-	allprojects {
-		repositories {
-			...
-			maven { url "https://jitpack.io" }
-		}
-	}
-```
-
-**Step 2.**
-
-添加依赖（请把{latestVersion}替换成上面的jitpack标签所示版本）
-
-```xml
-	dependencies {
-	        compile 'com.github.razerdp:BasePopup:{latestVersion}'
-	}
-```
-
-### After 1.8.6.1:
-[ ![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion)
+# 依赖  [ ![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion)
 
 添加依赖（请把{latestVersion}替换成上面的jitpack标签所示版本）
 ```xml
@@ -208,26 +175,30 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
     popup.showPopupWindow();
 ```
 
+# 方法介绍：
+请看wiki（陆续完善中）
+
+**Link👉**[WIKI](https://github.com/razerdp/BasePopup/wiki)
+
 ### 打赏（您的支持是我维护的动力-V-愿意的话，给个零食呗）
 ![wechat](https://github.com/razerdp/BasePopup/blob/master/img/wechat.jpg)
 
 
 # 一些例子
-![image](https://github.com/razerdp/BasePopup/blob/master/img/comment_popup_with_exitAnima.gif)
-![image](https://github.com/razerdp/BasePopup/blob/master/img/scale_popup.gif)
-![image](https://github.com/razerdp/BasePopup/blob/master/img/slide_from_bottom_popup.gif)
-![image](https://github.com/razerdp/BasePopup/blob/master/img/input_popup.gif)
-![image](https://github.com/razerdp/BasePopup/blob/master/img/list_popup.gif)
-![image](https://github.com/razerdp/BasePopup/blob/master/img/menu_popup.gif)
+
+| 对应popup            |  预览  |
+| :--------      | ---- |
+| [CommentPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/CommentPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/comment_popup_with_exitAnima.gif) |
+| [ScalePopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/ScalePopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/scale_popup.gif) |
+| [SlideFromBottomPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/SlideFromBottomPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/slide_from_bottom_popup.gif) |
+| [InputPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/InputPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/input_popup.gif) |
+| [ListPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/ListPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/list_popup.gif) |
+| [MenuPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/MenuPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/menu_popup.gif) |
 
 例子更新日志:
 
 https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md
 
-# 方法介绍：
-请看wiki（陆续完善中）
-
-**Link👉**[WIKI](https://github.com/razerdp/BasePopup/wiki)
 
 # 代码解析：
 http://www.jianshu.com/p/069f57e14a9c
