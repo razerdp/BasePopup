@@ -379,12 +379,14 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     /**
      * 设置一个点击后触发dismiss PopupWindow的View，一般为蒙层
+     *
      * @return 点击dismiss的控件
      */
     public abstract View getClickToDismissView();
 
     /**
      * 设置展示动画View的属性动画
+     *
      * @return
      */
     protected Animator initShowAnimator() {
@@ -496,12 +498,13 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                     Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
                 }
             }
-            if (mShowAnimation != null && mAnimaView != null) {
-                mAnimaView.clearAnimation();
-                mAnimaView.startAnimation(mShowAnimation);
-            }
-            if (mShowAnimation == null && mShowAnimator != null && mAnimaView != null) {
-                mShowAnimator.start();
+            if (mAnimaView != null) {
+                if (mShowAnimation != null) {
+                    mAnimaView.clearAnimation();
+                    mAnimaView.startAnimation(mShowAnimation);
+                } else if (mShowAnimator != null) {
+                    mShowAnimator.start();
+                }
             }
             //自动弹出键盘
             if (autoShowInputMethod && getInputView() != null) {
