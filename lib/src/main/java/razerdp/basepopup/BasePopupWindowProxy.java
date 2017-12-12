@@ -134,6 +134,11 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     }
 
     void callSuperDismiss() {
-        super.dismiss();
+        try {
+            super.dismiss();
+        } catch (Exception e) {
+            Log.e(TAG, "dismiss error");
+            e.printStackTrace();
+        }
     }
 }
