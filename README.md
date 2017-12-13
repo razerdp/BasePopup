@@ -13,8 +13,14 @@
 
 ## 更新日志：
 
-#### 1.8.8（未发布，等到解决别的issue后一同发布）
+#### 1.8.8
   - `BasePopupWindowProxy`和`PopupWindowProxy`权限收拢，不暴露放开
+  - 优化`SimpleAnimUtil`，修改部分动画时间和插值器
+  - 增加`setOutsideTouchable()`方法，和`setDismissWhenTouchOutside()`搭配使用有奇效哦
+  - 增加`BasePopupHelper`优化`BasePopupWindow`代码可读性
+  - 动画方面修正`AnimaView.clearAnimation()`->`Animation.cancel()`
+  - 优化`showOnTop()`/`showOnDown()`方法。。。虽然可能没什么人用
+  - 【未解决】`setBackPressEnable()`在M以上依然未能解决，除非我hook掉（但是代价太大），详情请看[#33](https://github.com/razerdp/BasePopup/issues/33)/问题描述：[查看描述](https://github.com/razerdp/BasePopup/blob/master/%E5%85%B3%E4%BA%8EAndorid%20M%E4%BB%A5%E4%B8%8AsetBackPressEnable()%E5%A4%B1%E6%95%88%E7%9A%84%E9%97%AE%E9%A2%98%E7%9A%84%E5%88%86%E6%9E%90.md)
   
 #### 1.8.7
   - 抽取`PopupWindowProxy`->`BasePopupWindowProxy`
@@ -34,9 +40,6 @@
   - set方法返回`BasePopupWindow`，可以来个“伪链式”调用哈哈
   - 针对诸位提出的setBackPress在6.0以上失效的问题，请查看这份[MD](https://github.com/razerdp/BasePopup/blob/master/%E5%85%B3%E4%BA%8EAndorid%20M%E4%BB%A5%E4%B8%8AsetBackPressEnable()%E5%A4%B1%E6%95%88%E7%9A%84%E9%97%AE%E9%A2%98%E7%9A%84%E5%88%86%E6%9E%90.md)文件（没错，暂时无法修复）
   - 删除`setRelativeToAnchorView()`方法，该方法本身就没有什么用处。。。
-
-##### 1.8.4:
-  - 补充PopupWindowProxy的scanForActivity方法（不知明原因在merged后丢失了）
 
 
 ### 最低SDK版本要求 : API 11
