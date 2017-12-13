@@ -44,7 +44,7 @@ final class BasePopupHelper {
     //点击popup外部是否消失
     private boolean dismissWhenTouchOutside;
     //外部是否可用点击
-    private boolean mOutsideClickable;
+    private boolean mOutsideTouchable;
     //是否需要淡入window动画
     private volatile boolean needPopupFadeAnima = true;
 
@@ -235,16 +235,19 @@ final class BasePopupHelper {
             outsideTouchable = false;
             hasBackground = false;
         }
+        if (outsideTouchable) {
+            focusable = false;
+        }
         return this;
     }
 
-    public boolean isOutsideClickable() {
-        return mOutsideClickable;
+    public boolean isOutsideTouchable() {
+        return mOutsideTouchable;
     }
 
-    public BasePopupHelper setOutsideClickable(boolean outsideClickable) {
-        mOutsideClickable = outsideClickable;
-        focusable = true;
+    public BasePopupHelper setOutsideTouchable(boolean outsideClickable) {
+        mOutsideTouchable = outsideClickable;
+        focusable = false;
         return this;
     }
 

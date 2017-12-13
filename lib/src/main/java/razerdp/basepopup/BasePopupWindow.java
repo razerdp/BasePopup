@@ -205,6 +205,7 @@
 package razerdp.basepopup;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
@@ -225,7 +226,7 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 
 import razerdp.util.InputMethodUtils;
-import razerdp.util.SimpleAnimUtil;
+import razerdp.util.SimpleAnimationUtils;
 
 /**
  * Created by 大灯泡 on 2016/1/14.
@@ -543,9 +544,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offset[1]) < getHeight());
             if (onTop) {
                 offset[1] = -anchorView.getHeight() - getHeight() - offset[1];
-                showOnTop(mPopupView);
+                showOnTop(mPopupView, anchorView);
             } else {
-                showOnDown(mPopupView);
+                showOnDown(mPopupView, anchorView);
             }
         }
         return offset;
@@ -824,8 +825,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return this;
     }
 
-    public BasePopupWindow setOutsideClickable(boolean clickable) {
-        mHelper.setOutsideClickable(clickable);
+    public BasePopupWindow setOutsideTouchable(boolean touchable) {
+        mHelper.setOutsideTouchable(touchable);
         return this;
     }
 
@@ -834,7 +835,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     public boolean isOutsideClickable() {
-        return mHelper.isOutsideClickable();
+        return mHelper.isOutsideTouchable();
     }
 
     //------------------------------------------状态控制-----------------------------------------------
@@ -915,7 +916,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     //------------------------------------------Anima-----------------------------------------------
 
-    private Animator.AnimatorListener mAnimatorListener = new Animator.AnimatorListener() {
+    private Animator.AnimatorListener mAnimatorListener = new AnimatorListenerAdapter() {
+
         @Override
         public void onAnimationStart(Animator animation) {
             isExitAnimaPlaying = true;
@@ -932,13 +934,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             isExitAnimaPlaying = false;
         }
 
-        @Override
-        public void onAnimationRepeat(Animator animation) {
-
-        }
     };
 
-    private Animation.AnimationListener mAnimationListener = new Animation.AnimationListener() {
+    private Animation.AnimationListener mAnimationListener = new SimpleAnimationUtils.AnimationListenerAdapter() {
         @Override
         public void onAnimationStart(Animation animation) {
             isExitAnimaPlaying = true;
@@ -949,11 +947,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             mPopupWindow.callSuperDismiss();
             isExitAnimaPlaying = false;
         }
-
-        @Override
-        public void onAnimationRepeat(Animation animation) {
-
-        }
     };
 
     /**
@@ -963,7 +956,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param start          初始位置
      */
     protected Animation getTranslateAnimation(int start, int end, int durationMillis) {
-        return SimpleAnimUtil.getTranslateAnimation(start, end, durationMillis);
+        return SimpleAnimationUtils.getTranslateAnimation(start, end, durationMillis);
     }
 
     /**
@@ -979,28 +972,48 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                                           float pivotXValue,
                                           int pivotYType,
                                           float pivotYValue) {
-        return SimpleAnimUtil.getScaleAnimation(fromX, toX, fromY, toY, pivotXType, pivotXValue, pivotYType, pivotYValue);
+        return SimpleAnimationUtils.getScaleAnimation(fromX, toX, fromY, toY, pivotXType, pivotXValue, pivotYType, pivotYValue);
     }
+
 
     /**
      * 生成自定义ScaleAnimation
      */
     protected Animation getDefaultScaleAnimation() {
-        return SimpleAnimUtil.getDefaultScaleAnimation();
+        return getDefaultScaleAnimation(true);
     }
+
+    /**
+     * 生成自定义ScaleAnimation
+     *
+     * @param in true for scale in
+     */
+    protected Animation getDefaultScaleAnimation(boolean in) {
+        return SimpleAnimationUtils.getDefaultScaleAnimation(in);
+    }
+
 
     /**
      * 生成默认的AlphaAnimation
      */
     protected Animation getDefaultAlphaAnimation() {
-        return SimpleAnimUtil.getDefaultAlphaAnimation();
+        return getDefaultAlphaAnimation(true);
+    }
+
+    /**
+     * 生成默认的AlphaAnimation
+     *
+     * @param in true for alpha in
+     */
+    protected Animation getDefaultAlphaAnimation(boolean in) {
+        return SimpleAnimationUtils.getDefaultAlphaAnimation(in);
     }
 
     /**
      * 从下方滑动上来
      */
     protected AnimatorSet getDefaultSlideFromBottomAnimationSet() {
-        return SimpleAnimUtil.getDefaultSlideFromBottomAnimationSet(mAnimaView);
+        return SimpleAnimationUtils.getDefaultSlideFromBottomAnimationSet(mAnimaView);
     }
 
     /**
@@ -1018,11 +1031,24 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     //------------------------------------------callback-----------------------------------------------
-    protected void showOnTop(View mPopupView) {
+
+    /**
+     * 在anchorView上方显示，autoLocatePopup为true时适用
+     *
+     * @param mPopupView {@link #onCreatePopupView()}返回的View
+     * @param anchorView {@link #showPopupWindow(View)}传入的View
+     */
+    protected void showOnTop(View mPopupView, View anchorView) {
 
     }
 
-    protected void showOnDown(View mPopupView) {
+    /**
+     * 在anchorView下方显示，autoLocatePopup为true时适用
+     *
+     * @param mPopupView {@link #onCreatePopupView()}返回的View
+     * @param anchorView {@link #showPopupWindow(View)}传入的View
+     */
+    protected void showOnDown(View mPopupView, View anchorView) {
 
     }
 
