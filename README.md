@@ -46,10 +46,17 @@
 
 # 依赖  [ ![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion)
 
-添加依赖（请把{latestVersion}替换成上面的jitpack标签所示版本）
+添加依赖（请把{latestVersion}替换成上面的Jcenter标签所示版本）
 ```xml
 	dependencies {
 	        compile 'com.github.razerdp:BasePopup:{latestVersion}'
+	}
+```
+
+ps:如果你懒。。。也可以这么添加（不是替换{latest.release}，直接copy就好）
+```xml
+    dependencies {
+            com.github.razerdp:BasePopup:latest.release
 	}
 ```
 
