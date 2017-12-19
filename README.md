@@ -55,7 +55,7 @@
 
 ps:如果你懒。。。也可以这么添加（不是替换{latest.release}，直接copy就好）
 ```xml
-    dependencies {
+	dependencies {
             com.github.razerdp:BasePopup:latest.release
 	}
 ```
