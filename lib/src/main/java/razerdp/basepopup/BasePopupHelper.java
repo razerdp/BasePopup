@@ -52,9 +52,9 @@ final class BasePopupHelper {
 
 
     //popup params
-    private boolean focusable;
-    private boolean outsideTouchable;
-    private boolean hasBackground;
+    private boolean focusable = true;
+    private boolean outsideTouchable = true;
+    private boolean hasBackground = true;
 
     public BasePopupHelper() {
         mAnchorViewLocation = new int[2];

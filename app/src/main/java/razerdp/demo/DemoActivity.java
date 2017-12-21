@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,6 +75,18 @@ public class DemoActivity extends FragmentActivity {
         SimpleBaseFrag simpleBaseFrag = fragMap.get(item.getItemId());
         mFragmentManager.beginTransaction().replace(R.id.popup_fragment, simpleBaseFrag).commit();
         return super.onOptionsItemSelected(item);
+    }
+
+    private long lastClickBackTime;
+
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() - lastClickBackTime > 2000) { // 后退阻断
+            Toast.makeText(this,"再点一次退出",Toast.LENGTH_LONG).show();
+            lastClickBackTime = System.currentTimeMillis();
+        } else { // 关掉app
+            super.onBackPressed();
+        }
     }
 
 }
