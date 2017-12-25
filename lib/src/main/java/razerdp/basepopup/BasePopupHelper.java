@@ -1,7 +1,6 @@
 package razerdp.basepopup;
 
 import android.animation.Animator;
-import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -48,11 +47,12 @@ final class BasePopupHelper {
 
     private int mPopupLayoutId;
 
+    private boolean backPressEnable;
+
 
     //popup params
     private boolean focusable = true;
     private boolean outsideTouchable = false;
-    private boolean hasBackground = true;
 
     BasePopupHelper() {
         mAnchorViewLocation = new int[2];
@@ -233,15 +233,12 @@ final class BasePopupHelper {
             //指定透明背景，back键相关
             focusable = true;
             outsideTouchable = true;
-            hasBackground = true;
         } else {
             focusable = false;
             outsideTouchable = false;
-            hasBackground = false;
         }
         popupWindow.setFocusable(focusable);
         popupWindow.setOutsideTouchable(outsideTouchable);
-        popupWindow.setBackgroundDrawable(hasBackground ? new ColorDrawable() : null);
         return this;
     }
 
@@ -270,4 +267,12 @@ final class BasePopupHelper {
         return mAnchorViewLocation[1];
     }
 
+    public boolean isBackPressEnable() {
+        return backPressEnable;
+    }
+
+     BasePopupHelper setBackPressEnable(boolean backPressEnable) {
+        this.backPressEnable = backPressEnable;
+        return this;
+    }
 }
