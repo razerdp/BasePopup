@@ -299,3 +299,171 @@ private class PopupBackgroundView extends FrameLayout {
 在 Issue :[#33](https://github.com/razerdp/BasePopup/issues/33)里，有朋友给出了一个不完美的解决方法，感谢他的思路[@zl277287818](https://github.com/zl277287818)，如果不是他的评论，我都忘了我写过这个回调了哈哈。
 
 
+
+---
+
+## 1.8.9 解决方案：
+
+再次研究源码，发现了一个突破点：`invokePopup()`
+
+依然是源码走起：
+
+先看看M之前的代码：
+
+```java
+  private void invokePopup(WindowManager.LayoutParams p) {
+        if (mContext != null) {
+            p.packageName = mContext.getPackageName();
+        }
+        mPopupView.setFitsSystemWindows(mLayoutInsetDecor);
+        setLayoutDirectionFromAnchor();
+        mWindowManager.addView(mPopupView, p);
+    }
+```
+
+然后看看M之后的代码：
+
+```java
+    private void invokePopup(WindowManager.LayoutParams p) {
+        if (mContext != null) {
+            p.packageName = mContext.getPackageName();
+        }
+
+        final PopupDecorView decorView = mDecorView;
+        decorView.setFitsSystemWindows(mLayoutInsetDecor);
+
+        setLayoutDirectionFromAnchor();
+
+        mWindowManager.addView(decorView, p);
+
+        if (mEnterTransition != null) {
+            decorView.requestEnterTransition(mEnterTransition);
+        }
+    }
+```
+
+上面说过，在M之前和M之后，引起返回键失效或者成功的原因在于`decorView`，M之前是根据background，M之后不关注background。
+
+然而因为按键的监听是在`dispatchKeyEvent`，而KeyListener是在其之后才有效，所以我们没有办法好好监听按键事件。
+
+然而我一直忽略了一件事：`decorView`作为popupwindow的最顶层，是直接被WindowManager给add到phone中的
+
+![image](https://github.com/razerdp/BasePopup/blob/master/img/1.png)
+
+
+无论是哪一份代码，但这一个操作是不会改变的，既然我们没法监听`KeyEvent`，那么我们直接给顶层View套上一层我们自定义的View（相当于代理）是否就可以成功拦截呢？
+
+于是我就瞄准了`WindowManager`，至于添加时机，很明显，就是addView方法，因此我们需要代理一下`WindowManager`...
+
+首先我们需要反射替换掉`PopupWindow`的`WindowManager`....
+
+[BasePopupWindowProxy#168]()
+
+```java
+  private void tryToProxyWindowManagerMethod(PopupWindow popupWindow) {
+        try {
+            if (hackWindowManager != null) return;
+            Field fieldWindowManager = PopupWindow.class.getDeclaredField("mWindowManager");
+            fieldWindowManager.setAccessible(true);
+            final WindowManager windowManager = (WindowManager) fieldWindowManager.get(popupWindow);
+            if (windowManager == null) return;
+            hackWindowManager = new HackWindowManager(windowManager,mController);
+            fieldWindowManager.set(popupWindow, hackWindowManager);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+```
+
+接着在我们的hackerWindowManager中进行代理。。。事实上本来是想动态代理的（因为WindowManager是个接口，条件允许动态代理）
+但是因为当我们hack掉`addView()`方法后，`removeView()`方法也需要hack掉，否则会出现不对等的情况，而在动态代理中我们需要写一堆类似于：
+
+```java
+if(method.getName().equals("addView")){}
+```
+
+最后决定，还是直接代理算了- -而且也便于扩展
+
+回到主题，我们代理中的处理需要针对不同版本来进行，但因为目前为止针对两个`decorView`操作都是一样的，所以直接采取判断View的名字而不判断系统版本：
+
+```java
+  private boolean checkProxyValided(View v) {
+        if (v == null) return false;
+        String viewSimpleClassName = v.getClass().getSimpleName();
+        return TextUtils.equals(viewSimpleClassName, "PopupDecorView") || TextUtils.equals(viewSimpleClassName, "PopupViewContainer");
+    }
+```
+
+最后处理一下其他方法就可以了：
+
+```java
+final class HackWindowManager implements WindowManager {
+    private static final String TAG = "HackWindowManager";
+    private WindowManager mWindowManager;
+    private PopupController mPopupController;
+    HackPopupDecorView mHackPopupDecorView;
+
+    public HackWindowManager(WindowManager windowManager, PopupController popupController) {
+        mWindowManager = windowManager;
+        mPopupController = popupController;
+    }
+
+    @Override
+    public Display getDefaultDisplay() {
+        return mWindowManager.getDefaultDisplay();
+    }
+
+    @Override
+    public void removeViewImmediate(View view) {
+        if (checkProxyValided(view) && mHackPopupDecorView != null) {
+            mWindowManager.removeViewImmediate(mHackPopupDecorView);
+            mHackPopupDecorView.setPopupController(null);
+            mHackPopupDecorView = null;
+        } else {
+            mWindowManager.removeViewImmediate(view);
+        }
+    }
+
+    @Override
+    public void addView(View view, ViewGroup.LayoutParams params) {
+        Log.i(TAG, "addView:  " + view.getClass().getSimpleName());
+
+        if (checkProxyValided(view)) {
+            mHackPopupDecorView = new HackPopupDecorView(view.getContext());
+            mHackPopupDecorView.setPopupController(mPopupController);
+            mHackPopupDecorView.addView(view);
+            mWindowManager.addView(mHackPopupDecorView, params);
+        } else {
+            mWindowManager.addView(view, params);
+        }
+    }
+
+    @Override
+    public void updateViewLayout(View view, ViewGroup.LayoutParams params) {
+        if (checkProxyValided(view) && mHackPopupDecorView != null) {
+            mWindowManager.updateViewLayout(mHackPopupDecorView, params);
+        } else {
+            mWindowManager.updateViewLayout(view, params);
+        }
+
+    }
+
+    @Override
+    public void removeView(View view) {
+        if (checkProxyValided(view) && mHackPopupDecorView != null) {
+            mWindowManager.removeView(mHackPopupDecorView);
+            mHackPopupDecorView.setPopupController(null);
+            mHackPopupDecorView = null;
+        } else {
+            mWindowManager.removeView(view);
+        }
+    }
+
+
+    private boolean checkProxyValided(View v) {
+        if (v == null) return false;
+        String viewSimpleClassName = v.getClass().getSimpleName();
+        return TextUtils.equals(viewSimpleClassName, "PopupDecorView") || TextUtils.equals(viewSimpleClassName, "PopupViewContainer");
+    }
+}
+```
