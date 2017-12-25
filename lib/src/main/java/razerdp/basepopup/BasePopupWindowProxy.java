@@ -7,7 +7,12 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.PopupWindow;
+
+import java.lang.reflect.Field;
+
+import razerdp.basepopup.proxy.HackWindowManager;
 
 /**
  * Created by 大灯泡 on 2017/11/27.
@@ -21,46 +26,61 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     private static final int MAX_SCAN_ACTIVITY_COUNT = 50;
     private volatile int tryScanActivityCount = 0;
     private PopupController mController;
+    protected HackWindowManager hackWindowManager;
 
     public BasePopupWindowProxy(Context context, PopupController mController) {
         super(context);
         this.mController = mController;
+        tryToProxyWindowManagerMethod(this);
     }
 
     public BasePopupWindowProxy(Context context, AttributeSet attrs, PopupController mController) {
         super(context, attrs);
         this.mController = mController;
+        tryToProxyWindowManagerMethod(this);
     }
 
     public BasePopupWindowProxy(Context context, AttributeSet attrs, int defStyleAttr, PopupController mController) {
         super(context, attrs, defStyleAttr);
         this.mController = mController;
+        tryToProxyWindowManagerMethod(this);
     }
 
     public BasePopupWindowProxy(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes, PopupController mController) {
         super(context, attrs, defStyleAttr, defStyleRes);
         this.mController = mController;
+        tryToProxyWindowManagerMethod(this);
     }
 
 
     public BasePopupWindowProxy(View contentView, PopupController mController) {
         super(contentView);
         this.mController = mController;
+        tryToProxyWindowManagerMethod(this);
     }
 
     public BasePopupWindowProxy(int width, int height, PopupController mController) {
         super(width, height);
         this.mController = mController;
+        tryToProxyWindowManagerMethod(this);
     }
 
     public BasePopupWindowProxy(View contentView, int width, int height, PopupController mController) {
         super(contentView, width, height);
         this.mController = mController;
+        tryToProxyWindowManagerMethod(this);
     }
 
     public BasePopupWindowProxy(View contentView, int width, int height, boolean focusable, PopupController mController) {
         super(contentView, width, height, focusable);
         this.mController = mController;
+        tryToProxyWindowManagerMethod(this);
+    }
+
+    @Override
+    public void setContentView(View contentView) {
+        super.setContentView(contentView);
+        tryToProxyWindowManagerMethod(this);
     }
 
     void callSuperShowAsDropDown(View anchor, int xoff, int yoff, int gravity) {
@@ -141,4 +161,25 @@ abstract class BasePopupWindowProxy extends PopupWindow {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 尝试代理掉windowmanager的addView方法
+     *
+     * @param popupWindow
+     */
+    private void tryToProxyWindowManagerMethod(PopupWindow popupWindow) {
+        try {
+            if (hackWindowManager != null) return;
+            Field fieldWindowManager = PopupWindow.class.getDeclaredField("mWindowManager");
+            fieldWindowManager.setAccessible(true);
+            final WindowManager windowManager = (WindowManager) fieldWindowManager.get(popupWindow);
+            if (windowManager == null) return;
+            hackWindowManager = new HackWindowManager(windowManager);
+            fieldWindowManager.set(popupWindow, hackWindowManager);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

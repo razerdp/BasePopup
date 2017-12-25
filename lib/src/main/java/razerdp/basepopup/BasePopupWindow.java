@@ -212,6 +212,7 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -392,7 +393,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * popupwindow是否需要淡入淡出
      */
     public BasePopupWindow setNeedPopupFade(boolean needPopupFadeAnima) {
-        mHelper.setNeedPopupFadeAnima(needPopupFadeAnima);
+        mHelper.setNeedPopupFadeAnima(mPopupWindow, needPopupFadeAnima);
         return this;
     }
 
@@ -451,7 +452,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     //------------------------------------------Methods-----------------------------------------------
     private void tryToShowPopup(View v) {
         try {
-            mHelper.applyToPopupWindow(mPopupWindow);
+            if (isShowing()) return;
             int[] offset;
             //传递了view
             if (v != null) {
@@ -496,6 +497,23 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             }
             Log.e(TAG, "catch an exception,processing reshow... try times  >>  " + retryCounter);
             retryToShowPopup(v);
+        }
+    }
+
+    private void tryToListenKeyEvent() {
+        try {
+            final Field fieldDecorView = PopupWindow.class.getDeclaredField("mDecorView");
+            fieldDecorView.setAccessible(true);
+            final FrameLayout decorView = (FrameLayout) fieldDecorView.get(mPopupWindow);
+            decorView.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    Log.i(TAG, "onKey: ");
+                    return false;
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -586,7 +604,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 如果使用这个方法，您必须保证通过 <strong>getInputView()<strong/>得到一个EditTextView
      */
     public BasePopupWindow setAutoShowInputMethod(boolean autoShow) {
-        mHelper.setAutoShowInputMethod(autoShow);
+        mHelper.setAutoShowInputMethod(mPopupWindow, autoShow);
         return this;
     }
 
@@ -821,12 +839,18 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param dismissWhenTouchOutside true for dismiss
      */
     public BasePopupWindow setDismissWhenTouchOutside(boolean dismissWhenTouchOutside) {
-        mHelper.setDismissWhenTouchOutside(dismissWhenTouchOutside);
+        mHelper.setDismissWhenTouchOutside(mPopupWindow, dismissWhenTouchOutside);
         return this;
     }
 
-    public BasePopupWindow setOutsideTouchable(boolean touchable) {
-        mHelper.setOutsideTouchable(touchable);
+    /**
+     * popupwindow是否拦截事件，这会影响到返回键dismiss的问题
+     *
+     * @param touchable ture:popupwindow拦截事件,false：不拦截事件
+     * @return
+     */
+    public BasePopupWindow setInterceptTouchEvent(boolean touchable) {
+        mHelper.setInterceptTouchEvent(mPopupWindow, touchable);
         return this;
     }
 
@@ -834,8 +858,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return mHelper.isDismissWhenTouchOutside();
     }
 
-    public boolean isOutsideClickable() {
-        return mHelper.isOutsideTouchable();
+    public boolean isInterceptTouchEvent() {
+        return mHelper.isInterceptTouchEvent();
     }
 
     //------------------------------------------状态控制-----------------------------------------------
@@ -1060,6 +1084,13 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         isExitAnimaPlaying = false;
     }
 
+
+    //------------------------------------------tools-----------------------------------------------
+
+    protected float dipToPx(float dip) {
+        if (getContext() == null) return dip;
+        return dip * getContext().getResources().getDisplayMetrics().density + 0.5f;
+    }
 
     //------------------------------------------Interface-----------------------------------------------
     public interface OnBeforeShowCallback {

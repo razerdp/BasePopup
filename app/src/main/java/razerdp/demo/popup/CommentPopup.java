@@ -9,7 +9,9 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -53,6 +55,8 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
         mCommentClickLayout.setOnClickListener(this);
 
         buildAnima();
+        setDismissWhenTouchOutside(true);
+        setInterceptTouchEvent(false);
     }
 
     private AnimationSet mAnimationSet;
@@ -104,16 +108,21 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
         super.showPopupWindow(v);
     }
 
+
     @Override
     protected Animation initShowAnimation() {
-        return getScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF, 1.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f);
+        TranslateAnimation showAnima = new TranslateAnimation(dipToPx(180f), 0, 0, 0);
+        showAnima.setInterpolator(new DecelerateInterpolator());
+        showAnima.setDuration(350);
+        return showAnima;
     }
 
     @Override
-    public Animation initExitAnimation() {
-        return getScaleAnimation(1.0f, 0.0f, 1.0f, 1.0f, Animation.RELATIVE_TO_SELF, 1.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f);
+    protected Animation initExitAnimation() {
+        TranslateAnimation exitAnima = new TranslateAnimation(0, dipToPx(180f), 0, 0);
+        exitAnima.setInterpolator(new DecelerateInterpolator());
+        exitAnima.setDuration(350);
+        return exitAnima;
     }
 
     @Override
