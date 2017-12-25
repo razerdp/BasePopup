@@ -357,7 +357,7 @@ private class PopupBackgroundView extends FrameLayout {
 
 首先我们需要反射替换掉`PopupWindow`的`WindowManager`....
 
-[BasePopupWindowProxy#168]()
+[BasePopupWindowProxy#176](https://github.com/razerdp/BasePopup/blob/master/lib/src/main/java/razerdp/basepopup/BasePopupWindowProxy.java#L176)
 
 ```java
   private void tryToProxyWindowManagerMethod(PopupWindow popupWindow) {
