@@ -495,25 +495,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 e.printStackTrace();
                 return;
             }
-            Log.e(TAG, "catch an exception,processing reshow... try times  >>  " + retryCounter);
             retryToShowPopup(v);
-        }
-    }
-
-    private void tryToListenKeyEvent() {
-        try {
-            final Field fieldDecorView = PopupWindow.class.getDeclaredField("mDecorView");
-            fieldDecorView.setAccessible(true);
-            final FrameLayout decorView = (FrameLayout) fieldDecorView.get(mPopupWindow);
-            decorView.setOnKeyListener(new View.OnKeyListener() {
-                @Override
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    Log.i(TAG, "onKey: ");
-                    return false;
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -522,6 +504,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     private void retryToShowPopup(final View v) {
         if (retryCounter > MAX_RETRY_SHOW_TIME) return;
+        Log.e(TAG, "catch an exception on showing popupwindow ...now retrying to show ... retry count  >>  " + retryCounter);
         if (isShowing()) mPopupWindow.callSuperDismiss();
         Context context = getContext();
         if (context instanceof Activity) {
@@ -614,6 +597,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 在android M之后失效
      */
     public BasePopupWindow setBackPressEnable(final boolean backPressEnable) {
+        mHelper.setBackPressEnable(backPressEnable);
         mPopupWindow.setBackgroundDrawable(backPressEnable ? new ColorDrawable() : null);
         return this;
     }
@@ -936,6 +920,20 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                     mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
         }
         return result;
+    }
+
+    @Override
+    public boolean onDispatchKeyEvent(KeyEvent event) {
+        return false;
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if (mHelper.isBackPressEnable()) {
+            dismiss();
+            return true;
+        }
+        return false;
     }
 
     //------------------------------------------Anima-----------------------------------------------
