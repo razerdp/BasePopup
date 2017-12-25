@@ -47,7 +47,7 @@ final class BasePopupHelper {
 
     private int mPopupLayoutId;
 
-    private boolean backPressEnable;
+    private boolean backPressEnable = true;
 
 
     //popup params
@@ -271,7 +271,7 @@ final class BasePopupHelper {
         return backPressEnable;
     }
 
-     BasePopupHelper setBackPressEnable(boolean backPressEnable) {
+    BasePopupHelper setBackPressEnable(boolean backPressEnable) {
         this.backPressEnable = backPressEnable;
         return this;
     }
