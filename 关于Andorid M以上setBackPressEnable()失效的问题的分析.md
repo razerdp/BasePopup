@@ -467,3 +467,7 @@ final class HackWindowManager implements WindowManager {
     }
 }
 ```
+
+最后的层级图如下：
+
+![image](https://github.com/razerdp/BasePopup/blob/master/img/2.png)
