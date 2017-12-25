@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -37,7 +38,6 @@ public class DemoActivity extends FragmentActivity {
         setContentView(R.layout.activity_demo);
         mFragmentManager = getSupportFragmentManager();
         ScalePopup scalePopup=new ScalePopup(this);
-        scalePopup.setBackPressEnable(false);
         scalePopup.showPopupWindow();
 
         fragMap = new HashMap<>();
@@ -57,6 +57,11 @@ public class DemoActivity extends FragmentActivity {
 
         SimpleBaseFrag firstShowFrag = fragMap.get(R.id.id_scale_popup);
         mFragmentManager.beginTransaction().replace(R.id.popup_fragment, firstShowFrag).commit();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

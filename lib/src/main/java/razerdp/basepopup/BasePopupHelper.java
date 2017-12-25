@@ -43,8 +43,6 @@ final class BasePopupHelper {
     private boolean showAtDown;
     //点击popup外部是否消失
     private boolean dismissWhenTouchOutside;
-    //外部是否可用点击
-    private boolean mOutsideTouchable;
     //是否需要淡入window动画
     private volatile boolean needPopupFadeAnima = true;
 
@@ -53,27 +51,27 @@ final class BasePopupHelper {
 
     //popup params
     private boolean focusable = true;
-    private boolean outsideTouchable = true;
+    private boolean outsideTouchable = false;
     private boolean hasBackground = true;
 
-    public BasePopupHelper() {
+    BasePopupHelper() {
         mAnchorViewLocation = new int[2];
     }
 
-    public int getPopupLayoutId() {
+    int getPopupLayoutId() {
         return mPopupLayoutId;
     }
 
-    public BasePopupHelper setPopupLayoutId(int popupLayoutId) {
+    BasePopupHelper setPopupLayoutId(int popupLayoutId) {
         mPopupLayoutId = popupLayoutId;
         return this;
     }
 
-    public Animation getShowAnimation() {
+    Animation getShowAnimation() {
         return mShowAnimation;
     }
 
-    public BasePopupHelper setShowAnimation(Animation showAnimation) {
+    BasePopupHelper setShowAnimation(Animation showAnimation) {
         if (mShowAnimation == showAnimation) return this;
         if (mShowAnimation != null) {
             mShowAnimation.cancel();
@@ -82,11 +80,11 @@ final class BasePopupHelper {
         return this;
     }
 
-    public Animator getShowAnimator() {
+    Animator getShowAnimator() {
         return mShowAnimator;
     }
 
-    public BasePopupHelper setShowAnimator(Animator showAnimator) {
+    BasePopupHelper setShowAnimator(Animator showAnimator) {
         if (mShowAnimator == showAnimator) return this;
         if (mShowAnimator != null) {
             mShowAnimator.cancel();
@@ -95,11 +93,11 @@ final class BasePopupHelper {
         return this;
     }
 
-    public Animation getExitAnimation() {
+    Animation getExitAnimation() {
         return mExitAnimation;
     }
 
-    public BasePopupHelper setExitAnimation(Animation exitAnimation) {
+    BasePopupHelper setExitAnimation(Animation exitAnimation) {
         if (mExitAnimation == exitAnimation) return this;
         if (mExitAnimation != null) {
             mExitAnimation.cancel();
@@ -108,11 +106,11 @@ final class BasePopupHelper {
         return this;
     }
 
-    public Animator getExitAnimator() {
+    Animator getExitAnimator() {
         return mExitAnimator;
     }
 
-    public BasePopupHelper setExitAnimator(Animator exitAnimator) {
+    BasePopupHelper setExitAnimator(Animator exitAnimator) {
         if (mExitAnimator == exitAnimator) return this;
         if (mExitAnimator != null) {
             mExitAnimator.cancel();
@@ -121,109 +119,115 @@ final class BasePopupHelper {
         return this;
     }
 
-    public int getPopupViewWidth() {
+    int getPopupViewWidth() {
         return popupViewWidth;
     }
 
-    public BasePopupHelper setPopupViewWidth(int popupViewWidth) {
+    BasePopupHelper setPopupViewWidth(int popupViewWidth) {
         this.popupViewWidth = popupViewWidth;
         return this;
     }
 
-    public int getPopupViewHeight() {
+    int getPopupViewHeight() {
         return popupViewHeight;
     }
 
-    public BasePopupHelper setPopupViewHeight(int popupViewHeight) {
+    BasePopupHelper setPopupViewHeight(int popupViewHeight) {
         this.popupViewHeight = popupViewHeight;
         return this;
     }
 
-    public boolean isNeedPopupFadeAnima() {
+    boolean isNeedPopupFadeAnima() {
         return needPopupFadeAnima;
     }
 
-    public BasePopupHelper setNeedPopupFadeAnima(boolean needPopupFadeAnima) {
+    BasePopupHelper setNeedPopupFadeAnima(PopupWindow popupWindow, boolean needPopupFadeAnima) {
+        if (popupWindow == null) return this;
         this.needPopupFadeAnima = needPopupFadeAnima;
+        popupWindow.setAnimationStyle(needPopupFadeAnima ? R.style.PopupAnimaFade : 0);
         return this;
     }
 
-    public boolean isShowAtDown() {
+    boolean isShowAtDown() {
         return showAtDown;
     }
 
-    public BasePopupHelper setShowAtDown(boolean showAtDown) {
+    BasePopupHelper setShowAtDown(boolean showAtDown) {
         this.showAtDown = showAtDown;
         return this;
     }
 
-    public int getPopupGravity() {
+    int getPopupGravity() {
         return popupGravity;
     }
 
-    public BasePopupHelper setPopupGravity(int popupGravity) {
+    BasePopupHelper setPopupGravity(int popupGravity) {
         this.popupGravity = popupGravity;
         return this;
     }
 
-    public int getOffsetX() {
+    int getOffsetX() {
         return offsetX;
     }
 
-    public BasePopupHelper setOffsetX(int offsetX) {
+    BasePopupHelper setOffsetX(int offsetX) {
         this.offsetX = offsetX;
         return this;
     }
 
-    public int getOffsetY() {
+    int getOffsetY() {
         return offsetY;
     }
 
-    public BasePopupHelper setOffsetY(int offsetY) {
+    BasePopupHelper setOffsetY(int offsetY) {
         this.offsetY = offsetY;
         return this;
     }
 
-    public boolean isAutoShowInputMethod() {
+    boolean isAutoShowInputMethod() {
         return autoShowInputMethod;
     }
 
-    public void setAutoShowInputMethod(boolean autoShowInputMethod) {
+    BasePopupHelper setAutoShowInputMethod(PopupWindow popupWindow, boolean autoShowInputMethod) {
+        if (popupWindow == null) return this;
         this.autoShowInputMethod = autoShowInputMethod;
+        popupWindow.setSoftInputMode(autoShowInputMethod ? WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE : WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+        return this;
     }
 
-    public boolean isAutoLocatePopup() {
+    boolean isAutoLocatePopup() {
         return isAutoLocatePopup;
     }
 
-    public BasePopupHelper setAutoLocatePopup(boolean autoLocatePopup) {
+    BasePopupHelper setAutoLocatePopup(boolean autoLocatePopup) {
         isAutoLocatePopup = autoLocatePopup;
         return this;
     }
 
-    public BasePopupWindow.OnDismissListener getOnDismissListener() {
+    BasePopupWindow.OnDismissListener getOnDismissListener() {
         return mOnDismissListener;
     }
 
-    public BasePopupHelper setOnDismissListener(BasePopupWindow.OnDismissListener onDismissListener) {
+    BasePopupHelper setOnDismissListener(BasePopupWindow.OnDismissListener onDismissListener) {
         mOnDismissListener = onDismissListener;
         return this;
     }
 
-    public BasePopupWindow.OnBeforeShowCallback getOnBeforeShowCallback() {
+    BasePopupWindow.OnBeforeShowCallback getOnBeforeShowCallback() {
         return mOnBeforeShowCallback;
     }
 
-    public BasePopupHelper setOnBeforeShowCallback(BasePopupWindow.OnBeforeShowCallback onBeforeShowCallback) {
+    BasePopupHelper setOnBeforeShowCallback(BasePopupWindow.OnBeforeShowCallback onBeforeShowCallback) {
         mOnBeforeShowCallback = onBeforeShowCallback;
         return this;
     }
 
-    public boolean isDismissWhenTouchOutside() {
+    boolean isDismissWhenTouchOutside() {
         return dismissWhenTouchOutside;
     }
 
-    public BasePopupHelper setDismissWhenTouchOutside(boolean dismissWhenTouchOutside) {
+    BasePopupHelper setDismissWhenTouchOutside(PopupWindow popupWindow, boolean dismissWhenTouchOutside) {
+        if (popupWindow == null) return this;
         this.dismissWhenTouchOutside = dismissWhenTouchOutside;
         if (dismissWhenTouchOutside) {
             //指定透明背景，back键相关
@@ -235,47 +239,35 @@ final class BasePopupHelper {
             outsideTouchable = false;
             hasBackground = false;
         }
-        if (outsideTouchable) {
-            focusable = false;
-        }
+        popupWindow.setFocusable(focusable);
+        popupWindow.setOutsideTouchable(outsideTouchable);
+        popupWindow.setBackgroundDrawable(hasBackground ? new ColorDrawable() : null);
         return this;
     }
 
-    public boolean isOutsideTouchable() {
-        return mOutsideTouchable;
+    boolean isInterceptTouchEvent() {
+        return outsideTouchable;
     }
 
-    public BasePopupHelper setOutsideTouchable(boolean outsideClickable) {
-        mOutsideTouchable = outsideClickable;
-        focusable = false;
+    BasePopupHelper setInterceptTouchEvent(PopupWindow popupWindow, boolean intecept) {
+        if (popupWindow == null) return this;
+        popupWindow.setFocusable(intecept);
+        popupWindow.setOutsideTouchable(!intecept);
         return this;
     }
 
-    public BasePopupHelper getAnchorLocation(View v) {
+    BasePopupHelper getAnchorLocation(View v) {
         if (v == null) return this;
         v.getLocationOnScreen(mAnchorViewLocation);
         return this;
     }
 
-    public int getAnchorX() {
+    int getAnchorX() {
         return mAnchorViewLocation[0];
     }
 
-    public int getAnchorY() {
+    int getAnchorY() {
         return mAnchorViewLocation[1];
     }
-
-
-    void applyToPopupWindow(PopupWindow popupWindow) {
-        if (popupWindow != null) {
-            popupWindow.setAnimationStyle(needPopupFadeAnima ? R.style.PopupAnimaFade : 0);
-            popupWindow.setSoftInputMode(autoShowInputMethod ? WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE : WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-            popupWindow.setFocusable(focusable);
-            popupWindow.setOutsideTouchable(outsideTouchable);
-            popupWindow.setBackgroundDrawable(hasBackground ? new ColorDrawable() : null);
-        }
-
-    }
-
 
 }
