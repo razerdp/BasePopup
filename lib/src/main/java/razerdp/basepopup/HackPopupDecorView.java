@@ -29,6 +29,29 @@ public class HackPopupDecorView extends ViewGroup {
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        final View child = getChildAt(0);
+        if (child == null) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        } else {
+            measureChild(child, widthMeasureSpec, heightMeasureSpec);
+            setMeasuredDimension(child.getMeasuredWidth(), child.getMeasuredHeight());
+        }
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        View child = getChildAt(0);
+        if (child == null) return;
+        child.layout(l, t, r, b);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        return false;
+    }
+
+    @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         boolean intercept = getPopupController() != null && getPopupController().onDispatchKeyEvent(event);
         if (intercept) return true;
@@ -58,11 +81,6 @@ public class HackPopupDecorView extends ViewGroup {
     }
 
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return super.onInterceptTouchEvent(ev);
-    }
-
-    @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (getPopupController() != null) {
             if (getPopupController().onTouchEvent(event)) {
@@ -83,24 +101,6 @@ public class HackPopupDecorView extends ViewGroup {
             }
         }
         return super.onTouchEvent(event);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        final View child = getChildAt(0);
-        if (child == null) {
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        } else {
-            measureChild(child, widthMeasureSpec, heightMeasureSpec);
-            setMeasuredDimension(child.getMeasuredWidth(), child.getMeasuredHeight());
-        }
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        View child = getChildAt(0);
-        if (child == null) return;
-        child.layout(l, t, r, b);
     }
 
     public PopupController getPopupController() {

@@ -38,7 +38,7 @@ public class DismissControlPopup extends BasePopupWindow implements View.OnClick
         AnimationSet set = new AnimationSet(true);
         set.setInterpolator(new DecelerateInterpolator());
         set.addAnimation(getScaleAnimation(1, 0, 1, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0));
-        set.addAnimation(getDefaultAlphaAnimation());
+        set.addAnimation(getDefaultAlphaAnimation(false));
         return set;
     }
 

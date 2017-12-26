@@ -25,7 +25,7 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     private static final int MAX_SCAN_ACTIVITY_COUNT = 50;
     private volatile int tryScanActivityCount = 0;
     private PopupController mController;
-    protected HackWindowManager hackWindowManager;
+    private HackWindowManager hackWindowManager;
 
     public BasePopupWindowProxy(Context context, PopupController mController) {
         super(context);
@@ -57,7 +57,6 @@ abstract class BasePopupWindowProxy extends PopupWindow {
         init();
     }
 
-
     public BasePopupWindowProxy(int width, int height, PopupController mController) {
         super(width, height);
         this.mController = mController;
@@ -74,6 +73,13 @@ abstract class BasePopupWindowProxy extends PopupWindow {
         super(contentView, width, height, focusable);
         this.mController = mController;
         init();
+    }
+
+    void bindPopupHelper(BasePopupHelper mHelper) {
+        if (hackWindowManager == null) {
+            tryToProxyWindowManagerMethod(this);
+        }
+        hackWindowManager.bindPopupHelper(mHelper);
     }
 
     private void init() {

@@ -11,16 +11,15 @@
 
 **从1.8.6.1开始，将不再支持Jitpack**
 
-**1.8.9目前是测试版，如果商用并追求稳定性，请暂时用着1.8.7，如果想体验新功能，欢迎使用1.8.9，这样可以加快迭代，保证尽快推出稳定版**
+**1.8.9(包括betaX)是测试版，一般指有重大改动或者新的功能，但并未经过大量的商用测试，如果商用并追求稳定性，请暂时用着1.8.7。如果想体验新功能，欢迎使用1.8.9(及beta版)，并在issue提交您遇到的问题，我尽量尽快解决，尽早推出稳定版**
 
 ## 更新日志：
 
-#### 1.8.9-beta2【未发布】
+#### 1.8.9-beta2
   - 增加演示demo：`DismissControlPopupFrag`
   - 增加两个方法用于touchEvent监听：`onTouchEvent()`&`onOutSideTouch()`
   - `HackPopupDecorView`继承`ViewGroup`而非`FrameLayout`，以解决PopupWindow的`decorView.getLayoutParams()`无法强转为`WindowManager.LayoutParams`的异常
   - 其余问题暂时没发现
-  - 下一步：在popupwindow不拦截事件同时响应BackPress.
 
 #### ~~1.8.8~~(1.8.9)
 
