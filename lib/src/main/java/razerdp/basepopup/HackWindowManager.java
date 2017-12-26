@@ -1,5 +1,6 @@
 package razerdp.basepopup;
 
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
@@ -19,6 +20,7 @@ final class HackWindowManager implements WindowManager {
     private WeakReference<WindowManager> mWindowManager;
     private WeakReference<PopupController> mPopupController;
     private WeakReference<HackPopupDecorView> mHackPopupDecorView;
+    private WeakReference<BasePopupHelper> mPopupHelper;
 
     public HackWindowManager(WindowManager windowManager, PopupController popupController) {
         mWindowManager = new WeakReference<WindowManager>(windowManager);
@@ -46,9 +48,9 @@ final class HackWindowManager implements WindowManager {
 
     @Override
     public void addView(View view, ViewGroup.LayoutParams params) {
-        Log.i(TAG, "addView:  " + view.getClass().getSimpleName());
         if (getWindowManager() == null) return;
         if (checkProxyValided(view)) {
+            params = applyHelper(params);
             final HackPopupDecorView hackPopupDecorView = new HackPopupDecorView(view.getContext());
             mHackPopupDecorView = new WeakReference<HackPopupDecorView>(hackPopupDecorView);
             hackPopupDecorView.setPopupController(getPopupController());
@@ -57,6 +59,21 @@ final class HackWindowManager implements WindowManager {
         } else {
             getWindowManager().addView(view, params);
         }
+    }
+
+    private ViewGroup.LayoutParams applyHelper(ViewGroup.LayoutParams params) {
+        if (!(params instanceof WindowManager.LayoutParams) || getBasePopupHelper() == null) return params;
+        WindowManager.LayoutParams p = (LayoutParams) params;
+        BasePopupHelper helper = getBasePopupHelper();
+        if (helper == null) return params;
+        if (!helper.isInterceptTouchEvent()) {
+            p.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+            p.flags |= WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+        }
+        if (helper.isFullScreen()) {
+            p.flags |= WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+        }
+        return p;
     }
 
     @Override
@@ -104,5 +121,14 @@ final class HackWindowManager implements WindowManager {
     private PopupController getPopupController() {
         if (mPopupController == null) return null;
         return mPopupController.get();
+    }
+
+    private BasePopupHelper getBasePopupHelper() {
+        if (mPopupHelper == null) return null;
+        return mPopupHelper.get();
+    }
+
+    void bindPopupHelper(BasePopupHelper helper) {
+        mPopupHelper = new WeakReference<BasePopupHelper>(helper);
     }
 }

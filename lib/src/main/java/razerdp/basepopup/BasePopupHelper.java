@@ -42,6 +42,8 @@ final class BasePopupHelper {
     private boolean showAtDown;
     //点击popup外部是否消失
     private boolean dismissWhenTouchOutside;
+    //是否全屏
+    private boolean fullScreen = true;
     //是否需要淡入window动画
     private volatile boolean needPopupFadeAnima = true;
 
@@ -49,10 +51,8 @@ final class BasePopupHelper {
 
     private boolean backPressEnable = true;
 
-
     //popup params
-    private boolean focusable = true;
-    private boolean outsideTouchable = false;
+    private boolean interCeptOutSideTouchEvent = true;
 
     BasePopupHelper() {
         mAnchorViewLocation = new int[2];
@@ -233,14 +233,12 @@ final class BasePopupHelper {
     }
 
     boolean isInterceptTouchEvent() {
-        return outsideTouchable;
+        return interCeptOutSideTouchEvent;
     }
 
     BasePopupHelper setInterceptTouchEvent(PopupWindow popupWindow, boolean intecept) {
         if (popupWindow == null) return this;
-        outsideTouchable = intecept;
-        popupWindow.setFocusable(intecept);
-        popupWindow.setOutsideTouchable(!intecept);
+        interCeptOutSideTouchEvent = intecept;
         return this;
     }
 
@@ -262,8 +260,18 @@ final class BasePopupHelper {
         return backPressEnable;
     }
 
-    BasePopupHelper setBackPressEnable(boolean backPressEnable) {
+    BasePopupHelper setBackPressEnable(PopupWindow popupWindow, boolean backPressEnable) {
+        if (popupWindow == null) return this;
         this.backPressEnable = backPressEnable;
+        return this;
+    }
+
+    boolean isFullScreen() {
+        return fullScreen;
+    }
+
+    BasePopupHelper setFullScreen(boolean fullScreen) {
+        this.fullScreen = fullScreen;
         return this;
     }
 }
