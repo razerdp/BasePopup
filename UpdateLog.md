@@ -1,5 +1,12 @@
 # BasePopup
 
+## 2017/12/26
+  - 增加演示demo：`DismissControlPopupFrag`
+  - 增加两个方法用于touchEvent监听：`onTouchEvent()`&`onOutSideTouch()`
+  - `HackPopupDecorView`继承`ViewGroup`而非`FrameLayout`，以解决PopupWindow的`decorView.getLayoutParams()`无法强转为`WindowManager.LayoutParams`的异常
+  - 其余问题暂时没发现
+  - 下一步：在popupwindow不拦截事件同时响应BackPress.
+
 ## 2017/12/25 （圣诞节快乐~）
   - `BasePopupWindowProxy`和`PopupWindowProxy`权限收拢，不暴露放开
   - 优化`SimpleAnimUtil`，修改部分动画时间和插值器

@@ -17,6 +17,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        google()
     }
     // 指定javadoc UTF-8格式
     tasks.withType(Javadoc) {
