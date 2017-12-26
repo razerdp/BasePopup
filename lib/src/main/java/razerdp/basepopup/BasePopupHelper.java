@@ -229,16 +229,6 @@ final class BasePopupHelper {
     BasePopupHelper setDismissWhenTouchOutside(PopupWindow popupWindow, boolean dismissWhenTouchOutside) {
         if (popupWindow == null) return this;
         this.dismissWhenTouchOutside = dismissWhenTouchOutside;
-        if (dismissWhenTouchOutside) {
-            //指定透明背景，back键相关
-            focusable = true;
-            outsideTouchable = true;
-        } else {
-            focusable = false;
-            outsideTouchable = false;
-        }
-        popupWindow.setFocusable(focusable);
-        popupWindow.setOutsideTouchable(outsideTouchable);
         return this;
     }
 
@@ -248,6 +238,7 @@ final class BasePopupHelper {
 
     BasePopupHelper setInterceptTouchEvent(PopupWindow popupWindow, boolean intecept) {
         if (popupWindow == null) return this;
+        outsideTouchable = intecept;
         popupWindow.setFocusable(intecept);
         popupWindow.setOutsideTouchable(!intecept);
         return this;

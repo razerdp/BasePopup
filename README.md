@@ -1,7 +1,7 @@
 # BasePopup
-抽象出一个方便自定义的Basepopup类，更加方便的创建出一个popup以及动画效果
+## 抽象出一个方便自定义的Basepopup类，更加方便的创建出一个popup以及动画效果
 
----
+
 
 [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion)
 [![license](https://img.shields.io/badge/license-Apache--2.0-blue.svg )](https://github.com/razerdp/BasePopup/blob/master/LICENSE)
@@ -11,10 +11,20 @@
 
 **从1.8.6.1开始，将不再支持Jitpack**
 
+**1.8.9目前是测试版，如果商用并追求稳定性，请暂时用着1.8.7，如果想体验新功能，欢迎使用1.8.9，这样可以加快迭代，保证尽快推出稳定版**
+
 ## 更新日志：
 
+#### 1.8.9-beta2【未发布】
+  - 增加演示demo：`DismissControlPopupFrag`
+  - 增加两个方法用于touchEvent监听：`onTouchEvent()`&`onOutSideTouch()`
+  - `HackPopupDecorView`继承`ViewGroup`而非`FrameLayout`，以解决PopupWindow的`decorView.getLayoutParams()`无法强转为`WindowManager.LayoutParams`的异常
+  - 其余问题暂时没发现
+  - 下一步：在popupwindow不拦截事件同时响应BackPress.
+
 #### ~~1.8.8~~(1.8.9)
-###【重大修复，不一定稳定,但因为解决了某个大问题，因此强烈建议升级到该版本，希望您可以尽量提交问题】
+
+**【重大修复，不一定稳定,但因为解决了某个大问题，因此强烈建议升级到该版本，希望您可以尽量提交问题】**
   - `BasePopupWindowProxy`和`PopupWindowProxy`权限收拢，不暴露放开
   - 优化`SimpleAnimUtil`，修改部分动画时间和插值器
   - 增加`setOutsideTouchable()`方法，和`setDismissWhenTouchOutside()`搭配使用有奇效哦
@@ -41,17 +51,8 @@
        + 非常感谢你们的issue
   - 修复部分issue：[#46](https://github.com/razerdp/BasePopup/issues/46)
   
-##### 1.8.6.1 
-  - 使用Jcenter代替JitPack
 
-##### 1.8.5.1
-  - 现在可以在onCreate里面showPopup啦~
-  - set方法返回`BasePopupWindow`，可以来个“伪链式”调用哈哈
-  - 针对诸位提出的setBackPress在6.0以上失效的问题，请查看这份[MD](https://github.com/razerdp/BasePopup/blob/master/%E5%85%B3%E4%BA%8EAndorid%20M%E4%BB%A5%E4%B8%8AsetBackPressEnable()%E5%A4%B1%E6%95%88%E7%9A%84%E9%97%AE%E9%A2%98%E7%9A%84%E5%88%86%E6%9E%90.md)文件（没错，暂时无法修复）
-  - 删除`setRelativeToAnchorView()`方法，该方法本身就没有什么用处。。。
-
-
-### 最低SDK版本要求 : API 11
+### 最低SDK版本要求 : API 14
 
 # 依赖  [ ![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion)
 

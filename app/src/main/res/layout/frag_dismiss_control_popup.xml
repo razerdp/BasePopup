@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="跟dismiss相关的各种蛋疼操作。。。"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switch_dismiss_when_touch_outside"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="点击外部dismiss（setDismissWhenTouchOutside）\n一般针对wrap_content的popup"
+            android:textColor="#666666"
+            android:textSize="12sp"/>
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switch_backpress_enable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="返回键dismiss（setBackPressEnable）"
+            android:textColor="#666666"
+            android:textSize="12sp"/>
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switch_intercept_touch_event"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:padding="8dp"
+            android:text="popup是否拦截事件（setInterceptTouchEvent）false时无法响应backpress"
+            android:textColor="#666666"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/popup_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="60dp"
+        android:text="show"
+        />
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/line_bg"
+        android:dividerHeight="0.5dp"
+        android:scrollbars="none"
+        />
+</LinearLayout>

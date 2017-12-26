@@ -2,8 +2,8 @@ package razerdp.demo;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,17 +17,18 @@ import razerdp.demo.fragment.AutoLocatedPopupFrag;
 import razerdp.demo.fragment.CommentPopupFrag;
 import razerdp.demo.fragment.CustomInterpolatorPopupFrag;
 import razerdp.demo.fragment.DialogPopupFrag;
+import razerdp.demo.fragment.DismissControlPopupFrag;
 import razerdp.demo.fragment.FullScreenPopupFrag;
 import razerdp.demo.fragment.InputPopupFrag;
 import razerdp.demo.fragment.ListPopupFrag;
 import razerdp.demo.fragment.MenuPopupFrag;
 import razerdp.demo.fragment.ScalePopupFrag;
-import razerdp.demo.fragment.SlideFromTopPopupFrag;
 import razerdp.demo.fragment.SimpleBaseFrag;
 import razerdp.demo.fragment.SlideFromBottomPopupFrag;
+import razerdp.demo.fragment.SlideFromTopPopupFrag;
 import razerdp.demo.popup.ScalePopup;
 
-public class DemoActivity extends FragmentActivity {
+public class DemoActivity extends AppCompatActivity {
     private FragmentManager mFragmentManager;
 
     private Map<Integer, SimpleBaseFrag> fragMap;
@@ -37,7 +38,7 @@ public class DemoActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
         mFragmentManager = getSupportFragmentManager();
-        ScalePopup scalePopup=new ScalePopup(this);
+        ScalePopup scalePopup = new ScalePopup(this);
         scalePopup.showPopupWindow();
 
         fragMap = new HashMap<>();
@@ -53,6 +54,7 @@ public class DemoActivity extends FragmentActivity {
         fragMap.put(R.id.id_full_screen_popup, new FullScreenPopupFrag());
         fragMap.put(R.id.id_auto_located_popup, new AutoLocatedPopupFrag());
         fragMap.put(R.id.id_slide_from_top_popup, new SlideFromTopPopupFrag());
+        fragMap.put(R.id.id_dismiss_control_popup, new DismissControlPopupFrag());
 
 
         SimpleBaseFrag firstShowFrag = fragMap.get(R.id.id_scale_popup);
@@ -87,7 +89,7 @@ public class DemoActivity extends FragmentActivity {
     @Override
     public void onBackPressed() {
         if (System.currentTimeMillis() - lastClickBackTime > 2000) { // 后退阻断
-            Toast.makeText(this,"再点一次退出",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "再点一次退出", Toast.LENGTH_LONG).show();
             lastClickBackTime = System.currentTimeMillis();
         } else { // 关掉app
             super.onBackPressed();
