@@ -214,6 +214,7 @@ import android.os.Build;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -928,9 +929,25 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return false;
+    }
+
+    @Override
     public boolean onBackPressed() {
         if (mHelper.isBackPressEnable()) {
             dismiss();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onOutSideTouch() {
+        if (mHelper.isDismissWhenTouchOutside()) {
+            dismiss();
+            return true;
+        } else if (mHelper.isInterceptTouchEvent()) {
             return true;
         }
         return false;

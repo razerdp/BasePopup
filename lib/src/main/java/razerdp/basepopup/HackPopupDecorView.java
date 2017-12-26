@@ -2,20 +2,19 @@ package razerdp.basepopup;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.widget.FrameLayout;
-
-import java.lang.ref.WeakReference;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 
 /**
  * Created by 大灯泡 on 2017/12/25.
  * <p>
  * 旨在用来拦截keyevent
  */
-public class HackPopupDecorView extends FrameLayout {
+public class HackPopupDecorView extends ViewGroup {
     private static final String TAG = "HackPopupDecorView";
-    private WeakReference<PopupController> mPopupController;
+    private PopupController mPopupController;
 
     public HackPopupDecorView(Context context) {
         super(context);
@@ -31,7 +30,6 @@ public class HackPopupDecorView extends FrameLayout {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        Log.i(TAG, "dispatchKeyEvent: ");
         boolean intercept = getPopupController() != null && getPopupController().onDispatchKeyEvent(event);
         if (intercept) return true;
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
@@ -59,12 +57,57 @@ public class HackPopupDecorView extends FrameLayout {
         }
     }
 
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        return super.onInterceptTouchEvent(ev);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (getPopupController() != null) {
+            if (getPopupController().onTouchEvent(event)) {
+                return true;
+            }
+        }
+        final int x = (int) event.getX();
+        final int y = (int) event.getY();
+
+        if ((event.getAction() == MotionEvent.ACTION_DOWN)
+                && ((x < 0) || (x >= getWidth()) || (y < 0) || (y >= getHeight()))) {
+            if (getPopupController() != null) {
+                return getPopupController().onOutSideTouch();
+            }
+        } else if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+            if (getPopupController() != null) {
+                return getPopupController().onOutSideTouch();
+            }
+        }
+        return super.onTouchEvent(event);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        final View child = getChildAt(0);
+        if (child == null) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        } else {
+            measureChild(child, widthMeasureSpec, heightMeasureSpec);
+            setMeasuredDimension(child.getMeasuredWidth(), child.getMeasuredHeight());
+        }
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        View child = getChildAt(0);
+        if (child == null) return;
+        child.layout(l, t, r, b);
+    }
+
     public PopupController getPopupController() {
-        if (mPopupController == null) return null;
-        return mPopupController.get();
+        return mPopupController;
     }
 
     public void setPopupController(PopupController popupController) {
-        mPopupController = new WeakReference<PopupController>(popupController);
+        mPopupController = popupController;
     }
 }
