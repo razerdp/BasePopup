@@ -274,6 +274,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         //默认占满全屏
         mPopupWindow = new PopupWindowProxy(mPopupView, w, h, this);
         mPopupWindow.setOnDismissListener(this);
+        mPopupWindow.bindPopupHelper(mHelper);
         setDismissWhenTouchOutside(true);
 
         preMeasurePopupView(w, h);
@@ -301,9 +302,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         //=============================================================元素获取
         mHelper.setShowAnimation(initShowAnimation())
-                .setShowAnimator(initShowAnimator())
-                .setExitAnimation(initExitAnimation())
-                .setExitAnimator(initExitAnimator());
+               .setShowAnimator(initShowAnimator())
+               .setExitAnimation(initExitAnimation())
+               .setExitAnimator(initExitAnimator());
     }
 
     private void checkPopupAnimaView() {
@@ -338,7 +339,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             }
             mPopupView.measure(w, h);
             mHelper.setPopupViewWidth(mPopupView.getMeasuredWidth())
-                    .setPopupViewHeight(mPopupView.getMeasuredHeight());
+                   .setPopupViewHeight(mPopupView.getMeasuredHeight());
             mPopupView.setFocusableInTouchMode(true);
         }
     }
@@ -469,9 +470,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 assert context != null : "context is null ! please make sure your activity is not be destroyed";
                 if (context instanceof Activity) {
                     mPopupWindow.showAtLocation(((Activity) context).findViewById(android.R.id.content),
-                            mHelper.getPopupGravity(),
-                            mHelper.getOffsetX(),
-                            mHelper.getOffsetY());
+                                                mHelper.getPopupGravity(),
+                                                mHelper.getOffsetX(),
+                                                mHelper.getOffsetY());
                 } else {
                     Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
                 }
@@ -598,8 +599,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 在android M之后失效
      */
     public BasePopupWindow setBackPressEnable(final boolean backPressEnable) {
-        mHelper.setBackPressEnable(backPressEnable);
-        mPopupWindow.setBackgroundDrawable(backPressEnable ? new ColorDrawable() : null);
+        mHelper.setBackPressEnable(mPopupWindow, backPressEnable);
         return this;
     }
 
@@ -629,7 +629,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 是否允许popupwindow覆盖屏幕（包含状态栏）
      */
     public BasePopupWindow setPopupWindowFullScreen(boolean needFullScreen) {
-        fitPopupWindowOverStatusBar(needFullScreen);
+        mHelper.setFullScreen(needFullScreen);
         return this;
     }
 
@@ -644,21 +644,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
     }
 
-    private void fitPopupWindowOverStatusBar(boolean needFullScreen) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            try {
-                Field mLayoutInScreen = PopupWindow.class.getDeclaredField("mLayoutInScreen");
-                mLayoutInScreen.setAccessible(true);
-                mLayoutInScreen.set(mPopupWindow, needFullScreen);
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
     //------------------------------------------Getter/Setter-----------------------------------------------
 
     /**
@@ -918,21 +903,38 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         boolean result = true;
         if (mHelper.getOnBeforeShowCallback() != null) {
             result = mHelper.getOnBeforeShowCallback().onBeforeShow(mPopupView, v,
-                    mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
+                                                                    mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
         }
         return result;
     }
 
+    /**
+     * 捕捉keyevent
+     *
+     * @param event
+     * @return true意味着你已经处理消耗了事件，后续不再传递
+     */
     @Override
     public boolean onDispatchKeyEvent(KeyEvent event) {
         return false;
     }
 
+    /**
+     * 捕捉touchevent
+     *
+     * @param event
+     * @return true意味着你已经处理消耗了事件，后续不再传递
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return false;
     }
 
+    /**
+     * 捕捉返回键事件
+     *
+     * @return true意味着你已经处理消耗了事件，后续不再传递
+     */
     @Override
     public boolean onBackPressed() {
         if (mHelper.isBackPressEnable()) {
@@ -942,15 +944,21 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return false;
     }
 
+    /**
+     * popupwindow外的事件点击回调，请注意您的popupwindow大小
+     *
+     * @return true意味着你已经处理消耗了事件，后续不再传递
+     */
     @Override
     public boolean onOutSideTouch() {
+        boolean result = false;
         if (mHelper.isDismissWhenTouchOutside()) {
             dismiss();
-            return true;
+            result = true;
         } else if (mHelper.isInterceptTouchEvent()) {
-            return true;
+            result = true;
         }
-        return false;
+        return result;
     }
 
     //------------------------------------------Anima-----------------------------------------------
