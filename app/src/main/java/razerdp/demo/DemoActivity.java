@@ -14,6 +14,7 @@ import java.util.Map;
 
 import razerdp.basepopup.R;
 import razerdp.demo.fragment.AutoLocatedPopupFrag;
+import razerdp.demo.fragment.BlurSlideFromBottomPopupFrag;
 import razerdp.demo.fragment.CommentPopupFrag;
 import razerdp.demo.fragment.CustomInterpolatorPopupFrag;
 import razerdp.demo.fragment.DialogPopupFrag;
@@ -55,6 +56,7 @@ public class DemoActivity extends AppCompatActivity {
         fragMap.put(R.id.id_auto_located_popup, new AutoLocatedPopupFrag());
         fragMap.put(R.id.id_slide_from_top_popup, new SlideFromTopPopupFrag());
         fragMap.put(R.id.id_dismiss_control_popup, new DismissControlPopupFrag());
+        fragMap.put(R.id.id_blur_slide_from_bottom_popup, new BlurSlideFromBottomPopupFrag());
 
 
         SimpleBaseFrag firstShowFrag = fragMap.get(R.id.id_scale_popup);

@@ -34,7 +34,7 @@ public class LogUtil {
     private static final String CLASS_LogTag_LINE_FORMAT = "%s.%s()_%s";
     private static final String sPACKAGENAME = "razerdp";
     //当精确模式启动，则会定位到具体的类，而非父类(更加耗时)
-    private static final boolean isExactMode = true;
+    private static final boolean isExactMode = false;
     //logcat最大长度为4*1024，此处取4000
     private static final int MAX_LOG_MSG_LENGTH = 4000;
 

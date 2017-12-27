@@ -225,8 +225,10 @@ import android.widget.PopupWindow;
 
 import java.lang.ref.WeakReference;
 
+import razerdp.blur.PopupBlurOption;
 import razerdp.util.InputMethodUtils;
 import razerdp.util.SimpleAnimationUtils;
+import razerdp.util.log.LogTag;
 import razerdp.util.log.LogUtil;
 
 /**
@@ -629,6 +631,34 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public BasePopupWindow setPopupWindowFullScreen(boolean needFullScreen) {
         mHelper.setFullScreen(needFullScreen);
+        return this;
+    }
+
+    /**
+     * 应用模糊脚本...默认模糊背景
+     *
+     * @return
+     */
+    public BasePopupWindow applyBlur() {
+        if (!(getContext() instanceof Activity)) {
+            LogUtil.trace(LogTag.e, TAG, "无法配置默认模糊脚本，因为context不是activity");
+            return this;
+        }
+        PopupBlurOption option = new PopupBlurOption();
+        View decorView = ((Activity) getContext()).getWindow().getDecorView().findViewById(android.R.id.content);
+        option.setBlurView(decorView);
+        mHelper.applyBlur(option);
+        return this;
+    }
+
+    /**
+     * 应用模糊脚本...
+     *
+     * @param option
+     * @return
+     */
+    public BasePopupWindow applyBlur(PopupBlurOption option) {
+        mHelper.applyBlur(option);
         return this;
     }
 

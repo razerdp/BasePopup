@@ -53,10 +53,14 @@ final class HackWindowManager implements WindowManager {
         if (getWindowManager() == null) return;
         LogUtil.trace(LogTag.i, TAG, "WindowManager.addView  >>>  " + view.getClass().getSimpleName());
         if (checkProxyValided(view)) {
+            BasePopupHelper helper = getBasePopupHelper();
             params = applyHelper(params);
             final HackPopupDecorView hackPopupDecorView = new HackPopupDecorView(view.getContext());
             mHackPopupDecorView = new WeakReference<HackPopupDecorView>(hackPopupDecorView);
             hackPopupDecorView.setPopupController(getPopupController());
+            if (helper != null && helper.isAllowToBlur()) {
+                hackPopupDecorView.lazyAttachBlurImageview(helper.getBlurOption());
+            }
             hackPopupDecorView.addView(view, params);
             getWindowManager().addView(hackPopupDecorView, params);
         } else {
