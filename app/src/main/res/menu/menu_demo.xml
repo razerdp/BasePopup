@@ -4,63 +4,69 @@
       tools:context="razerdp.demo.DemoActivity">
     <item
         android:id="@+id/id_scale_popup"
-        android:title="scale popup"
         android:orderInCategory="100"
+        android:title="scale popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_slide_from_bottom_popup"
-        android:title="slide from bottom popup"
         android:orderInCategory="101"
+        android:title="slide from bottom popup"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/id_blur_slide_from_bottom_popup"
+        android:orderInCategory="112"
+        android:title="blur slide from bottom popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_comment_popup"
-        android:title="comment popup"
         android:orderInCategory="102"
+        android:title="comment popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_input_popup"
-        android:title="input popup"
         android:orderInCategory="103"
+        android:title="input popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_list_popup"
-        android:title="list popup"
         android:orderInCategory="104"
+        android:title="list popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_menu_popup"
-        android:title="menu popup"
         android:orderInCategory="105"
+        android:title="menu popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_dialog_popup"
-        android:title="dialog popup"
         android:orderInCategory="106"
+        android:title="dialog popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_custom_interpolator_popup"
-        android:title="custom interpolator popup"
         android:orderInCategory="107"
+        android:title="custom interpolator popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_full_screen_popup"
-        android:title="full screen popup"
         android:orderInCategory="108"
+        android:title="full screen popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_auto_located_popup"
-        android:title="auto located popup"
         android:orderInCategory="109"
+        android:title="auto located popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_slide_from_top_popup"
-        android:title="slide from top popup"
         android:orderInCategory="110"
+        android:title="slide from top popup"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/id_dismiss_control_popup"
-        android:title="dismiss control popup"
         android:orderInCategory="111"
+        android:title="dismiss control popup"
         app:showAsAction="never"/>
 </menu>
