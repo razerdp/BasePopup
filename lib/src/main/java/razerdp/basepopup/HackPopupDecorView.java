@@ -7,6 +7,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import razerdp.blur.BlurImageView;
+import razerdp.blur.PopupBlurOption;
 import razerdp.util.log.LogTag;
 import razerdp.util.log.LogUtil;
 
@@ -18,6 +20,8 @@ import razerdp.util.log.LogUtil;
 public class HackPopupDecorView extends ViewGroup {
     private static final String TAG = "HackPopupDecorView";
     private PopupController mPopupController;
+    private BlurImageView blurImageView;
+    private PopupBlurOption mOption;
 
     public HackPopupDecorView(Context context) {
         super(context);
@@ -33,22 +37,37 @@ public class HackPopupDecorView extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        final View child = getChildAt(0);
-        if (child == null) {
+        final int childCount = getChildCount();
+        if (childCount <= 0) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         } else {
-            measureChild(child, widthMeasureSpec, heightMeasureSpec);
-            setMeasuredDimension(child.getMeasuredWidth(), child.getMeasuredHeight());
+            int maxWidth = 0;
+            int maxHeight = 0;
+
+            for (int i = 0; i < childCount; i++) {
+                View child = getChildAt(i);
+                measureChild(child, widthMeasureSpec, heightMeasureSpec);
+                maxWidth = Math.max(maxWidth, child.getMeasuredWidth());
+                maxHeight = Math.max(maxHeight, child.getMeasuredHeight());
+            }
+            setMeasuredDimension(maxWidth, maxHeight);
         }
         LogUtil.trace(LogTag.d, TAG, "onMeasure");
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        View child = getChildAt(0);
-        if (child == null) return;
+        final int childCount = getChildCount();
+        if (childCount <= 0) {
+            return;
+        } else {
+            for (int i = 0; i < childCount; i++) {
+                View child = getChildAt(i);
+                child.layout(l, t, r, b);
+            }
+        }
         LogUtil.trace(LogTag.d, TAG, "onLayout");
-        child.layout(l, t, r, b);
+
     }
 
     @Override
@@ -117,5 +136,31 @@ public class HackPopupDecorView extends ViewGroup {
 
     public void setPopupController(PopupController popupController) {
         mPopupController = popupController;
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (blurImageView != null) {
+            blurImageView.attachBlurOption(mOption);
+            blurImageView.start(mOption.getDuration());
+        }
+    }
+
+    public void lazyAttachBlurImageview(PopupBlurOption option) {
+        if (blurImageView != null) return;
+        mOption = option;
+        blurImageView = new BlurImageView(getContext());
+        addView(blurImageView, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+    }
+
+    public void startBlurAnima() {
+        if (blurImageView == null) return;
+        blurImageView.start(mOption == null ? 300 : mOption.getDuration());
+    }
+
+    public void dismissBlurAnima() {
+        if (blurImageView == null) return;
+        blurImageView.dismiss(mOption == null ? 300 : mOption.getDuration());
     }
 }

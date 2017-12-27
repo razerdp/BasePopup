@@ -7,6 +7,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.PopupWindow;
 
+import razerdp.blur.PopupBlurOption;
 import razerdp.library.R;
 
 /**
@@ -53,6 +54,9 @@ final class BasePopupHelper {
 
     //popup params
     private boolean interCeptOutSideTouchEvent = true;
+
+    //模糊option(为空的话则不模糊）
+    private PopupBlurOption mBlurOption;
 
     BasePopupHelper() {
         mAnchorViewLocation = new int[2];
@@ -274,4 +278,18 @@ final class BasePopupHelper {
         this.fullScreen = fullScreen;
         return this;
     }
+
+    PopupBlurOption getBlurOption() {
+        return mBlurOption;
+    }
+
+    BasePopupHelper applyBlur(PopupBlurOption option) {
+        this.mBlurOption = option;
+        return this;
+    }
+
+    public boolean isAllowToBlur() {
+        return mBlurOption != null && mBlurOption.isAllowToBlur();
+    }
+
 }
