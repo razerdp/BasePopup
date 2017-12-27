@@ -209,7 +209,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -225,10 +224,10 @@ import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Field;
 
 import razerdp.util.InputMethodUtils;
 import razerdp.util.SimpleAnimationUtils;
+import razerdp.util.log.LogUtil;
 
 /**
  * Created by 大灯泡 on 2016/1/14.
@@ -302,9 +301,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         //=============================================================元素获取
         mHelper.setShowAnimation(initShowAnimation())
-               .setShowAnimator(initShowAnimator())
-               .setExitAnimation(initExitAnimation())
-               .setExitAnimator(initExitAnimator());
+                .setShowAnimator(initShowAnimator())
+                .setExitAnimation(initExitAnimation())
+                .setExitAnimator(initExitAnimator());
     }
 
     private void checkPopupAnimaView() {
@@ -339,7 +338,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             }
             mPopupView.measure(w, h);
             mHelper.setPopupViewWidth(mPopupView.getMeasuredWidth())
-                   .setPopupViewHeight(mPopupView.getMeasuredHeight());
+                    .setPopupViewHeight(mPopupView.getMeasuredHeight());
             mPopupView.setFocusableInTouchMode(true);
         }
     }
@@ -470,9 +469,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 assert context != null : "context is null ! please make sure your activity is not be destroyed";
                 if (context instanceof Activity) {
                     mPopupWindow.showAtLocation(((Activity) context).findViewById(android.R.id.content),
-                                                mHelper.getPopupGravity(),
-                                                mHelper.getOffsetX(),
-                                                mHelper.getOffsetY());
+                            mHelper.getPopupGravity(),
+                            mHelper.getOffsetX(),
+                            mHelper.getOffsetY());
                 } else {
                     Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
                 }
@@ -903,7 +902,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         boolean result = true;
         if (mHelper.getOnBeforeShowCallback() != null) {
             result = mHelper.getOnBeforeShowCallback().onBeforeShow(mPopupView, v,
-                                                                    mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
+                    mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
         }
         return result;
     }
@@ -1113,6 +1112,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     protected float dipToPx(float dip) {
         if (getContext() == null) return dip;
         return dip * getContext().getResources().getDisplayMetrics().density + 0.5f;
+    }
+
+    public static void debugLog(boolean printLog) {
+        LogUtil.setOpenLog(printLog);
     }
 
     //------------------------------------------Interface-----------------------------------------------
