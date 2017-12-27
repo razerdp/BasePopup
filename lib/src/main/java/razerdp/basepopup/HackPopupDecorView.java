@@ -7,6 +7,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import razerdp.util.log.LogTag;
+import razerdp.util.log.LogUtil;
+
 /**
  * Created by 大灯泡 on 2017/12/25.
  * <p>
@@ -37,12 +40,14 @@ public class HackPopupDecorView extends ViewGroup {
             measureChild(child, widthMeasureSpec, heightMeasureSpec);
             setMeasuredDimension(child.getMeasuredWidth(), child.getMeasuredHeight());
         }
+        LogUtil.trace(LogTag.d, TAG, "onMeasure");
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         View child = getChildAt(0);
         if (child == null) return;
+        LogUtil.trace(LogTag.d, TAG, "onLayout");
         child.layout(l, t, r, b);
     }
 
@@ -70,6 +75,7 @@ public class HackPopupDecorView extends ViewGroup {
                 final KeyEvent.DispatcherState state = getKeyDispatcherState();
                 if (state != null && state.isTracking(event) && !event.isCanceled()) {
                     if (getPopupController() != null) {
+                        LogUtil.trace(LogTag.i, TAG, "dispatchKeyEvent: >>> onBackPressed");
                         return getPopupController().onBackPressed();
                     }
                 }
@@ -93,10 +99,12 @@ public class HackPopupDecorView extends ViewGroup {
         if ((event.getAction() == MotionEvent.ACTION_DOWN)
                 && ((x < 0) || (x >= getWidth()) || (y < 0) || (y >= getHeight()))) {
             if (getPopupController() != null) {
+                LogUtil.trace(LogTag.i, TAG, "onTouchEvent:[ACTION_DOWN] >>> onOutSideTouch");
                 return getPopupController().onOutSideTouch();
             }
         } else if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
             if (getPopupController() != null) {
+                LogUtil.trace(LogTag.i, TAG, "onTouchEvent:[ACTION_OUTSIDE] >>> onOutSideTouch");
                 return getPopupController().onOutSideTouch();
             }
         }
