@@ -1,14 +1,15 @@
 package razerdp.basepopup;
 
-import android.os.Build;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import java.lang.ref.WeakReference;
+
+import razerdp.util.log.LogTag;
+import razerdp.util.log.LogUtil;
 
 /**
  * Created by 大灯泡 on 2017/12/25.
@@ -35,6 +36,7 @@ final class HackWindowManager implements WindowManager {
     @Override
     public void removeViewImmediate(View view) {
         if (getWindowManager() == null) return;
+        LogUtil.trace(LogTag.i, TAG, "WindowManager.removeViewImmediate  >>>  " + view.getClass().getSimpleName());
         if (checkProxyValided(view) && getHackPopupDecorView() != null) {
             HackPopupDecorView hackPopupDecorView = getHackPopupDecorView();
             getWindowManager().removeViewImmediate(hackPopupDecorView);
@@ -49,6 +51,7 @@ final class HackWindowManager implements WindowManager {
     @Override
     public void addView(View view, ViewGroup.LayoutParams params) {
         if (getWindowManager() == null) return;
+        LogUtil.trace(LogTag.i, TAG, "WindowManager.addView  >>>  " + view.getClass().getSimpleName());
         if (checkProxyValided(view)) {
             params = applyHelper(params);
             final HackPopupDecorView hackPopupDecorView = new HackPopupDecorView(view.getContext());
@@ -62,16 +65,22 @@ final class HackWindowManager implements WindowManager {
     }
 
     private ViewGroup.LayoutParams applyHelper(ViewGroup.LayoutParams params) {
-        if (!(params instanceof WindowManager.LayoutParams) || getBasePopupHelper() == null) return params;
+        if (!(params instanceof WindowManager.LayoutParams) || getBasePopupHelper() == null)
+            return params;
         WindowManager.LayoutParams p = (LayoutParams) params;
         BasePopupHelper helper = getBasePopupHelper();
         if (helper == null) return params;
         if (!helper.isInterceptTouchEvent()) {
+            LogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  不拦截事件");
             p.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
             p.flags |= WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
         }
         if (helper.isFullScreen()) {
-            p.flags |= WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+            LogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  全屏");
+            p.flags |= LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+
+            // FIXME: 2017/12/27 全屏跟SOFT_INPUT_ADJUST_RESIZE冲突，暂时没有好的解决方案
+            p.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED;
         }
         return p;
     }
@@ -79,6 +88,7 @@ final class HackWindowManager implements WindowManager {
     @Override
     public void updateViewLayout(View view, ViewGroup.LayoutParams params) {
         if (getWindowManager() == null) return;
+        LogUtil.trace(LogTag.i, TAG, "WindowManager.updateViewLayout  >>>  " + view.getClass().getSimpleName());
         if (checkProxyValided(view) && getHackPopupDecorView() != null) {
             HackPopupDecorView hackPopupDecorView = getHackPopupDecorView();
             getWindowManager().updateViewLayout(hackPopupDecorView, params);
@@ -90,6 +100,7 @@ final class HackWindowManager implements WindowManager {
     @Override
     public void removeView(View view) {
         if (getWindowManager() == null) return;
+        LogUtil.trace(LogTag.i, TAG, "WindowManager.removeView  >>>  " + view.getClass().getSimpleName());
         if (checkProxyValided(view) && getHackPopupDecorView() != null) {
             HackPopupDecorView hackPopupDecorView = getHackPopupDecorView();
             getWindowManager().removeView(hackPopupDecorView);
