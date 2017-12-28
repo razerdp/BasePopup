@@ -42,7 +42,13 @@ final class HackWindowManager implements WindowManager {
         LogUtil.trace(LogTag.i, TAG, "WindowManager.removeViewImmediate  >>>  " + view.getClass().getSimpleName());
         if (checkProxyValided(view) && getHackPopupDecorView() != null) {
             if (getBlurImageView() != null) {
-                getWindowManager().removeViewImmediate(getBlurImageView());
+                try {
+                    getWindowManager().removeViewImmediate(getBlurImageView());
+                    mBlurImageView.clear();
+                    mBlurImageView = null;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             HackPopupDecorView hackPopupDecorView = getHackPopupDecorView();
             getWindowManager().removeViewImmediate(hackPopupDecorView);
@@ -101,7 +107,13 @@ final class HackWindowManager implements WindowManager {
         LogUtil.trace(LogTag.i, TAG, "WindowManager.removeView  >>>  " + view.getClass().getSimpleName());
         if (checkProxyValided(view) && getHackPopupDecorView() != null) {
             if (getBlurImageView() != null) {
-                getWindowManager().removeView(getBlurImageView());
+                try {
+                    getWindowManager().removeView(getBlurImageView());
+                    mBlurImageView.clear();
+                    mBlurImageView = null;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             HackPopupDecorView hackPopupDecorView = getHackPopupDecorView();
             getWindowManager().removeView(hackPopupDecorView);
