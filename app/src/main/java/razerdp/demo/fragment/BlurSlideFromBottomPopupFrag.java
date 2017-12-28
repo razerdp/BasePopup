@@ -30,7 +30,7 @@ public class BlurSlideFromBottomPopupFrag extends SimpleBaseFrag {
     @Override
     public BasePopupWindow getPopup() {
         BlurSlideFromBottomPopup popup = new BlurSlideFromBottomPopup(mContext);
-        popup.setBlurBackground(true);
+        popup.setBlurBackgroundEnable(true);
         return popup;
     }
 
