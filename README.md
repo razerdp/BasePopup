@@ -80,10 +80,10 @@
 ps:如果你懒。。。也可以这么添加（不是替换{latest.release}，直接copy就好）
 ```xml
 	dependencies {
-            com.github.razerdp:BasePopup:latest.release
+            compile 'com.github.razerdp:BasePopup:latest.release'
             
             //candy版本，不稳定，但会带有新功能
-            //compile 'com.github.razerdp:BasePopup_Candy:{latestVersion}'
+            //compile 'com.github.razerdp:BasePopup_Candy:latest.release'
 	}
 ```
 
