@@ -53,22 +53,27 @@ public class BlurImageView extends ImageView {
     }
 
     public void attachBlurOption(PopupBlurOption option) {
-        mBlurOption = new WeakReference<PopupBlurOption>(option);
-        View anchorView = option.getBlurView();
-        if (anchorView == null) {
-            LogUtil.trace(LogTag.e, TAG, "模糊锚点View为空，放弃模糊操作...");
-            return;
-        }
-        if (!BlurHelper.supportedBlur()) {
-            LogUtil.trace(LogTag.e, TAG, "不支持模糊。。。。");
-            return;
-        }
-        final Bitmap blurBitmap = BlurHelper.blur(getContext(), anchorView, option.getBlurPreScaleRatio(), option.getBlurRadius());
-        if (blurBitmap != null) {
-            LogUtil.trace("blurBitmap不为空");
-            setImageBitmap(blurBitmap);
-        } else {
-            LogUtil.trace("blurBitmap为空");
+        try {
+
+            mBlurOption = new WeakReference<PopupBlurOption>(option);
+            View anchorView = option.getBlurView();
+            if (anchorView == null) {
+                LogUtil.trace(LogTag.e, TAG, "模糊锚点View为空，放弃模糊操作...");
+                return;
+            }
+            if (!BlurHelper.renderScriptSupported()) {
+                LogUtil.trace(LogTag.e, TAG, "不支持脚本模糊。。。最低支持api 17(Android 4.2.2)，将采用fastblur");
+            }
+            final Bitmap blurBitmap = BlurHelper.blur(getContext(), anchorView, option.getBlurPreScaleRatio(), option.getBlurRadius());
+            if (blurBitmap != null) {
+                LogUtil.trace("blurBitmap不为空");
+                setImageBitmap(blurBitmap);
+            } else {
+                LogUtil.trace("blurBitmap为空");
+            }
+        } catch (Exception e) {
+            LogUtil.trace(LogTag.e, TAG, "模糊异常");
+            e.printStackTrace();
         }
 //        startBlurTask(anchorView);
     }
