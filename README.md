@@ -2,8 +2,10 @@
 ## 抽象出一个方便自定义的Basepopup类，更加方便的创建出一个popup以及动画效果
 
 
+| **Release**            |  **Candy**  |
+| --------      | ---- |
+| [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion) | [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion)|
 
-[![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion)
 [![license](https://img.shields.io/badge/license-Apache--2.0-blue.svg )](https://github.com/razerdp/BasePopup/blob/master/LICENSE)
 [![Author](https://img.shields.io/badge/Author-razerdp-blue.svg)](https://github.com/razerdp) 
 
@@ -11,13 +13,13 @@
 
 **从1.8.6.1开始，将不再支持Jitpack**
 
-**1.8.9(包括betaX)是测试版，一般指有重大改动或者新的功能，但并未经过大量的商用测试，如果商用并追求稳定性，请暂时用着1.8.7。如果想体验新功能，欢迎使用1.8.9(及beta版)，并在issue提交您遇到的问题，我尽量尽快解决，尽早推出稳定版**
+**请注意引用版本的问题，Release版本是稳定版，可商用。Candy不稳定，但包含着新功能或者新的优化，不建议商用。**
 
 ## 更新日志：
 
-#### 1.9.0-alpha（未发布）
+#### 1.9.0-alpha（candy）
   - 增加了一个window用于模糊层，增加模糊功能（请注意，并不一定稳定，仍然迭代中。。慎用！！！）
-    +  如果您需要模糊功能，仅仅需要调用一个方法：`setBlurBackgroundEnable()`
+    + 如果您需要模糊功能，仅仅需要调用一个方法：`setBlurBackgroundEnable()`
     + gradle请在`defaultConfig`下添加两句：
       - renderscriptTargetApi 25
       - enderscriptSupportModeEnabled true
@@ -60,12 +62,20 @@
 
 ### 最低SDK版本要求 : API 14
 
-# 依赖  [ ![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion)
+# 依赖  
 
-添加依赖（请把{latestVersion}替换成上面的Jcenter标签所示版本）
+| **Release**            |  **Candy**  |
+| --------      | ---- |
+| [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion) | [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion)|
+
+
+添加依赖（请把{latestVersion}替换成上面的Jcenter标签所示版本【candy版本不一定稳定，包含有新功能或者新的修复，完善后将会发布其release版】）
 ```xml
 	dependencies {
 	        compile 'com.github.razerdp:BasePopup:{latestVersion}'
+	        
+	        //candy版本，不稳定，但会带有新功能
+	        //compile 'com.github.razerdp:BasePopup_Candy:{latestVersion}'
 	}
 ```
 
@@ -73,6 +83,9 @@ ps:如果你懒。。。也可以这么添加（不是替换{latest.release}，�
 ```xml
 	dependencies {
             com.github.razerdp:BasePopup:latest.release
+            
+            //candy版本，不稳定，但会带有新功能
+            //compile 'com.github.razerdp:BasePopup_Candy:{latestVersion}'
 	}
 ```
 
