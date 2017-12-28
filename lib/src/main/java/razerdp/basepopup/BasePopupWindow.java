@@ -645,7 +645,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param blur true for blur decorView
      * @return
      */
-    public BasePopupWindow setBlurBackground(boolean blur) {
+    public BasePopupWindow setBlurBackgroundEnable(boolean blur) {
         if (!(getContext() instanceof Activity)) {
             LogUtil.trace(LogTag.e, TAG, "无法配置默认模糊脚本，因为context不是activity");
             return this;
@@ -667,12 +667,13 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     /**
-     * 应用模糊脚本...
+     * 应用模糊脚本...暂时不开放，因为anchorView还没做完
      *
      * @param option
      * @return
      */
-    public BasePopupWindow setBlurOption(PopupBlurOption option) {
+    // TODO: 2017/12/28 解决anchorView不是decorView的模糊图片的位置大小问题
+    BasePopupWindow setBlurOption(PopupBlurOption option) {
         mHelper.applyBlur(option);
         return this;
     }

@@ -15,6 +15,13 @@
 
 ## 更新日志：
 
+#### 1.9.0-alpha
+  - 增加了一个window用于模糊层，增加模糊功能
+    +  如果您需要模糊功能，仅仅需要调用一个方法：`setBlurBackgroundEnable()`
+    + gradle请在`defaultConfig`下添加两句：
+      - renderscriptTargetApi 25
+      - enderscriptSupportModeEnabled true
+
 #### 1.8.9-beta2
   - 增加演示demo：`DismissControlPopupFrag`
   - 增加两个方法用于touchEvent监听：`onTouchEvent()`&`onOutSideTouch()`
@@ -70,6 +77,15 @@ ps:如果你懒。。。也可以这么添加（不是替换{latest.release}，�
 ```
 
 # 使用方法
+
+ps:从1.9.0-alpha开始支持背景模糊（只需要一个方法：`setBlurBackgroundEnable`），最低支持api 17，您需要在gradle配置
+
+```xml
+defaultConfig {
+        renderscriptTargetApi 25
+        renderscriptSupportModeEnabled true
+    }
+```
 
 **Step 1:**
 
