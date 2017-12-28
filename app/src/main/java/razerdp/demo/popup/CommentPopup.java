@@ -57,6 +57,7 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
         buildAnima();
         setDismissWhenTouchOutside(true);
         setInterceptTouchEvent(false);
+        setBlurBackground(true);
     }
 
     private AnimationSet mAnimationSet;

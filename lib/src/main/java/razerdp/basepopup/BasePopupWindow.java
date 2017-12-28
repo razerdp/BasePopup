@@ -254,6 +254,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     //重试次数
     private volatile int retryCounter;
 
+    private InnerPopupWindowStateListener mStateListener;
+
     public BasePopupWindow(Context context) {
         initView(context, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
@@ -478,6 +480,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                     Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
                 }
             }
+            if (mStateListener != null) {
+                mStateListener.onTryToShow(mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
+            }
             if (mAnimaView != null) {
                 if (mHelper.getShowAnimation() != null) {
                     mHelper.getShowAnimation().cancel();
@@ -637,18 +642,28 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     /**
      * 应用模糊脚本...默认模糊背景
      *
+     * @param blur true for blur decorView
      * @return
      */
-    public BasePopupWindow applyBlur() {
+    public BasePopupWindow setBlurBackground(boolean blur) {
         if (!(getContext() instanceof Activity)) {
             LogUtil.trace(LogTag.e, TAG, "无法配置默认模糊脚本，因为context不是activity");
             return this;
         }
-        PopupBlurOption option = new PopupBlurOption();
-        View decorView = ((Activity) getContext()).getWindow().getDecorView().findViewById(android.R.id.content);
-        option.setBlurView(decorView);
-        mHelper.applyBlur(option);
-        return this;
+        PopupBlurOption option = null;
+        if (blur) {
+            option = new PopupBlurOption();
+            option.setBlurInDuration(mHelper.getShowAnimationDuration())
+                    .setBlurOutDuration(mHelper.getExitAnimationDuration());
+            View decorView = ((Activity) getContext()).getWindow().getDecorView();
+            if (decorView instanceof ViewGroup) {
+                option.setBlurView(((ViewGroup) decorView).getChildAt(0));
+            } else {
+                option.setBlurView(decorView);
+            }
+        }
+
+        return setBlurOption(option);
     }
 
     /**
@@ -657,7 +672,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param option
      * @return
      */
-    public BasePopupWindow applyBlur(PopupBlurOption option) {
+    public BasePopupWindow setBlurOption(PopupBlurOption option) {
         mHelper.applyBlur(option);
         return this;
     }
@@ -863,6 +878,16 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     //------------------------------------------状态控制-----------------------------------------------
 
+
+    /**
+     * 内部状态监听
+     *
+     * @param listener
+     */
+    void setOnInnerPopupWIndowStateListener(InnerPopupWindowStateListener listener) {
+        this.mStateListener = listener;
+    }
+
     /**
      * 取消一个PopupWindow，如果有退出动画，PopupWindow的消失将会在动画结束后执行
      */
@@ -900,6 +925,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 hasAnima = true;
             }
         }
+        if (!hasAnima) {
+            if (mStateListener != null) {
+                mStateListener.onWithAnimaDismiss();
+            }
+        }
         //如果有动画，则不立刻执行dismiss
         return !hasAnima;
     }
@@ -916,6 +946,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             mHelper.getExitAnimator().removeAllListeners();
         }
         mPopupWindow.callSuperDismiss();
+        if (mStateListener != null) {
+            mStateListener.onWithAnimaDismiss();
+        }
 
     }
 
@@ -997,6 +1030,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         @Override
         public void onAnimationStart(Animator animation) {
             isExitAnimaPlaying = true;
+            if (mStateListener != null) {
+                mStateListener.onAnimaDismissStart();
+            }
         }
 
         @Override
@@ -1016,6 +1052,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         @Override
         public void onAnimationStart(Animation animation) {
             isExitAnimaPlaying = true;
+            if (mStateListener != null) {
+                mStateListener.onAnimaDismissStart();
+            }
         }
 
         @Override

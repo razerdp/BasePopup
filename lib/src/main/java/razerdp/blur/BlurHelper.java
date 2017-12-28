@@ -65,6 +65,14 @@ class BlurHelper {
         blur.setInput(blurInput);
         blur.forEach(blurOutput);
         blurOutput.copyTo(result);
+
+        //释放
+        renderScript.destroy();
+        blurInput.destroy();
+        blurOutput.destroy();
+        scaledBitmap.recycle();
+        origin.recycle();
+
         result = Bitmap.createScaledBitmap(result, originWidth, originHeight, false);
         LogUtil.trace(LogTag.i, "resultWidth  >>  " + result.getWidth() + "   resultHeight  >>  " + result.getHeight());
         return result;

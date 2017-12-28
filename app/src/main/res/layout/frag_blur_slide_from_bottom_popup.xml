@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="从底部上升的popup，模糊背景，仅仅加了一个参数：\n applyBlur()"/>
+            android:text="从底部上升的popup，模糊背景，仅仅加了一个参数：\n setBlurBackground()"/>
 
         <LinearLayout
             android:layout_width="match_parent"

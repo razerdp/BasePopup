@@ -8,6 +8,7 @@ import android.view.WindowManager;
 
 import java.lang.ref.WeakReference;
 
+import razerdp.blur.BlurImageView;
 import razerdp.util.log.LogTag;
 import razerdp.util.log.LogUtil;
 
@@ -22,6 +23,7 @@ final class HackWindowManager implements WindowManager {
     private WeakReference<PopupController> mPopupController;
     private WeakReference<HackPopupDecorView> mHackPopupDecorView;
     private WeakReference<BasePopupHelper> mPopupHelper;
+    private WeakReference<BlurImageView> mBlurImageView;
 
     public HackWindowManager(WindowManager windowManager, PopupController popupController) {
         mWindowManager = new WeakReference<WindowManager>(windowManager);
@@ -38,6 +40,9 @@ final class HackWindowManager implements WindowManager {
         if (getWindowManager() == null) return;
         LogUtil.trace(LogTag.i, TAG, "WindowManager.removeViewImmediate  >>>  " + view.getClass().getSimpleName());
         if (checkProxyValided(view) && getHackPopupDecorView() != null) {
+            if (getBlurImageView() != null) {
+                getWindowManager().removeViewImmediate(getBlurImageView());
+            }
             HackPopupDecorView hackPopupDecorView = getHackPopupDecorView();
             getWindowManager().removeViewImmediate(hackPopupDecorView);
             hackPopupDecorView.setPopupController(null);
@@ -54,39 +59,27 @@ final class HackWindowManager implements WindowManager {
         LogUtil.trace(LogTag.i, TAG, "WindowManager.addView  >>>  " + view.getClass().getSimpleName());
         if (checkProxyValided(view)) {
             BasePopupHelper helper = getBasePopupHelper();
+            BlurImageView blurImageView = null;
+            //添加背景模糊层
+            if (helper != null && helper.isAllowToBlur()) {
+                blurImageView = new BlurImageView(view.getContext());
+                blurImageView.attachBlurOption(helper.getBlurOption());
+                mBlurImageView = new WeakReference<BlurImageView>(blurImageView);
+                getWindowManager().addView(blurImageView, generateBlurBackgroundWindowParams(params));
+            }
+
+            //添加popup主体
             params = applyHelper(params);
             final HackPopupDecorView hackPopupDecorView = new HackPopupDecorView(view.getContext());
             mHackPopupDecorView = new WeakReference<HackPopupDecorView>(hackPopupDecorView);
             hackPopupDecorView.setPopupController(getPopupController());
-            if (helper != null && helper.isAllowToBlur()) {
-                hackPopupDecorView.lazyAttachBlurImageview(helper.getBlurOption());
-            }
+            hackPopupDecorView.addBlurImageview(blurImageView);
             hackPopupDecorView.addView(view, params);
+
             getWindowManager().addView(hackPopupDecorView, params);
         } else {
             getWindowManager().addView(view, params);
         }
-    }
-
-    private ViewGroup.LayoutParams applyHelper(ViewGroup.LayoutParams params) {
-        if (!(params instanceof WindowManager.LayoutParams) || getBasePopupHelper() == null)
-            return params;
-        WindowManager.LayoutParams p = (LayoutParams) params;
-        BasePopupHelper helper = getBasePopupHelper();
-        if (helper == null) return params;
-        if (!helper.isInterceptTouchEvent()) {
-            LogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  不拦截事件");
-            p.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
-            p.flags |= WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
-        }
-        if (helper.isFullScreen()) {
-            LogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  全屏");
-            p.flags |= LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-
-            // FIXME: 2017/12/27 全屏跟SOFT_INPUT_ADJUST_RESIZE冲突，暂时没有好的解决方案
-            p.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED;
-        }
-        return p;
     }
 
     @Override
@@ -106,6 +99,9 @@ final class HackWindowManager implements WindowManager {
         if (getWindowManager() == null) return;
         LogUtil.trace(LogTag.i, TAG, "WindowManager.removeView  >>>  " + view.getClass().getSimpleName());
         if (checkProxyValided(view) && getHackPopupDecorView() != null) {
+            if (getBlurImageView() != null) {
+                getWindowManager().removeView(getBlurImageView());
+            }
             HackPopupDecorView hackPopupDecorView = getHackPopupDecorView();
             getWindowManager().removeView(hackPopupDecorView);
             hackPopupDecorView.setPopupController(null);
@@ -114,6 +110,60 @@ final class HackWindowManager implements WindowManager {
         } else {
             getWindowManager().removeView(view);
         }
+    }
+
+
+    /**
+     * 生成blurimageview的params
+     *
+     * @param params
+     * @return
+     */
+    private ViewGroup.LayoutParams generateBlurBackgroundWindowParams(ViewGroup.LayoutParams params) {
+        ViewGroup.LayoutParams result = new ViewGroup.LayoutParams(params);
+
+        if (params instanceof WindowManager.LayoutParams) {
+            WindowManager.LayoutParams mResults = new WindowManager.LayoutParams();
+            mResults.copyFrom((LayoutParams) params);
+
+            mResults.flags |= LayoutParams.FLAG_NOT_FOCUSABLE;
+            mResults.flags |= LayoutParams.FLAG_NOT_TOUCHABLE;
+            mResults.flags |= LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+            mResults.x = 0;
+            mResults.y = 0;
+
+            result = mResults;
+        }
+        result.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        result.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        return result;
+    }
+
+    /**
+     * 应用helper的设置到popup的params
+     *
+     * @param params
+     * @return
+     */
+    private ViewGroup.LayoutParams applyHelper(ViewGroup.LayoutParams params) {
+        if (!(params instanceof WindowManager.LayoutParams) || getBasePopupHelper() == null)
+            return params;
+        WindowManager.LayoutParams p = (LayoutParams) params;
+        BasePopupHelper helper = getBasePopupHelper();
+        if (helper == null) return params;
+        if (!helper.isInterceptTouchEvent()) {
+            LogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  不拦截事件");
+            p.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+            p.flags |= WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+        }
+        if (helper.isFullScreen()) {
+            LogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  全屏");
+            p.flags |= LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+
+            // FIXME: 2017/12/27 全屏跟SOFT_INPUT_ADJUST_RESIZE冲突，暂时没有好的解决方案
+            p.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED;
+        }
+        return p;
     }
 
 
@@ -141,6 +191,11 @@ final class HackWindowManager implements WindowManager {
     private BasePopupHelper getBasePopupHelper() {
         if (mPopupHelper == null) return null;
         return mPopupHelper.get();
+    }
+
+    private BlurImageView getBlurImageView() {
+        if (mBlurImageView == null) return null;
+        return mBlurImageView.get();
     }
 
     void bindPopupHelper(BasePopupHelper helper) {

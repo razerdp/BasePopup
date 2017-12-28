@@ -288,6 +288,24 @@ final class BasePopupHelper {
         return this;
     }
 
+    long getShowAnimationDuration() {
+        if (mShowAnimation != null) {
+            return mShowAnimation.getDuration();
+        } else if (mShowAnimator != null) {
+            return mShowAnimator.getDuration();
+        }
+        return 0;
+    }
+
+    long getExitAnimationDuration() {
+        if (mExitAnimation != null) {
+            return mExitAnimation.getDuration();
+        } else if (mExitAnimator != null) {
+            return mExitAnimator.getDuration();
+        }
+        return 0;
+    }
+
     public boolean isAllowToBlur() {
         return mBlurOption != null && mBlurOption.isAllowToBlur();
     }
