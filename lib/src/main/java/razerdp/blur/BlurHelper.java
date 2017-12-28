@@ -24,7 +24,7 @@ import razerdp.util.log.LogUtil;
 class BlurHelper {
 
     public static boolean renderScriptSupported() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1;
+        return Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1;
     }
 
     public static Bitmap blur(Context context, View view, float scaledRatio, float radius) {
