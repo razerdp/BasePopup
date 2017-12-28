@@ -1,5 +1,12 @@
 # BasePopup
 
+## 2017/12/28
+  - 增加了一个window用于模糊层，增加模糊功能
+    +  如果您需要模糊功能，仅仅需要调用一个方法：`setBlurBackgroundEnable()`
+    + gradle请在`defaultConfig`下添加两句：
+      - renderscriptTargetApi 25
+      - enderscriptSupportModeEnabled true
+
 ## 2017/12/27
   - 增加演示demo：`DismissControlPopupFrag`
   - 增加两个方法用于touchEvent监听：`onTouchEvent()`&`onOutSideTouch()`
