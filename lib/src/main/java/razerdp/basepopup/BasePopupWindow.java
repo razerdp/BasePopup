@@ -1038,8 +1038,14 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
         @Override
         public void onAnimationEnd(Animator animation) {
-            mPopupWindow.callSuperDismiss();
-            isExitAnimaPlaying = false;
+            mPopupView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mPopupWindow.callSuperDismiss();
+                    isExitAnimaPlaying = false;
+                }
+            });
+
         }
 
         @Override
@@ -1060,8 +1066,13 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            mPopupWindow.callSuperDismiss();
-            isExitAnimaPlaying = false;
+            mPopupView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mPopupWindow.callSuperDismiss();
+                    isExitAnimaPlaying = false;
+                }
+            });
         }
     };
 
