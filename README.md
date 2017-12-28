@@ -16,7 +16,7 @@
 ## 更新日志：
 
 #### 1.9.0-alpha
-  - 增加了一个window用于模糊层，增加模糊功能
+  - 增加了一个window用于模糊层，增加模糊功能（请注意，并不一定稳定，仍然迭代中。。慎用！！！）
     +  如果您需要模糊功能，仅仅需要调用一个方法：`setBlurBackgroundEnable()`
     + gradle请在`defaultConfig`下添加两句：
       - renderscriptTargetApi 25
