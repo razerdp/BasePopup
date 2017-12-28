@@ -12,8 +12,8 @@ import java.lang.ref.WeakReference;
 public class PopupBlurOption {
 
 
-    private static final float DEFAULT_BLUR_RADIUS = 8;
-    private static final float DEFAULT_PRE_SCALE_RATIO = 0.5f;
+    private static final float DEFAULT_BLUR_RADIUS = 6;
+    private static final float DEFAULT_PRE_SCALE_RATIO = 0.6f;
     private static final long DEFAULT_ANIMATION_DURATION = 300;
 
     private WeakReference<View> mBlurView;
@@ -74,6 +74,6 @@ public class PopupBlurOption {
     }
 
     public boolean isAllowToBlur() {
-        return getBlurView() != null && BlurHelper.supportedBlur();
+        return getBlurView() != null;
     }
 }
