@@ -11,7 +11,7 @@ android {
         versionCode 2
         versionName "1.0"
 
-        renderscriptTargetApi 17
+        renderscriptTargetApi 25
         renderscriptSupportModeEnabled true
     }
     lintOptions {

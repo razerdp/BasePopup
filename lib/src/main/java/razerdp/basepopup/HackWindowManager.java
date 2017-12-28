@@ -1,5 +1,6 @@
 package razerdp.basepopup;
 
+import android.graphics.PixelFormat;
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.View;
@@ -131,6 +132,9 @@ final class HackWindowManager implements WindowManager {
             mResults.flags |= LayoutParams.FLAG_LAYOUT_IN_SCREEN;
             mResults.x = 0;
             mResults.y = 0;
+            mResults.format = PixelFormat.RGBA_8888;
+
+            LogUtil.trace(LogTag.i, TAG, "模糊层窗口的window type >>  " + mResults.type);
 
             result = mResults;
         }
@@ -163,6 +167,7 @@ final class HackWindowManager implements WindowManager {
             // FIXME: 2017/12/27 全屏跟SOFT_INPUT_ADJUST_RESIZE冲突，暂时没有好的解决方案
             p.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED;
         }
+        LogUtil.trace(LogTag.i, TAG, "PopupWindow窗口的window type >>  " + p.type);
         return p;
     }
 
