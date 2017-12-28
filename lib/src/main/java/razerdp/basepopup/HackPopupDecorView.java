@@ -7,8 +7,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.lang.ref.WeakReference;
+
 import razerdp.blur.BlurImageView;
-import razerdp.blur.PopupBlurOption;
 import razerdp.util.log.LogTag;
 import razerdp.util.log.LogUtil;
 
@@ -20,8 +21,7 @@ import razerdp.util.log.LogUtil;
 public class HackPopupDecorView extends ViewGroup {
     private static final String TAG = "HackPopupDecorView";
     private PopupController mPopupController;
-    private BlurImageView blurImageView;
-    private PopupBlurOption mOption;
+    private WeakReference<BlurImageView> mBlurImageViewWeakReference;
 
     public HackPopupDecorView(Context context) {
         super(context);
@@ -136,31 +136,55 @@ public class HackPopupDecorView extends ViewGroup {
 
     public void setPopupController(PopupController popupController) {
         mPopupController = popupController;
+        if (mPopupController instanceof BasePopupWindow) {
+            ((BasePopupWindow) mPopupController).setOnInnerPopupWIndowStateListener(new InnerPopupWindowStateListener());
+        }
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (blurImageView != null) {
-            blurImageView.attachBlurOption(mOption);
-            blurImageView.start(mOption.getDuration());
-        }
+        startBlurAnima();
     }
 
-    public void lazyAttachBlurImageview(PopupBlurOption option) {
-        if (blurImageView != null) return;
-        mOption = option;
-        blurImageView = new BlurImageView(getContext());
-        addView(blurImageView, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+    public void addBlurImageview(BlurImageView blurImageView) {
+        if (blurImageView == null) return;
+        mBlurImageViewWeakReference = new WeakReference<BlurImageView>(blurImageView);
     }
 
     public void startBlurAnima() {
-        if (blurImageView == null) return;
-        blurImageView.start(mOption == null ? 300 : mOption.getDuration());
+        startBlurAnima(-1);
+    }
+
+    public void startBlurAnima(long duration) {
+        if (getBlurImageView() == null) return;
+        getBlurImageView().start(duration);
     }
 
     public void dismissBlurAnima() {
-        if (blurImageView == null) return;
-        blurImageView.dismiss(mOption == null ? 300 : mOption.getDuration());
+        dismissBlurAnima(-1);
+    }
+
+    public void dismissBlurAnima(long duration) {
+        if (getBlurImageView() == null) return;
+        getBlurImageView().dismiss(duration);
+    }
+
+    BlurImageView getBlurImageView() {
+        if (mBlurImageViewWeakReference == null) return null;
+        return mBlurImageViewWeakReference.get();
+    }
+
+    class InnerPopupWindowStateListener extends razerdp.basepopup.InnerPopupWindowStateListener {
+
+        @Override
+        void onAnimaDismissStart() {
+            dismissBlurAnima();
+        }
+
+        @Override
+        void onWithAnimaDismiss() {
+            dismissBlurAnima(0);
+        }
     }
 }
