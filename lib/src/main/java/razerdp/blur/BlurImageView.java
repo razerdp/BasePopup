@@ -11,7 +11,6 @@ import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
 
-import razerdp.blur.thread.ThreadPoolManager;
 import razerdp.util.log.LogTag;
 import razerdp.util.log.LogUtil;
 
@@ -45,6 +44,7 @@ public class BlurImageView extends ImageView {
         setFocusable(false);
         setFocusableInTouchMode(false);
         setScaleType(ScaleType.FIT_XY);
+        setAlpha(0f);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             setBackground(null);
         } else {
@@ -57,6 +57,10 @@ public class BlurImageView extends ImageView {
         View anchorView = option.getBlurView();
         if (anchorView == null) {
             LogUtil.trace(LogTag.e, TAG, "模糊锚点View为空，放弃模糊操作...");
+            return;
+        }
+        if (!BlurHelper.supportedBlur()) {
+            LogUtil.trace(LogTag.e, TAG, "不支持模糊。。。。");
             return;
         }
         final Bitmap blurBitmap = BlurHelper.blur(getContext(), anchorView, option.getBlurPreScaleRatio(), option.getBlurRadius());
@@ -74,15 +78,6 @@ public class BlurImageView extends ImageView {
         return mBlurOption.get();
     }
 
-
-    private void startBlurTask(View anchorView) {
-        if (!BlurHelper.supportedBlur()) {
-            LogUtil.trace(LogTag.e, TAG, "不支持渲染，至少需要api 17");
-            return;
-        }
-        ThreadPoolManager.execute(new CreateBlurBitmapRunnable(anchorView));
-    }
-
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
@@ -91,52 +86,39 @@ public class BlurImageView extends ImageView {
 
     public void start(long duration) {
         LogUtil.trace(LogTag.i, TAG, "开始模糊imageview alpha动画");
-        animate()
-                .alpha(1)
-                .setDuration(duration)
-                .setInterpolator(new DecelerateInterpolator())
-                .start();
+        if (duration > 0) {
+            animate()
+                    .alpha(1f)
+                    .setDuration(duration)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+        } else if (duration == -1) {
+            animate()
+                    .alpha(1f)
+                    .setDuration(getOption() == null ? 300 : getOption().getBlurInDuration())
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+        } else {
+            setAlpha(1f);
+        }
     }
 
     public void dismiss(long duration) {
         LogUtil.trace(LogTag.i, TAG, "dismiss模糊imageview alpha动画");
-        animate()
-                .alpha(0)
-                .setDuration(duration)
-                .setInterpolator(new DecelerateInterpolator())
-                .start();
-    }
-
-    class CreateBlurBitmapRunnable implements Runnable {
-
-        private View anchorView;
-
-        public CreateBlurBitmapRunnable(View anchorView) {
-            this.anchorView = anchorView;
-        }
-
-        @Override
-        public void run() {
-            if (abortBlur || getOption() == null) {
-                LogUtil.trace(LogTag.e, TAG, "放弃模糊，可能是已经移除了布局");
-                return;
-            }
-            PopupBlurOption option = getOption();
-            final Bitmap blurBitmap = BlurHelper.blur(getContext(), anchorView, option.getBlurPreScaleRatio(), option.getBlurRadius());
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    if (blurBitmap != null) {
-                        LogUtil.trace("blurBitmap不为空");
-                        setAlpha(0);
-                        setImageBitmap(blurBitmap);
-                    } else {
-                        LogUtil.trace("blurBitmap为空");
-                    }
-//                    Rect rect=new Rect();
-//                    anchorView.getGlobalVisibleRect(rect);
-                }
-            });
+        if (duration > 0) {
+            animate()
+                    .alpha(0f)
+                    .setDuration(duration)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+        } else if (duration == -1) {
+            animate()
+                    .alpha(0f)
+                    .setDuration(getOption() == null ? 300 : getOption().getBlurOutDuration())
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+        } else {
+            setAlpha(0f);
         }
     }
 }

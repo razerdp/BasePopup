@@ -45,9 +45,9 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
     public Animator initShowAnimator() {
        /* AnimatorSet set=new AnimatorSet();
         set.playTogether(
-                ObjectAnimator.ofFloat(mAnimaView,"scaleX",0.0f,1.0f).setDuration(300),
-                ObjectAnimator.ofFloat(mAnimaView,"scaleY",0.0f,1.0f).setDuration(300),
-                ObjectAnimator.ofFloat(mAnimaView,"alpha",0.0f,1.0f).setDuration(300*3/2));*/
+                ObjectAnimator.ofFloat(mAnimaView,"scaleX",0.0f,1.0f).setBlurInDuration(300),
+                ObjectAnimator.ofFloat(mAnimaView,"scaleY",0.0f,1.0f).setBlurInDuration(300),
+                ObjectAnimator.ofFloat(mAnimaView,"alpha",0.0f,1.0f).setBlurInDuration(300*3/2));*/
         return null;
     }
 
