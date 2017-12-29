@@ -289,21 +289,23 @@ final class BasePopupHelper {
     }
 
     long getShowAnimationDuration() {
+        long duration = 0;
         if (mShowAnimation != null) {
-            return mShowAnimation.getDuration();
+            duration = mShowAnimation.getDuration();
         } else if (mShowAnimator != null) {
-            return mShowAnimator.getDuration();
+            duration = mShowAnimator.getDuration();
         }
-        return 0;
+        return duration < 0 ? 300 : duration;
     }
 
     long getExitAnimationDuration() {
+        long duration = 0;
         if (mExitAnimation != null) {
-            return mExitAnimation.getDuration();
+            duration = mExitAnimation.getDuration();
         } else if (mExitAnimator != null) {
-            return mExitAnimator.getDuration();
+            duration = mExitAnimator.getDuration();
         }
-        return 0;
+        return duration < 0 ? 300 : duration;
     }
 
     public boolean isAllowToBlur() {

@@ -153,7 +153,7 @@ public class HackPopupDecorView extends ViewGroup {
     }
 
     public void startBlurAnima() {
-        startBlurAnima(-1);
+        startBlurAnima(-2);
     }
 
     public void startBlurAnima(long duration) {
@@ -162,7 +162,7 @@ public class HackPopupDecorView extends ViewGroup {
     }
 
     public void dismissBlurAnima() {
-        dismissBlurAnima(-1);
+        dismissBlurAnima(-2);
     }
 
     public void dismissBlurAnima(long duration) {
