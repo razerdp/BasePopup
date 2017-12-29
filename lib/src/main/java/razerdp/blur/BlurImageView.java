@@ -97,7 +97,7 @@ public class BlurImageView extends ImageView {
                     .setDuration(duration)
                     .setInterpolator(new DecelerateInterpolator())
                     .start();
-        } else if (duration == -1) {
+        } else if (duration == -2) {
             animate()
                     .alpha(1f)
                     .setDuration(getOption() == null ? 300 : getOption().getBlurInDuration())
@@ -116,7 +116,7 @@ public class BlurImageView extends ImageView {
                     .setDuration(duration)
                     .setInterpolator(new DecelerateInterpolator())
                     .start();
-        } else if (duration == -1) {
+        } else if (duration == -2) {
             animate()
                     .alpha(0f)
                     .setDuration(getOption() == null ? 300 : getOption().getBlurOutDuration())
