@@ -193,8 +193,8 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
   - 模糊背景功能已经开放，针对单个View的模糊方法开放
   - 模糊背景允许子线程执行，默认主线程执行
   - gradle请在`defaultConfig`下添加两句：
-        + renderscriptTargetApi 25
-        + enderscriptSupportModeEnabled true
+      + renderscriptTargetApi 25
+      + enderscriptSupportModeEnabled true
   - 发布1.9.0，其余bug修复
 
 #### 1.9.0-alpha2（candy）
