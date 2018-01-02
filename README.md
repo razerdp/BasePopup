@@ -9,7 +9,7 @@
 
 ## 请注意：
 
-**从1.8.6.1开始，将不再支持Jitpack**
+**请务必查看更新日志和例子预览，里面会详细解释每个版本增加或修复的功能**
 
 **请注意引用版本的问题，Release版本是稳定版，可商用。Candy不稳定，但包含着新功能或者新的优化，不建议商用。**
 
@@ -188,6 +188,14 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 
 
 ## 更新日志：
+
+#### 1.9.0
+  - 模糊背景功能已经开放，针对单个View的模糊方法开放
+  - 模糊背景允许子线程执行，默认主线程执行
+  - gradle请在`defaultConfig`下添加两句：
+        + renderscriptTargetApi 25
+        + enderscriptSupportModeEnabled true
+  - 发布1.9.0，其余bug修复
 
 #### 1.9.0-alpha2（candy）
   - 修复了可能导致的动画duration为-1而崩溃的问题

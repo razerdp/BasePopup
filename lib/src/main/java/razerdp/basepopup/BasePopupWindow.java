@@ -673,7 +673,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param option
      * @return
      */
-    // TODO: 2017/12/28 解决anchorView不是decorView的模糊图片的位置大小问题
     public BasePopupWindow setBlurOption(PopupBlurOption option) {
         mHelper.applyBlur(option);
         return this;
