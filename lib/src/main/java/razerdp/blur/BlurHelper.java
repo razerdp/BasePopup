@@ -14,6 +14,7 @@ import android.renderscript.Element;
 import android.renderscript.RSIllegalArgumentException;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.util.TypedValue;
 import android.view.View;
 
 import razerdp.util.log.LogTag;
@@ -24,8 +25,8 @@ import razerdp.util.log.LogUtil;
  * <p>
  * 模糊处理类
  */
-class BlurHelper {
-
+public class BlurHelper {
+    private static final String TAG = "BlurHelper";
     private static int statusBarHeight = 0;
 
     public static boolean renderScriptSupported() {
@@ -42,9 +43,12 @@ class BlurHelper {
 
     public static Bitmap blur(Context context, Bitmap origin, float scaledRatio, float radius) {
         if (renderScriptSupported()) {
+            LogUtil.trace(LogTag.i, TAG, "脚本模糊");
             return renderScriptblur(context, origin, scaledRatio, radius);
         } else {
-            return supportedBlur(context, origin, scaledRatio, radius);
+            LogUtil.trace(LogTag.i, TAG, "快速模糊");
+            scaledRatio = checkFloatRange(scaledRatio / 8, 1, scaledRatio);
+            return fastBlur(context, origin, scaledRatio, radius);
         }
     }
 
@@ -107,7 +111,7 @@ class BlurHelper {
         return result;
     }
 
-    public static Bitmap supportedBlur(Context context, Bitmap origin, float scaledRatio, float radius) {
+    public static Bitmap fastBlur(Context context, Bitmap origin, float scaledRatio, float radius) {
         if (origin == null || origin.isRecycled()) return null;
         radius = checkFloatRange(radius, 0, 20);
         scaledRatio = checkFloatRange(scaledRatio, 0, 1);
@@ -140,7 +144,7 @@ class BlurHelper {
         return result;
     }
 
-    private static Bitmap getViewBitmap(final View v, boolean fullScreen) {
+    public static Bitmap getViewBitmap(final View v, boolean fullScreen) {
         if (v == null || v.getWidth() <= 0 || v.getHeight() <= 0) {
             LogUtil.trace(LogTag.e, "getViewBitmap  >>  宽或者高为空");
             return null;
@@ -148,9 +152,18 @@ class BlurHelper {
         if (statusBarHeight <= 0) statusBarHeight = getStatusBarHeight(v.getContext());
         Bitmap b = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
-        c.drawColor(Color.WHITE);
-        if (fullScreen && statusBarHeight > 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (v.getContext() instanceof Activity) {
+        if (v.getBackground() == null) {
+            //背景为空，则填充colorBackground背景
+            TypedValue tv = new TypedValue();
+            v.getContext().getTheme().resolveAttribute(android.R.attr.colorBackground, tv, true);
+            if (tv.type >= TypedValue.TYPE_FIRST_COLOR_INT && tv.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+                c.drawColor(tv.data);
+            } else {
+                c.drawColor(Color.parseColor("#FAFAFA"));
+            }
+        }
+        if (fullScreen) {
+            if (statusBarHeight > 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && v.getContext() instanceof Activity) {
                 int statusBarColor = ((Activity) v.getContext()).getWindow().getStatusBarColor();
                 Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
                 p.setColor(statusBarColor);

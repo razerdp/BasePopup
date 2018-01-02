@@ -1,133 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-    >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="从底部上升的popup，模糊背景，仅仅加了一个参数：\n setBlurBackground()"/>
+        android:orientation="vertical"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp">
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:background="#554477"/>
+            <TextView
+                android:id="@+id/tv_tips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="从底部上升的popup\n模糊背景，仅需要一个方法：\n setBlurBackgroundEnable()
+        \n点选对应imageView后，只会模糊对应的View\n(包括我也是可以点的哦~)"/>
 
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="1"
-                android:background="#309de1"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
 
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="1"
-                android:background="#0ed683"/>
+                <ImageView
+                    android:id="@+id/iv_color_1"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:background="#554477"/>
 
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="1"
-                android:background="#f21c63"/>
+                <ImageView
+                    android:id="@+id/iv_color_2"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:background="#309de1"/>
+
+                <ImageView
+                    android:id="@+id/iv_color_3"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:background="#0ed683"/>
+
+                <ImageView
+                    android:id="@+id/iv_color_4"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:background="#f21c63"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
+
+                <ImageView
+                    android:id="@+id/iv_color_5"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:background="#f1cfa7"/>
+
+                <ImageView
+                    android:id="@+id/iv_color_6"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:background="#63af34"/>
+
+                <ImageView
+                    android:id="@+id/iv_color_7"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:background="#892eff"/>
+
+                <ImageView
+                    android:id="@+id/iv_color_8"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:background="#000000"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
+
+                <ImageView
+                    android:id="@+id/iv_color_9"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:background="#baf7c1"/>
+
+                <ImageView
+                    android:id="@+id/iv_color_10"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:background="#077b62"/>
+
+                <ImageView
+                    android:id="@+id/iv_color_11"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:background="#480941"/>
+
+                <ImageView
+                    android:id="@+id/iv_color_12"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:background="#c95757"/>
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
+        <com.razerdp.widgets.StrokeLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp">
+            android:layout_margin="8dp"
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:stroke_color="@android:color/darker_gray"
+            app:stroke_width="2dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="选择的View的bitmap↓"/>
 
             <ImageView
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:background="#f1cfa7"/>
+                android:id="@+id/iv_preview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:scaleType="fitXY"/>
+        </com.razerdp.widgets.StrokeLinearLayout>
 
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="1"
-                android:background="#63af34"/>
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="1"
-                android:background="#892eff"/>
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="1"
-                android:background="#000000"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/popup_show"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp">
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:background="#baf7c1"/>
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="1"
-                android:background="#077b62"/>
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="1"
-                android:background="#480941"/>
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="1"
-                android:background="#c95757"/>
-        </LinearLayout>
+            android:layout_gravity="center_horizontal"
+            android:text="show"/>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/popup_show"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="show"/>
-</RelativeLayout>
+</ScrollView>

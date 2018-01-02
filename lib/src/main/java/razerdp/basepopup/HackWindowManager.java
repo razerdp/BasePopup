@@ -146,8 +146,6 @@ final class HackWindowManager implements WindowManager {
             mResults.y = 0;
             mResults.format = PixelFormat.RGBA_8888;
 
-            LogUtil.trace(LogTag.i, TAG, "模糊层窗口的window type >>  " + mResults.type);
-
             result = mResults;
         }
         result.width = ViewGroup.LayoutParams.MATCH_PARENT;
