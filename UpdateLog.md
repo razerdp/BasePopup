@@ -1,5 +1,13 @@
 # BasePopup
 
+## 2018/01/02
+  - 模糊背景功能已经开放，针对单个View的模糊方法开放
+  - 模糊背景允许子线程执行，默认主线程执行
+  - gradle请在`defaultConfig`下添加两句：
+      + renderscriptTargetApi 25
+      + enderscriptSupportModeEnabled true
+  - 发布1.9.0，其余bug修复
+
 ## 2017/12/28
   - 增加了一个window用于模糊层，增加模糊功能
     +  如果您需要模糊功能，仅仅需要调用一个方法：`setBlurBackgroundEnable()`
