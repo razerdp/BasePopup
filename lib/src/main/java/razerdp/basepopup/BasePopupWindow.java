@@ -653,7 +653,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         PopupBlurOption option = null;
         if (blur) {
             option = new PopupBlurOption();
-            option.setBlurInDuration(mHelper.getShowAnimationDuration())
+            option.setFullScreen(true)
+                    .setBlurInDuration(mHelper.getShowAnimationDuration())
                     .setBlurOutDuration(mHelper.getExitAnimationDuration());
             View decorView = ((Activity) getContext()).getWindow().getDecorView();
             if (decorView instanceof ViewGroup) {
@@ -673,7 +674,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @return
      */
     // TODO: 2017/12/28 解决anchorView不是decorView的模糊图片的位置大小问题
-    BasePopupWindow setBlurOption(PopupBlurOption option) {
+    public BasePopupWindow setBlurOption(PopupBlurOption option) {
         mHelper.applyBlur(option);
         return this;
     }

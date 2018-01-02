@@ -22,7 +22,6 @@ public class DismissControlPopup extends BasePopupWindow implements View.OnClick
         findViewById(R.id.tx_1).setOnClickListener(this);
         findViewById(R.id.tx_2).setOnClickListener(this);
         findViewById(R.id.tx_3).setOnClickListener(this);
-        setBlurBackgroundEnable(true);
     }
 
     @Override

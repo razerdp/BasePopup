@@ -15,12 +15,15 @@ public class PopupBlurOption {
     private static final float DEFAULT_BLUR_RADIUS = 6;
     private static final float DEFAULT_PRE_SCALE_RATIO = 0.6f;
     private static final long DEFAULT_ANIMATION_DURATION = 300;
+    private static final boolean DEFAULT_BLUR_ASYNC = false;//默认子线程blur
 
     private WeakReference<View> mBlurView;
     private float mBlurRadius = DEFAULT_BLUR_RADIUS;
     private float mBlurPreScaleRatio = DEFAULT_PRE_SCALE_RATIO;
     private long mBlurInDuration = DEFAULT_ANIMATION_DURATION;
     private long mBlurOutDuration = DEFAULT_ANIMATION_DURATION;
+    private boolean mBlurAsync = DEFAULT_BLUR_ASYNC;
+    private boolean mFullScreen = true;
 
 
     public PopupBlurOption() {
@@ -70,6 +73,24 @@ public class PopupBlurOption {
 
     public PopupBlurOption setBlurOutDuration(long blurOutDuration) {
         mBlurOutDuration = blurOutDuration;
+        return this;
+    }
+
+    public boolean isBlurAsync() {
+        return mBlurAsync;
+    }
+
+    public PopupBlurOption setBlurAsync(boolean blurAsync) {
+        mBlurAsync = blurAsync;
+        return this;
+    }
+
+    public boolean isFullScreen() {
+        return mFullScreen;
+    }
+
+    public PopupBlurOption setFullScreen(boolean fullScreen) {
+        mFullScreen = fullScreen;
         return this;
     }
 
