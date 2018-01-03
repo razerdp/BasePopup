@@ -189,7 +189,7 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 
 ## 更新日志：
 
-#### 1.9.0
+#### 1.9.1
   - 修复可能出现的死循环问题以及去掉manifest文件冲突的问题
   - 部分方法名字修改，默认关闭 Log，如果您需要打印内部调试日志，请使用该方法：`BasePopupWindow.debugLog(true)`
   - 增加位移动画（百分比传值）,位移动画名字修正：`getTranslateAnimation()` -> `getTranslateVerticalAnimation()`
@@ -198,7 +198,7 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
   - gradle请在`defaultConfig`下添加两句：
       + renderscriptTargetApi 25
       + enderscriptSupportModeEnabled true
-  - 发布1.9.0，其余bug修复
+  - 发布1.9.1，其余bug修复
 
 #### 1.9.0-alpha2（candy）
   - 修复了可能导致的动画duration为-1而崩溃的问题
