@@ -6,13 +6,14 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.view.View;
 import android.view.animation.Animation;
+
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.interpolator.OverShootInterpolator;
 
 /**
  * Created by 大灯泡 on 2016/10/11.
- *
+ * <p>
  * 全屏的popup
  */
 
@@ -22,9 +23,11 @@ public class FullScreenPopup extends BasePopupWindow {
         super(context);
         /**全屏popup*/
         setPopupWindowFullScreen(true);
+        setBlurBackgroundEnable(true);
     }
 
-    @Override protected Animation initShowAnimation() {
+    @Override
+    protected Animation initShowAnimation() {
         return null;
     }
 
@@ -55,11 +58,13 @@ public class FullScreenPopup extends BasePopupWindow {
         return getPopupWindowView();
     }
 
-    @Override public View onCreatePopupView() {
+    @Override
+    public View onCreatePopupView() {
         return createPopupById(R.layout.popup_fullscreen);
     }
 
-    @Override public View initAnimaView() {
+    @Override
+    public View initAnimaView() {
         return findViewById(R.id.popup_anima);
     }
 }

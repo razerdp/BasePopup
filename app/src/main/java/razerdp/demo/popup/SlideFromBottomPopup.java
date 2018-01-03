@@ -24,12 +24,12 @@ public class SlideFromBottomPopup extends BasePopupWindow implements View.OnClic
 
     @Override
     protected Animation initShowAnimation() {
-        return getTranslateAnimation(250 * 2, 0, 300);
+        return getTranslateVerticalAnimation(1f, 0, 500);
     }
 
     @Override
     protected Animation initExitAnimation() {
-        return getTranslateAnimation(0, 250 * 2, 300);
+        return getTranslateVerticalAnimation(0, 1f, 500);
     }
 
     @Override

@@ -1,6 +1,9 @@
 # BasePopup
 
 ## 2018/01/02
+  - 修复可能出现的死循环问题以及去掉manifest文件冲突的问题
+  - 部分方法名字修改，默认关闭 Log，如果您需要打印内部调试日志，请使用该方法：`BasePopupWindow.debugLog(true)`
+  - 增加位移动画（百分比传值）,位移动画名字修正：`getTranslateAnimation()` -> `getTranslateVerticalAnimation()`
   - 模糊背景功能已经开放，针对单个View的模糊方法开放
   - 模糊背景允许子线程执行，默认主线程执行
   - gradle请在`defaultConfig`下添加两句：
