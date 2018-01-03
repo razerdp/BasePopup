@@ -12,9 +12,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.logging.Logger;
 
-import razerdp.library.BuildConfig;
-
-import static razerdp.util.log.LogTag.*;
+import static razerdp.util.log.LogTag.i;
 
 
 /**
@@ -25,7 +23,7 @@ import static razerdp.util.log.LogTag.*;
 public class LogUtil {
 
     // 获取堆栈信息会影响性能，发布应用时记得关闭DebugMode
-    private static final boolean[] mIsDebugMode = {BuildConfig.DEBUG};
+    private static final boolean[] mIsDebugMode = {false};
     private static final String TAG = "basepopup";
     private static final String SUFFIX = ".java";
     //从栈底第三个开始追踪，因为第一个一般是虚拟机，第二个是线程，第三个是log
