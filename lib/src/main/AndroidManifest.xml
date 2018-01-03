@@ -3,7 +3,6 @@
 
     <application
         android:allowBackup="true"
-        android:label="basepopup"
         android:supportsRtl="true">
 
     </application>

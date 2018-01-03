@@ -463,9 +463,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             if (v != null) {
                 offset = calculateOffset(v);
                 if (mHelper.isShowAtDown()) {
-                    mPopupWindow.showAsDropDown(v, offset[0], offset[1]);
+                    mPopupWindow.showAsDropDownProxy(v, offset[0], offset[1]);
                 } else {
-                    mPopupWindow.showAtLocation(v, mHelper.getPopupGravity(), offset[0], offset[1]);
+                    mPopupWindow.showAtLocationProxy(v, mHelper.getPopupGravity(), offset[0], offset[1]);
                 }
             } else {
                 //什么都没传递，取顶级view的id
@@ -1080,10 +1080,22 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 生成TranslateAnimation
      *
      * @param durationMillis 动画显示时间
-     * @param start          初始位置
+     * @param start          初始百分比
+     * @param end            结束百分比
      */
-    protected Animation getTranslateAnimation(int start, int end, int durationMillis) {
-        return SimpleAnimationUtils.getTranslateAnimation(start, end, durationMillis);
+    protected Animation getTranslateVerticalAnimation(int start, int end, int durationMillis) {
+        return SimpleAnimationUtils.getTranslateVerticalAnimation(start, end, durationMillis);
+    }
+
+    /**
+     * 生成TranslateAnimation（相对于parent）
+     *
+     * @param durationMillis 动画显示时间
+     * @param start          初始百分比(0f~1f)
+     * @param end            结束百分比(0f~1f)
+     */
+    protected Animation getTranslateVerticalAnimation(float start, float end, int durationMillis) {
+        return SimpleAnimationUtils.getTranslateVerticalAnimation(start, end, durationMillis);
     }
 
     /**

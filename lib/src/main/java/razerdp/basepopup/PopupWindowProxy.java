@@ -1,6 +1,7 @@
 package razerdp.basepopup;
 
 import android.os.Build;
+import android.view.Gravity;
 import android.view.View;
 
 /**
@@ -26,13 +27,15 @@ class PopupWindowProxy extends BasePopupWindowProxy {
      * @param yoff
      * @param gravity
      */
-    @Override
-    public void showAsDropDown(View anchor, int xoff, int yoff, int gravity) {
+    public void showAsDropDownProxy(View anchor, int xoff, int yoff, int gravity) {
         PopupCompatManager.showAsDropDown(this, anchor, xoff, yoff, gravity);
     }
 
-    @Override
-    public void showAtLocation(View parent, int gravity, int x, int y) {
+    public void showAsDropDownProxy(View anchor, int xoff, int yoff) {
+        PopupCompatManager.showAsDropDown(this, anchor, xoff, yoff, Gravity.TOP | Gravity.START);
+    }
+
+    public void showAtLocationProxy(View parent, int gravity, int x, int y) {
         PopupCompatManager.showAtLocation(this, parent, gravity, x, y);
     }
 
