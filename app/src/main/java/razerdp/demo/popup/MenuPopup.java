@@ -1,6 +1,5 @@
 package razerdp.demo.popup;
 
-import android.animation.Animator;
 import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,13 +41,12 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
     }
 
     @Override
-    public Animator initShowAnimator() {
-       /* AnimatorSet set=new AnimatorSet();
-        set.playTogether(
-                ObjectAnimator.ofFloat(mAnimaView,"scaleX",0.0f,1.0f).setBlurInDuration(300),
-                ObjectAnimator.ofFloat(mAnimaView,"scaleY",0.0f,1.0f).setBlurInDuration(300),
-                ObjectAnimator.ofFloat(mAnimaView,"alpha",0.0f,1.0f).setBlurInDuration(300*3/2));*/
-        return null;
+    protected Animation initExitAnimation() {
+        AnimationSet set = new AnimationSet(true);
+        set.setInterpolator(new DecelerateInterpolator());
+        set.addAnimation(getScaleAnimation(1, 0, 1, 0, Animation.RELATIVE_TO_SELF, 1, Animation.RELATIVE_TO_SELF, 0));
+        set.addAnimation(getDefaultAlphaAnimation());
+        return set;
     }
 
     @Override

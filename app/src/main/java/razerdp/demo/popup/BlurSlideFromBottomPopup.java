@@ -24,12 +24,12 @@ public class BlurSlideFromBottomPopup extends BasePopupWindow implements View.On
 
     @Override
     protected Animation initShowAnimation() {
-        return getTranslateYAnimation(250 * 2, 0, 300);
+        return getTranslateVerticalAnimation(1f, 0f, 300);
     }
 
     @Override
     protected Animation initExitAnimation() {
-        return getTranslateYAnimation(0, 250 * 2, 300);
+        return getTranslateVerticalAnimation(0f, 1f, 300);
     }
 
     @Override

@@ -22,8 +22,20 @@ public class SimpleAnimationUtils {
      * @param durationMillis 动画显示时间
      * @param start          初始位置
      */
-    public static Animation getTranslateAnimation(int start, int end, int durationMillis) {
+    public static Animation getTranslateVerticalAnimation(int start, int end, int durationMillis) {
         Animation translateAnimation = new TranslateAnimation(0, 0, start, end);
+        translateAnimation.setDuration(durationMillis);
+        return translateAnimation;
+    }
+
+    /**
+     * 生成TranslateAnimation
+     *
+     * @param durationMillis 动画显示时间
+     * @param start          初始位置
+     */
+    public static Animation getTranslateVerticalAnimation(float start, float end, int durationMillis) {
+        Animation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0, Animation.RELATIVE_TO_PARENT, 0, Animation.RELATIVE_TO_PARENT, start, Animation.RELATIVE_TO_PARENT, end);
         translateAnimation.setDuration(durationMillis);
         return translateAnimation;
     }
