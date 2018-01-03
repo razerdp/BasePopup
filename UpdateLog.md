@@ -9,7 +9,7 @@
   - gradle请在`defaultConfig`下添加两句：
       + renderscriptTargetApi 25
       + enderscriptSupportModeEnabled true
-  - 发布1.9.0，其余bug修复
+  - 发布1.9.1，其余bug修复
 
 ## 2017/12/28
   - 增加了一个window用于模糊层，增加模糊功能
