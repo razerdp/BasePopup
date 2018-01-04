@@ -646,6 +646,17 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @return
      */
     public BasePopupWindow setBlurBackgroundEnable(boolean blur) {
+        return setBlurBackgroundEnable(blur, null);
+    }
+
+    /**
+     * 应用模糊脚本...默认模糊背景
+     *
+     * @param blur true for blur decorView
+     * @param l    创建blur配置监听
+     * @return
+     */
+    public BasePopupWindow setBlurBackgroundEnable(boolean blur, OnBlurOptionInitListener l) {
         if (!(getContext() instanceof Activity)) {
             LogUtil.trace(LogTag.e, TAG, "无法配置默认模糊脚本，因为context不是activity");
             return this;
@@ -656,6 +667,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             option.setFullScreen(true)
                     .setBlurInDuration(mHelper.getShowAnimationDuration())
                     .setBlurOutDuration(mHelper.getExitAnimationDuration());
+            if (l != null) {
+                l.onCreateBlurOption(option);
+            }
             View decorView = ((Activity) getContext()).getWindow().getDecorView();
             if (decorView instanceof ViewGroup) {
                 option.setBlurView(((ViewGroup) decorView).getChildAt(0));
@@ -1169,6 +1183,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return getContext().getResources().getDisplayMetrics().widthPixels;
     }
 
+    View getContentView() {
+        return mPopupWindow.getContentView();
+    }
+
     //------------------------------------------callback-----------------------------------------------
 
     /**
@@ -1224,6 +1242,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         boolean onBeforeShow(View popupRootView, View anchorView, boolean hasShowAnima);
 
 
+    }
+
+    public interface OnBlurOptionInitListener {
+        void onCreateBlurOption(PopupBlurOption option);
     }
 
     public static abstract class OnDismissListener implements PopupWindow.OnDismissListener {
