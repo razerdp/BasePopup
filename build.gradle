@@ -24,7 +24,7 @@ allprojects {
         options{
             encoding 'UTF-8'
             charSet 'UTF-8'
-            links "https://androiddoc.qiniudn.com/reference/"
+            links "https://developer.android.google.cn/reference/"
             addStringOption('Xdoclint:none', '-quiet')
         }
     }
