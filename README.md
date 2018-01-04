@@ -1,34 +1,38 @@
-# BasePopup
-## 抽象出一个方便自定义的Basepopup类，更加方便的创建出一个popup以及动画效果
+BasePopup
+---
+**抽象出一个方便自定义的Basepopup类，更加方便的创建出一个popup以及动画效果**
 
 
-| **Release**            |  **Candy**  | **License**            |  **Author**  |
-| ---- | ---- | ---- | ---- |
-| [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion) | [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion)| [![license](https://img.shields.io/badge/license-Apache--2.0-blue.svg )](https://github.com/razerdp/BasePopup/blob/master/LICENSE) | [![Author](https://img.shields.io/badge/Author-razerdp-blue.svg)](https://github.com/razerdp) |
+| **Release** | **Candy** | **License** | **Api** | **Author** |
+| ---- | ---- | ---- | ---- | ---- |
+| [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion) | [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion)| [![license](https://img.shields.io/badge/license-Apache--2.0-blue.svg )](https://github.com/razerdp/BasePopup/blob/master/LICENSE) | [![Api](https://img.shields.io/badge/Api-14%2B-green.svg)](https://img.shields.io/badge/Api-14%2B-green.svg) | [![Author](https://img.shields.io/badge/Author-razerdp-blue.svg)](https://github.com/razerdp) |
 
 
-## 请注意：
+注意事项
+---
 
+```
 **请务必查看更新日志和例子预览，里面会详细解释每个版本增加或修复的功能**
 
 **请注意引用版本的问题，Release版本是稳定版，可商用。**
 
-**Candy不稳定（且更新很频繁），但包含着新功能或者新的优化，不建议商用。**
+**Candy不稳定（且更新很频繁），但包含着新功能或者新的优化，不建议商用。** 
+```
 
-### [更新日志](https://github.com/razerdp/BasePopup#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97-1)
+[**更新日志**](https://github.com/razerdp/BasePopup#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97-1)
 
-### [例子预览](https://github.com/razerdp/BasePopup#%E4%B8%80%E4%BA%9B%E4%BE%8B%E5%AD%90)
-
-### 最低SDK版本要求 : API 14
-
-# 依赖  
-
-| **Release**            |  **Candy**  |
-| --------      | ---- |
-| [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion) | [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion)|
+[**例子预览**](https://github.com/razerdp/BasePopup#%E4%B8%80%E4%BA%9B%E4%BE%8B%E5%AD%90)
 
 
-添加依赖（请把{latestVersion}替换成上面的Jcenter标签所示版本【candy版本不一定稳定，包含有新功能或者新的修复，完善后将会发布其release版】）
+依赖
+---
+
+| **Release** | **Candy** |
+| ---- | ---- |
+| [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion) | [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion) |
+
+
+添加依赖（请把{latestVersion}替换成上面的Jcenter标签所示版本**【candy版本不一定稳定，包含有新功能或者新的修复，完善后将会发布其release版】**）
 ```xml
 	dependencies {
 	        compile 'com.github.razerdp:BasePopup:{latestVersion}'
@@ -38,11 +42,13 @@
 	}
 ```
 
-# 使用方法
 
-ps:从1.9.0-alpha开始支持背景模糊（只需要一个方法：`setBlurBackgroundEnable`）
+使用方法
+---
 
-**RenderScript最低支持api 17（更低的情况将会使用fastblur），您需要在gradle配置**
+ps:从1.9.0-alpha开始支持背景模糊（只需要一个方法：`setBlurBackgroundEnable()`）
+
+**RenderScript最低支持api 17（更低的情况将会使用fastblur），您需要在gradle配置一下代码**
 
 ```xml
 defaultConfig {
@@ -87,7 +93,7 @@ etc.
 
 **Step 2:**
 
-新建一个类继承Basepopup
+新建一个类继承BasePopupWindow
 
 **Step 3:**
 
@@ -170,89 +176,95 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
     popup.showPopupWindow();
 ```
 
-# 方法介绍：
+方法介绍：
+---
+
 请看wiki（陆续完善中）
 
 **Link👉**[WIKI](https://github.com/razerdp/BasePopup/wiki)
 
 
-# 打赏（看在我那么努力维护的份上。。。给个零食呗~）
+打赏（看在我那么努力维护的份上。。。给个零食呗~）
+---
 
-|微信         | 支付宝           | 
-| ------------- |:-------------:| 
+| 微信 |支付宝 | 
+| ---- | ---- | 
 | ![](https://github.com/razerdp/FriendCircle/blob/master/wechat.png)      | ![](https://github.com/razerdp/FriendCircle/blob/master/alipay.png) |
 
 
 
-# 更新日志([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))：
 
-### 1.9.2（未发布）
-  - 修复`HackDecorView`针对PopupWindow高度问题
-  - 增加`setBlurBackgroundEnable()`模糊设置回调，允许自定义模糊操作
-  - 暂时不发布1.9.2，等待其他问题一同收集。
+更新日志([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
+---
 
-### 1.9.1
-  - 修复可能出现的死循环问题以及去掉manifest文件冲突的问题
-  - 部分方法名字修改，默认关闭 Log，如果您需要打印内部调试日志，请使用该方法：`BasePopupWindow.debugLog(true)`
-  - 增加位移动画（百分比传值）,位移动画名字修正：`getTranslateAnimation()` -> `getTranslateVerticalAnimation()`
-  - 模糊背景功能已经开放，针对单个View的模糊方法开放
-  - 模糊背景允许子线程执行，默认主线程执行
-  - gradle请在`defaultConfig`下添加两句：
-      + renderscriptTargetApi 25
-      + enderscriptSupportModeEnabled true
-  - 发布1.9.1，其余bug修复
+* **1.9.2（未发布）**
+  * 修复`HackDecorView`针对PopupWindow高度问题
+  * 增加`setBlurBackgroundEnable()`模糊设置回调，允许自定义模糊操作
+  * 暂时不发布1.9.2，等待其他问题一同收集。
 
-### 1.9.0-alpha2（candy）
-  - 修复了可能导致的动画duration为-1而崩溃的问题
+* **1.9.1**
+  * 修复可能出现的死循环问题以及去掉manifest文件冲突的问题
+  * 部分方法名字修改，默认关闭 Log，如果您需要打印内部调试日志，请使用该方法：`BasePopupWindow.debugLog(true)`
+  * 增加位移动画（百分比传值）,位移动画名字修正：`getTranslateAnimation()` -> `getTranslateVerticalAnimation()`
+  * 模糊背景功能已经开放，针对单个View的模糊方法开放
+  * 模糊背景允许子线程执行，默认主线程执行
+  * gradle请在`defaultConfig`下添加两句：
+      * **renderscriptTargetApi 25**
+      * **enderscriptSupportModeEnabled true**
+  * 发布1.9.1，其余bug修复
 
-### 1.9.0-alpha（candy）
-  - 增加了一个window用于模糊层，增加模糊功能（请注意，并不一定稳定，仍然迭代中。。慎用！！！）
-    + 如果您需要模糊功能，仅仅需要调用一个方法：`setBlurBackgroundEnable()`
-    + gradle请在`defaultConfig`下添加两句：
-      - renderscriptTargetApi 25
-      - enderscriptSupportModeEnabled true
+* **1.9.0-alpha2（candy）**
+  * 修复了可能导致的动画duration为-1而崩溃的问题
 
-### 1.8.9-beta2
-  - 增加演示demo：`DismissControlPopupFrag`
-  - 增加两个方法用于touchEvent监听：`onTouchEvent()`&`onOutSideTouch()`
-  - `HackPopupDecorView`继承`ViewGroup`而非`FrameLayout`，以解决PopupWindow的`decorView.getLayoutParams()`无法强转为`WindowManager.LayoutParams`的异常
-  - 其余问题暂时没发现
+* **1.9.0-alpha（candy）**
+  * 增加了一个window用于模糊层，增加模糊功能（请注意，并不一定稳定，仍然迭代中。。慎用！！！）
+    * 如果您需要模糊功能，仅仅需要调用一个方法：`setBlurBackgroundEnable()`
+    * gradle请在`defaultConfig`下添加两句：
+      * **renderscriptTargetApi 25**
+      * **enderscriptSupportModeEnabled true**
 
-### ~~1.8.8~~(1.8.9)
+* **1.8.9-beta2**
+  * 增加演示demo：`DismissControlPopupFrag`
+  * 增加两个方法用于touchEvent监听：`onTouchEvent()`&`onOutSideTouch()`
+  * `HackPopupDecorView`继承`ViewGroup`而非`FrameLayout`，以解决PopupWindow的`decorView.getLayoutParams()`无法强转为`WindowManager.LayoutParams`的异常
+  * 其余问题暂时没发现
+
+* **~~1.8.8~~(1.8.9)**
 
 **【重大修复，不一定稳定,但因为解决了某个大问题，因此强烈建议升级到该版本，希望您可以尽量提交问题】**
-  - `BasePopupWindowProxy`和`PopupWindowProxy`权限收拢，不暴露放开
-  - 优化`SimpleAnimUtil`，修改部分动画时间和插值器
-  - 增加`setOutsideTouchable()`方法，和`setDismissWhenTouchOutside()`搭配使用有奇效哦
-  - 增加`BasePopupHelper`优化`BasePopupWindow`代码可读性
-  - 动画方面修正`AnimaView.clearAnimation()`->`Animation.cancel()`
-  - 优化`showOnTop()`/`showOnDown()`方法。。。虽然可能没什么人用
-  - 1.8.8版本因为一些问题而去除[#50](https://github.com/razerdp/BasePopup/issues/50)，替换为1.8.9
-  - 【已解决】`setBackPressEnable()`在M以上已经可以自行决定是否允许返回键dismiss了，同时开放了keyEvent
-    + 解决方案：[1.8.9 解决方案](https://github.com/razerdp/BasePopup/blob/master/%E5%85%B3%E4%BA%8EAndorid%20M%E4%BB%A5%E4%B8%8AsetBackPressEnable()%E5%A4%B1%E6%95%88%E7%9A%84%E9%97%AE%E9%A2%98%E7%9A%84%E5%88%86%E6%9E%90.md#189-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88)
-    + issue:[#33](https://github.com/razerdp/BasePopup/issues/33)
-    + `BasePopupWindow`增加两个方法用于keyEvent的监听：`onDispatchKeyEvent()`&`onBackPressed()`
-    + 感谢诸位热烈的讨论~
-  - 部分方法名更改
-    + `setOutsideTouchable()`->`setInterceptTouchEvent()`，该方法会影响焦点问题，即便是解决了`backPress`若这个方法设置为false，依然不会响应backpress
+
+  * `BasePopupWindowProxy`和`PopupWindowProxy`权限收拢，不暴露放开
+  * 优化`SimpleAnimUtil`，修改部分动画时间和插值器
+  * 增加`setOutsideTouchable()`方法，和`setDismissWhenTouchOutside()`搭配使用有奇效哦
+  * 增加`BasePopupHelper`优化`BasePopupWindow`代码可读性
+  * 动画方面修正`AnimaView.clearAnimation()`->`Animation.cancel()`
+  * 优化`showOnTop()`/`showOnDown()`方法。。。虽然可能没什么人用
+  * 1.8.8版本因为一些问题而去除[#50](https://github.com/razerdp/BasePopup/issues/50)，替换为1.8.9
+  * 【已解决】`setBackPressEnable()`在M以上已经可以自行决定是否允许返回键dismiss了，同时开放了keyEvent
+    * 解决方案：[1.8.9 解决方案](https://github.com/razerdp/BasePopup/blob/master/%E5%85%B3%E4%BA%8EAndorid%20M%E4%BB%A5%E4%B8%8AsetBackPressEnable()%E5%A4%B1%E6%95%88%E7%9A%84%E9%97%AE%E9%A2%98%E7%9A%84%E5%88%86%E6%9E%90.md#189-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88)
+    * issue:[#33](https://github.com/razerdp/BasePopup/issues/33)
+    * `BasePopupWindow`增加两个方法用于keyEvent的监听：`onDispatchKeyEvent()`&`onBackPressed()`
+    * 感谢诸位热烈的讨论~
+  * 部分方法名更改
+    * `setOutsideTouchable()`->`setInterceptTouchEvent()`，该方法会影响焦点问题，即便是解决了`backPress`若这个方法设置为false，依然不会响应backpress
     
   
-### 1.8.7
-  - 抽取`PopupWindowProxy`->`BasePopupWindowProxy`
-  - 归类各种蛋疼的`showAsDropDown`适配->`PopupCompatManager`
-  - 修正部分命名和方法名以及注释名错误的问题
-       + 感谢简书小伙伴的评论，否则我还真发现不了。。。
-       + 评论地址：[点我](http://www.jianshu.com/p/069f57e14a9c#comment-17669137)
-       + 根据简书id，只能猜测他的github id：[Chenley](https://github.com/Chenley)，如果您见到并发现我这个猜测是错的，请及时联系我-V- 
-       + 非常感谢你们的issue
-  - 修复部分issue：[#46](https://github.com/razerdp/BasePopup/issues/46)
+* **1.8.7**
+  * 抽取`PopupWindowProxy`->`BasePopupWindowProxy`
+  * 归类各种蛋疼的`showAsDropDown`适配->`PopupCompatManager`
+  * 修正部分命名和方法名以及注释名错误的问题
+       * 感谢简书小伙伴的评论，否则我还真发现不了。。。
+       * 评论地址：[点我](http://www.jianshu.com/p/069f57e14a9c#comment-17669137)
+       * 根据简书id，只能猜测他的github id：[Chenley](https://github.com/Chenley)，如果您见到并发现我这个猜测是错的，请及时联系我-V- 
+       * 非常感谢你们的issue
+  * 修复部分issue：[#46](https://github.com/razerdp/BasePopup/issues/46)
   
+  
+一些例子
+---
 
-
-# 一些例子
-
-| 对应popup            |  预览  |
-| :--------      | ---- |
+| 对应popup | 预览 |
+| :---- | ---- |
 | [BlurSlideFromBottomPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/BlurSlideFromBottomPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/blur_popup.gif) |
 | [CommentPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/CommentPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/comment_popup_with_exitAnima.gif) |
 | [ScalePopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/ScalePopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/scale_popup.gif) |
@@ -262,12 +274,15 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 | [MenuPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/MenuPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/menu_popup.gif) |
 
 
-# 代码解析：
+代码解析
+---
 
 (很旧的文章了，考虑迟点重新编写)
 
 [http://www.jianshu.com/p/069f57e14a9c](http://www.jianshu.com/p/069f57e14a9c)
 
 
-# License
+License
+---
+
 Apache-2.0
