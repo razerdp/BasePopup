@@ -57,7 +57,7 @@ defaultConfig {
     }
 ```
 
-**Step 1:**
+* **Step 1:**
 
 像您平时定制activity布局文件一样定制您的popup布局（请注意，展示动画的那个view必须是popupview的子view）
 
@@ -91,11 +91,11 @@ etc.
 ![image](https://github.com/razerdp/BasePopup/blob/master/img/etc.png)
 
 
-**Step 2:**
+* **Step 2:**
 
 新建一个类继承BasePopupWindow
 
-**Step 3:**
+* **Step 3:**
 
 实现必要的几个方法：
 
@@ -165,7 +165,7 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 }
 ```
 
-**Step 4:**
+* **Step 4:**
 
 把您刚才实现的popup给new出来并调用show方法
 
