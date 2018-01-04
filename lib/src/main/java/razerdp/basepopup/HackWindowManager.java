@@ -81,7 +81,21 @@ final class HackWindowManager implements WindowManager {
             mHackPopupDecorView = new WeakReference<HackPopupDecorView>(hackPopupDecorView);
             hackPopupDecorView.setPopupController(getPopupController());
             hackPopupDecorView.addBlurImageview(blurImageView);
-            hackPopupDecorView.addView(view, params);
+
+            ViewGroup.LayoutParams decorViewLayoutParams = null;
+            if (getPopupController() instanceof BasePopupWindow) {
+                View contentView = ((BasePopupWindow) getPopupController()).getContentView();
+                if (contentView != null) {
+                    decorViewLayoutParams = contentView.getLayoutParams();
+                }
+            }
+            if (decorViewLayoutParams != null) {
+                // FIXME: 2018/1/4 这里将popup高度处理为跟contentView高度一致，但尚未清除会否有风险
+                params.height = decorViewLayoutParams.height;
+                hackPopupDecorView.addView(view, decorViewLayoutParams);
+            } else {
+                hackPopupDecorView.addView(view);
+            }
 
             getWindowManager().addView(hackPopupDecorView, params);
         } else {
