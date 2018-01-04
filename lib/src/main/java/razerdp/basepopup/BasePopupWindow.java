@@ -1183,6 +1183,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return getContext().getResources().getDisplayMetrics().widthPixels;
     }
 
+    View getContentView() {
+        return mPopupWindow.getContentView();
+    }
+
     //------------------------------------------callback-----------------------------------------------
 
     /**
