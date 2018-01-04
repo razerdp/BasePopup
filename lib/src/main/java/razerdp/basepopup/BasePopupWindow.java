@@ -682,7 +682,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     /**
-     * 应用模糊脚本...暂时不开放，因为anchorView还没做完
+     * 应用模糊脚本
      *
      * @param option
      * @return

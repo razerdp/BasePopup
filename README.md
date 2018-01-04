@@ -11,7 +11,9 @@
 
 **请务必查看更新日志和例子预览，里面会详细解释每个版本增加或修复的功能**
 
-**请注意引用版本的问题，Release版本是稳定版，可商用。Candy不稳定，但包含着新功能或者新的优化，不建议商用。**
+**请注意引用版本的问题，Release版本是稳定版，可商用。**
+
+**Candy不稳定（且更新很频繁），但包含着新功能或者新的优化，不建议商用。**
 
 ### [更新日志](https://github.com/razerdp/BasePopup#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97-1)
 
@@ -33,16 +35,6 @@
 	        
 	        //candy版本，不稳定，但会带有新功能
 	        //compile 'com.github.razerdp:BasePopup_Candy:{latestVersion}'
-	}
-```
-
-ps:如果你懒。。。也可以这么添加（不是替换{latest.release}，直接copy就好）
-```xml
-	dependencies {
-            compile 'com.github.razerdp:BasePopup:latest.release'
-            
-            //candy版本，不稳定，但会带有新功能
-            //compile 'com.github.razerdp:BasePopup_Candy:latest.release'
 	}
 ```
 
@@ -103,7 +95,7 @@ etc.
 
 `initShowAnimation()`:初始化一个进入动画，该动画将会用到`initAnimaView()`返回的view
 
-`onCreatePopupView()`:初始化您的popupwindow界面，建议直接使用`createPopupById()`
+`onCreatePopupView()`:初始化您的popupwindow界面，建议直接使用`createPopupById()`，不能返回空值
 
 `getClickToDismissView()`:如果有需要的话，可以使用这个方法返回一个点击dismiss popupwindow的view(也许是遮罩层也许是某个view，这个随您喜欢)
 
@@ -183,11 +175,20 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 
 **Link👉**[WIKI](https://github.com/razerdp/BasePopup/wiki)
 
-### 打赏（您的支持是我维护的动力-V-愿意的话，给个零食呗）
-![wechat](https://github.com/razerdp/BasePopup/blob/master/img/wechat.jpg)
+### 打赏（看在我那么努力维护的份上。。。给个零食呗~）
+
+|微信         | 支付宝           | 
+| ------------- |:-------------:| 
+| ![](https://github.com/razerdp/FriendCircle/blob/master/wechat.png)      | ![](https://github.com/razerdp/FriendCircle/blob/master/alipay.png) |
+
 
 
 ## 更新日志：
+
+#### 1.9.2（未发布）
+  - 修复`HackDecorView`针对PopupWindow高度问题
+  - 增加`setBlurBackgroundEnable()`模糊设置回调，允许自定义模糊操作
+  - 暂时不发布1.9.2，等待其他问题一同收集。
 
 #### 1.9.1
   - 修复可能出现的死循环问题以及去掉manifest文件冲突的问题
