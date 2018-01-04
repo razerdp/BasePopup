@@ -175,7 +175,8 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 
 **Link👉**[WIKI](https://github.com/razerdp/BasePopup/wiki)
 
-### 打赏（看在我那么努力维护的份上。。。给个零食呗~）
+
+# 打赏（看在我那么努力维护的份上。。。给个零食呗~）
 
 |微信         | 支付宝           | 
 | ------------- |:-------------:| 
@@ -183,14 +184,14 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 
 
 
-## 更新日志：
+# 更新日志([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))：
 
-#### 1.9.2（未发布）
+### 1.9.2（未发布）
   - 修复`HackDecorView`针对PopupWindow高度问题
   - 增加`setBlurBackgroundEnable()`模糊设置回调，允许自定义模糊操作
   - 暂时不发布1.9.2，等待其他问题一同收集。
 
-#### 1.9.1
+### 1.9.1
   - 修复可能出现的死循环问题以及去掉manifest文件冲突的问题
   - 部分方法名字修改，默认关闭 Log，如果您需要打印内部调试日志，请使用该方法：`BasePopupWindow.debugLog(true)`
   - 增加位移动画（百分比传值）,位移动画名字修正：`getTranslateAnimation()` -> `getTranslateVerticalAnimation()`
@@ -201,23 +202,23 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
       + enderscriptSupportModeEnabled true
   - 发布1.9.1，其余bug修复
 
-#### 1.9.0-alpha2（candy）
+### 1.9.0-alpha2（candy）
   - 修复了可能导致的动画duration为-1而崩溃的问题
 
-#### 1.9.0-alpha（candy）
+### 1.9.0-alpha（candy）
   - 增加了一个window用于模糊层，增加模糊功能（请注意，并不一定稳定，仍然迭代中。。慎用！！！）
     + 如果您需要模糊功能，仅仅需要调用一个方法：`setBlurBackgroundEnable()`
     + gradle请在`defaultConfig`下添加两句：
       - renderscriptTargetApi 25
       - enderscriptSupportModeEnabled true
 
-#### 1.8.9-beta2
+### 1.8.9-beta2
   - 增加演示demo：`DismissControlPopupFrag`
   - 增加两个方法用于touchEvent监听：`onTouchEvent()`&`onOutSideTouch()`
   - `HackPopupDecorView`继承`ViewGroup`而非`FrameLayout`，以解决PopupWindow的`decorView.getLayoutParams()`无法强转为`WindowManager.LayoutParams`的异常
   - 其余问题暂时没发现
 
-#### ~~1.8.8~~(1.8.9)
+### ~~1.8.8~~(1.8.9)
 
 **【重大修复，不一定稳定,但因为解决了某个大问题，因此强烈建议升级到该版本，希望您可以尽量提交问题】**
   - `BasePopupWindowProxy`和`PopupWindowProxy`权限收拢，不暴露放开
@@ -236,7 +237,7 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
     + `setOutsideTouchable()`->`setInterceptTouchEvent()`，该方法会影响焦点问题，即便是解决了`backPress`若这个方法设置为false，依然不会响应backpress
     
   
-#### 1.8.7
+### 1.8.7
   - 抽取`PopupWindowProxy`->`BasePopupWindowProxy`
   - 归类各种蛋疼的`showAsDropDown`适配->`PopupCompatManager`
   - 修正部分命名和方法名以及注释名错误的问题
@@ -260,14 +261,13 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 | [ListPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/ListPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/list_popup.gif) |
 | [MenuPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/MenuPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/menu_popup.gif) |
 
-例子更新日志:
-
-https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md
-
 
 # 代码解析：
-http://www.jianshu.com/p/069f57e14a9c
+
+(很旧的文章了，考虑迟点重新编写)
+
+[http://www.jianshu.com/p/069f57e14a9c](http://www.jianshu.com/p/069f57e14a9c)
 
 
-### License
+# License
 Apache-2.0
