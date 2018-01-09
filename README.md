@@ -19,9 +19,9 @@ BasePopup
 **Candy不稳定（且更新很频繁），但包含着新功能或者新的优化，不建议商用。** 
 ```
 
-[**更新日志**](https://github.com/razerdp/BasePopup/blob/master/README.md#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97%E5%8E%86%E5%8F%B2%E6%9B%B4%E6%96%B0)
+[**更新日志**](https://github.com/razerdp/BasePopup#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97%E5%8E%86%E5%8F%B2%E6%9B%B4%E6%96%B0)
 
-[**例子预览**](https://github.com/razerdp/BasePopup/blob/master/README.md#%E4%B8%80%E4%BA%9B%E4%BE%8B%E5%AD%90)
+[**例子预览**](https://github.com/razerdp/BasePopup#%E4%B8%80%E4%BA%9B%E4%BE%8B%E5%AD%90)
 
 
 依赖
