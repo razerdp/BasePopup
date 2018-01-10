@@ -1,5 +1,11 @@
 # BasePopup
 
+## 2018/01/10
+  * 发布1.9.2
+  * 修复`HackDecorView`针对PopupWindow高度问题
+  * 增加`setBlurBackgroundEnable()`模糊设置回调，允许自定义模糊操作
+  * 修改为默认子线程模糊背景，同时增加blurImageView的模糊等待操作
+
 ## 2018/01/02
   - 修复可能出现的死循环问题以及去掉manifest文件冲突的问题
   - 部分方法名字修改，默认关闭 Log，如果您需要打印内部调试日志，请使用该方法：`BasePopupWindow.debugLog(true)`

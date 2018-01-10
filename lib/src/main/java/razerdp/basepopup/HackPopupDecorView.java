@@ -11,7 +11,7 @@ import java.lang.ref.WeakReference;
 
 import razerdp.blur.BlurImageView;
 import razerdp.util.log.LogTag;
-import razerdp.util.log.LogUtil;
+import razerdp.util.log.PopupLogUtil;
 
 /**
  * Created by 大灯泡 on 2017/12/25.
@@ -52,7 +52,7 @@ public class HackPopupDecorView extends ViewGroup {
             }
             setMeasuredDimension(maxWidth, maxHeight);
         }
-        LogUtil.trace(LogTag.d, TAG, "onMeasure");
+        PopupLogUtil.trace(LogTag.d, TAG, "onMeasure");
     }
 
     @Override
@@ -66,7 +66,7 @@ public class HackPopupDecorView extends ViewGroup {
                 child.layout(l, t, r, b);
             }
         }
-        LogUtil.trace(LogTag.d, TAG, "onLayout");
+        PopupLogUtil.trace(LogTag.d, TAG, "onLayout");
 
     }
 
@@ -94,7 +94,7 @@ public class HackPopupDecorView extends ViewGroup {
                 final KeyEvent.DispatcherState state = getKeyDispatcherState();
                 if (state != null && state.isTracking(event) && !event.isCanceled()) {
                     if (getPopupController() != null) {
-                        LogUtil.trace(LogTag.i, TAG, "dispatchKeyEvent: >>> onBackPressed");
+                        PopupLogUtil.trace(LogTag.i, TAG, "dispatchKeyEvent: >>> onBackPressed");
                         return getPopupController().onBackPressed();
                     }
                 }
@@ -118,12 +118,12 @@ public class HackPopupDecorView extends ViewGroup {
         if ((event.getAction() == MotionEvent.ACTION_DOWN)
                 && ((x < 0) || (x >= getWidth()) || (y < 0) || (y >= getHeight()))) {
             if (getPopupController() != null) {
-                LogUtil.trace(LogTag.i, TAG, "onTouchEvent:[ACTION_DOWN] >>> onOutSideTouch");
+                PopupLogUtil.trace(LogTag.i, TAG, "onTouchEvent:[ACTION_DOWN] >>> onOutSideTouch");
                 return getPopupController().onOutSideTouch();
             }
         } else if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
             if (getPopupController() != null) {
-                LogUtil.trace(LogTag.i, TAG, "onTouchEvent:[ACTION_OUTSIDE] >>> onOutSideTouch");
+                PopupLogUtil.trace(LogTag.i, TAG, "onTouchEvent:[ACTION_OUTSIDE] >>> onOutSideTouch");
                 return getPopupController().onOutSideTouch();
             }
         }

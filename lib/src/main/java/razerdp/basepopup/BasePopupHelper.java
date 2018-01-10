@@ -33,6 +33,9 @@ final class BasePopupHelper {
     private int popupGravity = Gravity.NO_GRAVITY;
     private int offsetX;
     private int offsetY;
+    private int preMeasureWidth;
+    private int preMeasureHeight;
+
     private int popupViewWidth;
     private int popupViewHeight;
     //锚点view的location
@@ -138,6 +141,24 @@ final class BasePopupHelper {
 
     BasePopupHelper setPopupViewHeight(int popupViewHeight) {
         this.popupViewHeight = popupViewHeight;
+        return this;
+    }
+
+    int getPreMeasureWidth() {
+        return preMeasureWidth;
+    }
+
+    BasePopupHelper setPreMeasureWidth(int preMeasureWidth) {
+        this.preMeasureWidth = preMeasureWidth;
+        return this;
+    }
+
+    int getPreMeasureHeight() {
+        return preMeasureHeight;
+    }
+
+    BasePopupHelper setPreMeasureHeight(int preMeasureHeight) {
+        this.preMeasureHeight = preMeasureHeight;
         return this;
     }
 
