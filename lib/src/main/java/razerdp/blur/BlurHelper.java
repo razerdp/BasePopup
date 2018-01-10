@@ -18,7 +18,7 @@ import android.util.TypedValue;
 import android.view.View;
 
 import razerdp.util.log.LogTag;
-import razerdp.util.log.LogUtil;
+import razerdp.util.log.PopupLogUtil;
 
 /**
  * Created by 大灯泡 on 2017/12/27.
@@ -43,10 +43,10 @@ public class BlurHelper {
 
     public static Bitmap blur(Context context, Bitmap origin, float scaledRatio, float radius) {
         if (renderScriptSupported()) {
-            LogUtil.trace(LogTag.i, TAG, "脚本模糊");
+            PopupLogUtil.trace(LogTag.i, TAG, "脚本模糊");
             return renderScriptblur(context, origin, scaledRatio, radius);
         } else {
-            LogUtil.trace(LogTag.i, TAG, "快速模糊");
+            PopupLogUtil.trace(LogTag.i, TAG, "快速模糊");
             scaledRatio = checkFloatRange(scaledRatio / 8, 1, scaledRatio);
             return fastBlur(context, origin, scaledRatio, radius);
         }
@@ -60,7 +60,7 @@ public class BlurHelper {
 
         final int originWidth = origin.getWidth();
         final int originHeight = origin.getHeight();
-        LogUtil.trace(LogTag.i, "originWidth  >>  " + originWidth + "   originHeight  >>  " + originHeight);
+        PopupLogUtil.trace(LogTag.i, "originWidth  >>  " + originWidth + "   originHeight  >>  " + originHeight);
 
         int scaledWidth = originWidth;
         int scaledHeight = originHeight;
@@ -70,7 +70,7 @@ public class BlurHelper {
             scaledHeight = (int) (scaledHeight * scaledRatio);
         }
 
-        LogUtil.trace(LogTag.i, "scaledWidth  >>  " + scaledWidth + "   scaledHeight  >>  " + scaledHeight);
+        PopupLogUtil.trace(LogTag.i, "scaledWidth  >>  " + scaledWidth + "   scaledHeight  >>  " + scaledHeight);
 
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(origin, scaledWidth, scaledHeight, false);
         Bitmap result = Bitmap.createBitmap(scaledBitmap);
@@ -107,7 +107,7 @@ public class BlurHelper {
         origin.recycle();
 
         result = Bitmap.createScaledBitmap(result, originWidth, originHeight, false);
-        LogUtil.trace(LogTag.i, "resultWidth  >>  " + result.getWidth() + "   resultHeight  >>  " + result.getHeight());
+        PopupLogUtil.trace(LogTag.i, "resultWidth  >>  " + result.getWidth() + "   resultHeight  >>  " + result.getHeight());
         return result;
     }
 
@@ -118,7 +118,7 @@ public class BlurHelper {
 
         final int originWidth = origin.getWidth();
         final int originHeight = origin.getHeight();
-        LogUtil.trace(LogTag.i, "originWidth  >>  " + originWidth + "   originHeight  >>  " + originHeight);
+        PopupLogUtil.trace(LogTag.i, "originWidth  >>  " + originWidth + "   originHeight  >>  " + originHeight);
 
         int scaledWidth = originWidth;
         int scaledHeight = originHeight;
@@ -128,7 +128,7 @@ public class BlurHelper {
             scaledHeight = (int) (scaledHeight * scaledRatio);
         }
 
-        LogUtil.trace(LogTag.i, "scaledWidth  >>  " + scaledWidth + "   scaledHeight  >>  " + scaledHeight);
+        PopupLogUtil.trace(LogTag.i, "scaledWidth  >>  " + scaledWidth + "   scaledHeight  >>  " + scaledHeight);
 
         Bitmap result = Bitmap.createScaledBitmap(origin, scaledWidth, scaledHeight, false);
 
@@ -140,13 +140,13 @@ public class BlurHelper {
         origin.recycle();
 
         result = Bitmap.createScaledBitmap(result, originWidth, originHeight, false);
-        LogUtil.trace(LogTag.i, "resultWidth  >>  " + result.getWidth() + "   resultHeight  >>  " + result.getHeight());
+        PopupLogUtil.trace(LogTag.i, "resultWidth  >>  " + result.getWidth() + "   resultHeight  >>  " + result.getHeight());
         return result;
     }
 
     public static Bitmap getViewBitmap(final View v, boolean fullScreen) {
         if (v == null || v.getWidth() <= 0 || v.getHeight() <= 0) {
-            LogUtil.trace(LogTag.e, "getViewBitmap  >>  宽或者高为空");
+            PopupLogUtil.trace(LogTag.e, "getViewBitmap  >>  宽或者高为空");
             return null;
         }
         if (statusBarHeight <= 0) statusBarHeight = getStatusBarHeight(v.getContext());

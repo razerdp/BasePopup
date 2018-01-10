@@ -229,7 +229,7 @@ import razerdp.blur.PopupBlurOption;
 import razerdp.util.InputMethodUtils;
 import razerdp.util.SimpleAnimationUtils;
 import razerdp.util.log.LogTag;
-import razerdp.util.log.LogUtil;
+import razerdp.util.log.PopupLogUtil;
 
 /**
  * Created by 大灯泡 on 2016/1/14.
@@ -280,6 +280,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         mPopupWindow.bindPopupHelper(mHelper);
         setDismissWhenTouchOutside(true);
 
+        mHelper.setPopupViewWidth(w);
+        mHelper.setPopupViewHeight(h);
+
         preMeasurePopupView(w, h);
 
         //默认是渐入动画
@@ -305,9 +308,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         //=============================================================元素获取
         mHelper.setShowAnimation(initShowAnimation())
-                .setShowAnimator(initShowAnimator())
-                .setExitAnimation(initExitAnimation())
-                .setExitAnimator(initExitAnimator());
+               .setShowAnimator(initShowAnimator())
+               .setExitAnimation(initExitAnimation())
+               .setExitAnimator(initExitAnimator());
     }
 
     private void checkPopupAnimaView() {
@@ -341,8 +344,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 mPopupView.setLayoutParams(p);
             }
             mPopupView.measure(w, h);
-            mHelper.setPopupViewWidth(mPopupView.getMeasuredWidth())
-                    .setPopupViewHeight(mPopupView.getMeasuredHeight());
+            mHelper.setPreMeasureWidth(mPopupView.getMeasuredWidth())
+                   .setPreMeasureHeight(mPopupView.getMeasuredHeight());
             mPopupView.setFocusableInTouchMode(true);
         }
     }
@@ -473,9 +476,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 assert context != null : "context is null ! please make sure your activity is not be destroyed";
                 if (context instanceof Activity) {
                     mPopupWindow.showAtLocationProxy(((Activity) context).findViewById(android.R.id.content),
-                            mHelper.getPopupGravity(),
-                            mHelper.getOffsetX(),
-                            mHelper.getOffsetY());
+                                                     mHelper.getPopupGravity(),
+                                                     mHelper.getOffsetX(),
+                                                     mHelper.getOffsetY());
                 } else {
                     Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
                 }
@@ -658,15 +661,15 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public BasePopupWindow setBlurBackgroundEnable(boolean blur, OnBlurOptionInitListener l) {
         if (!(getContext() instanceof Activity)) {
-            LogUtil.trace(LogTag.e, TAG, "无法配置默认模糊脚本，因为context不是activity");
+            PopupLogUtil.trace(LogTag.e, TAG, "无法配置默认模糊脚本，因为context不是activity");
             return this;
         }
         PopupBlurOption option = null;
         if (blur) {
             option = new PopupBlurOption();
             option.setFullScreen(true)
-                    .setBlurInDuration(mHelper.getShowAnimationDuration())
-                    .setBlurOutDuration(mHelper.getExitAnimationDuration());
+                  .setBlurInDuration(mHelper.getShowAnimationDuration())
+                  .setBlurOutDuration(mHelper.getExitAnimationDuration());
             if (l != null) {
                 l.onCreateBlurOption(option);
             }
@@ -846,8 +849,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @return
      */
     public int getHeight() {
-        int height = mPopupWindow.getHeight();
-        return height <= 0 ? mHelper.getPopupViewHeight() : height;
+        return mPopupWindow.getHeight() <= 0 ? mHelper.getPreMeasureHeight() : mPopupWindow.getHeight();
     }
 
     /**
@@ -856,8 +858,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @return
      */
     public int getWidth() {
-        int width = mPopupWindow.getWidth();
-        return width <= 0 ? mHelper.getPopupViewWidth() : width;
+        return mPopupWindow.getWidth() <= 0 ? mHelper.getPreMeasureWidth() : mPopupWindow.getWidth();
     }
 
     /**
@@ -980,7 +981,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         boolean result = true;
         if (mHelper.getOnBeforeShowCallback() != null) {
             result = mHelper.getOnBeforeShowCallback().onBeforeShow(mPopupView, v,
-                    mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
+                                                                    mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
         }
         return result;
     }
@@ -1183,9 +1184,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return getContext().getResources().getDisplayMetrics().widthPixels;
     }
 
-    View getContentView() {
-        return mPopupWindow.getContentView();
-    }
 
     //------------------------------------------callback-----------------------------------------------
 
@@ -1226,7 +1224,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     public static void debugLog(boolean printLog) {
-        LogUtil.setOpenLog(printLog);
+        PopupLogUtil.setOpenLog(printLog);
     }
 
     //------------------------------------------Interface-----------------------------------------------
