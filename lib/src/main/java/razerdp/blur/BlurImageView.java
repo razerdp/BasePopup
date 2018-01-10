@@ -1,8 +1,9 @@
 package razerdp.blur;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.os.Build;
@@ -16,7 +17,7 @@ import java.lang.ref.WeakReference;
 
 import razerdp.blur.thread.ThreadPoolManager;
 import razerdp.util.log.LogTag;
-import razerdp.util.log.LogUtil;
+import razerdp.util.log.PopupLogUtil;
 
 /**
  * Created by 大灯泡 on 2017/12/27.
@@ -28,7 +29,9 @@ public class BlurImageView extends ImageView {
 
     private volatile boolean abortBlur = false;
     private WeakReference<PopupBlurOption> mBlurOption;
-    private Canvas mBlurCanvas;
+    private volatile boolean blurFinish = false;
+    private volatile boolean isAnimating = false;
+    private long startDuration;
 
 
     public BlurImageView(Context context) {
@@ -61,21 +64,21 @@ public class BlurImageView extends ImageView {
         mBlurOption = new WeakReference<PopupBlurOption>(option);
         View anchorView = option.getBlurView();
         if (anchorView == null) {
-            LogUtil.trace(LogTag.e, TAG, "模糊锚点View为空，放弃模糊操作...");
+            PopupLogUtil.trace(LogTag.e, TAG, "模糊锚点View为空，放弃模糊操作...");
             return;
         }
         if (option.isBlurAsync()) {
-            LogUtil.trace(LogTag.i, TAG, "子线程blur");
+            PopupLogUtil.trace(LogTag.i, TAG, "子线程blur");
             startBlurTask(anchorView);
         } else {
             try {
-                LogUtil.trace(LogTag.i, TAG, "主线程blur");
+                PopupLogUtil.trace(LogTag.i, TAG, "主线程blur");
                 if (!BlurHelper.renderScriptSupported()) {
-                    LogUtil.trace(LogTag.e, TAG, "不支持脚本模糊。。。最低支持api 17(Android 4.2.2)，将采用fastblur");
+                    PopupLogUtil.trace(LogTag.e, TAG, "不支持脚本模糊。。。最低支持api 17(Android 4.2.2)，将采用fastblur");
                 }
                 setImageBitmapOnUiThread(BlurHelper.blur(getContext(), anchorView, option.getBlurPreScaleRatio(), option.getBlurRadius(), option.isFullScreen()));
             } catch (Exception e) {
-                LogUtil.trace(LogTag.e, TAG, "模糊异常");
+                PopupLogUtil.trace(LogTag.e, TAG, "模糊异常");
                 e.printStackTrace();
             }
         }
@@ -98,18 +101,38 @@ public class BlurImageView extends ImageView {
      * @param duration
      */
     public void start(long duration) {
-        LogUtil.trace(LogTag.i, TAG, "开始模糊imageview alpha动画");
+        startDuration = duration;
+        if (!blurFinish) {
+            postDelayed(new WaitForBlurFinishRunnalbe(), 8);
+            PopupLogUtil.trace(LogTag.v, TAG, "等待blur完成");
+            return;
+        }
+        if (isAnimating) return;
+        PopupLogUtil.trace(LogTag.i, TAG, "开始模糊imageview alpha动画");
+        isAnimating = true;
         if (duration > 0) {
             animate()
                     .alpha(1f)
                     .setDuration(duration)
                     .setInterpolator(new DecelerateInterpolator())
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            isAnimating = false;
+                        }
+                    })
                     .start();
         } else if (duration == -2) {
             animate()
                     .alpha(1f)
                     .setDuration(getOption() == null ? 300 : getOption().getBlurInDuration())
                     .setInterpolator(new DecelerateInterpolator())
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            isAnimating = false;
+                        }
+                    })
                     .start();
         } else {
             setAlpha(1f);
@@ -122,7 +145,8 @@ public class BlurImageView extends ImageView {
      * @param duration
      */
     public void dismiss(long duration) {
-        LogUtil.trace(LogTag.i, TAG, "dismiss模糊imageview alpha动画");
+        isAnimating = false;
+        PopupLogUtil.trace(LogTag.i, TAG, "dismiss模糊imageview alpha动画");
         if (duration > 0) {
             animate()
                     .alpha(0f)
@@ -156,9 +180,9 @@ public class BlurImageView extends ImageView {
      */
     private void setImageBitmapOnUiThread(final Bitmap blurBitmap) {
         if (blurBitmap != null) {
-            LogUtil.trace("blurBitmap不为空");
+            PopupLogUtil.trace("blurBitmap不为空");
         } else {
-            LogUtil.trace("blurBitmap为空");
+            PopupLogUtil.trace("blurBitmap为空");
         }
         if (isUiThread()) {
             handleSetImageBitmap(blurBitmap);
@@ -188,11 +212,12 @@ public class BlurImageView extends ImageView {
                 if (anchorView == null) return;
                 Rect rect = new Rect();
                 anchorView.getGlobalVisibleRect(rect);
-                Matrix matrix=getImageMatrix();
+                Matrix matrix = getImageMatrix();
                 matrix.setTranslate(rect.left, rect.top);
                 setImageMatrix(matrix);
             }
         }
+        blurFinish = true;
     }
 
     private boolean isUiThread() {
@@ -210,10 +235,22 @@ public class BlurImageView extends ImageView {
         @Override
         public void run() {
             if (abortBlur || getOption() == null) {
-                LogUtil.trace(LogTag.e, TAG, "放弃模糊，可能是已经移除了布局");
+                PopupLogUtil.trace(LogTag.e, TAG, "放弃模糊，可能是已经移除了布局");
                 return;
             }
             setImageBitmapOnUiThread(BlurHelper.blur(getContext(), anchorView, getOption().getBlurPreScaleRatio(), getOption().getBlurRadius(), getOption().isFullScreen()));
+        }
+    }
+
+    class WaitForBlurFinishRunnalbe implements Runnable {
+
+        @Override
+        public void run() {
+            if (blurFinish) {
+                start(startDuration);
+            } else {
+                postDelayed(this, 8);
+            }
         }
     }
 }

@@ -20,7 +20,7 @@ import static razerdp.util.log.LogTag.i;
  * <p>
  * log日志类
  */
-public class LogUtil {
+public class PopupLogUtil {
 
     // 获取堆栈信息会影响性能，发布应用时记得关闭DebugMode
     private static final boolean[] mIsDebugMode = {false};
@@ -213,7 +213,7 @@ public class LogUtil {
      */
     private static StackTraceElement getCurrentStackTrace() {
         StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-        int stackOffset = getStackOffset(trace, LogUtil.class);
+        int stackOffset = getStackOffset(trace, PopupLogUtil.class);
         if (stackOffset == -1) {
             stackOffset = getStackOffset(trace, Logger.class);
             if (stackOffset == -1) {
@@ -232,8 +232,8 @@ public class LogUtil {
             StackTraceElement e = trace[i];
             String name = e.getClassName();
             //寻找到调用logtrace的最后一个偏移
-            if (cla.equals(LogUtil.class) && i < trace.length - 1 && trace[i + 1].getClassName()
-                    .equals(LogUtil.class.getName())) {
+            if (cla.equals(PopupLogUtil.class) && i < trace.length - 1 && trace[i + 1].getClassName()
+                                                                                      .equals(PopupLogUtil.class.getName())) {
                 continue;
             }
             if (isExactMode) {
