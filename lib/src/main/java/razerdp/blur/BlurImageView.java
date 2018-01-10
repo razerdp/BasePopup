@@ -170,7 +170,7 @@ public class BlurImageView extends ImageView {
      * @param anchorView
      */
     private void startBlurTask(View anchorView) {
-        ThreadPoolManager.execute(new CreateBlurBitmapRunnable(anchorView));
+        ThreadPoolManager.execute(new CreateBlurBitmapRunnable(BlurHelper.getViewBitmap(anchorView, getOption().isFullScreen())));
     }
 
     /**
@@ -226,10 +226,10 @@ public class BlurImageView extends ImageView {
 
     class CreateBlurBitmapRunnable implements Runnable {
 
-        private View anchorView;
+        private Bitmap bitmap;
 
-        CreateBlurBitmapRunnable(View anchorView) {
-            this.anchorView = anchorView;
+        CreateBlurBitmapRunnable(Bitmap bitmap) {
+            this.bitmap = bitmap;
         }
 
         @Override
@@ -238,7 +238,7 @@ public class BlurImageView extends ImageView {
                 PopupLogUtil.trace(LogTag.e, TAG, "放弃模糊，可能是已经移除了布局");
                 return;
             }
-            setImageBitmapOnUiThread(BlurHelper.blur(getContext(), anchorView, getOption().getBlurPreScaleRatio(), getOption().getBlurRadius(), getOption().isFullScreen()));
+            setImageBitmapOnUiThread(BlurHelper.blur(getContext(), bitmap, getOption().getBlurPreScaleRatio(), getOption().getBlurRadius()));
         }
     }
 
