@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
@@ -160,6 +161,11 @@ public class BlurHelper {
                 c.drawColor(tv.data);
             } else {
                 c.drawColor(Color.parseColor("#FAFAFA"));
+            }
+        } else {
+            Drawable bgDrawable = v.getBackground();
+            if (bgDrawable != null) {
+                bgDrawable.draw(c);
             }
         }
         if (fullScreen) {
