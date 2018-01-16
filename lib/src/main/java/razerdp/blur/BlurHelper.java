@@ -8,7 +8,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
@@ -162,12 +161,14 @@ public class BlurHelper {
             } else {
                 c.drawColor(Color.parseColor("#FAFAFA"));
             }
-        } else {
+        }
+        // FIXME: 2018/1/16 有争议，是否需要绘制背景？
+        /*else {
             Drawable bgDrawable = v.getBackground();
             if (bgDrawable != null) {
                 bgDrawable.draw(c);
             }
-        }
+        }*/
         if (fullScreen) {
             if (statusBarHeight > 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && v.getContext() instanceof Activity) {
                 int statusBarColor = ((Activity) v.getContext()).getWindow().getStatusBarColor();
