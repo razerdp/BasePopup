@@ -1,5 +1,9 @@
 # BasePopup
 
+## 2018/01/23
+  * 修复了在popup外滑动时`ViewGroup.LayoutParams`的cast异常
+      * link: [issue#52](https://github.com/razerdp/BasePopup/issues/52)
+
 ## 2018/01/10
   * 发布1.9.2
   * 修复`HackDecorView`针对PopupWindow高度问题
