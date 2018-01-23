@@ -65,6 +65,10 @@ final class HackWindowManager implements WindowManager {
         if (getWindowManager() == null) return;
         PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.addView  >>>  " + view.getClass().getSimpleName());
         if (checkProxyValided(view)) {
+            /**
+             * 此时的params是WindowManager.LayoutParams，需要留意强转问题
+             * popup内部有scrollChangeListener，会有params强转为WindowManager.LayoutParams的情况
+             */
             BasePopupHelper helper = getBasePopupHelper();
             BlurImageView blurImageView = null;
             //添加背景模糊层
@@ -82,7 +86,18 @@ final class HackWindowManager implements WindowManager {
             hackPopupDecorView.setPopupController(getPopupController());
             hackPopupDecorView.addBlurImageview(blurImageView);
 
-            ViewGroup.LayoutParams decorViewLayoutParams = new ViewGroup.LayoutParams(params);
+
+            ViewGroup.LayoutParams decorViewLayoutParams = null;
+            if (params instanceof WindowManager.LayoutParams) {
+                WindowManager.LayoutParams wp = new WindowManager.LayoutParams();
+                wp.copyFrom((LayoutParams) params);
+                decorViewLayoutParams = wp;
+            } else {
+                // FIXME: 2018/1/23 可能会导致cast exception
+                //{#52}https://github.com/razerdp/BasePopup/issues/52
+                decorViewLayoutParams = new ViewGroup.LayoutParams(params);
+            }
+
             if (helper != null) {
                 decorViewLayoutParams.width = helper.getPopupViewWidth();
                 decorViewLayoutParams.height = helper.getPopupViewHeight();

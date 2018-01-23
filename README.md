@@ -195,7 +195,11 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 
 
 更新日志([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
----
+---------------------------------------------------------------------------
+
+* **1.9.3(release)**
+  * 修复了在popup外滑动时`ViewGroup.LayoutParams`的cast异常
+      * link: [issue#52](https://github.com/razerdp/BasePopup/issues/52)
 
 * **1.9.2(release)**
   * 修复`HackDecorView`针对PopupWindow高度问题
@@ -229,37 +233,7 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
   * `HackPopupDecorView`继承`ViewGroup`而非`FrameLayout`，以解决PopupWindow的`decorView.getLayoutParams()`无法强转为`WindowManager.LayoutParams`的异常
   * 其余问题暂时没发现
 
-* **~~1.8.8~~(1.8.9)**
 
-**【重大修复，不一定稳定,但因为解决了某个大问题，因此强烈建议升级到该版本，希望您可以尽量提交问题】**
-
-  * `BasePopupWindowProxy`和`PopupWindowProxy`权限收拢，不暴露放开
-  * 优化`SimpleAnimUtil`，修改部分动画时间和插值器
-  * 增加`setOutsideTouchable()`方法，和`setDismissWhenTouchOutside()`搭配使用有奇效哦
-  * 增加`BasePopupHelper`优化`BasePopupWindow`代码可读性
-  * 动画方面修正`AnimaView.clearAnimation()`->`Animation.cancel()`
-  * 优化`showOnTop()`/`showOnDown()`方法。。。虽然可能没什么人用
-  * 1.8.8版本因为一些问题而去除[#50](https://github.com/razerdp/BasePopup/issues/50)，替换为1.8.9
-  * 【已解决】`setBackPressEnable()`在M以上已经可以自行决定是否允许返回键dismiss了，同时开放了keyEvent
-    * 解决方案：[1.8.9 解决方案](https://github.com/razerdp/BasePopup/blob/master/%E5%85%B3%E4%BA%8EAndorid%20M%E4%BB%A5%E4%B8%8AsetBackPressEnable()%E5%A4%B1%E6%95%88%E7%9A%84%E9%97%AE%E9%A2%98%E7%9A%84%E5%88%86%E6%9E%90.md#189-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88)
-    * issue:[#33](https://github.com/razerdp/BasePopup/issues/33)
-    * `BasePopupWindow`增加两个方法用于keyEvent的监听：`onDispatchKeyEvent()`&`onBackPressed()`
-    * 感谢诸位热烈的讨论~
-  * 部分方法名更改
-    * `setOutsideTouchable()`->`setInterceptTouchEvent()`，该方法会影响焦点问题，即便是解决了`backPress`若这个方法设置为false，依然不会响应backpress
-    
-  
-* **1.8.7**
-  * 抽取`PopupWindowProxy`->`BasePopupWindowProxy`
-  * 归类各种蛋疼的`showAsDropDown`适配->`PopupCompatManager`
-  * 修正部分命名和方法名以及注释名错误的问题
-       * 感谢简书小伙伴的评论，否则我还真发现不了。。。
-       * 评论地址：[点我](http://www.jianshu.com/p/069f57e14a9c#comment-17669137)
-       * 根据简书id，只能猜测他的github id：[Chenley](https://github.com/Chenley)，如果您见到并发现我这个猜测是错的，请及时联系我-V- 
-       * 非常感谢你们的issue
-  * 修复部分issue：[#46](https://github.com/razerdp/BasePopup/issues/46)
-  
-  
 一些例子
 ---
 
