@@ -47,7 +47,7 @@ final class BasePopupHelper {
     //点击popup外部是否消失
     private boolean dismissWhenTouchOutside;
     //是否全屏
-    private boolean fullScreen = true;
+    private boolean fullScreen = false;
     //是否需要淡入window动画
     private volatile boolean needPopupFadeAnima = true;
 
