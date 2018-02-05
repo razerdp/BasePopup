@@ -32,7 +32,10 @@ BasePopup
 | [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion) | [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion) |
 
 
-添加依赖（请把{latestVersion}替换成上面的Jcenter标签所示版本**【candy版本不一定稳定，包含有新功能或者新的修复，完善后将会发布其release版】**）
+添加依赖（请把{latestVersion}替换成上面的Jcenter标签所示版本
+
+**【candy版本不一定稳定，包含有新功能或者新的修复，完善后将会发布其release版】**
+
 ```xml
 	dependencies {
 	        compile 'com.github.razerdp:BasePopup:{latestVersion}'
@@ -183,6 +186,12 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 
 **Link👉**[WIKI](https://github.com/razerdp/BasePopup/wiki)
 
+交流群：590777418
+---
+
+因为目前还有朋友圈项目，建立了一个交流群，出于懒得管理那么多，所以如果有想法或者优化建议或者其他问题，欢迎加入“朋友圈交流群”
+
+![](https://github.com/razerdp/FriendCircle/blob/master/qqgroup.png)
 
 打赏（看在我那么努力维护的份上。。。给个零食呗~）
 ---
