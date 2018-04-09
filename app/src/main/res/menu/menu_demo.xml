@@ -63,10 +63,14 @@
         android:orderInCategory="110"
         android:title="slide from top popup"
         app:showAsAction="never"/>
-
+    <item
+        android:id="@+id/id_slide_from_top_popup2"
+        android:orderInCategory="111"
+        android:title="slide from top popup2"
+        app:showAsAction="never"/>
     <item
         android:id="@+id/id_dismiss_control_popup"
-        android:orderInCategory="111"
+        android:orderInCategory="112"
         android:title="dismiss control popup"
         app:showAsAction="never"/>
 </menu>

@@ -40,6 +40,7 @@ final class BasePopupHelper {
     private int popupViewHeight;
     //锚点view的location
     private int[] mAnchorViewLocation;
+    private int mAnchorViewHeight;
     //是否自动适配popup的位置
     private boolean isAutoLocatePopup;
     //showasdropdown
@@ -270,7 +271,12 @@ final class BasePopupHelper {
     BasePopupHelper getAnchorLocation(View v) {
         if (v == null) return this;
         v.getLocationOnScreen(mAnchorViewLocation);
+        mAnchorViewHeight = v.getHeight();
         return this;
+    }
+
+    int getAnchorHeight() {
+        return mAnchorViewHeight;
     }
 
     int getAnchorX() {

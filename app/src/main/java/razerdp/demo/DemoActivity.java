@@ -28,6 +28,7 @@ import razerdp.demo.fragment.ScalePopupFrag;
 import razerdp.demo.fragment.SimpleBaseFrag;
 import razerdp.demo.fragment.SlideFromBottomPopupFrag;
 import razerdp.demo.fragment.SlideFromTopPopupFrag;
+import razerdp.demo.fragment.SlideFromTopPopupFrag2;
 import razerdp.demo.popup.ScalePopup;
 
 public class DemoActivity extends AppCompatActivity {
@@ -57,6 +58,7 @@ public class DemoActivity extends AppCompatActivity {
         fragMap.put(R.id.id_full_screen_popup, new FullScreenPopupFrag());
         fragMap.put(R.id.id_auto_located_popup, new AutoLocatedPopupFrag());
         fragMap.put(R.id.id_slide_from_top_popup, new SlideFromTopPopupFrag());
+        fragMap.put(R.id.id_slide_from_top_popup2, new SlideFromTopPopupFrag2());
         fragMap.put(R.id.id_dismiss_control_popup, new DismissControlPopupFrag());
         fragMap.put(R.id.id_blur_slide_from_bottom_popup, new BlurSlideFromBottomPopupFrag());
 

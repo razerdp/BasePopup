@@ -5,7 +5,6 @@ import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 
 /**
  * Created by 大灯泡 on 2017/11/27.
@@ -78,7 +77,8 @@ final class PopupCompatManager {
          * @param view
          */
         void initSystemBar(View view) {
-            try {
+            // FIXME: 2018/4/9 暂时这个方法有点问题，弃用
+          /*  try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -95,7 +95,7 @@ final class PopupCompatManager {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
         }
 
         private void hideSystemUI(View view) {
@@ -182,8 +182,13 @@ final class PopupCompatManager {
 
         @Override
         void showAsDropDownImpl(Activity activity, BasePopupWindowProxy popupWindow, View anchor, int xoff, int yoff, int gravity) {
-            popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-            popupWindow.callSuperShowAsDropDown(anchor, xoff, yoff, gravity);
+            int[] anchorLocation = new int[2];
+            anchor.getLocationInWindow(anchorLocation);
+
+            xoff = anchorLocation[0] + xoff;
+            yoff = anchorLocation[1] + anchor.getHeight() + yoff;
+
+            popupWindow.callSuperShowAsDropDown(anchor, xoff, yoff, Gravity.TOP);
             initSystemBar(popupWindow.getContentView());
         }
 
