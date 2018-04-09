@@ -27,52 +27,52 @@ abstract class BasePopupWindowProxy extends PopupWindow {
 
     private static final int MAX_SCAN_ACTIVITY_COUNT = 50;
     private volatile int tryScanActivityCount = 0;
-    private PopupController mController;
+    private PopupTouchController mController;
     private HackWindowManager hackWindowManager;
 
-    public BasePopupWindowProxy(Context context, PopupController mController) {
+    public BasePopupWindowProxy(Context context, PopupTouchController mController) {
         super(context);
         this.mController = mController;
         init();
     }
 
-    public BasePopupWindowProxy(Context context, AttributeSet attrs, PopupController mController) {
+    public BasePopupWindowProxy(Context context, AttributeSet attrs, PopupTouchController mController) {
         super(context, attrs);
         this.mController = mController;
         init();
     }
 
-    public BasePopupWindowProxy(Context context, AttributeSet attrs, int defStyleAttr, PopupController mController) {
+    public BasePopupWindowProxy(Context context, AttributeSet attrs, int defStyleAttr, PopupTouchController mController) {
         super(context, attrs, defStyleAttr);
         this.mController = mController;
         init();
     }
 
-    public BasePopupWindowProxy(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes, PopupController mController) {
+    public BasePopupWindowProxy(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes, PopupTouchController mController) {
         super(context, attrs, defStyleAttr, defStyleRes);
         this.mController = mController;
         init();
     }
 
-    public BasePopupWindowProxy(View contentView, PopupController mController) {
+    public BasePopupWindowProxy(View contentView, PopupTouchController mController) {
         super(contentView);
         this.mController = mController;
         init();
     }
 
-    public BasePopupWindowProxy(int width, int height, PopupController mController) {
+    public BasePopupWindowProxy(int width, int height, PopupTouchController mController) {
         super(width, height);
         this.mController = mController;
         init();
     }
 
-    public BasePopupWindowProxy(View contentView, int width, int height, PopupController mController) {
+    public BasePopupWindowProxy(View contentView, int width, int height, PopupTouchController mController) {
         super(contentView, width, height);
         this.mController = mController;
         init();
     }
 
-    public BasePopupWindowProxy(View contentView, int width, int height, boolean focusable, PopupController mController) {
+    public BasePopupWindowProxy(View contentView, int width, int height, boolean focusable, PopupTouchController mController) {
         super(contentView, width, height, focusable);
         this.mController = mController;
         init();

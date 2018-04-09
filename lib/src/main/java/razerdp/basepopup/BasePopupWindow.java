@@ -236,7 +236,7 @@ import razerdp.util.log.PopupLogUtil;
  * <p>
  * 抽象通用popupwindow的父类
  */
-public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismissListener, PopupController {
+public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismissListener, PopupTouchController {
     private static final String TAG = "BasePopupWindow";
     private static final int MAX_RETRY_SHOW_TIME = 3;
     private BasePopupHelper mHelper;
@@ -308,9 +308,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         //=============================================================元素获取
         mHelper.setShowAnimation(initShowAnimation())
-               .setShowAnimator(initShowAnimator())
-               .setExitAnimation(initExitAnimation())
-               .setExitAnimator(initExitAnimator());
+                .setShowAnimator(initShowAnimator())
+                .setExitAnimation(initExitAnimation())
+                .setExitAnimator(initExitAnimator());
     }
 
     private void checkPopupAnimaView() {
@@ -345,7 +345,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             }
             mPopupView.measure(w, h);
             mHelper.setPreMeasureWidth(mPopupView.getMeasuredWidth())
-                   .setPreMeasureHeight(mPopupView.getMeasuredHeight());
+                    .setPreMeasureHeight(mPopupView.getMeasuredHeight());
             mPopupView.setFocusableInTouchMode(true);
         }
     }
@@ -476,9 +476,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 assert context != null : "context is null ! please make sure your activity is not be destroyed";
                 if (context instanceof Activity) {
                     mPopupWindow.showAtLocationProxy(((Activity) context).findViewById(android.R.id.content),
-                                                     mHelper.getPopupGravity(),
-                                                     mHelper.getOffsetX(),
-                                                     mHelper.getOffsetY());
+                            mHelper.getPopupGravity(),
+                            mHelper.getOffsetX(),
+                            mHelper.getOffsetY());
                 } else {
                     Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
                 }
@@ -668,8 +668,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         if (blur) {
             option = new PopupBlurOption();
             option.setFullScreen(true)
-                  .setBlurInDuration(mHelper.getShowAnimationDuration())
-                  .setBlurOutDuration(mHelper.getExitAnimationDuration());
+                    .setBlurInDuration(mHelper.getShowAnimationDuration())
+                    .setBlurOutDuration(mHelper.getExitAnimationDuration());
             if (l != null) {
                 l.onCreateBlurOption(option);
             }
@@ -943,7 +943,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         if (!hasAnima) {
             if (mStateListener != null) {
-                mStateListener.onWithAnimaDismiss();
+                mStateListener.onNoAnimateDismiss();
             }
         }
         //如果有动画，则不立刻执行dismiss
@@ -963,7 +963,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         mPopupWindow.callSuperDismiss();
         if (mStateListener != null) {
-            mStateListener.onWithAnimaDismiss();
+            mStateListener.onNoAnimateDismiss();
         }
 
     }
@@ -981,7 +981,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         boolean result = true;
         if (mHelper.getOnBeforeShowCallback() != null) {
             result = mHelper.getOnBeforeShowCallback().onBeforeShow(mPopupView, v,
-                                                                    mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
+                    mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
         }
         return result;
     }
@@ -1047,7 +1047,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         public void onAnimationStart(Animator animation) {
             isExitAnimaPlaying = true;
             if (mStateListener != null) {
-                mStateListener.onAnimaDismissStart();
+                mStateListener.onAnimateDismissStart();
             }
         }
 
@@ -1075,7 +1075,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         public void onAnimationStart(Animation animation) {
             isExitAnimaPlaying = true;
             if (mStateListener != null) {
-                mStateListener.onAnimaDismissStart();
+                mStateListener.onAnimateDismissStart();
             }
         }
 

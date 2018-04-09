@@ -6,10 +6,8 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
-import java.lang.ref.WeakReference;
-
-import razerdp.blur.BlurImageView;
 import razerdp.util.log.LogTag;
 import razerdp.util.log.PopupLogUtil;
 
@@ -20,8 +18,9 @@ import razerdp.util.log.PopupLogUtil;
  */
 public class HackPopupDecorView extends ViewGroup {
     private static final String TAG = "HackPopupDecorView";
-    private PopupController mPopupController;
-    private WeakReference<BlurImageView> mBlurImageViewWeakReference;
+    private PopupTouchController mPopupTouchController;
+    private View mPopupDecorView;
+    private BasePopupHelper mBasePopupHelper;
 
     public HackPopupDecorView(Context context) {
         super(context);
@@ -77,7 +76,7 @@ public class HackPopupDecorView extends ViewGroup {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        boolean intercept = getPopupController() != null && getPopupController().onDispatchKeyEvent(event);
+        boolean intercept = mPopupTouchController != null && mPopupTouchController.onDispatchKeyEvent(event);
         if (intercept) return true;
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             if (getKeyDispatcherState() == null) {
@@ -93,9 +92,9 @@ public class HackPopupDecorView extends ViewGroup {
             } else if (event.getAction() == KeyEvent.ACTION_UP) {
                 final KeyEvent.DispatcherState state = getKeyDispatcherState();
                 if (state != null && state.isTracking(event) && !event.isCanceled()) {
-                    if (getPopupController() != null) {
+                    if (mPopupTouchController != null) {
                         PopupLogUtil.trace(LogTag.i, TAG, "dispatchKeyEvent: >>> onBackPressed");
-                        return getPopupController().onBackPressed();
+                        return mPopupTouchController.onBackPressed();
                     }
                 }
             }
@@ -107,8 +106,8 @@ public class HackPopupDecorView extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (getPopupController() != null) {
-            if (getPopupController().onTouchEvent(event)) {
+        if (mPopupTouchController != null) {
+            if (mPopupTouchController.onTouchEvent(event)) {
                 return true;
             }
         }
@@ -117,74 +116,94 @@ public class HackPopupDecorView extends ViewGroup {
 
         if ((event.getAction() == MotionEvent.ACTION_DOWN)
                 && ((x < 0) || (x >= getWidth()) || (y < 0) || (y >= getHeight()))) {
-            if (getPopupController() != null) {
+            if (mPopupTouchController != null) {
                 PopupLogUtil.trace(LogTag.i, TAG, "onTouchEvent:[ACTION_DOWN] >>> onOutSideTouch");
-                return getPopupController().onOutSideTouch();
+                return mPopupTouchController.onOutSideTouch();
             }
         } else if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-            if (getPopupController() != null) {
+            if (mPopupTouchController != null) {
                 PopupLogUtil.trace(LogTag.i, TAG, "onTouchEvent:[ACTION_OUTSIDE] >>> onOutSideTouch");
-                return getPopupController().onOutSideTouch();
+                return mPopupTouchController.onOutSideTouch();
             }
         }
         return super.onTouchEvent(event);
     }
 
-    public PopupController getPopupController() {
-        return mPopupController;
-    }
-
-    public void setPopupController(PopupController popupController) {
-        mPopupController = popupController;
-        if (mPopupController instanceof BasePopupWindow) {
-            ((BasePopupWindow) mPopupController).setOnInnerPopupWIndowStateListener(new InnerPopupWindowStateListener());
-        }
-    }
-
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        startBlurAnima();
+        if (mOnAttachListener != null) {
+            mOnAttachListener.onAttachtoWindow();
+        }
     }
 
-    public void addBlurImageview(BlurImageView blurImageView) {
-        if (blurImageView == null) return;
-        mBlurImageViewWeakReference = new WeakReference<BlurImageView>(blurImageView);
-    }
-
-    public void startBlurAnima() {
-        startBlurAnima(-2);
-    }
-
-    public void startBlurAnima(long duration) {
-        if (getBlurImageView() == null) return;
-        getBlurImageView().start(duration);
-    }
-
-    public void dismissBlurAnima() {
-        dismissBlurAnima(-2);
-    }
-
-    public void dismissBlurAnima(long duration) {
-        if (getBlurImageView() == null) return;
-        getBlurImageView().dismiss(duration);
-    }
-
-    BlurImageView getBlurImageView() {
-        if (mBlurImageViewWeakReference == null) return null;
-        return mBlurImageViewWeakReference.get();
-    }
-
-    class InnerPopupWindowStateListener extends razerdp.basepopup.InnerPopupWindowStateListener {
-
-        @Override
-        void onAnimaDismissStart() {
-            dismissBlurAnima();
+    ViewGroup.LayoutParams addPopupDecorView(View view, ViewGroup.LayoutParams sourcePopupDecorViewParams, BasePopupHelper helper, PopupTouchController controller) {
+        this.mPopupDecorView = view;
+        this.mPopupTouchController = controller;
+        this.mBasePopupHelper = helper;
+        /**
+         * 此时的params是WindowManager.LayoutParams，需要留意强转问题
+         * popup内部有scrollChangeListener，会有params强转为WindowManager.LayoutParams的情况
+         */
+        sourcePopupDecorViewParams = applyHelper(sourcePopupDecorViewParams, helper);
+        ViewGroup.LayoutParams decorViewLayoutParams;
+        if (sourcePopupDecorViewParams instanceof WindowManager.LayoutParams) {
+            WindowManager.LayoutParams wp = new WindowManager.LayoutParams();
+            wp.copyFrom((WindowManager.LayoutParams) sourcePopupDecorViewParams);
+            decorViewLayoutParams = wp;
+        } else {
+            // FIXME: 2018/1/23 可能会导致cast exception
+            //{#52}https://github.com/razerdp/BasePopup/issues/52
+            decorViewLayoutParams = new ViewGroup.LayoutParams(sourcePopupDecorViewParams);
         }
 
-        @Override
-        void onWithAnimaDismiss() {
-            dismissBlurAnima(0);
+        if (helper != null) {
+            decorViewLayoutParams.width = helper.getPopupViewWidth();
+            decorViewLayoutParams.height = helper.getPopupViewHeight();
         }
+        addView(view, decorViewLayoutParams);
+
+        return sourcePopupDecorViewParams;
+    }
+
+    /**
+     * 应用helper的设置到popup的params
+     *
+     * @param params
+     * @return
+     */
+    private ViewGroup.LayoutParams applyHelper(ViewGroup.LayoutParams params, BasePopupHelper helper) {
+        if (!(params instanceof WindowManager.LayoutParams) || helper == null) {
+            return params;
+        }
+        WindowManager.LayoutParams p = (WindowManager.LayoutParams) params;
+        if (!helper.isInterceptTouchEvent()) {
+            PopupLogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  不拦截事件");
+            p.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+            p.flags |= WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+        }
+        if (helper.isFullScreen()) {
+            PopupLogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  全屏");
+            p.flags |= WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+
+            // FIXME: 2017/12/27 全屏跟SOFT_INPUT_ADJUST_RESIZE冲突，暂时没有好的解决方案
+            p.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED;
+        }
+        PopupLogUtil.trace(LogTag.i, TAG, "PopupWindow窗口的window type >>  " + p.type);
+        return p;
+    }
+
+    private OnAttachListener mOnAttachListener;
+
+    public OnAttachListener getOnAttachListener() {
+        return mOnAttachListener;
+    }
+
+    public void setOnAttachListener(OnAttachListener onAttachListener) {
+        mOnAttachListener = onAttachListener;
+    }
+
+    interface OnAttachListener {
+        void onAttachtoWindow();
     }
 }

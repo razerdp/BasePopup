@@ -12,6 +12,7 @@ import android.widget.Toast;
 import java.util.HashMap;
 import java.util.Map;
 
+import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.fragment.AutoLocatedPopupFrag;
 import razerdp.demo.fragment.BlurSlideFromBottomPopupFrag;
@@ -38,6 +39,7 @@ public class DemoActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
+        BasePopupWindow.debugLog(true);
         mFragmentManager = getSupportFragmentManager();
         ScalePopup scalePopup = new ScalePopup(this);
         scalePopup.showPopupWindow();
