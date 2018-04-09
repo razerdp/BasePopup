@@ -556,9 +556,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offset[1]) < getHeight());
             if (onTop) {
                 offset[1] = -anchorView.getHeight() - getHeight() - offset[1];
-                showOnTop(mPopupView, anchorView);
+                onAnchorTop(mPopupView, anchorView);
             } else {
-                showOnDown(mPopupView, anchorView);
+                onAnchorBottom(mPopupView, anchorView);
             }
         }
         return offset;
@@ -1193,7 +1193,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param mPopupView {@link #onCreatePopupView()}返回的View
      * @param anchorView {@link #showPopupWindow(View)}传入的View
      */
-    protected void showOnTop(View mPopupView, View anchorView) {
+    protected void onAnchorTop(View mPopupView, View anchorView) {
 
     }
 
@@ -1203,7 +1203,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param mPopupView {@link #onCreatePopupView()}返回的View
      * @param anchorView {@link #showPopupWindow(View)}传入的View
      */
-    protected void showOnDown(View mPopupView, View anchorView) {
+    protected void onAnchorBottom(View mPopupView, View anchorView) {
 
     }
 

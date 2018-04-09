@@ -97,10 +97,22 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
                 });
                 mWindowManager.addView(blurImageView, createBlurBackgroundWindowParams(params));
             }
-            mWindowManager.addView(hackPopupDecorView, params);
+            mWindowManager.addView(hackPopupDecorView, fitLayoutParamsPosition(params));
         } else {
             mWindowManager.addView(view, params);
         }
+    }
+
+    private ViewGroup.LayoutParams fitLayoutParamsPosition(ViewGroup.LayoutParams params) {
+        if (params instanceof WindowManager.LayoutParams) {
+            WindowManager.LayoutParams p = (LayoutParams) params;
+            BasePopupHelper helper = getBasePopupHelper();
+            if (helper != null && helper.isShowAtDown() && p.y <= helper.getAnchorY()) {
+                int y = helper.getAnchorY() + helper.getAnchorHeight() + helper.getOffsetY();
+                p.y = y <= 0 ? 0 : y;
+            }
+        }
+        return params;
     }
 
     @Override
@@ -110,16 +122,7 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
         PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.updateViewLayout  >>>  " + view.getClass().getSimpleName());
         if (isPopupInnerDecorView(view) && getHackPopupDecorView() != null) {
             HackPopupDecorView hackPopupDecorView = getHackPopupDecorView();
-            if (params instanceof WindowManager.LayoutParams) {
-                WindowManager.LayoutParams thisParams = ((LayoutParams) params);
-                ViewGroup.LayoutParams hackDecorParams = hackPopupDecorView == null ? null : hackPopupDecorView.getLayoutParams();
-                if (hackDecorParams instanceof WindowManager.LayoutParams) {
-                    WindowManager.LayoutParams hackParams = (LayoutParams) hackDecorParams;
-                    thisParams.x = thisParams.x + hackParams.x;
-                    thisParams.y = thisParams.y - statusBarHeight + hackParams.y;
-                }
-            }
-            mWindowManager.updateViewLayout(hackPopupDecorView, params);
+            mWindowManager.updateViewLayout(hackPopupDecorView, fitLayoutParamsPosition(params));
         } else {
             mWindowManager.updateViewLayout(view, params);
         }
@@ -207,7 +210,7 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
         mPopupHelper = new WeakReference<BasePopupHelper>(helper);
     }
 
-    void checkStatusBarHeight(Context context) {
+    private void checkStatusBarHeight(Context context) {
         if (statusBarHeight != 0 || context == null) return;
         int result = 0;
         //获取状态栏高度的资源id
