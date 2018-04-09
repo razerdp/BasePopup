@@ -403,9 +403,9 @@ final class HackWindowManager implements WindowManager {
     private PopupController mPopupController;
     HackPopupDecorView mHackPopupDecorView;
 
-    public HackWindowManager(WindowManager windowManager, PopupController popupController) {
+    public HackWindowManager(WindowManager windowManager, PopupController popupTouchController) {
         mWindowManager = windowManager;
-        mPopupController = popupController;
+        mPopupController = popupTouchController;
     }
 
     @Override

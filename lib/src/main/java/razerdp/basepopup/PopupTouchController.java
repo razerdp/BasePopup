@@ -7,7 +7,7 @@ import android.view.MotionEvent;
  * Created by 大灯泡 on 2017/1/13.
  */
 
-interface PopupController {
+interface PopupTouchController {
 
 
     boolean onBeforeDismiss();

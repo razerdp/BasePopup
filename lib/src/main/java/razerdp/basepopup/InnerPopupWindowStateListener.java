@@ -4,14 +4,14 @@ package razerdp.basepopup;
  * Created by 大灯泡 on 2017/12/28.
  */
 abstract class InnerPopupWindowStateListener {
-    abstract void onAnimaDismissStart();
+    abstract void onAnimateDismissStart();
 
-    abstract void onWithAnimaDismiss();
+    abstract void onNoAnimateDismiss();
 
-    public void onTryToShow(boolean hasAnima) {
+    public void onTryToShow(boolean hasAnimate) {
     }
 
-    public void onAnimaShowStar(){
+    public void onAnimateShowStar(){
 
     }
 

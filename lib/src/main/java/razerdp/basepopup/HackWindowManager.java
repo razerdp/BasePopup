@@ -1,5 +1,6 @@
 package razerdp.basepopup;
 
+import android.content.Context;
 import android.graphics.PixelFormat;
 import android.text.TextUtils;
 import android.view.Display;
@@ -18,32 +19,34 @@ import razerdp.util.log.PopupLogUtil;
  * <p>
  * 代理掉popup的windowmanager，在addView操作，拦截decorView的操作
  */
-final class HackWindowManager implements WindowManager {
+final class HackWindowManager extends InnerPopupWindowStateListener implements WindowManager {
     private static final String TAG = "HackWindowManager";
-    private WeakReference<WindowManager> mWindowManager;
-    private WeakReference<PopupController> mPopupController;
+    private WindowManager mWindowManager;
+    private WeakReference<PopupTouchController> mPopupController;
     private WeakReference<HackPopupDecorView> mHackPopupDecorView;
     private WeakReference<BasePopupHelper> mPopupHelper;
     private WeakReference<BlurImageView> mBlurImageView;
+    private static int statusBarHeight;
 
-    public HackWindowManager(WindowManager windowManager, PopupController popupController) {
-        mWindowManager = new WeakReference<WindowManager>(windowManager);
-        mPopupController = new WeakReference<PopupController>(popupController);
+    public HackWindowManager(WindowManager windowManager, PopupTouchController popupTouchController) {
+        mWindowManager = windowManager;
+        mPopupController = new WeakReference<PopupTouchController>(popupTouchController);
     }
 
     @Override
     public Display getDefaultDisplay() {
-        return getWindowManager() == null ? null : getWindowManager().getDefaultDisplay();
+        return mWindowManager == null ? null : mWindowManager.getDefaultDisplay();
     }
 
     @Override
     public void removeViewImmediate(View view) {
-        if (getWindowManager() == null) return;
+        if (mWindowManager == null) return;
+        checkStatusBarHeight(view.getContext());
         PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.removeViewImmediate  >>>  " + view.getClass().getSimpleName());
-        if (checkProxyValided(view) && getHackPopupDecorView() != null) {
+        if (isPopupInnerDecorView(view) && getHackPopupDecorView() != null) {
             if (getBlurImageView() != null) {
                 try {
-                    getWindowManager().removeViewImmediate(getBlurImageView());
+                    mWindowManager.removeViewImmediate(getBlurImageView());
                     mBlurImageView.clear();
                     mBlurImageView = null;
                 } catch (Exception e) {
@@ -51,84 +54,86 @@ final class HackWindowManager implements WindowManager {
                 }
             }
             HackPopupDecorView hackPopupDecorView = getHackPopupDecorView();
-            getWindowManager().removeViewImmediate(hackPopupDecorView);
-            hackPopupDecorView.setPopupController(null);
+            mWindowManager.removeViewImmediate(hackPopupDecorView);
             mHackPopupDecorView.clear();
             mHackPopupDecorView = null;
         } else {
-            getWindowManager().removeViewImmediate(view);
+            mWindowManager.removeViewImmediate(view);
         }
     }
 
     @Override
     public void addView(View view, ViewGroup.LayoutParams params) {
-        if (getWindowManager() == null) return;
+        if (mWindowManager == null) return;
+        checkStatusBarHeight(view.getContext());
         PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.addView  >>>  " + view.getClass().getSimpleName());
-        if (checkProxyValided(view)) {
+        if (isPopupInnerDecorView(view)) {
             /**
              * 此时的params是WindowManager.LayoutParams，需要留意强转问题
              * popup内部有scrollChangeListener，会有params强转为WindowManager.LayoutParams的情况
              */
             BasePopupHelper helper = getBasePopupHelper();
             BlurImageView blurImageView = null;
+
+            //添加popup主体
+            final HackPopupDecorView hackPopupDecorView = new HackPopupDecorView(view.getContext());
+            params = hackPopupDecorView.addPopupDecorView(view, params, helper, getPopupController());
+            mHackPopupDecorView = new WeakReference<HackPopupDecorView>(hackPopupDecorView);
             //添加背景模糊层
             if (helper != null && helper.isAllowToBlur()) {
                 blurImageView = new BlurImageView(view.getContext());
                 blurImageView.attachBlurOption(helper.getBlurOption());
                 mBlurImageView = new WeakReference<BlurImageView>(blurImageView);
-                getWindowManager().addView(blurImageView, generateBlurBackgroundWindowParams(params));
+                if (getPopupController() instanceof BasePopupWindow) {
+                    ((BasePopupWindow) getPopupController()).setOnInnerPopupWIndowStateListener(this);
+                }
+                hackPopupDecorView.setOnAttachListener(new HackPopupDecorView.OnAttachListener() {
+                    @Override
+                    public void onAttachtoWindow() {
+                        if (getBlurImageView() != null) {
+                            getBlurImageView().start(-2);
+                        }
+                    }
+                });
+                mWindowManager.addView(blurImageView, createBlurBackgroundWindowParams(params));
             }
-
-            //添加popup主体
-            params = applyHelper(params);
-            final HackPopupDecorView hackPopupDecorView = new HackPopupDecorView(view.getContext());
-            mHackPopupDecorView = new WeakReference<HackPopupDecorView>(hackPopupDecorView);
-            hackPopupDecorView.setPopupController(getPopupController());
-            hackPopupDecorView.addBlurImageview(blurImageView);
-
-
-            ViewGroup.LayoutParams decorViewLayoutParams = null;
-            if (params instanceof WindowManager.LayoutParams) {
-                WindowManager.LayoutParams wp = new WindowManager.LayoutParams();
-                wp.copyFrom((LayoutParams) params);
-                decorViewLayoutParams = wp;
-            } else {
-                // FIXME: 2018/1/23 可能会导致cast exception
-                //{#52}https://github.com/razerdp/BasePopup/issues/52
-                decorViewLayoutParams = new ViewGroup.LayoutParams(params);
-            }
-
-            if (helper != null) {
-                decorViewLayoutParams.width = helper.getPopupViewWidth();
-                decorViewLayoutParams.height = helper.getPopupViewHeight();
-            }
-            hackPopupDecorView.addView(view, decorViewLayoutParams);
-            getWindowManager().addView(hackPopupDecorView, params);
+            mWindowManager.addView(hackPopupDecorView, params);
         } else {
-            getWindowManager().addView(view, params);
+            mWindowManager.addView(view, params);
         }
     }
 
     @Override
     public void updateViewLayout(View view, ViewGroup.LayoutParams params) {
-        if (getWindowManager() == null) return;
+        if (mWindowManager == null) return;
+        checkStatusBarHeight(view.getContext());
         PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.updateViewLayout  >>>  " + view.getClass().getSimpleName());
-        if (checkProxyValided(view) && getHackPopupDecorView() != null) {
+        if (isPopupInnerDecorView(view) && getHackPopupDecorView() != null) {
             HackPopupDecorView hackPopupDecorView = getHackPopupDecorView();
-            getWindowManager().updateViewLayout(hackPopupDecorView, params);
+            if (params instanceof WindowManager.LayoutParams) {
+                WindowManager.LayoutParams thisParams = ((LayoutParams) params);
+                ViewGroup.LayoutParams hackDecorParams = hackPopupDecorView == null ? null : hackPopupDecorView.getLayoutParams();
+                if (hackDecorParams instanceof WindowManager.LayoutParams) {
+                    WindowManager.LayoutParams hackParams = (LayoutParams) hackDecorParams;
+                    thisParams.x = thisParams.x + hackParams.x;
+                    thisParams.y = thisParams.y - statusBarHeight + hackParams.y;
+                }
+            }
+            mWindowManager.updateViewLayout(hackPopupDecorView, params);
         } else {
-            getWindowManager().updateViewLayout(view, params);
+            mWindowManager.updateViewLayout(view, params);
         }
     }
 
     @Override
     public void removeView(View view) {
-        if (getWindowManager() == null) return;
+        if (mWindowManager == null) return;
+        checkStatusBarHeight(view.getContext());
         PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.removeView  >>>  " + view.getClass().getSimpleName());
-        if (checkProxyValided(view) && getHackPopupDecorView() != null) {
+        if (isPopupInnerDecorView(view) && getHackPopupDecorView() != null) {
             if (getBlurImageView() != null) {
                 try {
-                    getWindowManager().removeView(getBlurImageView());
+                    mWindowManager.removeView(getBlurImageView());
                     mBlurImageView.clear();
                     mBlurImageView = null;
                 } catch (Exception e) {
@@ -136,12 +141,11 @@ final class HackWindowManager implements WindowManager {
                 }
             }
             HackPopupDecorView hackPopupDecorView = getHackPopupDecorView();
-            getWindowManager().removeView(hackPopupDecorView);
-            hackPopupDecorView.setPopupController(null);
+            mWindowManager.removeView(hackPopupDecorView);
             mHackPopupDecorView.clear();
             mHackPopupDecorView = null;
         } else {
-            getWindowManager().removeView(view);
+            mWindowManager.removeView(view);
         }
     }
 
@@ -152,7 +156,7 @@ final class HackWindowManager implements WindowManager {
      * @param params
      * @return
      */
-    private ViewGroup.LayoutParams generateBlurBackgroundWindowParams(ViewGroup.LayoutParams params) {
+    private ViewGroup.LayoutParams createBlurBackgroundWindowParams(ViewGroup.LayoutParams params) {
         ViewGroup.LayoutParams result = new ViewGroup.LayoutParams(params);
 
         if (params instanceof WindowManager.LayoutParams) {
@@ -173,36 +177,7 @@ final class HackWindowManager implements WindowManager {
         return result;
     }
 
-    /**
-     * 应用helper的设置到popup的params
-     *
-     * @param params
-     * @return
-     */
-    private ViewGroup.LayoutParams applyHelper(ViewGroup.LayoutParams params) {
-        if (!(params instanceof WindowManager.LayoutParams) || getBasePopupHelper() == null)
-            return params;
-        WindowManager.LayoutParams p = (LayoutParams) params;
-        BasePopupHelper helper = getBasePopupHelper();
-        if (helper == null) return params;
-        if (!helper.isInterceptTouchEvent()) {
-            PopupLogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  不拦截事件");
-            p.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
-            p.flags |= WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
-        }
-        if (helper.isFullScreen()) {
-            PopupLogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  全屏");
-            p.flags |= LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-
-            // FIXME: 2017/12/27 全屏跟SOFT_INPUT_ADJUST_RESIZE冲突，暂时没有好的解决方案
-            p.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED;
-        }
-        PopupLogUtil.trace(LogTag.i, TAG, "PopupWindow窗口的window type >>  " + p.type);
-        return p;
-    }
-
-
-    private boolean checkProxyValided(View v) {
+    private boolean isPopupInnerDecorView(View v) {
         if (v == null) return false;
         String viewSimpleClassName = v.getClass().getSimpleName();
         return TextUtils.equals(viewSimpleClassName, "PopupDecorView") || TextUtils.equals(viewSimpleClassName, "PopupViewContainer");
@@ -213,12 +188,7 @@ final class HackWindowManager implements WindowManager {
         return mHackPopupDecorView.get();
     }
 
-    private WindowManager getWindowManager() {
-        if (mWindowManager == null) return null;
-        return mWindowManager.get();
-    }
-
-    private PopupController getPopupController() {
+    private PopupTouchController getPopupController() {
         if (mPopupController == null) return null;
         return mPopupController.get();
     }
@@ -235,5 +205,30 @@ final class HackWindowManager implements WindowManager {
 
     void bindPopupHelper(BasePopupHelper helper) {
         mPopupHelper = new WeakReference<BasePopupHelper>(helper);
+    }
+
+    void checkStatusBarHeight(Context context) {
+        if (statusBarHeight != 0 || context == null) return;
+        int result = 0;
+        //获取状态栏高度的资源id
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId);
+        }
+        statusBarHeight = result;
+    }
+
+    @Override
+    void onAnimateDismissStart() {
+        if (getBlurImageView() != null) {
+            getBlurImageView().dismiss(-2);
+        }
+    }
+
+    @Override
+    void onNoAnimateDismiss() {
+        if (getBlurImageView() != null) {
+            getBlurImageView().dismiss(0);
+        }
     }
 }
