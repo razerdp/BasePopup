@@ -1,5 +1,14 @@
 # BasePopup
 
+* **1.9.4-alpha(candy)**
+  * 本版本是预览版本，如果您有需要，可以更新到Candy版本，但不保证没有任何问题
+  * 针对8.0进行修复
+      * link: [issue#56](https://github.com/razerdp/BasePopup/issues/56)
+      * link: [issue#61](https://github.com/razerdp/BasePopup/issues/61)
+      * link: [issue#64](https://github.com/razerdp/BasePopup/issues/64)
+  * 优化代码，HackWindowManager与HackPopupDecorView部分重构
+  * showOnTop/showOnDown更名->onAnchorTop/onAnchorBottom，避免误导。
+
 ## 2018/01/23
   * 修复了在popup外滑动时`ViewGroup.LayoutParams`的cast异常
       * link: [issue#52](https://github.com/razerdp/BasePopup/issues/52)

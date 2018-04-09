@@ -32,7 +32,7 @@ class PopupWindowProxy extends BasePopupWindowProxy {
     }
 
     public void showAsDropDownProxy(View anchor, int xoff, int yoff) {
-        PopupCompatManager.showAsDropDown(this, anchor, xoff, yoff, Gravity.TOP | Gravity.START);
+        showAsDropDownProxy(anchor, xoff, yoff, Gravity.NO_GRAVITY);
     }
 
     public void showAtLocationProxy(View parent, int gravity, int x, int y) {
