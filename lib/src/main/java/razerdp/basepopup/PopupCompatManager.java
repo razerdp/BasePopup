@@ -182,13 +182,7 @@ final class PopupCompatManager {
 
         @Override
         void showAsDropDownImpl(Activity activity, BasePopupWindowProxy popupWindow, View anchor, int xoff, int yoff, int gravity) {
-            int[] anchorLocation = new int[2];
-            anchor.getLocationInWindow(anchorLocation);
-
-            xoff = anchorLocation[0] + xoff;
-            yoff = anchorLocation[1] + anchor.getHeight() + yoff;
-
-            popupWindow.callSuperShowAsDropDown(anchor, xoff, yoff, Gravity.TOP);
+            popupWindow.callSuperShowAsDropDown(anchor, xoff, yoff, gravity);
             initSystemBar(popupWindow.getContentView());
         }
 
