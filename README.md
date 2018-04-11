@@ -11,13 +11,13 @@ BasePopup
 注意事项
 ---
 
-```
 **请务必查看更新日志和例子预览，里面会详细解释每个版本增加或修复的功能**
 
 **请注意引用版本的问题，Release版本是稳定版，可商用。**
 
-**Candy不稳定（且更新很频繁），但包含着新功能或者新的优化，不建议商用。** 
-```
+**Candy不稳定（且更新很频繁），但包含着新功能或者新的优化，不建议商用。**
+
+### Candy版本反馈请点->[**Candy反馈**](https://github.com/razerdp/BasePopup/issues/66)
 
 [**更新日志**](https://github.com/razerdp/BasePopup#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97%E5%8E%86%E5%8F%B2%E6%9B%B4%E6%96%B0)
 
@@ -205,6 +205,8 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 
 更新日志([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 ---------------------------------------------------------------------------
+* **1.9.4-alpha2(candy)**
+  * 修复误打包测试代码的alpha1
 
 * **1.9.4-alpha(candy)**
   * 本版本是预览版本，如果您有需要，可以更新到Candy版本，但不保证没有任何问题
@@ -234,22 +236,6 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
       * **renderscriptTargetApi 25**
       * **enderscriptSupportModeEnabled true**
   * 发布1.9.1，其余bug修复
-
-* **1.9.0-alpha2（candy）**
-  * 修复了可能导致的动画duration为-1而崩溃的问题
-
-* **1.9.0-alpha（candy）**
-  * 增加了一个window用于模糊层，增加模糊功能（请注意，并不一定稳定，仍然迭代中。。慎用！！！）
-    * 如果您需要模糊功能，仅仅需要调用一个方法：`setBlurBackgroundEnable()`
-    * gradle请在`defaultConfig`下添加两句：
-      * **renderscriptTargetApi 25**
-      * **enderscriptSupportModeEnabled true**
-
-* **1.8.9-beta2**
-  * 增加演示demo：`DismissControlPopupFrag`
-  * 增加两个方法用于touchEvent监听：`onTouchEvent()`&`onOutSideTouch()`
-  * `HackPopupDecorView`继承`ViewGroup`而非`FrameLayout`，以解决PopupWindow的`decorView.getLayoutParams()`无法强转为`WindowManager.LayoutParams`的异常
-  * 其余问题暂时没发现
 
 
 一些例子
