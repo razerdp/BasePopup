@@ -33,6 +33,8 @@ final class BasePopupHelper {
     private int popupGravity = Gravity.NO_GRAVITY;
     private int offsetX;
     private int offsetY;
+    private int internalOffsetX;
+    private int internalOffsetY;
     private int preMeasureWidth;
     private int preMeasureHeight;
 
@@ -285,6 +287,24 @@ final class BasePopupHelper {
 
     int getAnchorY() {
         return mAnchorViewLocation[1];
+    }
+
+    int getInternalOffsetX() {
+        return internalOffsetX + offsetX;
+    }
+
+    BasePopupHelper setInternalOffsetX(int internalOffsetX) {
+        this.internalOffsetX = internalOffsetX;
+        return this;
+    }
+
+    int getInternalOffsetY() {
+        return internalOffsetY + offsetY;
+    }
+
+    BasePopupHelper setInternalOffsetY(int internalOffsetY) {
+        this.internalOffsetY = internalOffsetY;
+        return this;
     }
 
     public boolean isBackPressEnable() {
