@@ -108,7 +108,7 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
             WindowManager.LayoutParams p = (LayoutParams) params;
             BasePopupHelper helper = getBasePopupHelper();
             if (helper != null && helper.isShowAtDown() && p.y <= helper.getAnchorY()) {
-                int y = helper.getAnchorY() + helper.getAnchorHeight() + helper.getOffsetY();
+                int y = helper.getAnchorY() + helper.getAnchorHeight() + helper.getInternalOffsetY();
                 p.y = y <= 0 ? 0 : y;
             }
         }

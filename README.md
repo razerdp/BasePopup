@@ -205,6 +205,10 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 
 更新日志([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 ---------------------------------------------------------------------------
+* **1.9.4(release)**
+  * 修复autolocate的问题
+  * 发布1.9.4
+
 * **1.9.4-alpha2(candy)**
   * 修复误打包测试代码的alpha1
 
