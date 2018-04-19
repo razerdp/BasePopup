@@ -556,6 +556,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offset[1]) < getHeight());
             if (onTop) {
                 offset[1] = -anchorView.getHeight() - getHeight() - offset[1];
+                mHelper.setInternalOffsetY(offset[1]);
                 onAnchorTop(mPopupView, anchorView);
             } else {
                 onAnchorBottom(mPopupView, anchorView);
