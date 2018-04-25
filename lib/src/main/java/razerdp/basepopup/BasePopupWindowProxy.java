@@ -26,7 +26,7 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     private static final String TAG = "BasePopupWindowProxy";
 
     private static final int MAX_SCAN_ACTIVITY_COUNT = 50;
-    private volatile int tryScanActivityCount = 0;
+    private int tryScanActivityCount = 0;
     private PopupTouchController mController;
     private HackWindowManager hackWindowManager;
 
@@ -135,23 +135,24 @@ abstract class BasePopupWindowProxy extends PopupWindow {
      * <p>
      * https://github.com/razerdp/BasePopup/pull/26
      *
-     * @param cont
+     * @param from
      * @return
      * @author: hshare
+     * @author: razerdp optimize on 2018/4/25
      */
-    Activity scanForActivity(Context cont) {
-        if (cont == null) {
-            return null;
-        } else if (cont instanceof Activity) {
-            return (Activity) cont;
-        } else if (cont instanceof ContextWrapper) {
+    Activity scanForActivity(Context from) {
+        Context result = from;
+        while (result instanceof ContextWrapper) {
+            if (result instanceof Activity) {
+                return (Activity) result;
+            }
             if (tryScanActivityCount > MAX_SCAN_ACTIVITY_COUNT) {
                 //break endless loop
                 return null;
             }
             tryScanActivityCount++;
             PopupLogUtil.trace(LogTag.i, TAG, "scanForActivity: " + tryScanActivityCount);
-            return scanForActivity(((ContextWrapper) cont).getBaseContext());
+            result = ((ContextWrapper) result).getBaseContext();
         }
         return null;
     }
