@@ -16,25 +16,18 @@ import static razerdp.util.log.LogTag.i;
 
 
 /**
- * Created by 大灯泡 on 2017/12/27.
+ * Created by 大灯泡 on 2017/4/19.
  * <p>
- * log日志类
+ * 重构log日志类
  */
 public class PopupLogUtil {
-
     // 获取堆栈信息会影响性能，发布应用时记得关闭DebugMode
     private static final boolean[] mIsDebugMode = {false};
-    private static final String TAG = "basepopup";
-    private static final String SUFFIX = ".java";
-    //从栈底第三个开始追踪，因为第一个一般是虚拟机，第二个是线程，第三个是log
-    private static final int sStartStackTraceOffset = 3;
-
-    private static final String CLASS_LogTag_LINE_FORMAT = "%s.%s()_%s";
-    private static final String sPACKAGENAME = "razerdp";
-    //当精确模式启动，则会定位到具体的类，而非父类(更加耗时)
-    private static final boolean isExactMode = false;
+    private static final String TAG = "pywm";
     //logcat最大长度为4*1024，此处取4000
     private static final int MAX_LOG_MSG_LENGTH = 4000;
+    //超长Log？
+    private static final boolean LOG_LONG = true;
 
     public static void trace(String msg) {
         trace(i, msg);
@@ -44,56 +37,59 @@ public class PopupLogUtil {
         trace(i, throwable);
     }
 
-    public static void trace(LogTag LogTag, String msg) {
-        trace(LogTag, TAG, msg);
+    public static void trace(LogTag method, String msg) {
+        trace(method, TAG, msg);
     }
 
-    public static void trace(LogTag LogTag, Throwable throwable) {
-        trace(LogTag, TAG, throwable);
+    public static void trace(LogTag method, Throwable throwable) {
+        trace(method, TAG, throwable);
     }
 
-    public static void trace(LogTag LogTag, String tag, String msg) {
-        trace(LogTag, tag, msg, null);
+    public static void trace(LogTag method, String tag, String msg) {
+        trace(method, tag, msg, null);
     }
 
-    public static void trace(LogTag LogTag, String tag, Throwable throwable) {
-        trace(LogTag, tag, null, throwable);
+    public static void trace(LogTag method, String tag, Throwable throwable) {
+        trace(method, tag, null, throwable);
     }
 
-    public static void trace(LogTag LogTag, String tag, String msg, Throwable throwable) {
+    public static void trace(LogTag method, String tag, String msg, Throwable throwable) {
         if (!checkOpenLog()) return;
-        traceInternal(LogTag, tag, getLogMsg(msg, throwable));
+        traceInternal(method, tag, getLogMsg(msg, throwable));
     }
 
     /**
      * 此处会将过长的logcat拆分多次log
      *
-     * @param LogTag
      * @param tag
      * @param content
      */
-    private static void traceInternal(LogTag LogTag, String tag, String content) {
-//        logByLogTag(LogTag, tag, content);
-        // !!暂时不采取拆分超长log!!!
-        try {
-            long length = content.length();
-            if (length <= MAX_LOG_MSG_LENGTH) {
-                logByLogTag(LogTag, tag, content);
-            } else {
-                while (content.length() > MAX_LOG_MSG_LENGTH) {
-                    String logContent = content.substring(0, MAX_LOG_MSG_LENGTH);
-                    content = content.replace(logContent, "");
-                    logByLogTag(LogTag, tag, logContent);
+    private static void traceInternal(LogTag method, String tag, String content) {
+        if (!LOG_LONG) {
+            logByMethod(method, tag, content);
+        } else {
+            try {
+                long length = content.length();
+                if (length <= MAX_LOG_MSG_LENGTH) {
+                    logByMethod(method, tag, content);
+                } else {
+                    while (content.length() > MAX_LOG_MSG_LENGTH) {
+                        String logContent = content.substring(0, MAX_LOG_MSG_LENGTH);
+                        content = content.replace(logContent, "");
+                        logByMethod(method, tag, logContent);
+                    }
+                    logByMethod(method, tag, content);
                 }
-                logByLogTag(LogTag, tag, content);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
+
     }
 
-    private static void logByLogTag(LogTag LogTag, String tag, String outPutMsg) {
-        switch (LogTag) {
+    private static void logByMethod(LogTag method, String tag, String outPutMsg) {
+        switch (method) {
             case i:
                 Log.i(tag, outPutMsg);
                 break;
@@ -117,8 +113,8 @@ public class PopupLogUtil {
 
 
     private static String getLogMsg(String msg, Throwable throwable) {
-        if (!TextUtils.isEmpty(msg)) return wrapLogWithLogTagLocation(msg);
-        if (throwable != null) return wrapLogWithLogTagLocation(getCrashInfo(throwable));
+        if (!TextUtils.isEmpty(msg)) return wrapLogWithMethodLocation(msg);
+        if (throwable != null) return wrapLogWithMethodLocation(getCrashInfo(throwable));
         return "没有日志哦";
     }
 
@@ -142,7 +138,7 @@ public class PopupLogUtil {
     /**
      * 代码定位
      */
-    private static String wrapLogWithLogTagLocation(String msg) {
+    private static String wrapLogWithMethodLocation(String msg) {
         StackTraceElement element = getCurrentStackTrace();
         String className = "unknow";
         String methodName = "unknow";
@@ -161,7 +157,8 @@ public class PopupLogUtil {
                 .append(lineNumber)
                 .append(") #")
                 .append(methodName)
-                .append("： ")
+                .append("：")
+                .append('\n')
                 .append(msg);
         return sb.toString();
     }
@@ -223,40 +220,31 @@ public class PopupLogUtil {
                 }
             }
         }
-        StackTraceElement caller = trace[stackOffset];
-        return caller;
+        return trace[stackOffset];
     }
 
     private static int getStackOffset(StackTraceElement[] trace, Class cla) {
-        for (int i = sStartStackTraceOffset; i < trace.length; i++) {
-            StackTraceElement e = trace[i];
-            String name = e.getClassName();
-            //寻找到调用logtrace的最后一个偏移
-            if (cla.equals(PopupLogUtil.class) && i < trace.length - 1 && trace[i + 1].getClassName()
-                                                                                      .equals(PopupLogUtil.class.getName())) {
-                continue;
-            }
-            if (isExactMode) {
-                //如果是精准模式，则开始匹配包名
-                if (i < trace.length - 1) {
-                    String nextStackName = trace[i + 1].getClassName();
-                    if (name.startsWith(sPACKAGENAME) && !name.contains("$") &&
-                            nextStackName != null && nextStackName.startsWith(sPACKAGENAME) && !nextStackName.contains("$")) {
-                        //排除匿名内部类
-                        continue;
-                    } else {
-                        return i;
-                    }
-                } else {
-                    return i;
-                }
+        int logIndex = -1;
+        for (int i = 0; i < trace.length; i++) {
+            StackTraceElement element = trace[i];
+            String tClass = element.getClassName();
+            if (TextUtils.equals(tClass, cla.getName())) {
+                logIndex = i;
             } else {
-                if (name.equals(cla.getName())) {
-                    return ++i;
-                }
+                if (logIndex > -1) break;
             }
         }
-        return -1;
+        if (logIndex != -1) {
+            logIndex++;
+            if (logIndex >= trace.length) {
+                logIndex = trace.length - 1;
+            }
+        }
+        return logIndex;
+    }
+
+    public static String wrapLocation(Class cla, int lineNumber) {
+        return ".(" + cla.getSimpleName() + ".java:" + lineNumber + ")";
     }
 
 
