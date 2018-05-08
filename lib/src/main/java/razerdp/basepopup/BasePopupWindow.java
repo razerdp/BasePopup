@@ -246,7 +246,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     //popup视图
     private View mPopupView;
     private WeakReference<Context> mContext;
-    protected View mAnimaView;
+    protected View mAnimateApplyView;
     protected View mDismissView;
 
     private volatile boolean isExitAnimaPlaying = false;
@@ -268,9 +268,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         mContext = new WeakReference<Context>(context);
         mHelper = new BasePopupHelper();
         mPopupView = onCreatePopupView();
-        mAnimaView = initAnimaView();
-        if (mAnimaView != null) {
-            mHelper.setPopupLayoutId(mAnimaView.getId());
+        mAnimateApplyView = initAnimaView();
+        if (mAnimateApplyView != null) {
+            mHelper.setPopupLayoutId(mAnimateApplyView.getId());
         }
         checkPopupAnimaView();
 
@@ -298,8 +298,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 }
             });
         }
-        if (mAnimaView != null && !(mAnimaView instanceof AdapterView)) {
-            mAnimaView.setOnClickListener(new View.OnClickListener() {
+        if (mAnimateApplyView != null && !(mAnimateApplyView instanceof AdapterView)) {
+            mAnimateApplyView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -314,16 +314,16 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     private void checkPopupAnimaView() {
-        //处理popupview与animaview相同的情况
-        //当popupView与animaView相同的时候，处理位置信息会出问题，因此这里需要对mAnimaView再包裹一层
-        if (mPopupView != null && mAnimaView != null && mPopupView == mAnimaView) {
+        //处理popupview与animateview相同的情况
+        //当popupView与animateView相同的时候，处理位置信息会出问题，因此这里需要对mAnimaView再包裹一层
+        if (mPopupView != null && mAnimateApplyView != null && mPopupView == mAnimateApplyView) {
             try {
                 mPopupView = new FrameLayout(getContext());
                 final int mPopupLayoutId = mHelper.getPopupLayoutId();
                 if (mPopupLayoutId == 0) {
-                    ((FrameLayout) mPopupView).addView(mAnimaView);
+                    ((FrameLayout) mPopupView).addView(mAnimateApplyView);
                 } else {
-                    mAnimaView = View.inflate(getContext(), mPopupLayoutId, (FrameLayout) mPopupView);
+                    mAnimateApplyView = View.inflate(getContext(), mPopupLayoutId, (FrameLayout) mPopupView);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -364,8 +364,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 设置一个点击后触发dismiss PopupWindow的View，一般为蒙层
      *
      * @return 点击dismiss的控件
+     * @deprecated use {@link }
      */
-    public abstract View getClickToDismissView();
+    public View getClickToDismissView() {
+        return getPopupWindowView();
+    }
 
     /**
      * 设置展示动画View的属性动画
@@ -412,8 +415,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     /**
      * 设置popup的动画style
      */
-    public BasePopupWindow setPopupAnimaStyle(int animaStyleRes) {
-        mPopupWindow.setAnimationStyle(animaStyleRes);
+    public BasePopupWindow setPopupAnimationStyle(int animationStyleRes) {
+        mPopupWindow.setAnimationStyle(animationStyleRes);
         return this;
     }
 
@@ -486,10 +489,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             if (mStateListener != null) {
                 mStateListener.onTryToShow(mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
             }
-            if (mAnimaView != null) {
+            if (mAnimateApplyView != null) {
                 if (mHelper.getShowAnimation() != null) {
                     mHelper.getShowAnimation().cancel();
-                    mAnimaView.startAnimation(mHelper.getShowAnimation());
+                    mAnimateApplyView.startAnimation(mHelper.getShowAnimation());
                 } else if (mHelper.getShowAnimator() != null) {
                     mHelper.getShowAnimator().start();
                 }
@@ -925,11 +928,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     @Override
     public boolean callDismissAtOnce() {
         boolean hasAnima = false;
-        if (mHelper.getExitAnimation() != null && mAnimaView != null) {
+        if (mHelper.getExitAnimation() != null && mAnimateApplyView != null) {
             if (!isExitAnimaPlaying) {
                 mHelper.getExitAnimation().setAnimationListener(mAnimationListener);
                 mHelper.getExitAnimation().cancel();
-                mAnimaView.startAnimation(mHelper.getExitAnimation());
+                mAnimateApplyView.startAnimation(mHelper.getExitAnimation());
                 isExitAnimaPlaying = true;
                 hasAnima = true;
             }
@@ -954,9 +957,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     /**
      * 直接消掉popup而不需要动画
      */
-    public void dismissWithOutAnima() {
+    public void dismissWithOutAnimate() {
         if (!checkPerformDismiss()) return;
-        if (mHelper.getExitAnimation() != null && mAnimaView != null) {
+        if (mHelper.getExitAnimation() != null && mAnimateApplyView != null) {
             mHelper.getExitAnimation().cancel();
         }
         if (mHelper.getExitAnimator() != null) {
@@ -966,7 +969,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         if (mStateListener != null) {
             mStateListener.onNoAnimateDismiss();
         }
-
     }
 
 
@@ -1168,7 +1170,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 从下方滑动上来
      */
     protected AnimatorSet getDefaultSlideFromBottomAnimationSet() {
-        return SimpleAnimationUtils.getDefaultSlideFromBottomAnimationSet(mAnimaView);
+        return SimpleAnimationUtils.getDefaultSlideFromBottomAnimationSet(mAnimateApplyView);
     }
 
     /**
@@ -1235,10 +1237,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
          *
          * @param popupRootView The rootView of popup,it's usually be your layout
          * @param anchorView    The anchorView whitch popup show
-         * @param hasShowAnima  Check if show your popup with anima?
+         * @param hasShowAnimate  Check if show your popup with animate?
          * @return
          */
-        boolean onBeforeShow(View popupRootView, View anchorView, boolean hasShowAnima);
+        boolean onBeforeShow(View popupRootView, View anchorView, boolean hasShowAnimate);
 
 
     }
