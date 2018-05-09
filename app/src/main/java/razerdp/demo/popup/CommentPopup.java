@@ -2,7 +2,6 @@ package razerdp.demo.popup;
 
 import android.app.Activity;
 import android.os.Handler;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -111,7 +110,7 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
 
 
     @Override
-    protected Animation initShowAnimation() {
+    protected Animation onCreateShowAnimation() {
         TranslateAnimation showAnima = new TranslateAnimation(dipToPx(180f), 0, 0, 0);
         showAnima.setInterpolator(new DecelerateInterpolator());
         showAnima.setDuration(350);
@@ -119,7 +118,7 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
     }
 
     @Override
-    protected Animation initExitAnimation() {
+    protected Animation onCreateDismissAnimation() {
         TranslateAnimation exitAnima = new TranslateAnimation(0, dipToPx(180f), 0, 0);
         exitAnima.setInterpolator(new DecelerateInterpolator());
         exitAnima.setDuration(350);
@@ -127,13 +126,8 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
     }
 
     @Override
-    public View onCreatePopupView() {
-        return LayoutInflater.from(getContext()).inflate(R.layout.popup_comment, null);
-    }
-
-    @Override
-    public View initAnimaView() {
-        return getPopupWindowView().findViewById(R.id.comment_popup_contianer);
+    public View onCreateContentView() {
+        return createPopupById(R.layout.popup_comment);
     }
     //=============================================================Getter/Setter
 
@@ -170,11 +164,5 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
         void onLikeClick(View v, TextView likeText);
 
         void onCommentClick(View v);
-    }
-    //=============================================================abortMethods
-
-    @Override
-    public View getClickToDismissView() {
-        return null;
     }
 }

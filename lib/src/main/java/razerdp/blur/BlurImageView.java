@@ -224,6 +224,10 @@ public class BlurImageView extends ImageView {
         return Thread.currentThread() == Looper.getMainLooper().getThread();
     }
 
+    public void destroy(){
+
+    }
+
     class CreateBlurBitmapRunnable implements Runnable {
 
         private Bitmap bitmap;

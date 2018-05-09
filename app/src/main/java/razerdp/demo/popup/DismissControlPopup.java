@@ -25,7 +25,7 @@ public class DismissControlPopup extends BasePopupWindow implements View.OnClick
     }
 
     @Override
-    protected Animation initShowAnimation() {
+    protected Animation onCreateShowAnimation() {
         AnimationSet set = new AnimationSet(true);
         set.setInterpolator(new DecelerateInterpolator());
         set.addAnimation(getScaleAnimation(0, 1, 0, 1, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0));
@@ -34,7 +34,7 @@ public class DismissControlPopup extends BasePopupWindow implements View.OnClick
     }
 
     @Override
-    protected Animation initExitAnimation() {
+    protected Animation onCreateDismissAnimation() {
         AnimationSet set = new AnimationSet(true);
         set.setInterpolator(new DecelerateInterpolator());
         set.addAnimation(getScaleAnimation(1, 0, 1, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0));
@@ -50,18 +50,8 @@ public class DismissControlPopup extends BasePopupWindow implements View.OnClick
     }
 
     @Override
-    public View getClickToDismissView() {
-        return null;
-    }
-
-    @Override
-    public View onCreatePopupView() {
+    public View onCreateContentView() {
         return createPopupById(R.layout.popup_menu);
-    }
-
-    @Override
-    public View initAnimaView() {
-        return getPopupWindowView().findViewById(R.id.popup_contianer);
     }
 
     @Override
