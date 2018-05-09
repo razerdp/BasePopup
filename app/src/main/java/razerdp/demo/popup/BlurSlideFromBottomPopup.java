@@ -1,7 +1,6 @@
 package razerdp.demo.popup;
 
 import android.app.Activity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 
@@ -23,38 +22,29 @@ public class BlurSlideFromBottomPopup extends BasePopupWindow implements View.On
     }
 
     @Override
-    protected Animation initShowAnimation() {
+    protected Animation onCreateShowAnimation() {
         return getTranslateVerticalAnimation(1f, 0f, 300);
     }
 
     @Override
-    protected Animation initExitAnimation() {
+    protected Animation onCreateDismissAnimation() {
         return getTranslateVerticalAnimation(0f, 1f, 300);
     }
 
     @Override
-    public View getClickToDismissView() {
-        return popupView.findViewById(R.id.click_to_dismiss);
+    public View onInitDismissClickView() {
+        return findViewById(R.id.click_to_dismiss);
     }
 
     @Override
-    public View onCreatePopupView() {
-        popupView = LayoutInflater.from(getContext()).inflate(R.layout.popup_blur_slide_from_bottom, null);
-        return popupView;
-    }
-
-    @Override
-    public View initAnimaView() {
-        return popupView.findViewById(R.id.popup_anima);
+    public View onCreateContentView() {
+        return createPopupById(R.layout.popup_blur_slide_from_bottom);
     }
 
     private void bindEvent() {
-        if (popupView != null) {
-            popupView.findViewById(R.id.tx_1).setOnClickListener(this);
-            popupView.findViewById(R.id.tx_2).setOnClickListener(this);
-            popupView.findViewById(R.id.tx_3).setOnClickListener(this);
-        }
-
+        findViewById(R.id.tx_1).setOnClickListener(this);
+        findViewById(R.id.tx_2).setOnClickListener(this);
+        findViewById(R.id.tx_3).setOnClickListener(this);
     }
 
     @Override

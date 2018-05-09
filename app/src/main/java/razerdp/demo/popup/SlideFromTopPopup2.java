@@ -52,7 +52,7 @@ public class SlideFromTopPopup2 extends BasePopupWindow {
     }
 
     @Override
-    protected Animation initShowAnimation() {
+    protected Animation onCreateShowAnimation() {
         TranslateAnimation translateAnimation = new TranslateAnimation(0f, 0f, -DimensUtils.dipToPx(getContext(), 350f), 0);
         translateAnimation.setDuration(450);
         translateAnimation.setInterpolator(new OvershootInterpolator(1));
@@ -60,7 +60,7 @@ public class SlideFromTopPopup2 extends BasePopupWindow {
     }
 
     @Override
-    protected Animation initExitAnimation() {
+    protected Animation onCreateDismissAnimation() {
         TranslateAnimation translateAnimation = new TranslateAnimation(0f, 0f, 0, -DimensUtils.dipToPx(getContext(), 350f));
         translateAnimation.setDuration(450);
         translateAnimation.setInterpolator(new OvershootInterpolator(-4));
@@ -68,18 +68,8 @@ public class SlideFromTopPopup2 extends BasePopupWindow {
     }
 
     @Override
-    public View getClickToDismissView() {
-        return getPopupWindowView();
-    }
-
-    @Override
-    public View onCreatePopupView() {
+    public View onCreateContentView() {
         return createPopupById(R.layout.popup_select_from_top2);
-    }
-
-    @Override
-    public View initAnimaView() {
-        return findViewById(R.id.popup_anima);
     }
 
     //=============================================================adapter

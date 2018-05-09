@@ -24,24 +24,24 @@ public class CustomInterpolatorPopup extends BasePopupWindow implements View.OnC
 
 
     @Override
-    protected Animation initShowAnimation() {
+    protected Animation onCreateShowAnimation() {
         return mAnimation;
     }
 
     @Override
-    public View getClickToDismissView() {
-        return popupView.findViewById(R.id.click_to_dismiss);
+    protected Animation onCreateDismissAnimation() {
+        return null;
     }
 
     @Override
-    public View onCreatePopupView() {
+    public View onInitDismissClickView() {
+        return findViewById(R.id.click_to_dismiss);
+    }
+
+    @Override
+    public View onCreateContentView() {
         popupView= LayoutInflater.from(getContext()).inflate(R.layout.popup_normal,null);
         return popupView;
-    }
-
-    @Override
-    public View initAnimaView() {
-        return popupView.findViewById(R.id.popup_anima);
     }
 
     private void bindEvent() {

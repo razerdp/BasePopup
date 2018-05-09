@@ -33,7 +33,12 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
     }
 
     @Override
-    protected Animation initShowAnimation() {
+    protected Animation onCreateShowAnimation() {
+        return null;
+    }
+
+    @Override
+    protected Animation onCreateDismissAnimation() {
         return null;
     }
 
@@ -46,39 +51,29 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
 
 
     @Override
-    public Animator initShowAnimator() {
+    public Animator onCreateShowAnimator() {
         return getDefaultSlideFromBottomAnimationSet();
     }
 
     @Override
-    public EditText getInputView() {
+    public EditText onCreateInputView() {
         return mInputEdittext;
     }
 
     @Override
-    public View getClickToDismissView() {
-        return getPopupWindowView();
-    }
-
-    @Override
-    public View onCreatePopupView() {
+    public View onCreateContentView() {
         return LayoutInflater.from(getContext()).inflate(R.layout.popup_input,null);
     }
 
     @Override
-    public View initAnimaView() {
-        return findViewById(R.id.popup_anima);
-    }
-
-    @Override
-    public Animator initExitAnimator() {
+    public Animator onCreateDismissAnimator() {
         AnimatorSet set = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
             set = new AnimatorSet();
-            if (initAnimaView() != null) {
+            if (mDisplayAnimateView != null) {
                 set.playTogether(
-                        ObjectAnimator.ofFloat(initAnimaView(), "translationY", 0, 250).setDuration(400),
-                        ObjectAnimator.ofFloat(initAnimaView(), "alpha", 1, 0.4f).setDuration(250 * 3 / 2));
+                        ObjectAnimator.ofFloat(mDisplayAnimateView, "translationY", 0, 250).setDuration(400),
+                        ObjectAnimator.ofFloat(mDisplayAnimateView, "alpha", 1, 0.4f).setDuration(250 * 3 / 2));
             }
         }
         return set;

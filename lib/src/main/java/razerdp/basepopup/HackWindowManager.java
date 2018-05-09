@@ -10,7 +10,6 @@ import android.view.WindowManager;
 
 import java.lang.ref.WeakReference;
 
-import razerdp.blur.BlurImageView;
 import razerdp.util.log.LogTag;
 import razerdp.util.log.PopupLogUtil;
 
@@ -25,7 +24,7 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
     private WeakReference<PopupTouchController> mPopupController;
     private WeakReference<HackPopupDecorView> mHackPopupDecorView;
     private WeakReference<BasePopupHelper> mPopupHelper;
-    private WeakReference<BlurImageView> mBlurImageView;
+    private WeakReference<PopupMaskLayout> mMaskLayout;
     private static int statusBarHeight;
 
     public HackWindowManager(WindowManager windowManager, PopupTouchController popupTouchController) {
@@ -44,11 +43,11 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
         checkStatusBarHeight(view.getContext());
         PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.removeViewImmediate  >>>  " + view.getClass().getSimpleName());
         if (isPopupInnerDecorView(view) && getHackPopupDecorView() != null) {
-            if (getBlurImageView() != null) {
+            if (getMaskLayout() != null) {
                 try {
-                    mWindowManager.removeViewImmediate(getBlurImageView());
-                    mBlurImageView.clear();
-                    mBlurImageView = null;
+                    mWindowManager.removeViewImmediate(getMaskLayout());
+                    mMaskLayout.clear();
+                    mMaskLayout = null;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -73,29 +72,26 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
              * popup内部有scrollChangeListener，会有params强转为WindowManager.LayoutParams的情况
              */
             BasePopupHelper helper = getBasePopupHelper();
-            BlurImageView blurImageView = null;
+            mMaskLayout = new WeakReference<>(new PopupMaskLayout(view.getContext()));
 
             //添加popup主体
             final HackPopupDecorView hackPopupDecorView = new HackPopupDecorView(view.getContext());
             params = hackPopupDecorView.addPopupDecorView(view, params, helper, getPopupController());
             mHackPopupDecorView = new WeakReference<HackPopupDecorView>(hackPopupDecorView);
-            //添加背景模糊层
-            if (helper != null && helper.isAllowToBlur()) {
-                blurImageView = new BlurImageView(view.getContext());
-                blurImageView.attachBlurOption(helper.getBlurOption());
-                mBlurImageView = new WeakReference<BlurImageView>(blurImageView);
-                if (getPopupController() instanceof BasePopupWindow) {
-                    ((BasePopupWindow) getPopupController()).setOnInnerPopupWIndowStateListener(this);
-                }
-                hackPopupDecorView.setOnAttachListener(new HackPopupDecorView.OnAttachListener() {
-                    @Override
-                    public void onAttachtoWindow() {
-                        if (getBlurImageView() != null) {
-                            getBlurImageView().start(-2);
-                        }
+
+            if (getPopupController() instanceof BasePopupWindow) {
+                ((BasePopupWindow) getPopupController()).setOnInnerPopupWindowStateListener(this);
+            }
+            hackPopupDecorView.setOnAttachListener(new HackPopupDecorView.OnAttachListener() {
+                @Override
+                public void onAttachtoWindow() {
+                    if (getMaskLayout() != null) {
+                        getMaskLayout().handleStart(-2);
                     }
-                });
-                mWindowManager.addView(blurImageView, createBlurBackgroundWindowParams(params));
+                }
+            });
+            if (getMaskLayout() != null) {
+                mWindowManager.addView(getMaskLayout(), createBlurBackgroundWindowParams(params));
             }
             mWindowManager.addView(hackPopupDecorView, fitLayoutParamsPosition(params));
         } else {
@@ -134,11 +130,11 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
         checkStatusBarHeight(view.getContext());
         PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.removeView  >>>  " + view.getClass().getSimpleName());
         if (isPopupInnerDecorView(view) && getHackPopupDecorView() != null) {
-            if (getBlurImageView() != null) {
+            if (getMaskLayout() != null) {
                 try {
-                    mWindowManager.removeView(getBlurImageView());
-                    mBlurImageView.clear();
-                    mBlurImageView = null;
+                    mWindowManager.removeView(getMaskLayout());
+                    mMaskLayout.clear();
+                    mMaskLayout = null;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -201,9 +197,9 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
         return mPopupHelper.get();
     }
 
-    private BlurImageView getBlurImageView() {
-        if (mBlurImageView == null) return null;
-        return mBlurImageView.get();
+    private PopupMaskLayout getMaskLayout() {
+        if (mMaskLayout == null) return null;
+        return mMaskLayout.get();
     }
 
     void bindPopupHelper(BasePopupHelper helper) {
@@ -223,15 +219,15 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
 
     @Override
     void onAnimateDismissStart() {
-        if (getBlurImageView() != null) {
-            getBlurImageView().dismiss(-2);
+        if (getMaskLayout() != null) {
+            getMaskLayout().handleDismiss(-2);
         }
     }
 
     @Override
     void onNoAnimateDismiss() {
-        if (getBlurImageView() != null) {
-            getBlurImageView().dismiss(0);
+        if (getMaskLayout() != null) {
+            getMaskLayout().handleDismiss(0);
         }
     }
 }

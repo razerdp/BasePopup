@@ -1,6 +1,7 @@
 package razerdp.basepopup;
 
 import android.animation.Animator;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -52,7 +53,7 @@ final class BasePopupHelper {
     //是否全屏
     private boolean fullScreen = false;
     //是否需要淡入window动画
-    private volatile boolean needPopupFadeAnima = true;
+    private volatile boolean isPopupFadeEnable = true;
 
     private int mPopupLayoutId;
 
@@ -63,6 +64,9 @@ final class BasePopupHelper {
 
     //模糊option(为空的话则不模糊）
     private PopupBlurOption mBlurOption;
+
+    //背景颜色
+    private int mBackgroundColor = Color.TRANSPARENT;
 
     BasePopupHelper() {
         mAnchorViewLocation = new int[2];
@@ -165,13 +169,13 @@ final class BasePopupHelper {
         return this;
     }
 
-    boolean isNeedPopupFadeAnima() {
-        return needPopupFadeAnima;
+    boolean isPopupFadeEnable() {
+        return isPopupFadeEnable;
     }
 
-    BasePopupHelper setNeedPopupFadeAnima(PopupWindow popupWindow, boolean needPopupFadeAnima) {
+    BasePopupHelper setPopupFadeEnable(PopupWindow popupWindow, boolean needPopupFadeAnima) {
         if (popupWindow == null) return this;
-        this.needPopupFadeAnima = needPopupFadeAnima;
+        this.isPopupFadeEnable = needPopupFadeAnima;
         popupWindow.setAnimationStyle(needPopupFadeAnima ? R.style.PopupAnimaFade : 0);
         return this;
     }
@@ -353,6 +357,15 @@ final class BasePopupHelper {
             duration = mExitAnimator.getDuration();
         }
         return duration < 0 ? 300 : duration;
+    }
+
+    public int getPopupBackgroundColor() {
+        return mBackgroundColor;
+    }
+
+    public BasePopupHelper setPopupBackgroundColor(int backgroundColor) {
+        mBackgroundColor = backgroundColor;
+        return this;
     }
 
     public boolean isAllowToBlur() {

@@ -27,44 +27,40 @@ public class FullScreenPopup extends BasePopupWindow {
     }
 
     @Override
-    protected Animation initShowAnimation() {
+    protected Animation onCreateShowAnimation() {
         return null;
     }
 
     @Override
-    public Animator initShowAnimator() {
+    protected Animation onCreateDismissAnimation() {
+        return null;
+    }
+
+    @Override
+    public Animator onCreateShowAnimator() {
         AnimatorSet set;
         set = new AnimatorSet();
-        ObjectAnimator transAnimator = ObjectAnimator.ofFloat(mAnimateApplyView, "translationY", 250, 0).setDuration(600);
+        ObjectAnimator transAnimator = ObjectAnimator.ofFloat(mDisplayAnimateView, "translationY", 250, 0).setDuration(600);
         transAnimator.setInterpolator(new OverShootInterpolator());
-        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mAnimateApplyView, "alpha", 0.4f, 1).setDuration(250 * 3 / 2);
+        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mDisplayAnimateView, "alpha", 0.4f, 1).setDuration(250 * 3 / 2);
         set.playTogether(transAnimator, alphaAnimator);
         return set;
     }
 
     @Override
-    public Animator initExitAnimator() {
+    public Animator onCreateDismissAnimator() {
         AnimatorSet set;
         set = new AnimatorSet();
-        ObjectAnimator transAnimator = ObjectAnimator.ofFloat(mAnimateApplyView, "translationY", 0, 250).setDuration(600);
+        ObjectAnimator transAnimator = ObjectAnimator.ofFloat(mDisplayAnimateView, "translationY", 0, 250).setDuration(600);
         transAnimator.setInterpolator(new OverShootInterpolator(-6));
-        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mAnimateApplyView, "alpha", 1f, 0).setDuration(800);
+        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mDisplayAnimateView, "alpha", 1f, 0).setDuration(800);
         set.playTogether(transAnimator, alphaAnimator);
         return set;
     }
 
-    @Override
-    public View getClickToDismissView() {
-        return getPopupWindowView();
-    }
 
     @Override
-    public View onCreatePopupView() {
+    public View onCreateContentView() {
         return createPopupById(R.layout.popup_fullscreen);
-    }
-
-    @Override
-    public View initAnimaView() {
-        return findViewById(R.id.popup_anima);
     }
 }

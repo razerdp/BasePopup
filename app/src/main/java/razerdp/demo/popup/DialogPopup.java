@@ -31,7 +31,7 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
     }
 
     @Override
-    protected Animation initShowAnimation() {
+    protected Animation onCreateShowAnimation() {
         AnimationSet set=new AnimationSet(false);
         Animation shakeAnima=new RotateAnimation(0,15,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
         shakeAnima.setInterpolator(new CycleInterpolator(5));
@@ -42,18 +42,13 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
     }
 
     @Override
-    public View getClickToDismissView() {
-        return getPopupWindowView();
+    protected Animation onCreateDismissAnimation() {
+        return null;
     }
 
     @Override
-    public View onCreatePopupView() {
+    public View onCreateContentView() {
         return createPopupById(R.layout.popup_dialog);
-    }
-
-    @Override
-    public View initAnimaView() {
-        return findViewById(R.id.popup_anima);
     }
 
     @Override
