@@ -241,6 +241,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private static final String TAG = "BasePopupWindow";
     private static final int MAX_RETRY_SHOW_TIME = 3;
     private BasePopupHelper mHelper;
+    public static int SCREEN_WIDTH = 0;
+    public static int SCREEN_HEIGHT = 0;
 
     //元素定义
     private PopupWindowProxy mPopupWindow;
@@ -257,7 +259,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private InnerPopupWindowStateListener mStateListener;
 
     public BasePopupWindow(Context context) {
-        initView(context, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        this(context, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
     public BasePopupWindow(Context context, int w, int h) {
@@ -287,9 +289,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
         preMeasurePopupView(w, h);
 
-        //默认是渐入动画
-        setPopupFadeEnable(Build.VERSION.SDK_INT <= 22);
-
         //=============================================================为外层的view添加点击事件，并设置点击消失
         View v = onInitDismissClickView();
         if (v != null && !(v instanceof AdapterView)) {
@@ -300,15 +299,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 }
             });
         }
-       /* if (mDisplayAnimateView != null && !(mDisplayAnimateView instanceof AdapterView)) {
-            mDisplayAnimateView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-        }*/
-
         //show or dismiss animate
         mHelper.setShowAnimation(onCreateShowAnimation())
                 .setShowAnimator(onCreateShowAnimator())
@@ -318,17 +308,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     private void preMeasurePopupView(int w, int h) {
         if (mPopupContentView != null) {
-            //修复可能出现的android 4.3的measure空指针问题
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                int contentViewHeight = ViewGroup.LayoutParams.MATCH_PARENT;
-                final ViewGroup.LayoutParams layoutParams = mPopupContentView.getLayoutParams();
-                if (layoutParams != null && layoutParams.height == ViewGroup.LayoutParams.WRAP_CONTENT) {
-                    contentViewHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
-                }
-                ViewGroup.LayoutParams p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, contentViewHeight);
-                mPopupContentView.setLayoutParams(p);
-            }
-            mPopupContentView.measure(w, h);
+            int measureWidth = View.MeasureSpec.makeMeasureSpec(w, View.MeasureSpec.UNSPECIFIED);
+            int measureHeight = View.MeasureSpec.makeMeasureSpec(h, View.MeasureSpec.UNSPECIFIED);
+            mPopupContentView.measure(measureWidth, measureHeight);
             mHelper.setPreMeasureWidth(mPopupContentView.getMeasuredWidth())
                     .setPreMeasureHeight(mPopupContentView.getMeasuredHeight());
             mPopupContentView.setFocusableInTouchMode(true);
@@ -1166,14 +1148,20 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 获取屏幕高度(px)
      */
     public int getScreenHeight() {
-        return getContext().getResources().getDisplayMetrics().heightPixels;
+        if (SCREEN_HEIGHT == 0) {
+            SCREEN_HEIGHT = getContext().getResources().getDisplayMetrics().heightPixels;
+        }
+        return SCREEN_HEIGHT;
     }
 
     /**
      * 获取屏幕宽度(px)
      */
     public int getScreenWidth() {
-        return getContext().getResources().getDisplayMetrics().widthPixels;
+        if (SCREEN_WIDTH == 0) {
+            SCREEN_WIDTH = getContext().getResources().getDisplayMetrics().widthPixels;
+        }
+        return SCREEN_WIDTH;
     }
 
 

@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.graphics.Color;
 import android.view.View;
 import android.view.animation.Animation;
 
@@ -22,8 +23,9 @@ public class FullScreenPopup extends BasePopupWindow {
     public FullScreenPopup(Activity context) {
         super(context);
         /**全屏popup*/
-        setPopupWindowFullScreen(true);
-        setBlurBackgroundEnable(true);
+        setPopupWindowFullScreen(true)
+                .setBlurBackgroundEnable(true)
+                .setPopupBackgroundColor(Color.parseColor("#88ff0000"));
     }
 
     @Override

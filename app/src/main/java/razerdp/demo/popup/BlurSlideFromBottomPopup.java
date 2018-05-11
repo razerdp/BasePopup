@@ -32,11 +32,6 @@ public class BlurSlideFromBottomPopup extends BasePopupWindow implements View.On
     }
 
     @Override
-    public View onInitDismissClickView() {
-        return findViewById(R.id.click_to_dismiss);
-    }
-
-    @Override
     public View onCreateContentView() {
         return createPopupById(R.layout.popup_blur_slide_from_bottom);
     }

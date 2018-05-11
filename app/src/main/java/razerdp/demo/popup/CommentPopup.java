@@ -1,6 +1,7 @@
 package razerdp.demo.popup;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,12 +37,7 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
     private Handler mHandler;
 
     public CommentPopup(Activity context) {
-        this(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-    }
-
-    public CommentPopup(Activity context, int w, int h) {
-        super(context, w, h);
-
+        super(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mHandler = new Handler();
 
         mLikeAnimaView = (ImageView) findViewById(R.id.iv_like);
@@ -54,10 +50,12 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
         mCommentClickLayout.setOnClickListener(this);
 
         buildAnima();
+        setPopupBackgroundColor(Color.TRANSPARENT);
         setDismissWhenTouchOutside(true);
         setInterceptTouchEvent(false);
         setBlurBackgroundEnable(true);
     }
+
 
     private AnimationSet mAnimationSet;
 
