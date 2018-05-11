@@ -28,28 +28,33 @@ class PopupBackgroundView extends View {
 
     private PopupBackgroundView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
     }
 
     public static PopupBackgroundView creaete(Context context, BasePopupHelper helper) {
         PopupBackgroundView view = new PopupBackgroundView(context);
-        view.mHelper = helper;
+        view.init(context, helper);
         return view;
     }
 
-    private void init() {
+    private void init(Context context, final BasePopupHelper mHelper) {
         if (mHelper == null || mHelper.getPopupBackgroundColor() == Color.TRANSPARENT) {
             setVisibility(GONE);
             return;
         }
+        this.mHelper = mHelper;
         setVisibility(VISIBLE);
         setBackgroundColor(mHelper.getPopupBackgroundColor());
         if (mHelper.isPopupFadeEnable()) {
-            final Animation fadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.basepopup_fade_in);
             getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
-                    startAnimation(fadeIn);
+                    Animation fadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.basepopup_fade_in);
+                    if (fadeIn != null) {
+                        long fadeInTime = mHelper.getShowAnimationDuration() - 300;
+                        fadeIn.setDuration(Math.max(fadeIn.getDuration(), fadeInTime));
+                        fadeIn.setFillAfter(true);
+                        startAnimation(fadeIn);
+                    }
                     getViewTreeObserver().removeOnPreDrawListener(this);
                     return true;
                 }
@@ -58,13 +63,18 @@ class PopupBackgroundView extends View {
     }
 
     public void destroy() {
-        clearAnimation();
+        mHelper = null;
     }
 
     public void handleAnimateDismiss() {
-        if (mHelper.isPopupFadeEnable()) {
+        if (mHelper != null && mHelper.isPopupFadeEnable()) {
             Animation fadeOut = AnimationUtils.loadAnimation(getContext(), R.anim.basepopup_fade_out);
-            startAnimation(fadeOut);
+            if (fadeOut != null) {
+                long fadeDismissTime = mHelper.getExitAnimationDuration() - 300;
+                fadeOut.setDuration(Math.max(fadeOut.getDuration(), fadeDismissTime));
+                fadeOut.setFillAfter(true);
+                startAnimation(fadeOut);
+            }
         }
     }
 }

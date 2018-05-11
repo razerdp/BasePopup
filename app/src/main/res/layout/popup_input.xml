@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/popup_bg">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+    >
 
     <LinearLayout
-        android:id="@+id/popup_anima"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_centerInParent="true"
-        android:background="@android:color/white"
         android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp">
+        android:layout_marginRight="25dp"
+        android:background="@android:color/white"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center"
+            android:text="Title"
             android:textColor="#1bb25b"
-            android:textSize="18sp"
-            android:text="Title"/>
+            android:textSize="18sp"/>
 
         <View style="@style/line_style"/>
 

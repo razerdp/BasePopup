@@ -4,11 +4,11 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
+
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.utils.ToastUtils;
@@ -62,7 +62,7 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
 
     @Override
     public View onCreateContentView() {
-        return LayoutInflater.from(getContext()).inflate(R.layout.popup_input,null);
+        return createPopupById(R.layout.popup_input);
     }
 
     @Override

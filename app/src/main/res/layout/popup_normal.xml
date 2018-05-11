@@ -3,13 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/popup_bg"
     android:paddingLeft="25dp"
     android:paddingRight="25dp"
     >
 
     <LinearLayout
-        android:id="@+id/popup_anima"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

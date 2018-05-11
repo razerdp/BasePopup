@@ -5,7 +5,6 @@
     android:background="@color/popup_bg"
     >
     <RelativeLayout
-        android:id="@+id/popup_anima"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/white"

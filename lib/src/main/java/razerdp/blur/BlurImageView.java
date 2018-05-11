@@ -14,6 +14,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import razerdp.blur.thread.ThreadPoolManager;
 import razerdp.util.log.LogTag;
@@ -27,11 +28,14 @@ import razerdp.util.log.PopupLogUtil;
 public class BlurImageView extends ImageView {
     private static final String TAG = "BlurImageView";
 
+    private static final long BLUR_TASK_WAIT_TIMEOUT = 1000;//图片模糊超时1秒
     private volatile boolean abortBlur = false;
     private WeakReference<PopupBlurOption> mBlurOption;
-    private volatile boolean blurFinish = false;
+    private AtomicBoolean blurFinish = new AtomicBoolean(false);
     private volatile boolean isAnimating = false;
+    private AtomicBoolean waitForBlurTask = new AtomicBoolean(false);
     private long startDuration;
+    private long startTime;
 
 
     public BlurImageView(Context context) {
@@ -102,9 +106,10 @@ public class BlurImageView extends ImageView {
      */
     public void start(long duration) {
         startDuration = duration;
-        if (!blurFinish) {
-            postDelayed(new WaitForBlurFinishRunnalbe(), 8);
-            PopupLogUtil.trace(LogTag.v, TAG, "等待blur完成");
+        if (!blurFinish.get() || waitForBlurTask.get()) {
+            startTime = System.currentTimeMillis();
+            waitForBlurTask.compareAndSet(false, true);
+            PopupLogUtil.trace(LogTag.e, TAG, "等待模糊完成");
             return;
         }
         if (isAnimating) return;
@@ -179,11 +184,6 @@ public class BlurImageView extends ImageView {
      * @param blurBitmap
      */
     private void setImageBitmapOnUiThread(final Bitmap blurBitmap) {
-        if (blurBitmap != null) {
-            PopupLogUtil.trace("blurBitmap不为空");
-        } else {
-            PopupLogUtil.trace("blurBitmap为空");
-        }
         if (isUiThread()) {
             handleSetImageBitmap(blurBitmap);
         } else {
@@ -217,15 +217,33 @@ public class BlurImageView extends ImageView {
                 setImageMatrix(matrix);
             }
         }
-        blurFinish = true;
+        blurFinish.compareAndSet(false, true);
+        if (waitForBlurTask.get()) {
+            if (System.currentTimeMillis() - startTime >= BLUR_TASK_WAIT_TIMEOUT) {
+                PopupLogUtil.trace(LogTag.e, TAG, "模糊等待超时");
+                waitForBlurTask.set(false);
+            } else {
+                waitForBlurTask.compareAndSet(true, false);
+                start(startDuration);
+            }
+        }
+        PopupLogUtil.trace(LogTag.i, TAG, "设置成功：" + blurFinish.get());
     }
 
     private boolean isUiThread() {
         return Thread.currentThread() == Looper.getMainLooper().getThread();
     }
 
-    public void destroy(){
-
+    public void destroy() {
+        setImageBitmap(null);
+        abortBlur = true;
+        if (mBlurOption != null) {
+            mBlurOption.clear();
+            mBlurOption = null;
+        }
+        blurFinish.set(false);
+        isAnimating = false;
+        startDuration = 0;
     }
 
     class CreateBlurBitmapRunnable implements Runnable {
@@ -243,18 +261,6 @@ public class BlurImageView extends ImageView {
                 return;
             }
             setImageBitmapOnUiThread(BlurHelper.blur(getContext(), bitmap, getOption().getBlurPreScaleRatio(), getOption().getBlurRadius()));
-        }
-    }
-
-    class WaitForBlurFinishRunnalbe implements Runnable {
-
-        @Override
-        public void run() {
-            if (blurFinish) {
-                start(startDuration);
-            } else {
-                postDelayed(this, 8);
-            }
         }
     }
 }
