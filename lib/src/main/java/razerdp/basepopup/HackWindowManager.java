@@ -72,7 +72,7 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
              * popup内部有scrollChangeListener，会有params强转为WindowManager.LayoutParams的情况
              */
             BasePopupHelper helper = getBasePopupHelper();
-            mMaskLayout = new WeakReference<>(new PopupMaskLayout(view.getContext()));
+            mMaskLayout = new WeakReference<>(PopupMaskLayout.create(view.getContext(), helper));
 
             //添加popup主体
             final HackPopupDecorView hackPopupDecorView = new HackPopupDecorView(view.getContext());

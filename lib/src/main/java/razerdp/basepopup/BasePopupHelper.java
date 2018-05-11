@@ -66,7 +66,7 @@ final class BasePopupHelper {
     private PopupBlurOption mBlurOption;
 
     //背景颜色
-    private int mBackgroundColor = Color.TRANSPARENT;
+    private int mBackgroundColor = Color.parseColor("#8f000000");
 
     BasePopupHelper() {
         mAnchorViewLocation = new int[2];
