@@ -46,39 +46,27 @@ final class BasePopupHelper {
     private int mAnchorViewHeight;
     //是否自动适配popup的位置
     private boolean isAutoLocatePopup;
-    //showasdropdown
-    private boolean showAtDown;
+    //是否showAsDropDown
+    private boolean isShowAsDropDown;
     //点击popup外部是否消失
     private boolean dismissWhenTouchOutside;
     //是否全屏
     private boolean fullScreen = false;
     //是否需要淡入window动画
     private volatile boolean isPopupFadeEnable = true;
-
-    private int mPopupLayoutId;
-
+    //是否禁止后退键dismiss
     private boolean backPressEnable = true;
-
     //popup params
-    private boolean interCeptOutSideTouchEvent = true;
-
+    private boolean interceptOutSideTouchEvent = true;
     //模糊option(为空的话则不模糊）
     private PopupBlurOption mBlurOption;
-
+    //背景层是否对齐popup
+    private boolean mAlignMaskToPopup = false;
     //背景颜色
     private int mBackgroundColor = Color.parseColor("#8f000000");
 
     BasePopupHelper() {
         mAnchorViewLocation = new int[2];
-    }
-
-    int getPopupLayoutId() {
-        return mPopupLayoutId;
-    }
-
-    BasePopupHelper setPopupLayoutId(int popupLayoutId) {
-        mPopupLayoutId = popupLayoutId;
-        return this;
     }
 
     Animation getShowAnimation() {
@@ -180,12 +168,12 @@ final class BasePopupHelper {
         return this;
     }
 
-    boolean isShowAtDown() {
-        return showAtDown;
+    boolean isShowAsDropDown() {
+        return isShowAsDropDown;
     }
 
-    BasePopupHelper setShowAtDown(boolean showAtDown) {
-        this.showAtDown = showAtDown;
+    BasePopupHelper setShowAsDropDown(boolean showAsDropDown) {
+        this.isShowAsDropDown = showAsDropDown;
         return this;
     }
 
@@ -265,12 +253,12 @@ final class BasePopupHelper {
     }
 
     boolean isInterceptTouchEvent() {
-        return interCeptOutSideTouchEvent;
+        return interceptOutSideTouchEvent;
     }
 
     BasePopupHelper setInterceptTouchEvent(PopupWindow popupWindow, boolean intecept) {
         if (popupWindow == null) return this;
-        interCeptOutSideTouchEvent = intecept;
+        interceptOutSideTouchEvent = intecept;
         return this;
     }
 
@@ -365,6 +353,15 @@ final class BasePopupHelper {
 
     public BasePopupHelper setPopupBackgroundColor(int backgroundColor) {
         mBackgroundColor = backgroundColor;
+        return this;
+    }
+
+    public boolean isAlignMaskToPopup() {
+        return mAlignMaskToPopup;
+    }
+
+    public BasePopupHelper setAlignMaskToPopup(boolean alignMaskToPopup) {
+        mAlignMaskToPopup = alignMaskToPopup;
         return this;
     }
 

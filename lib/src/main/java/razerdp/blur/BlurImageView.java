@@ -63,7 +63,7 @@ public class BlurImageView extends ImageView {
         }
     }
 
-    public void attachBlurOption(PopupBlurOption option) {
+    public void applyBlurOption(PopupBlurOption option) {
         if (option == null) return;
         mBlurOption = new WeakReference<PopupBlurOption>(option);
         View anchorView = option.getBlurView();
@@ -202,6 +202,9 @@ public class BlurImageView extends ImageView {
      * @param bitmap
      */
     private void handleSetImageBitmap(Bitmap bitmap) {
+        if (bitmap != null) {
+            PopupLogUtil.trace(LogTag.i, "bitmap: 【" + bitmap.getWidth() + "," + bitmap.getHeight() + "】");
+        }
         setAlpha(0f);
         setImageBitmap(bitmap);
         if (getOption() != null) {
