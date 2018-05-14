@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import razerdp.blur.BlurImageView;
@@ -30,29 +31,38 @@ class PopupMaskLayout extends FrameLayout {
         super(context, attrs, defStyleAttr);
     }
 
-    public static PopupMaskLayout create(Context context, BasePopupHelper helper) {
+    public static PopupMaskLayout create(Context context, BasePopupHelper helper, ViewGroup.LayoutParams params) {
         PopupMaskLayout view = new PopupMaskLayout(context);
-        view.init(context, helper);
+        view.init(context, helper, params);
         return view;
     }
 
-    private void init(Context context, BasePopupHelper mHelper) {
+    private void init(Context context, BasePopupHelper mHelper, ViewGroup.LayoutParams params) {
         if (mHelper == null) {
             setVisibility(GONE);
             return;
         }
+        setLayoutAnimation(null);
         setVisibility(VISIBLE);
         if (mHelper.isAllowToBlur()) {
             mBlurImageView = new BlurImageView(context);
-            mBlurImageView.attachBlurOption(mHelper.getBlurOption());
-            addView(mBlurImageView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            mBlurImageView.applyBlurOption(mHelper.getBlurOption());
+            addViewInLayout(mBlurImageView, -1, generateDefaultLayoutParams());
         }
         if (mHelper.getPopupBackgroundColor() != Color.TRANSPARENT) {
             mBackgroundView = PopupBackgroundView.creaete(context, mHelper);
-            addView(mBackgroundView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            LayoutParams backgroundViewParams = generateDefaultLayoutParams();
+            if (mHelper.isAlignMaskToPopup() && params instanceof WindowManager.LayoutParams) {
+                backgroundViewParams.topMargin = ((WindowManager.LayoutParams) params).y;
+            }
+            addViewInLayout(mBackgroundView, -1, backgroundViewParams);
         }
     }
 
+    @Override
+    protected LayoutParams generateDefaultLayoutParams() {
+        return new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+    }
 
     public void handleStart(long duration) {
         if (mBlurImageView != null) {

@@ -1,6 +1,6 @@
-BasePopup
+BasePopup（V2）
 ---
-**抽象出一个方便自定义的Basepopup类，更加方便的创建出一个popup以及动画效果**
+**这是一个快速实现PopupWindow的基类，本基类易于扩展，并且几乎没有使用限制，便于您快速实现各种各样的PopupWindow。**
 
 
 | **Release** | **Candy** | **License** | **Api** | **Author** |
@@ -68,15 +68,12 @@ etc.
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--根布局，常用作蒙层（就是变暗的背景）-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#8f000000">
+    >
     
-    <!--播放动画的内容，可以认为是popup的主要内容布局-->
     <RelativeLayout
-        android:id="@+id/popup_anima"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_dialog"
@@ -126,7 +123,7 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
     }
 
     @Override
-    protected Animation initShowAnimation() {
+    protected Animation onCreateShowAnimation() {
         AnimationSet set=new AnimationSet(false);
         Animation shakeAnima=new RotateAnimation(0,15,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
         shakeAnima.setInterpolator(new CycleInterpolator(5));
@@ -137,18 +134,13 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
     }
 
     @Override
-    protected View getClickToDismissView() {
-        return getPopupWindowView();
+    protected Animation onCreateDismissAnimation() {
+        return null;
     }
 
     @Override
-    public View onCreatePopupView() {
+    public View onCreateContentView() {
         return createPopupById(R.layout.popup_dialog);
-    }
-
-    @Override
-    public View initAnimaView() {
-        return findViewById(R.id.popup_anima);
     }
 
     @Override
@@ -205,41 +197,8 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 
 更新日志([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 ---------------------------------------------------------------------------
-* **1.9.4(release)**
-  * 修复autolocate的问题
-  * 发布1.9.4
-
-* **1.9.4-alpha2(candy)**
-  * 修复误打包测试代码的alpha1
-
-* **1.9.4-alpha(candy)**
-  * 本版本是预览版本，如果您有需要，可以更新到Candy版本，但不保证没有任何问题
-  * 针对8.0进行修复
-      * link: [issue#56](https://github.com/razerdp/BasePopup/issues/56)
-      * link: [issue#61](https://github.com/razerdp/BasePopup/issues/61)
-      * link: [issue#64](https://github.com/razerdp/BasePopup/issues/64)
-  * 优化代码，HackWindowManager与HackPopupDecorView部分重构
-  * showOnTop/showOnDown更名->onAnchorTop/onAnchorBottom，避免误导。
-
-* **1.9.3(release)**
-  * 修复了在popup外滑动时`ViewGroup.LayoutParams`的cast异常
-      * link: [issue#52](https://github.com/razerdp/BasePopup/issues/52)
-
-* **1.9.2(release)**
-  * 修复`HackDecorView`针对PopupWindow高度问题
-  * 增加`setBlurBackgroundEnable()`模糊设置回调，允许自定义模糊操作
-  * 修改为默认子线程模糊背景，同时增加blurImageView的模糊等待操作
-
-* **1.9.1(release)**
-  * 修复可能出现的死循环问题以及去掉manifest文件冲突的问题
-  * 部分方法名字修改，默认关闭 Log，如果您需要打印内部调试日志，请使用该方法：`BasePopupWindow.debugLog(true)`
-  * 增加位移动画（百分比传值）,位移动画名字修正：`getTranslateAnimation()` -> `getTranslateVerticalAnimation()`
-  * 模糊背景功能已经开放，针对单个View的模糊方法开放
-  * 模糊背景允许子线程执行，默认主线程执行
-  * gradle请在`defaultConfig`下添加两句：
-      * **renderscriptTargetApi 25**
-      * **enderscriptSupportModeEnabled true**
-  * 发布1.9.1，其余bug修复
+* **2.0.0-alpha1(candy)**
+  * 发布预览v2版本
 
 
 一些例子
