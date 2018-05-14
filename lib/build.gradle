@@ -31,7 +31,7 @@ publish {
     groupId = 'com.github.razerdp'
 //    artifactId = 'BasePopup'
     artifactId = 'BasePopup_Candy'
-    publishVersion = '2.0.0'
+    publishVersion = '2.0.0-alpha1'
     desc = '打造一个通用的Popup'
     website = 'https://github.com/razerdp/BasePopup'
 }
