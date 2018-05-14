@@ -29,9 +29,9 @@ dependencies {
 publish {
     userOrg = 'razerdp'
     groupId = 'com.github.razerdp'
-    artifactId = 'BasePopup'
-//    artifactId = 'BasePopup_Candy'
-    publishVersion = '1.9.4'
+//    artifactId = 'BasePopup'
+    artifactId = 'BasePopup_Candy'
+    publishVersion = '2.0.0'
     desc = '打造一个通用的Popup'
     website = 'https://github.com/razerdp/BasePopup'
 }

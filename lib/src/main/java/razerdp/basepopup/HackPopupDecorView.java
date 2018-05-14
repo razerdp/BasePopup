@@ -189,7 +189,6 @@ public class HackPopupDecorView extends ViewGroup {
             // FIXME: 2017/12/27 全屏跟SOFT_INPUT_ADJUST_RESIZE冲突，暂时没有好的解决方案
             p.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED;
         }
-        PopupLogUtil.trace(LogTag.i, TAG, "PopupWindow窗口的window type >>  " + p.type);
         return p;
     }
 
