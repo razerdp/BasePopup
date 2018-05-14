@@ -17,7 +17,6 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener 
     public ScalePopup(Activity context) {
         super(context);
         bindEvent();
-        setBlurBackgroundEnable(true);
     }
 
 

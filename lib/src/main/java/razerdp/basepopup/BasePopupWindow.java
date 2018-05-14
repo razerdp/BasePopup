@@ -298,6 +298,19 @@ import razerdp.util.log.PopupLogUtil;
  * <li>2018/05/14 ： 2.0版本重构</li>
  * </ul>
  * </p>
+ * 頂頂頂頂頂頂頂頂頂　頂頂頂頂頂頂頂頂頂
+ * 頂頂頂頂頂頂頂　　　　　頂頂
+ * 　　　頂頂　　　頂頂頂頂頂頂頂頂頂頂頂
+ * 　　　頂頂　　　頂頂頂頂頂頂頂頂頂頂頂
+ * 　　　頂頂　　　頂頂　　　　　　　頂頂
+ * 　　　頂頂　　　頂頂　　頂頂頂　　頂頂
+ * 　　　頂頂　　　頂頂　　頂頂頂　　頂頂
+ * 　　　頂頂　　　頂頂　　頂頂頂　　頂頂
+ * 　　　頂頂　　　頂頂　　頂頂頂　　頂頂
+ * 　　　頂頂　　　　　　　頂頂頂
+ * 　　　頂頂　　　　　　頂頂　頂頂　頂頂
+ * 　頂頂頂頂　　　頂頂頂頂頂　頂頂頂頂頂
+ * 　頂頂頂頂　　　頂頂頂頂　　　頂頂頂頂
  *
  * @author 大灯泡
  * @version 2.0
@@ -321,7 +334,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private volatile boolean isExitAnimatePlaying = false;
 
     //重试次数
-    private volatile int retryCounter;
+    private int retryCounter;
 
     private InnerPopupWindowStateListener mStateListener;
 
@@ -504,7 +517,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 Context context = getContext();
                 assert context != null : "context is null ! please make sure your activity is not be destroyed";
                 if (context instanceof Activity) {
-                    mPopupWindow.showAtLocationProxy(((Activity) context).findViewById(android.R.id.content),
+                    mPopupWindow.showAtLocationProxy(((Activity) context).getWindow().getDecorView(),
                             mHelper.getPopupGravity(),
                             mHelper.getOffsetX(),
                             mHelper.getOffsetY());
@@ -530,12 +543,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             }
             retryCounter = 0;
         } catch (Exception e) {
-            if (retryCounter > MAX_RETRY_SHOW_TIME) {
-                Log.e(TAG, "show error\n" + e.getMessage());
-                e.printStackTrace();
-                return;
-            }
             retryToShowPopup(v);
+            PopupLogUtil.trace(LogTag.e, TAG, "show error\n" + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -544,28 +554,29 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     private void retryToShowPopup(final View v) {
         if (retryCounter > MAX_RETRY_SHOW_TIME) return;
-        Log.e(TAG, "catch an exception on showing popupwindow ...now retrying to show ... retry count  >>  " + retryCounter);
-        if (isShowing()) mPopupWindow.callSuperDismiss();
-        Context context = getContext();
-        if (context instanceof Activity) {
-            Activity act = (Activity) context;
-            boolean availabled;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                availabled = !act.isFinishing() && !act.isDestroyed();
-            } else {
-                availabled = !act.isFinishing();
-            }
-            if (availabled) {
-                View rootView = act.findViewById(android.R.id.content);
-                if (rootView == null) return;
-                rootView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        retryCounter++;
-                        tryToShowPopup(v);
-                    }
-                }, 350);
-            }
+        PopupLogUtil.trace(LogTag.e, TAG, "catch an exception on showing popupwindow ...now retrying to show ... retry count  >>  " + retryCounter);
+        if (mPopupWindow.callSuperIsShowing()) {
+            mPopupWindow.callSuperDismiss();
+        }
+        Activity act = mPopupWindow.scanForActivity(getContext());
+        if (act == null) return;
+        boolean available;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            available = !act.isFinishing() && !act.isDestroyed();
+        } else {
+            available = !act.isFinishing();
+        }
+        if (available) {
+            View rootView = act.getWindow().getDecorView();
+            if (rootView == null) return;
+            rootView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    retryCounter++;
+                    tryToShowPopup(v);
+                    PopupLogUtil.trace(LogTag.e, TAG, "retry to show >> " + retryCounter);
+                }
+            }, 350);
         }
 
     }
@@ -958,7 +969,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         try {
             mPopupWindow.dismiss();
         } catch (Exception e) {
-            Log.e(TAG, "dismiss error");
+            PopupLogUtil.trace(LogTag.e, TAG, "dismiss error");
             e.printStackTrace();
         }
     }
@@ -1275,7 +1286,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return dip * getContext().getResources().getDisplayMetrics().density + 0.5f;
     }
 
-    public static void debugLog(boolean printLog) {
+    public static void setDebugLogEnable(boolean printLog) {
         PopupLogUtil.setOpenLog(printLog);
     }
 
