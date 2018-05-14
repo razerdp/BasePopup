@@ -72,11 +72,11 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
              * popup内部有scrollChangeListener，会有params强转为WindowManager.LayoutParams的情况
              */
             BasePopupHelper helper = getBasePopupHelper();
-            mMaskLayout = new WeakReference<>(PopupMaskLayout.create(view.getContext(), helper));
 
             //添加popup主体
             final HackPopupDecorView hackPopupDecorView = new HackPopupDecorView(view.getContext());
             params = hackPopupDecorView.addPopupDecorView(view, params, helper, getPopupController());
+            mMaskLayout = new WeakReference<>(PopupMaskLayout.create(view.getContext(), helper, fitLayoutParamsPosition(params)));
             mHackPopupDecorView = new WeakReference<HackPopupDecorView>(hackPopupDecorView);
 
             if (getPopupController() instanceof BasePopupWindow) {
@@ -103,7 +103,7 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
         if (params instanceof WindowManager.LayoutParams) {
             WindowManager.LayoutParams p = (LayoutParams) params;
             BasePopupHelper helper = getBasePopupHelper();
-            if (helper != null && helper.isShowAtDown() && p.y <= helper.getAnchorY()) {
+            if (helper != null && helper.isShowAsDropDown() && p.y <= helper.getAnchorY()) {
                 int y = helper.getAnchorY() + helper.getAnchorHeight() + helper.getInternalOffsetY();
                 p.y = y <= 0 ? 0 : y;
             }
@@ -165,6 +165,7 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
             mResults.flags |= LayoutParams.FLAG_NOT_FOCUSABLE;
             mResults.flags |= LayoutParams.FLAG_NOT_TOUCHABLE;
             mResults.flags |= LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+            mResults.windowAnimations = 0;
             mResults.x = 0;
             mResults.y = 0;
             mResults.format = PixelFormat.RGBA_8888;
