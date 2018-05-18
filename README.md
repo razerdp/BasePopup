@@ -1,5 +1,5 @@
-BasePopup（V2）
----
+BasePopup（v2）
+-------------
 **这是一个快速实现PopupWindow的基类，本基类易于扩展，并且几乎没有使用限制，便于您快速实现各种各样的PopupWindow。**
 
 
@@ -9,6 +9,9 @@ BasePopup（V2）
 
 
 注意事项
+----
+
+Android P 未进行适配！！！非SDK方法保护没有进行突破，Android P慎用。。。
 ---
 
 **请务必查看更新日志和例子预览，里面会详细解释每个版本增加或修复的功能**
@@ -47,18 +50,7 @@ BasePopup（V2）
 
 
 使用方法
----
-
-ps:从1.9.0-alpha开始支持背景模糊（只需要一个方法：`setBlurBackgroundEnable()`）
-
-**RenderScript最低支持api 17（更低的情况将会使用fastblur），您需要在gradle配置一下代码**
-
-```xml
-defaultConfig {
-        renderscriptTargetApi 25
-        renderscriptSupportModeEnabled true
-    }
-```
+----
 
 * **Step 1:**
 
@@ -67,7 +59,6 @@ defaultConfig {
 etc.
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -99,11 +90,10 @@ etc.
 
 实现必要的几个方法：
 
-`initShowAnimation()`:初始化一个进入动画，该动画将会用到`initAnimaView()`返回的view
+`onCreateShowAnimation()`/`onCreateDismissAnimation()`:初始化一个显示/退出动画，该动画将会用到`onCreatePopupView()`所返回的view,可以为空。
 
-`onCreatePopupView()`:初始化您的popupwindow界面，建议直接使用`createPopupById()`，不能返回空值
+`onCreatePopupView()`:初始化您的popupwindow界面，建议直接使用`createPopupById()`
 
-`getClickToDismissView()`:如果有需要的话，可以使用这个方法返回一个点击dismiss popupwindow的view(也许是遮罩层也许是某个view，这个随您喜欢)
 
 例如
 
@@ -145,17 +135,7 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.ok:
-                Toast.makeText(getContext(),"click the ok button",Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.cancel:
-                Toast.makeText(getContext(),"click the cancel button",Toast.LENGTH_SHORT).show();
-                break;
-            default:
-                break;
-        }
-
+        //... click event
     }
 }
 ```
@@ -169,6 +149,19 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 ```java
     DialogPopup popup = new DialogPopup(context);
     popup.showPopupWindow();
+```
+
+
+
+**ps:从1.9.0-alpha开始支持背景模糊（只需要一个方法：`setBlurBackgroundEnable()`）**
+
+**RenderScript最低支持api 17（更低的情况将会使用fastblur），您需要在gradle配置一下代码**
+
+```xml
+defaultConfig {
+        renderscriptTargetApi 25
+        renderscriptSupportModeEnabled true
+    }
 ```
 
 方法介绍：
