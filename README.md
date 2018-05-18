@@ -1,6 +1,6 @@
 BasePopup  
 
-[BasePopup V2版本请点我](https://github.com/razerdp/BasePopup/tree/basepopup_v3)
+[BasePopup V2版本请点我](https://github.com/razerdp/BasePopup/tree/basepopup_v2)
 ---
 **抽象出一个方便自定义的Basepopup类，更加方便的创建出一个popup以及动画效果**
 
@@ -14,6 +14,8 @@ BasePopup
 ---
 
 ### Android P未进行适配！！！Android P请慎用
+
+---
 
 **请务必查看更新日志和例子预览，里面会详细解释每个版本增加或修复的功能**
 
@@ -30,7 +32,7 @@ BasePopup
 其他
 ---
 
-关于V2版本更新（现已在Candy发布2.0.0alpha-1） 
+[关于V2版本更新（现已在Candy发布2.0.0alpha-1）](https://github.com/razerdp/BasePopup/blob/master/About_v2.md)
 
 
 依赖
