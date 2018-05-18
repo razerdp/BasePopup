@@ -1,4 +1,6 @@
-BasePopup
+BasePopup  
+
+[BasePopup V2版本请点我](https://github.com/razerdp/BasePopup/tree/basepopup_v3)
 ---
 **抽象出一个方便自定义的Basepopup类，更加方便的创建出一个popup以及动画效果**
 
@@ -11,6 +13,8 @@ BasePopup
 注意事项
 ---
 
+### Android P未进行适配！！！Android P请慎用
+
 **请务必查看更新日志和例子预览，里面会详细解释每个版本增加或修复的功能**
 
 **请注意引用版本的问题，Release版本是稳定版，可商用。**
@@ -22,6 +26,11 @@ BasePopup
 [**更新日志**](https://github.com/razerdp/BasePopup#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97%E5%8E%86%E5%8F%B2%E6%9B%B4%E6%96%B0)
 
 [**例子预览**](https://github.com/razerdp/BasePopup#%E4%B8%80%E4%BA%9B%E4%BE%8B%E5%AD%90)
+
+其他
+---
+
+关于V2版本更新（现已在Candy发布2.0.0alpha-1） 
 
 
 依赖
@@ -205,6 +214,11 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 
 更新日志([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 ---------------------------------------------------------------------------
+* **2.0.0alpha-1(candy)**
+  * 发布v2预览版本
+  * 本次candy用作2.0预览版发布，2.0对整体结构有破坏性改变，如果您在商业项目中用得比较多，请勿轻易使用candy版本。
+  * 2.0.0版本相关请查看分支:[basepopup v2](https://github.com/razerdp/BasePopup/tree/basepopup_v2)
+
 * **1.9.4(release)**
   * 修复autolocate的问题
   * 发布1.9.4
