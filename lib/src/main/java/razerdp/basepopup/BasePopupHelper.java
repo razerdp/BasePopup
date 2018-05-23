@@ -23,8 +23,8 @@ final class BasePopupHelper {
     //anima
     private Animation mShowAnimation;
     private Animator mShowAnimator;
-    private Animation mExitAnimation;
-    private Animator mExitAnimator;
+    private Animation mDismissAnimation;
+    private Animator mDismissAnimator;
 
     //callback
     private BasePopupWindow.OnDismissListener mOnDismissListener;
@@ -61,7 +61,7 @@ final class BasePopupHelper {
     //模糊option(为空的话则不模糊）
     private PopupBlurOption mBlurOption;
     //背景层是否对齐popup
-    private boolean mAlignMaskToPopup = false;
+    private boolean mAlignBackground = false;
     //背景颜色
     private int mBackgroundColor = Color.parseColor("#8f000000");
 
@@ -95,29 +95,29 @@ final class BasePopupHelper {
         return this;
     }
 
-    Animation getExitAnimation() {
-        return mExitAnimation;
+    Animation getDismissAnimation() {
+        return mDismissAnimation;
     }
 
-    BasePopupHelper setExitAnimation(Animation exitAnimation) {
-        if (mExitAnimation == exitAnimation) return this;
-        if (mExitAnimation != null) {
-            mExitAnimation.cancel();
+    BasePopupHelper setDismissAnimation(Animation dismissAnimation) {
+        if (mDismissAnimation == dismissAnimation) return this;
+        if (mDismissAnimation != null) {
+            mDismissAnimation.cancel();
         }
-        mExitAnimation = exitAnimation;
+        mDismissAnimation = dismissAnimation;
         return this;
     }
 
-    Animator getExitAnimator() {
-        return mExitAnimator;
+    Animator getDismissAnimator() {
+        return mDismissAnimator;
     }
 
-    BasePopupHelper setExitAnimator(Animator exitAnimator) {
-        if (mExitAnimator == exitAnimator) return this;
-        if (mExitAnimator != null) {
-            mExitAnimator.cancel();
+    BasePopupHelper setDismissAnimator(Animator dismissAnimator) {
+        if (mDismissAnimator == dismissAnimator) return this;
+        if (mDismissAnimator != null) {
+            mDismissAnimator.cancel();
         }
-        mExitAnimator = exitAnimator;
+        mDismissAnimator = dismissAnimator;
         return this;
     }
 
@@ -339,10 +339,10 @@ final class BasePopupHelper {
 
     long getExitAnimationDuration() {
         long duration = 0;
-        if (mExitAnimation != null) {
-            duration = mExitAnimation.getDuration();
-        } else if (mExitAnimator != null) {
-            duration = mExitAnimator.getDuration();
+        if (mDismissAnimation != null) {
+            duration = mDismissAnimation.getDuration();
+        } else if (mDismissAnimator != null) {
+            duration = mDismissAnimator.getDuration();
         }
         return duration < 0 ? 300 : duration;
     }
@@ -356,12 +356,12 @@ final class BasePopupHelper {
         return this;
     }
 
-    public boolean isAlignMaskToPopup() {
-        return mAlignMaskToPopup;
+    public boolean isAlignBackground() {
+        return mAlignBackground;
     }
 
-    public BasePopupHelper setAlignMaskToPopup(boolean alignMaskToPopup) {
-        mAlignMaskToPopup = alignMaskToPopup;
+    public BasePopupHelper setAlignBackgound(boolean mAlignBackground) {
+        this.mAlignBackground = mAlignBackground;
         return this;
     }
 

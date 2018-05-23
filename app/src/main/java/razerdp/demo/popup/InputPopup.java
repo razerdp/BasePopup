@@ -17,18 +17,18 @@ import razerdp.demo.utils.ToastUtils;
  * Created by 大灯泡 on 2016/1/18.
  * 带输入法的popup
  */
-public class InputPopup extends BasePopupWindow implements View.OnClickListener{
+public class InputPopup extends BasePopupWindow implements View.OnClickListener {
     private Button mCancelButton;
     private Button mCompeleteButton;
     private EditText mInputEdittext;
 
     public InputPopup(Activity context) {
         super(context);
-        mCancelButton= (Button) findViewById(R.id.btn_cancel);
-        mCompeleteButton= (Button) findViewById(R.id.btn_Compelete);
-        mInputEdittext= (EditText) findViewById(R.id.ed_input);
+        mCancelButton = (Button) findViewById(R.id.btn_cancel);
+        mCompeleteButton = (Button) findViewById(R.id.btn_Compelete);
+        mInputEdittext = (EditText) findViewById(R.id.ed_input);
 
-        setAutoShowInputMethod(true);
+        setAutoShowInputMethod(mInputEdittext, true);
         bindEvent();
     }
 
@@ -56,11 +56,6 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
     }
 
     @Override
-    public EditText onCreateInputView() {
-        return mInputEdittext;
-    }
-
-    @Override
     public View onCreateContentView() {
         return createPopupById(R.layout.popup_input);
     }
@@ -82,12 +77,12 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener{
     //=============================================================click event
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_cancel:
                 dismiss();
                 break;
             case R.id.btn_Compelete:
-                ToastUtils.ToastMessage(getContext(),mInputEdittext.getText().toString());
+                ToastUtils.ToastMessage(getContext(), mInputEdittext.getText().toString());
                 dismiss();
                 break;
             default:
