@@ -52,7 +52,7 @@ class PopupMaskLayout extends FrameLayout {
         if (mHelper.getPopupBackgroundColor() != Color.TRANSPARENT) {
             mBackgroundView = PopupBackgroundView.creaete(context, mHelper);
             LayoutParams backgroundViewParams = generateDefaultLayoutParams();
-            if (mHelper.isAlignMaskToPopup() && params instanceof WindowManager.LayoutParams) {
+            if (mHelper.isAlignBackground() && params instanceof WindowManager.LayoutParams) {
                 backgroundViewParams.topMargin = ((WindowManager.LayoutParams) params).y;
             }
             addViewInLayout(mBackgroundView, -1, backgroundViewParams);
