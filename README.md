@@ -54,7 +54,7 @@ Android P 未进行适配！！！非SDK方法保护没有进行突破，Android
 
 * **Step 1:**
 
-像您平时定制activity布局文件一样定制您的popup布局（请注意，展示动画的那个view必须是popupview的子view）
+像您平时定制activity布局文件一样定制您的popup布局
 
 etc.
 ```xml
@@ -206,14 +206,6 @@ defaultConfig {
 | [InputPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/InputPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/input_popup.gif) |
 | [ListPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/ListPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/list_popup.gif) |
 | [MenuPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/MenuPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/menu_popup.gif) |
-
-
-代码解析
----
-
-(很旧的文章了，考虑迟点重新编写)
-
-[http://www.jianshu.com/p/069f57e14a9c](http://www.jianshu.com/p/069f57e14a9c)
 
 
 License
