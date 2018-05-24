@@ -49,11 +49,6 @@
         android:title="custom interpolator popup"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/id_full_screen_popup"
-        android:orderInCategory="108"
-        android:title="full screen popup"
-        app:showAsAction="never"/>
-    <item
         android:id="@+id/id_auto_located_popup"
         android:orderInCategory="109"
         android:title="auto located popup"
