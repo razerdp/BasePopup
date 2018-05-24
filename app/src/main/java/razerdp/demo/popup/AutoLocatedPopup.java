@@ -18,7 +18,8 @@ public class AutoLocatedPopup extends BasePopupWindow implements View.OnClickLis
 
     public AutoLocatedPopup(Activity context) {
         super(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        setAutoLocatePopup(true);
+        setAutoLocatePopup(true)
+        .setAlignBackground(false);
         bindEvent();
     }
 
