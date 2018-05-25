@@ -500,10 +500,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </ul>
      * </p>
      *
-     * @param needPopupFadeAnima true for apply anim style
+     * @param needPopupFadeAnimate true for apply anim style
      */
-    public BasePopupWindow setPopupFadeEnable(boolean needPopupFadeAnima) {
-        mHelper.setPopupFadeEnable(mPopupWindow, needPopupFadeAnima);
+    public BasePopupWindow setPopupFadeEnable(boolean needPopupFadeAnimate) {
+        mHelper.setPopupFadeEnable(mPopupWindow, needPopupFadeAnimate);
         return this;
     }
 
@@ -780,7 +780,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param id the ID to search for
      * @return a view with given ID if found, or {@code null} otherwise
      */
-    protected <T extends View> T findViewById(int id) {
+    public  <T extends View> T findViewById(int id) {
         if (mContentView != null && id != 0) {
             return (T) mContentView.findViewById(id);
         }
