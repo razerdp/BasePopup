@@ -41,10 +41,10 @@ Android P 未进行适配！！！非SDK方法保护没有进行突破，Android
 
 ```xml
 	dependencies {
-	        compile 'com.github.razerdp:BasePopup:{latestVersion}'
+	        implementation 'com.github.razerdp:BasePopup:{latestVersion}'
 	        
 	        //candy版本，不稳定，但会带有新功能
-	        //compile 'com.github.razerdp:BasePopup_Candy:{latestVersion}'
+	        //implementation 'com.github.razerdp:BasePopup_Candy:{latestVersion}'
 	}
 ```
 
