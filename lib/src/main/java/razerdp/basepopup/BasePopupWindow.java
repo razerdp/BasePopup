@@ -209,6 +209,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -780,7 +782,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param id the ID to search for
      * @return a view with given ID if found, or {@code null} otherwise
      */
-    public  <T extends View> T findViewById(int id) {
+    public <T extends View> T findViewById(int id) {
         if (mContentView != null && id != 0) {
             return (T) mContentView.findViewById(id);
         }
@@ -809,19 +811,31 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param color 背景颜色
      */
     public BasePopupWindow setPopupBackgroundColor(int color) {
-        mHelper.setPopupBackgroundColor(color);
+        mHelper.setPopupBackground(new ColorDrawable(color));
         return this;
     }
 
     /**
      * <p>
-     * 获取当前PopupWindow背景颜色
+     * 设置PopupWindow背景Drawable，默认颜色为<strong>#8f000000</strong>
      * </p>
      *
-     * @return 背景颜色
+     * @param background 背景Drawable
      */
-    public int getPopupBackgroundColor() {
-        return mHelper.getPopupBackgroundColor();
+    public BasePopupWindow setPopupBackgroundColor(Drawable background) {
+        mHelper.setPopupBackground(background);
+        return this;
+    }
+
+    /**
+     * <p>
+     * 获取当前PopupWindow背景
+     * </p>
+     *
+     * @return 背景
+     */
+    public Drawable getPopupBackground() {
+        return mHelper.getPopupBackground();
     }
 
     /**
