@@ -1,7 +1,7 @@
 package razerdp.basepopup;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -9,6 +9,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import razerdp.library.R;
+import razerdp.util.PopupUtil;
 
 /**
  * Created by 大灯泡 on 2018/5/9.
@@ -37,13 +38,18 @@ class PopupBackgroundView extends View {
     }
 
     private void init(Context context, final BasePopupHelper mHelper) {
-        if (mHelper == null || mHelper.getPopupBackgroundColor() == Color.TRANSPARENT) {
+        if (PopupUtil.isBackgroundInvalidated(mHelper.getPopupBackground()))
+        {
             setVisibility(GONE);
             return;
         }
         this.mHelper = mHelper;
         setVisibility(VISIBLE);
-        setBackgroundColor(mHelper.getPopupBackgroundColor());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            setBackground(mHelper.getPopupBackground());
+        } else {
+            setBackgroundDrawable(mHelper.getPopupBackground());
+        }
         if (mHelper.isPopupFadeEnable()) {
             getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override

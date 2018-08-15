@@ -1,13 +1,13 @@
 package razerdp.basepopup;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import razerdp.blur.BlurImageView;
+import razerdp.util.PopupUtil;
 
 /**
  * Created by 大灯泡 on 2018/5/9.
@@ -49,7 +49,7 @@ class PopupMaskLayout extends FrameLayout {
             mBlurImageView.applyBlurOption(mHelper.getBlurOption());
             addViewInLayout(mBlurImageView, -1, generateDefaultLayoutParams());
         }
-        if (mHelper.getPopupBackgroundColor() != Color.TRANSPARENT) {
+        if (!PopupUtil.isBackgroundInvalidated(mHelper.getPopupBackground())) {
             mBackgroundView = PopupBackgroundView.creaete(context, mHelper);
             LayoutParams backgroundViewParams = generateDefaultLayoutParams();
             if (mHelper.isAlignBackground() && params instanceof WindowManager.LayoutParams) {
