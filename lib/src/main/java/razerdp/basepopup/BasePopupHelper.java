@@ -2,6 +2,8 @@ package razerdp.basepopup;
 
 import android.animation.Animator;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -63,7 +65,7 @@ final class BasePopupHelper {
     //背景层是否对齐popup
     private boolean mAlignBackground = true;
     //背景颜色
-    private int mBackgroundColor = Color.parseColor("#8f000000");
+    private Drawable mBackgroundDrawable = new ColorDrawable(Color.parseColor("#8f000000"));
 
     BasePopupHelper() {
         mAnchorViewLocation = new int[2];
@@ -347,12 +349,12 @@ final class BasePopupHelper {
         return duration < 0 ? 300 : duration;
     }
 
-    public int getPopupBackgroundColor() {
-        return mBackgroundColor;
+    public Drawable getPopupBackground() {
+        return mBackgroundDrawable;
     }
 
-    public BasePopupHelper setPopupBackgroundColor(int backgroundColor) {
-        mBackgroundColor = backgroundColor;
+    public BasePopupHelper setPopupBackground(Drawable background) {
+        mBackgroundDrawable = background;
         return this;
     }
 
