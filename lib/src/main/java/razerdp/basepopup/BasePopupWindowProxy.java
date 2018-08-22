@@ -13,6 +13,7 @@ import android.widget.PopupWindow;
 
 import java.lang.reflect.Field;
 
+import razerdp.util.PopupUtil;
 import razerdp.util.log.LogTag;
 import razerdp.util.log.PopupLogUtil;
 
@@ -173,10 +174,19 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     void callSuperDismiss() {
         try {
             super.dismiss();
+            clear();
         } catch (Exception e) {
             Log.e(TAG, "dismiss error");
             e.printStackTrace();
+            clear();
         }
+    }
+
+    void clear() {
+        if (hackWindowManager != null) {
+            hackWindowManager.clear();
+        }
+        PopupUtil.clearViewFromParent(getContentView());
     }
 
     /**
