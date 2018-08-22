@@ -8,7 +8,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 27
         versionCode 23
-        versionName "2.0.0-alpha2"
+        versionName "2.0.1-alpha1"
     }
     buildTypes {
         release {
@@ -31,7 +31,7 @@ publish {
     groupId = 'com.github.razerdp'
 //    artifactId = 'BasePopup'
     artifactId = 'BasePopup_Candy'
-    publishVersion = '2.0.0-alpha2'
+    publishVersion = '2.0.1-alpha1'
     desc = '打造一个通用的Popup'
     website = 'https://github.com/razerdp/BasePopup'
 }
