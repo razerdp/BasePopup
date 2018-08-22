@@ -274,7 +274,7 @@ import razerdp.util.log.PopupLogUtil;
  * <ul>
  * <li><strong>背景层（Mask层）：</strong>
  * <ul>
- * <li>背景颜色现在由api {@link #setPopupBackgroundColor(int)}来制定，默认情况下，该颜色为{@code #8f000000}</li>
+ * <li>背景颜色现在由api {@link #setBackgroundColor(int)}来制定，默认情况下，该颜色为{@code #8f000000}</li>
  * <li>通常情况下，Mask层是铺满整个屏幕的，如果您不需要Mask层铺满屏幕，您可以使用{@link #setAlignBackground(boolean)}把Mask层对齐到与您的PopupWindow主体一致</li>
  * </ul></li>
  * <li><strong>模糊层（Blur层）：</strong>
@@ -810,7 +810,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *
      * @param color 背景颜色
      */
-    public BasePopupWindow setPopupBackgroundColor(int color) {
+    public BasePopupWindow setBackgroundColor(int color) {
         mHelper.setPopupBackground(new ColorDrawable(color));
         return this;
     }
@@ -820,9 +820,24 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 设置PopupWindow背景Drawable，默认颜色为<strong>#8f000000</strong>
      * </p>
      *
+     * @param drawableIds 背景Drawable id
+     */
+    public BasePopupWindow setBackground(int drawableIds) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return setBackground(getContext().getDrawable(drawableIds));
+        } else {
+            return setBackground(getContext().getResources().getDrawable(drawableIds, getContext().getTheme()));
+        }
+    }
+
+    /**
+     * <p>
+     * 设置PopupWindow背景Drawable，默认颜色为<strong>#8f000000</strong>
+     * </p>
+     *
      * @param background 背景Drawable
      */
-    public BasePopupWindow setPopupBackgroundColor(Drawable background) {
+    public BasePopupWindow setBackground(Drawable background) {
         mHelper.setPopupBackground(background);
         return this;
     }

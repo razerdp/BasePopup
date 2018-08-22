@@ -148,6 +148,17 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
         }
     }
 
+    public void clear() {
+        try {
+            removeViewImmediate(mHackPopupDecorView.get());
+            removeViewImmediate(getMaskLayout());
+            mHackPopupDecorView.clear();
+            mMaskLayout.clear();
+        } catch (Exception e) {
+            //no print
+        }
+    }
+
 
     /**
      * 生成blurimageview的params

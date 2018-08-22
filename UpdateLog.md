@@ -1,5 +1,10 @@
 * BasePopup
 
+* **2.0.1-alpha1** (2018/08/22)
+  * 修复无法在onCreate()里面显示的问题
+  * 增加setBackground(Drawable/ResourceId)方法，fixed [#79](https://github.com/razerdp/BasePopup/issues/79)
+  * 正式版即将发布，。
+
 * 2018/05/23
   * 添加注释
 
