@@ -340,12 +340,25 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private int retryCounter;
     private InnerPopupWindowStateListener mStateListener;
     private EditText mAutoShowInputEdittext;
+    private boolean initImmediately;
 
     public BasePopupWindow(Context context) {
         this(context, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
     public BasePopupWindow(Context context, int w, int h) {
+        this(context, w, h, true);
+    }
+
+    protected BasePopupWindow(Context context, int w, int h, boolean initImmediately) {
+        this.initImmediately = initImmediately;
+        if (initImmediately) {
+            initView(context, w, h);
+        }
+    }
+
+    protected void callInit(Context context, int w, int h) {
+        if (initImmediately) return;
         initView(context, w, h);
     }
 
