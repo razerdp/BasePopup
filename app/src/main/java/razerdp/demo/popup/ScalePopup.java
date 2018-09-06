@@ -1,7 +1,6 @@
 package razerdp.demo.popup;
 
 import android.app.Activity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 
@@ -15,8 +14,6 @@ import razerdp.demo.utils.ToastUtils;
  */
 public class ScalePopup extends BasePopupWindow implements View.OnClickListener {
 
-    private View popupView;
-
     public ScalePopup(Activity context) {
         super(context);
         bindEvent();
@@ -24,38 +21,24 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener 
 
 
     @Override
-    protected Animation initShowAnimation() {
+    protected Animation onCreateShowAnimation() {
         return getDefaultScaleAnimation();
     }
 
     @Override
-    protected Animation initExitAnimation() {
+    protected Animation onCreateDismissAnimation() {
         return getDefaultScaleAnimation(false);
     }
 
     @Override
-    public View getClickToDismissView() {
-        return popupView.findViewById(R.id.click_to_dismiss);
-    }
-
-    @Override
-    public View onCreatePopupView() {
-        popupView = LayoutInflater.from(getContext()).inflate(R.layout.popup_normal, null);
-        return popupView;
-    }
-
-    @Override
-    public View initAnimaView() {
-        return popupView.findViewById(R.id.popup_anima);
+    public View onCreateContentView() {
+        return createPopupById(R.layout.popup_normal);
     }
 
     private void bindEvent() {
-        if (popupView != null) {
-            popupView.findViewById(R.id.tx_1).setOnClickListener(this);
-            popupView.findViewById(R.id.tx_2).setOnClickListener(this);
-            popupView.findViewById(R.id.tx_3).setOnClickListener(this);
-        }
-
+        findViewById(R.id.tx_1).setOnClickListener(this);
+        findViewById(R.id.tx_2).setOnClickListener(this);
+        findViewById(R.id.tx_3).setOnClickListener(this);
     }
 
     @Override
