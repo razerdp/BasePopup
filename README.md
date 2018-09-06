@@ -25,7 +25,7 @@ Android P 未进行适配！！！因目前Native绕过API限制方法尚未稳�
 
 [**v1.x READ_ME**](https://github.com/razerdp/BasePopup/blob/master/README_OLD.md)
 
-[**1.x迁移到2.x帮助文档**]()
+[**1.x迁移到2.x帮助文档**](https://github.com/razerdp/BasePopup/blob/fbba4b71a33de69ed7c495e6c1bb284bb87dca52/1.x%E8%BF%81%E7%A7%BB2.x%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3.md)
 
 [**更新日志**](https://github.com/razerdp/BasePopup#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97%E5%8E%86%E5%8F%B2%E6%9B%B4%E6%96%B0)
 
