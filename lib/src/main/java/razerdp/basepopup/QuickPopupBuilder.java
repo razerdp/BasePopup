@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 
 import java.lang.ref.WeakReference;
 
+import razerdp.widget.QuickPopup;
+
 /**
  * Created by 大灯泡 on 2018/8/23.
  * <p>
@@ -21,9 +23,9 @@ public class QuickPopupBuilder {
     int height = ViewGroup.LayoutParams.MATCH_PARENT;
 
 
-    public QuickPopupBuilder(Context context) {
+    private QuickPopupBuilder(Context context) {
         mContextWeakReference = new WeakReference<>(context);
-        mConfig = new QuickPopupConfig();
+        mConfig = QuickPopupConfig.generateDefault();
     }
 
     public static QuickPopupBuilder with(Context context) {
@@ -47,6 +49,32 @@ public class QuickPopupBuilder {
     public QuickPopupBuilder height(int height) {
         this.height = height;
         return this;
+    }
+
+    public QuickPopupBuilder config(QuickPopupConfig quickPopupConfig) {
+        this.mConfig = quickPopupConfig;
+        return this;
+    }
+
+    public QuickPopup build() {
+        return new QuickPopup(getContext(), mConfig, mContentView, width, height);
+    }
+
+    public QuickPopup show() {
+        return show(null);
+
+    }
+
+    public QuickPopup show(int anchorViewResid) {
+        QuickPopup quickPopup = build();
+        quickPopup.showPopupWindow(anchorViewResid);
+        return quickPopup;
+    }
+
+    public QuickPopup show(View anchorView) {
+        QuickPopup quickPopup = build();
+        quickPopup.showPopupWindow(anchorView);
+        return quickPopup;
     }
 
 

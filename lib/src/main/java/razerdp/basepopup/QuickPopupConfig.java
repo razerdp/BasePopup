@@ -8,6 +8,7 @@ import android.view.animation.Animation;
 import java.util.HashMap;
 
 import razerdp.blur.PopupBlurOption;
+import razerdp.util.SimpleAnimationUtils;
 
 /**
  * Created by 大灯泡 on 2018/8/23.
@@ -29,6 +30,12 @@ public final class QuickPopupConfig {
     HashMap<Integer, Pair<View.OnClickListener, Boolean>> mListenersHolderMap;
 
 
+    public static QuickPopupConfig generateDefault() {
+        return new QuickPopupConfig()
+                .withShowAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(true))
+                .withDismissAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(false))
+                .fadeInAndOut(true);
+    }
 
     public QuickPopupConfig withShowAnimation(Animation showAnimation) {
         mShowAnimation = showAnimation;
@@ -98,6 +105,22 @@ public final class QuickPopupConfig {
 
     public Animator getDismissAnimator() {
         return mDismissAnimator;
+    }
+
+    public PopupBlurOption getPopupBlurOption() {
+        return mPopupBlurOption;
+    }
+
+    public boolean isBlurBackground() {
+        return blurBackground;
+    }
+
+    public boolean isFadeEnable() {
+        return fadeEnable;
+    }
+
+    public HashMap<Integer, Pair<View.OnClickListener, Boolean>> getListenersHolderMap() {
+        return mListenersHolderMap;
     }
 
     public BasePopupWindow.OnDismissListener getDismissListener() {
