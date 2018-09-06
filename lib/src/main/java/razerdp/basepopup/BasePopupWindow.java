@@ -622,7 +622,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 Context context = getContext();
                 assert context != null : "context is null ! please make sure your activity is not be destroyed";
                 if (context instanceof Activity) {
-                    mPopupWindow.showAtLocationProxy(((Activity) context).getWindow().getDecorView(),
+                    mPopupWindow.showAtLocationProxy(((Activity) context).findViewById(android.R.id.content),
                             mHelper.getPopupGravity(),
                             mHelper.getOffsetX(),
                             mHelper.getOffsetY());

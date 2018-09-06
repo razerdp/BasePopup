@@ -52,6 +52,9 @@ Android P 未进行适配！！！非SDK方法保护没有进行突破，Android
 使用方法
 ----
 
+### 方法一
+----
+
 * **Step 1:**
 
 像您平时定制activity布局文件一样定制您的popup布局
@@ -150,6 +153,24 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
     DialogPopup popup = new DialogPopup(context);
     popup.showPopupWindow();
 ```
+
+----
+
+### 方法二
+----
+如果您并不需要很详细的定义一个PopupWindow，您也可以选择`QuickPopupBuilder`采取链式写法快速编写出一个Popup以使用。
+
+```java
+    QuickPopupBuilder.with(this)
+        .contentView(R.layout.popup_normal)
+        .config(new QuickPopupConfig()
+                .blurBackground(true)
+                .withShowAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(true))
+                .withDismissAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(false)))
+        .show();
+````
+
+
 
 
 

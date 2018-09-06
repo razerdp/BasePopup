@@ -13,4 +13,8 @@
     <color name="click_bg">#c7c7c7</color>
     <color name="menu_bg">#2b2b2b</color>
     <color name="menu_click_bg">#515151</color>
+
+    <color name="color_black1">#333333</color>
+    <color name="color_black2">#666666</color>
+    <color name="color_black3">#999999</color>
 </resources>

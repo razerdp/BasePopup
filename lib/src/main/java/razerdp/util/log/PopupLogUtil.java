@@ -23,7 +23,7 @@ import static razerdp.util.log.LogTag.i;
 public class PopupLogUtil {
     // 获取堆栈信息会影响性能，发布应用时记得关闭DebugMode
     private static final boolean[] mIsDebugMode = {false};
-    private static final String TAG = "pywm";
+    private static final String TAG = "BasePopup";
     //logcat最大长度为4*1024，此处取4000
     private static final int MAX_LOG_MSG_LENGTH = 4000;
     //超长Log？
