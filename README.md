@@ -217,6 +217,10 @@ defaultConfig {
 更新日志([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 ---------------------------------------------------------------------------
 
+* **2.0.1-alpha2**(2018/09/06)
+  * 增加快速构建QuickPopupBuilder
+  * 尝试修复[#59](https://github.com/razerdp/BasePopup/issues/59)
+  
 * **2.0.1-alpha1** (2018/08/22)
   * 修复无法在onCreate()里面显示的问题
   * 增加setBackground(Drawable/ResourceId)方法，fixed [#79](https://github.com/razerdp/BasePopup/issues/79)
