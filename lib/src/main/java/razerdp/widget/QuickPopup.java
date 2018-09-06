@@ -2,8 +2,12 @@ package razerdp.widget;
 
 import android.animation.Animator;
 import android.content.Context;
+import android.util.Pair;
 import android.view.View;
 import android.view.animation.Animation;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.QuickPopupConfig;
@@ -31,7 +35,40 @@ public class QuickPopup extends BasePopupWindow {
     }
 
     private void applyConfigSetting() {
+        if (mConfig.getPopupBlurOption() != null) {
+            setBlurOption(mConfig.getPopupBlurOption());
+        } else {
+            setBlurBackgroundEnable(mConfig.isBlurBackground());
+        }
 
+        setPopupFadeEnable(mConfig.isFadeEnable());
+
+        applyClick();
+    }
+
+    private void applyClick() {
+        HashMap<Integer, Pair<View.OnClickListener, Boolean>> eventsMap = mConfig.getListenersHolderMap();
+        if (eventsMap == null || eventsMap.isEmpty()) return;
+        for (Map.Entry<Integer, Pair<View.OnClickListener, Boolean>> entry : eventsMap.entrySet()) {
+            int viewId = entry.getKey();
+            final Pair<View.OnClickListener, Boolean> event = entry.getValue();
+            View v = findViewById(viewId);
+            if (v != null) {
+                if (event.second) {
+                    v.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (event.first != null) {
+                                event.first.onClick(v);
+                            }
+                            dismiss();
+                        }
+                    });
+                } else {
+                    v.setOnClickListener(event.first);
+                }
+            }
+        }
     }
 
 

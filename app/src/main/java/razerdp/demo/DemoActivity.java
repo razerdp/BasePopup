@@ -1,5 +1,6 @@
 package razerdp.demo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -83,6 +84,16 @@ public class DemoActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         SimpleBaseFrag simpleBaseFrag = fragMap.get(item.getItemId());
+        if (simpleBaseFrag == null) {
+            Intent intent = null;
+            if (item.getItemId() == R.id.id_full_activity) {
+                intent = new Intent(this, DemoFullScreenActivity.class);
+            }
+            if (intent != null) {
+                startActivity(intent);
+            }
+            return false;
+        }
         mFragmentManager.beginTransaction().replace(R.id.popup_fragment, simpleBaseFrag).commit();
         return super.onOptionsItemSelected(item);
     }

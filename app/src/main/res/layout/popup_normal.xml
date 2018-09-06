@@ -20,7 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:gravity="center"
-            android:text="test1"/>
+            android:text="test1"
+            android:textColor="@color/color_black1"/>
 
         <View
             style="@style/line_style"/>
@@ -30,7 +31,8 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:gravity="center"
-            android:text="test2"/>
+            android:text="test2"
+            android:textColor="@color/color_black1"/>
 
         <View
             style="@style/line_style"/>
@@ -40,7 +42,8 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:gravity="center"
-            android:text="test3"/>
+            android:text="test3"
+            android:textColor="@color/color_black1"/>
 
     </LinearLayout>
 </RelativeLayout>
