@@ -177,40 +177,36 @@ public class ListPopup extends BasePopupWindow {
 
     //=============================================================super methods
     @Override
-    protected Animation initShowAnimation() {
+    protected Animation onCreateShowAnimation() {
         return null;
     }
 
     @Override
-    public Animator initShowAnimator() {
+    protected Animation onCreateDismissAnimation() {
+        return null;
+    }
+
+    @Override
+    public Animator onCreateShowAnimator() {
         AnimatorSet set = new AnimatorSet();
-        set.playTogether(ObjectAnimator.ofFloat(mAnimateApplyView, "rotationX", 90f, 0f).setDuration(400),
-                         ObjectAnimator.ofFloat(mAnimateApplyView, "translationY", 250f, 0f).setDuration(400),
-                         ObjectAnimator.ofFloat(mAnimateApplyView, "alpha", 0f, 1f).setDuration(400 * 3 / 2));
+        set.playTogether(ObjectAnimator.ofFloat(mDisplayAnimateView, "rotationX", 90f, 0f).setDuration(400),
+                         ObjectAnimator.ofFloat(mDisplayAnimateView, "translationY", 250f, 0f).setDuration(400),
+                         ObjectAnimator.ofFloat(mDisplayAnimateView, "alpha", 0f, 1f).setDuration(400 * 3 / 2));
         return set;
     }
 
     @Override
-    public View getClickToDismissView() {
-        return getPopupWindowView();
-    }
-
-    @Override
-    public View onCreatePopupView() {
+    public View onCreateContentView() {
         return createPopupById(R.layout.popup_list);
     }
 
-    @Override
-    public View initAnimaView() {
-        return findViewById(R.id.popup_anima);
-    }
 
     @Override
-    public Animator initExitAnimator() {
+    public Animator onCreateDismissAnimator() {
         AnimatorSet set = new AnimatorSet();
-        set.playTogether(ObjectAnimator.ofFloat(mAnimateApplyView, "rotationX", 0f, 90f).setDuration(400),
-                         ObjectAnimator.ofFloat(mAnimateApplyView, "translationY", 0f, 250f).setDuration(400),
-                         ObjectAnimator.ofFloat(mAnimateApplyView, "alpha", 1f, 0f).setDuration(400 * 3 / 2));
+        set.playTogether(ObjectAnimator.ofFloat(mDisplayAnimateView, "rotationX", 0f, 90f).setDuration(400),
+                         ObjectAnimator.ofFloat(mDisplayAnimateView, "translationY", 0f, 250f).setDuration(400),
+                         ObjectAnimator.ofFloat(mDisplayAnimateView, "alpha", 1f, 0f).setDuration(400 * 3 / 2));
         return set;
     }
 

@@ -1,5 +1,6 @@
 package razerdp.demo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -20,7 +21,6 @@ import razerdp.demo.fragment.CommentPopupFrag;
 import razerdp.demo.fragment.CustomInterpolatorPopupFrag;
 import razerdp.demo.fragment.DialogPopupFrag;
 import razerdp.demo.fragment.DismissControlPopupFrag;
-import razerdp.demo.fragment.FullScreenPopupFrag;
 import razerdp.demo.fragment.InputPopupFrag;
 import razerdp.demo.fragment.ListPopupFrag;
 import razerdp.demo.fragment.MenuPopupFrag;
@@ -40,10 +40,9 @@ public class DemoActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
-        BasePopupWindow.debugLog(true);
+        BasePopupWindow.setDebugLogEnable(true);
         mFragmentManager = getSupportFragmentManager();
-        ScalePopup scalePopup = new ScalePopup(this);
-        scalePopup.showPopupWindow();
+        new ScalePopup(this).showPopupWindow();
 
         fragMap = new HashMap<>();
 
@@ -55,7 +54,6 @@ public class DemoActivity extends AppCompatActivity {
         fragMap.put(R.id.id_menu_popup, new MenuPopupFrag());
         fragMap.put(R.id.id_dialog_popup, new DialogPopupFrag());
         fragMap.put(R.id.id_custom_interpolator_popup, new CustomInterpolatorPopupFrag());
-        fragMap.put(R.id.id_full_screen_popup, new FullScreenPopupFrag());
         fragMap.put(R.id.id_auto_located_popup, new AutoLocatedPopupFrag());
         fragMap.put(R.id.id_slide_from_top_popup, new SlideFromTopPopupFrag());
         fragMap.put(R.id.id_slide_from_top_popup2, new SlideFromTopPopupFrag2());
@@ -86,6 +84,16 @@ public class DemoActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         SimpleBaseFrag simpleBaseFrag = fragMap.get(item.getItemId());
+        if (simpleBaseFrag == null) {
+            Intent intent = null;
+            if (item.getItemId() == R.id.id_full_activity) {
+                intent = new Intent(this, DemoFullScreenActivity.class);
+            }
+            if (intent != null) {
+                startActivity(intent);
+            }
+            return false;
+        }
         mFragmentManager.beginTransaction().replace(R.id.popup_fragment, simpleBaseFrag).commit();
         return super.onOptionsItemSelected(item);
     }
