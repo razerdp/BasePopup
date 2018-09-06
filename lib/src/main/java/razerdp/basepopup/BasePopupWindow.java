@@ -209,7 +209,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -220,7 +223,6 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 
 import java.lang.ref.WeakReference;
@@ -232,121 +234,179 @@ import razerdp.util.log.LogTag;
 import razerdp.util.log.PopupLogUtil;
 
 /**
- * Created by 大灯泡 on 2016/1/14.
+ * <br>
  * <p>
- * 抽象通用popupwindow的父类
+ * 这是一个快速实现PopupWindow的基类，本基类易于扩展，并且几乎没有使用限制，便于您快速实现各种各样的PopupWindow。
+ * </p>
+ * <p>
+ * BasePopup已经为您内部实现了多数实际使用遇到的复杂场景功能，比如背景模糊、展现动画、收起动画等。
+ * 这些功能大多数都是可以由您自行定制或者决定是否执行，
+ * </p>
+ * <p>
+ * <a name="简单使用"></a>
+ * <h2>简单使用说明：</h2>
+ * 在继承了BasePopupWindow之后，会要求您实现三个方法：
+ * <br>
+ * <ul>
+ * <li>{@link #onCreateShowAnimation()} 该方法决定您的PopupWindow将会以怎样的动画展示出来，可以返回为 {@code null}</li>
+ * <li>{@link #onCreateDismissAnimation()} 该方法决定您的PopupWindow将会以怎样的动画小时，可以返回为 {@code null}</li>
+ * <li>{@link BasePopup#onCreateContentView()} 该方法决定您的PopupWindow的contentView，<strong>一般不可以返回空值【{@code NotNull}】</strong>类似于{@link PopupWindow#setContentView(View)}，
+ * 但建议使用基类方法{@link #createPopupById(int)}</li>
+ * </ul>
+ * <p>
+ * 在您定义好基本的几个方法后，您可以创建PopupWindow实例并直接调用{@link #showPopupWindow()}方法即可
+ * <li>
+ * <strong>建议您在反复使用PopupWindow类中将PopupWindow定义为成员变量，方便复用</strong>
+ * </li>
+ * <pre>
+ *     <strong>example：</strong>
+ *           DemoPopup popup = new DemoPopup(context);
+ *           popup.showPopupWindow();
+ *     </pre>
+ * </p>
+ * <p>
+ * <a name="关于背景模糊和背景颜色"></a>
+ * <h2>关于背景模糊和背景颜色：</h2>
+ * <br>
+ * 从<strong>3.0</strong>版本开始，BasePopup进行了一次彻底重构，将背景层（包含模糊和背景颜色）和前景层（PopupWindow主体内容）完全分离，
+ * 因此请不要再把背景颜色定义在您的PopupWindow的布局文件中，否则动画将会对整个前景造成影响导致不满意的效果。
+ * <p>
+ * <ul>
+ * <li><strong>背景层（Mask层）：</strong>
+ * <ul>
+ * <li>背景颜色现在由api {@link #setBackgroundColor(int)}来制定，默认情况下，该颜色为{@code #8f000000}</li>
+ * <li>通常情况下，Mask层是铺满整个屏幕的，如果您不需要Mask层铺满屏幕，您可以使用{@link #setAlignBackground(boolean)}把Mask层对齐到与您的PopupWindow主体一致</li>
+ * </ul></li>
+ * <li><strong>模糊层（Blur层）：</strong>
+ * <ul>
+ * <li>模糊默认关闭，如果您开启模糊，请设置{@link #setBlurBackgroundEnable(boolean)}为true，默认情况下模糊对象是当前decorView，如果您需要针对模糊某个View，
+ * 请设置{@link #setBlurOption(PopupBlurOption)}以及{@link PopupBlurOption#setBlurView(View)}传入。</li>
+ * <li>如果您想修改默认的背景模糊中的模糊配置，您可以调用{@link #setBlurBackgroundEnable(boolean, OnBlurOptionInitListener)}，在{@link OnBlurOptionInitListener#onCreateBlurOption(PopupBlurOption)}中进行修改</li>
+ * </ul>
+ * </li>
+ * </ul>
+ * </p>
+ * <p>
+ * <h3>更多的api或者issue，请访问github以得到帮助，如果我看到了，我会第一时间在git上回复您的</h3>
+ * <ul>
+ * <li>github: <a href="https://github.com/razerdp/BasePopup">https://github.com/razerdp/BasePopup</a></li>
+ * <li>wiki:   <a href="https://github.com/razerdp/BasePopup/wiki">https://github.com/razerdp/BasePopup/wiki</a></li>
+ * <li>issue: <a href="https://github.com/razerdp/BasePopup/issues">https://github.com/razerdp/BasePopup/issues</a></li>
+ * </ul>
+ * </p>
+ * <p>
+ * <p>
+ * 重大版本修正记录：
+ * <ul>
+ * <li>2018/05/14 ： 2.0版本重构</li>
+ * </ul>
+ * </p>
+ * 頂頂頂頂頂頂頂頂頂　頂頂頂頂頂頂頂頂頂
+ * 頂頂頂頂頂頂頂　　　　　頂頂
+ * 　　　頂頂　　　頂頂頂頂頂頂頂頂頂頂頂
+ * 　　　頂頂　　　頂頂頂頂頂頂頂頂頂頂頂
+ * 　　　頂頂　　　頂頂　　　　　　　頂頂
+ * 　　　頂頂　　　頂頂　　頂頂頂　　頂頂
+ * 　　　頂頂　　　頂頂　　頂頂頂　　頂頂
+ * 　　　頂頂　　　頂頂　　頂頂頂　　頂頂
+ * 　　　頂頂　　　頂頂　　頂頂頂　　頂頂
+ * 　　　頂頂　　　　　　　頂頂頂
+ * 　　　頂頂　　　　　　頂頂　頂頂　頂頂
+ * 　頂頂頂頂　　　頂頂頂頂頂　頂頂頂頂頂
+ * 　頂頂頂頂　　　頂頂頂頂　　　頂頂頂頂
+ *
+ * @author 大灯泡
+ * @version 2.0
+ * @since 2016/1/14
  */
 public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismissListener, PopupTouchController {
     private static final String TAG = "BasePopupWindow";
     private static final int MAX_RETRY_SHOW_TIME = 3;
+
     private BasePopupHelper mHelper;
+    public static int SCREEN_WIDTH = 0;
+    public static int SCREEN_HEIGHT = 0;
+    private WeakReference<Context> mContext;
 
     //元素定义
     private PopupWindowProxy mPopupWindow;
     //popup视图
-    private View mPopupView;
-    private WeakReference<Context> mContext;
-    protected View mAnimateApplyView;
-    protected View mDismissView;
+    private View mContentView;
+    protected View mDisplayAnimateView;
 
-    private volatile boolean isExitAnimaPlaying = false;
+    private volatile boolean isExitAnimatePlaying = false;
 
     //重试次数
-    private volatile int retryCounter;
-
+    private int retryCounter;
     private InnerPopupWindowStateListener mStateListener;
+    private EditText mAutoShowInputEdittext;
+    private boolean initImmediately;
 
     public BasePopupWindow(Context context) {
-        initView(context, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        this(context, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
     public BasePopupWindow(Context context, int w, int h) {
+        this(context, w, h, true);
+    }
+
+    protected BasePopupWindow(Context context, int w, int h, boolean initImmediately) {
+        this.initImmediately = initImmediately;
+        if (initImmediately) {
+            initView(context, w, h);
+        }
+    }
+
+    protected void callInit(Context context, int w, int h) {
+        if (initImmediately) return;
         initView(context, w, h);
     }
 
     private void initView(Context context, int w, int h) {
         mContext = new WeakReference<Context>(context);
         mHelper = new BasePopupHelper();
-        mPopupView = onCreatePopupView();
-        mAnimateApplyView = initAnimaView();
-        if (mAnimateApplyView != null) {
-            mHelper.setPopupLayoutId(mAnimateApplyView.getId());
+        mContentView = onCreateContentView();
+        mDisplayAnimateView = onCreateAnimateView();
+        if (mDisplayAnimateView == null) {
+            mDisplayAnimateView = mContentView;
         }
-        checkPopupAnimaView();
 
         //默认占满全屏
-        mPopupWindow = new PopupWindowProxy(mPopupView, w, h, this);
+        mPopupWindow = new PopupWindowProxy(mContentView, w, h, this);
         mPopupWindow.setOnDismissListener(this);
         mPopupWindow.bindPopupHelper(mHelper);
-        setDismissWhenTouchOutside(true);
+        setAllowDismissWhenTouchOutside(true);
 
         mHelper.setPopupViewWidth(w);
         mHelper.setPopupViewHeight(h);
 
         preMeasurePopupView(w, h);
 
-        //默认是渐入动画
-        setNeedPopupFade(Build.VERSION.SDK_INT <= 22);
-
         //=============================================================为外层的view添加点击事件，并设置点击消失
-        mDismissView = getClickToDismissView();
-        if (mDismissView != null && !(mDismissView instanceof AdapterView)) {
-            mDismissView.setOnClickListener(new View.OnClickListener() {
+        View v = onInitDismissClickView();
+        if (v != null && !(v instanceof AdapterView)) {
+            v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     dismiss();
                 }
             });
         }
-        if (mAnimateApplyView != null && !(mAnimateApplyView instanceof AdapterView)) {
-            mAnimateApplyView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-        }
-        //=============================================================元素获取
-        mHelper.setShowAnimation(initShowAnimation())
-                .setShowAnimator(initShowAnimator())
-                .setExitAnimation(initExitAnimation())
-                .setExitAnimator(initExitAnimator());
-    }
-
-    private void checkPopupAnimaView() {
-        //处理popupview与animateview相同的情况
-        //当popupView与animateView相同的时候，处理位置信息会出问题，因此这里需要对mAnimaView再包裹一层
-        if (mPopupView != null && mAnimateApplyView != null && mPopupView == mAnimateApplyView) {
-            try {
-                mPopupView = new FrameLayout(getContext());
-                final int mPopupLayoutId = mHelper.getPopupLayoutId();
-                if (mPopupLayoutId == 0) {
-                    ((FrameLayout) mPopupView).addView(mAnimateApplyView);
-                } else {
-                    mAnimateApplyView = View.inflate(getContext(), mPopupLayoutId, (FrameLayout) mPopupView);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        //show or dismiss animate
+        mHelper.setShowAnimation(onCreateShowAnimation())
+                .setShowAnimator(onCreateShowAnimator())
+                .setDismissAnimation(onCreateDismissAnimation())
+                .setDismissAnimator(onCreateDismissAnimator());
     }
 
     private void preMeasurePopupView(int w, int h) {
-        if (mPopupView != null) {
-            //修复可能出现的android 4.3的measure空指针问题
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                int contentViewHeight = ViewGroup.LayoutParams.MATCH_PARENT;
-                final ViewGroup.LayoutParams layoutParams = mPopupView.getLayoutParams();
-                if (layoutParams != null && layoutParams.height == ViewGroup.LayoutParams.WRAP_CONTENT) {
-                    contentViewHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
-                }
-                ViewGroup.LayoutParams p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, contentViewHeight);
-                mPopupView.setLayoutParams(p);
-            }
-            mPopupView.measure(w, h);
-            mHelper.setPreMeasureWidth(mPopupView.getMeasuredWidth())
-                    .setPreMeasureHeight(mPopupView.getMeasuredHeight());
-            mPopupView.setFocusableInTouchMode(true);
+        if (mContentView != null) {
+            int measureWidth = View.MeasureSpec.makeMeasureSpec(w, View.MeasureSpec.UNSPECIFIED);
+            int measureHeight = View.MeasureSpec.makeMeasureSpec(h, View.MeasureSpec.UNSPECIFIED);
+            mContentView.measure(measureWidth, measureHeight);
+            mHelper.setPreMeasureWidth(mContentView.getMeasuredWidth())
+                    .setPreMeasureHeight(mContentView.getMeasuredHeight());
+            mContentView.setFocusableInTouchMode(true);
         }
     }
 
@@ -354,66 +414,130 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     //------------------------------------------抽象-----------------------------------------------
 
     /**
-     * PopupWindow展示出来后，需要执行动画的View.一般为蒙层之上的View
+     * <p>
+     * 该方法决定您的PopupWindow将会以怎样的动画展示出来，可以返回为 {@code null}
+     * </p>
+     * <p>
+     * 本类提供一些简单的动画方法：
+     * <ul>
+     * <li>{@link #getDefaultAlphaAnimation()}：得到一个默认进入的渐变动画</li>
+     * <li>{@link #getDefaultScaleAnimation()}：得到一个默认的放大缩小动画</li>
+     * <li>{@link #getTranslateVerticalAnimation(float, float, int)} ()}：快速获取垂直方向的动画</li>
+     * </ul>
+     * </p>
      *
-     * @return 展示的动画
+     * @return 返回显示PopupWindow的动画
      */
-    protected abstract Animation initShowAnimation();
+    protected abstract Animation onCreateShowAnimation();
 
     /**
-     * 设置一个点击后触发dismiss PopupWindow的View，一般为蒙层
+     * <p>
+     * 该方法决定您的PopupWindow将会以怎样的动画消失，可以返回为 {@code null}
+     * <br>
+     * <br>
+     * 如果返回不为空，则在返回动画播放结束后触发{@link PopupWindow#dismiss()}
+     * </p>
+     * <p>
+     * 本类提供一些简单的动画方法：
+     * <ul>
+     * <li>{@link #getDefaultAlphaAnimation(boolean)} ()}：得到一个默认进入的渐变动画</li>
+     * <li>{@link #getDefaultScaleAnimation(boolean)} ()}：得到一个默认的放大缩小动画</li>
+     * <li>{@link #getTranslateVerticalAnimation(float, float, int)} ()}：快速获取垂直方向的动画</li>
+     * </ul>
+     * </p>
      *
-     * @return 点击dismiss的控件
-     * @deprecated use {@link }
+     * @return 返回PopupWindow消失前的动画
      */
-    public View getClickToDismissView() {
-        return getPopupWindowView();
-    }
+    protected abstract Animation onCreateDismissAnimation();
+
 
     /**
-     * 设置展示动画View的属性动画
+     * <p>
+     * 通过覆写该方法你可以返回一个你指定点击关闭PopupWindow的View，可以返回为{@code null}
+     * </p>
      *
-     * @return
+     * @return 返回一个View，点击该View将会触发{@link #dismiss()}
      */
-    protected Animator initShowAnimator() {
+    protected View onInitDismissClickView() {
+        return getContentView();
+    }
+
+    /**
+     * <p>
+     * 该方法决定您的PopupWindow将会以怎样的动画展示出来（返回 {@link Animator}），可以返回为 {@code null}
+     * <br>
+     * <br>
+     * 功能详情请看{@link #onCreateShowAnimation()}
+     * </p>
+     *
+     * @return 返回显示PopupWindow的动画
+     */
+    protected Animator onCreateShowAnimator() {
         return null;
     }
 
     /**
-     * 设置一个拥有输入功能的View，一般为EditTextView
+     * <p>
+     * 通过该方法您可以指定您的PopupWindow显示动画用于哪个View（{@link #onCreateShowAnimation()}/{@link #onCreateShowAnimator()}）
+     * <br>
+     * <br>
+     * 可以返回为空 {@code null}
+     * </p>
+     *
+     * @return 返回指定播放动画的View，返回为空则默认整个PopupWindow
      */
-    public EditText getInputView() {
+    protected View onCreateAnimateView() {
+        return null;
+    }
+
+
+    /**
+     * <p>
+     * 该方法决定您的PopupWindow将会以怎样的动画消失（返回 {@link Animator}），可以返回为 {@code null}
+     * <br>
+     * <br>
+     * 功能详情请看{@link #onCreateDismissAnimation()} ()}
+     * </p>
+     */
+    protected Animator onCreateDismissAnimator() {
         return null;
     }
 
     /**
-     * 设置PopupWindow销毁时的退出动画
+     * <p>
+     * 当传入true，你的PopupWindow将会淡入显示，淡出消失。
+     * <br>
+     * 与{@link #onCreateShowAnimation()}/{@link #onCreateDismissAnimation()}不同的是，该方法为Window层级服务，固定Style
+     * <br>
+     * <ul>
+     * <li>{@style ref razerdp.library.R.anim.basepopup_fade_in}</li>
+     * <li>{@style ref razerdp.library.R.anim.basepopup_fade_out}</li>
+     * </ul>
+     * </p>
+     *
+     * @param needPopupFadeAnimate true for apply anim style
      */
-    protected Animation initExitAnimation() {
-        return null;
-    }
-
-    /**
-     * 设置PopupWindow销毁时的退出属性动画
-     */
-    protected Animator initExitAnimator() {
-        return null;
-    }
-
-    /**
-     * popupwindow是否需要淡入淡出
-     */
-    public BasePopupWindow setNeedPopupFade(boolean needPopupFadeAnima) {
-        mHelper.setNeedPopupFadeAnima(mPopupWindow, needPopupFadeAnima);
+    public BasePopupWindow setPopupFadeEnable(boolean needPopupFadeAnimate) {
+        mHelper.setPopupFadeEnable(mPopupWindow, needPopupFadeAnimate);
         return this;
     }
 
-    public boolean isNeedPopupFade() {
-        return mHelper.isNeedPopupFadeAnima();
+    /**
+     * <p>
+     * 当前PopupWindow是否设置了淡入淡出效果
+     * </p>
+     */
+    public boolean isPopupFadeEnable() {
+        return mHelper.isPopupFadeEnable();
     }
 
     /**
-     * 设置popup的动画style
+     * <p>
+     * 设置PopupWindow的动画style<strong>针对PopupWindow整体的Window哦</strong>
+     * <br>
+     * <br>
+     * 通常情况下，请使用{@link #onCreateDismissAnimation()} or {@link #onCreateShowAnimator()}
+     * </p>
      */
     public BasePopupWindow setPopupAnimationStyle(int animationStyleRes) {
         mPopupWindow.setAnimationStyle(animationStyleRes);
@@ -423,19 +547,30 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     //------------------------------------------showPopup-----------------------------------------------
 
     /**
-     * 调用此方法时，PopupWindow将会显示在DecorView
+     * <p>
+     * 调用这个方法时，将会展示PopupWindow。
+     * <br>
+     * <br>
+     * 如果{@link #onCreateShowAnimation()} or {@link #onCreateShowAnimator()}其中之一返回不为空，
+     * 则在PopupWindow展示后为{@link #onCreateAnimateView()} 指定的View执行动画
+     * </p>
+     * <p>
+     * 您可以在{@link Activity#onCreate(Bundle)}里面使用该方法，本方法在无法展示时会重试3次，如果3次都无法展示，则失败。
+     * </p>
      */
     public void showPopupWindow() {
         if (checkPerformShow(null)) {
-            mHelper.setShowAtDown(false);
+            mHelper.setShowAsDropDown(false);
             tryToShowPopup(null);
         }
     }
 
     /**
-     * 调用此方法时，PopupWindow默认展示在anchorView下方
+     * <p>
+     * 传入anchorView的ViewId，方法详情{@link #showPopupWindow(View)}
+     * </p>
      *
-     * @param anchorViewResid
+     * @param anchorViewResid anchorView的ViewId
      */
     public void showPopupWindow(int anchorViewResid) {
         Context context = getContext();
@@ -449,14 +584,23 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     /**
-     * 调用此方法时，PopupWindow默认展示在anchorView下方
+     * <p>
+     * 调用这个方法时，将会展示PopupWindow。
+     * <br>
+     * <br>
+     * <h3>本方法在展示PopupWindow时，会跟系统一样，展示在传入的View的底部，如果位置足够，将会跟anchorView的锚点对齐。</h3>
+     * <br>
+     * <br>
+     * 其他方法详情参考{@link #showPopupWindow()}
+     * <p>
+     * </p>
      *
-     * @param v
+     * @param anchorView 锚点View，PopupWindow将会显示在其下方
      */
-    public void showPopupWindow(View v) {
-        if (checkPerformShow(v)) {
-            mHelper.setShowAtDown(true);
-            tryToShowPopup(v);
+    public void showPopupWindow(View anchorView) {
+        if (checkPerformShow(anchorView)) {
+            mHelper.setShowAsDropDown(true);
+            tryToShowPopup(anchorView);
         }
     }
 
@@ -468,7 +612,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             //传递了view
             if (v != null) {
                 offset = calculateOffset(v);
-                if (mHelper.isShowAtDown()) {
+                if (mHelper.isShowAsDropDown()) {
                     mPopupWindow.showAsDropDownProxy(v, offset[0], offset[1]);
                 } else {
                     mPopupWindow.showAtLocationProxy(v, mHelper.getPopupGravity(), offset[0], offset[1]);
@@ -489,27 +633,24 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             if (mStateListener != null) {
                 mStateListener.onTryToShow(mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
             }
-            if (mAnimateApplyView != null) {
+            if (mDisplayAnimateView != null) {
                 if (mHelper.getShowAnimation() != null) {
                     mHelper.getShowAnimation().cancel();
-                    mAnimateApplyView.startAnimation(mHelper.getShowAnimation());
+                    mDisplayAnimateView.startAnimation(mHelper.getShowAnimation());
                 } else if (mHelper.getShowAnimator() != null) {
                     mHelper.getShowAnimator().start();
                 }
             }
             //自动弹出键盘
-            if (mHelper.isAutoShowInputMethod() && getInputView() != null) {
-                getInputView().requestFocus();
-                InputMethodUtils.showInputMethod(getInputView(), 350);
+            if (mHelper.isAutoShowInputMethod() && mAutoShowInputEdittext != null) {
+                mAutoShowInputEdittext.requestFocus();
+                InputMethodUtils.showInputMethod(mAutoShowInputEdittext, 350);
             }
             retryCounter = 0;
         } catch (Exception e) {
-            if (retryCounter > MAX_RETRY_SHOW_TIME) {
-                Log.e(TAG, "show error\n" + e.getMessage());
-                e.printStackTrace();
-                return;
-            }
             retryToShowPopup(v);
+            PopupLogUtil.trace(LogTag.e, TAG, "show error\n" + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -518,28 +659,29 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     private void retryToShowPopup(final View v) {
         if (retryCounter > MAX_RETRY_SHOW_TIME) return;
-        Log.e(TAG, "catch an exception on showing popupwindow ...now retrying to show ... retry count  >>  " + retryCounter);
-        if (isShowing()) mPopupWindow.callSuperDismiss();
-        Context context = getContext();
-        if (context instanceof Activity) {
-            Activity act = (Activity) context;
-            boolean availabled;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                availabled = !act.isFinishing() && !act.isDestroyed();
-            } else {
-                availabled = !act.isFinishing();
-            }
-            if (availabled) {
-                View rootView = act.findViewById(android.R.id.content);
-                if (rootView == null) return;
-                rootView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        retryCounter++;
-                        tryToShowPopup(v);
-                    }
-                }, 350);
-            }
+        PopupLogUtil.trace(LogTag.e, TAG, "catch an exception on showing popupwindow ...now retrying to show ... retry count  >>  " + retryCounter);
+        if (mPopupWindow.callSuperIsShowing()) {
+            mPopupWindow.callSuperDismiss();
+        }
+        Activity act = mPopupWindow.scanForActivity(getContext());
+        if (act == null) return;
+        boolean available;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            available = !act.isFinishing() && !act.isDestroyed();
+        } else {
+            available = !act.isFinishing();
+        }
+        if (available) {
+            View rootView = act.getWindow().getDecorView();
+            if (rootView == null) return;
+            rootView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    retryCounter++;
+                    tryToShowPopup(v);
+                    PopupLogUtil.trace(LogTag.e, TAG, "retry to show >> " + retryCounter);
+                }
+            }, 350);
         }
 
     }
@@ -560,9 +702,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             if (onTop) {
                 offset[1] = -anchorView.getHeight() - getHeight() - offset[1];
                 mHelper.setInternalOffsetY(offset[1]);
-                onAnchorTop(mPopupView, anchorView);
+                onAnchorTop(mContentView, anchorView);
             } else {
-                onAnchorBottom(mPopupView, anchorView);
+                onAnchorBottom(mContentView, anchorView);
             }
         }
         return offset;
@@ -570,11 +712,15 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     /**
+     * <p>
      * PopupWindow是否需要自适应输入法，为输入法弹出让出区域
+     * </p>
      *
-     * @param needAdjust <br>
-     *                   true for "SOFT_INPUT_ADJUST_RESIZE" mode<br>
-     *                   false for "SOFT_INPUT_ADJUST_NOTHING" mode
+     * @param needAdjust <ul>
+     *                   <li>true for "SOFT_INPUT_ADJUST_RESIZE" mode</li>
+     *                   <li>false for "SOFT_INPUT_ADJUST_NOTHING" mode</li>
+     *                   </ul>
+     *                   <br>
      */
     public BasePopupWindow setAdjustInputMethod(boolean needAdjust) {
         setAdjustInputMethod(needAdjust, WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -582,11 +728,17 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     /**
-     * @param needAdjust
+     * <p>
+     * PopupWindow是否需要自适应输入法，为输入法弹出让出区域
+     * </p>
+     *
+     * @param needAdjust <ul>
+     *                   <li>true for "SOFT_INPUT_ADJUST_RESIZE" mode</li>
+     *                   <li>false for "SOFT_INPUT_ADJUST_NOTHING" mode</li>
+     *                   </ul>
      * @param flag       The desired mode, see
      *                   {@link android.view.WindowManager.LayoutParams#softInputMode}
      *                   for the full list
-     * @return
      */
     public BasePopupWindow setAdjustInputMethod(boolean needAdjust, int flag) {
         if (needAdjust) {
@@ -598,18 +750,21 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     /**
-     * 当PopupWindow展示的时候，这个参数决定了是否自动弹出输入法
-     * 如果使用这个方法，您必须保证通过 <strong>getInputView()<strong/>得到一个EditTextView
+     * <p>
+     * PopupWindow在展示的时候自动打开输入法，在传入参数时请务必传入{@link EditText}
+     * </p>
      */
-    public BasePopupWindow setAutoShowInputMethod(boolean autoShow) {
+    public BasePopupWindow setAutoShowInputMethod(EditText editText, boolean autoShow) {
         mHelper.setAutoShowInputMethod(mPopupWindow, autoShow);
+        mAutoShowInputEdittext = editText;
         return this;
     }
 
     /**
-     * 这个参数决定点击返回键是否可以取消掉PopupWindow
      * <p>
-     * 在android M之后失效
+     * 禁止PopupWindow返回键dismiss
+     * </p>
+     * <p>
      */
     public BasePopupWindow setBackPressEnable(final boolean backPressEnable) {
         mHelper.setBackPressEnable(mPopupWindow, backPressEnable);
@@ -617,29 +772,44 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     /**
+     * <p>
      * 这个方法封装了LayoutInflater.from(context).inflate，方便您设置PopupWindow所用的xml
+     * </p>
      *
      * @param resId reference of layout
      * @return root View of the layout
      */
     public View createPopupById(int resId) {
         if (resId != 0) {
-            mHelper.setPopupLayoutId(resId);
             return LayoutInflater.from(getContext()).inflate(resId, null);
         } else {
             return null;
         }
     }
 
-    protected View findViewById(int id) {
-        if (mPopupView != null && id != 0) {
-            return mPopupView.findViewById(id);
+    /**
+     * <p>
+     * 还在用View.findViewById么，，，不如试试这款？
+     * </p>
+     *
+     * @param id the ID to search for
+     * @return a view with given ID if found, or {@code null} otherwise
+     */
+    public <T extends View> T findViewById(int id) {
+        if (mContentView != null && id != 0) {
+            return (T) mContentView.findViewById(id);
         }
         return null;
     }
 
     /**
-     * 是否允许popupwindow覆盖屏幕（包含状态栏）
+     * <p>
+     * 允许PopupWindow覆盖屏幕（包含状态栏）
+     * <br>
+     * <br>
+     * <h3>【本方法将会导致输入法屏幕适配失效{@link #setAdjustInputMethod(boolean, int)}，具体表现为无法根据输入法自动腾出位置，
+     * 因为Window.Flag=Full_Screen时，layout管理交由Window而非Activity，两者冲突暂时无解决方案。】</h3>
+     * </p>
      */
     public BasePopupWindow setPopupWindowFullScreen(boolean needFullScreen) {
         mHelper.setFullScreen(needFullScreen);
@@ -647,23 +817,87 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     /**
-     * 应用模糊脚本...默认模糊背景
+     * <p>
+     * 设置PopupWindow背景颜色，默认颜色为<strong>#8f000000</strong>
+     * </p>
+     *
+     * @param color 背景颜色
+     */
+    public BasePopupWindow setBackgroundColor(int color) {
+        mHelper.setPopupBackground(new ColorDrawable(color));
+        return this;
+    }
+
+    /**
+     * <p>
+     * 设置PopupWindow背景Drawable，默认颜色为<strong>#8f000000</strong>
+     * </p>
+     *
+     * @param drawableIds 背景Drawable id
+     */
+    public BasePopupWindow setBackground(int drawableIds) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return setBackground(getContext().getDrawable(drawableIds));
+        } else {
+            return setBackground(getContext().getResources().getDrawable(drawableIds, getContext().getTheme()));
+        }
+    }
+
+    /**
+     * <p>
+     * 设置PopupWindow背景Drawable，默认颜色为<strong>#8f000000</strong>
+     * </p>
+     *
+     * @param background 背景Drawable
+     */
+    public BasePopupWindow setBackground(Drawable background) {
+        mHelper.setPopupBackground(background);
+        return this;
+    }
+
+    /**
+     * <p>
+     * 获取当前PopupWindow背景
+     * </p>
+     *
+     * @return 背景
+     */
+    public Drawable getPopupBackground() {
+        return mHelper.getPopupBackground();
+    }
+
+    /**
+     * <p>
+     * 设置PopupWindow弹出时是否模糊背景。
+     * <br>
+     * <br>
+     * 在使用模糊背景前，您可以通过{@link #setBlurOption(PopupBlurOption)}传入模糊配置。
+     * <br>
+     * <br>
+     * <strong>本方法默认模糊当前Activity的DecorView</strong>
+     * </p>
      *
      * @param blur true for blur decorView
-     * @return
      */
     public BasePopupWindow setBlurBackgroundEnable(boolean blur) {
         return setBlurBackgroundEnable(blur, null);
     }
 
     /**
-     * 应用模糊脚本...默认模糊背景
+     * <p>
+     * 设置PopupWindow弹出时是否模糊背景。
+     * <br>
+     * <br>
+     * 在使用模糊背景前，您可以通过{@link #setBlurOption(PopupBlurOption)}传入模糊配置。
+     * <br>
+     * <br>
+     * 本方法允许您传入一个初始化监听，您可以在{@link OnBlurOptionInitListener#onCreateBlurOption(PopupBlurOption)}中进行展示前的最后一次修改
+     * </p>
      *
-     * @param blur true for blur decorView
-     * @param l    创建blur配置监听
-     * @return
+     * @param blur               true for blur decorView
+     * @param optionInitListener 初始化回调
      */
-    public BasePopupWindow setBlurBackgroundEnable(boolean blur, OnBlurOptionInitListener l) {
+    public BasePopupWindow setBlurBackgroundEnable(boolean blur, OnBlurOptionInitListener optionInitListener) {
         if (!(getContext() instanceof Activity)) {
             PopupLogUtil.trace(LogTag.e, TAG, "无法配置默认模糊脚本，因为context不是activity");
             return this;
@@ -674,8 +908,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             option.setFullScreen(true)
                     .setBlurInDuration(mHelper.getShowAnimationDuration())
                     .setBlurOutDuration(mHelper.getExitAnimationDuration());
-            if (l != null) {
-                l.onCreateBlurOption(option);
+            if (optionInitListener != null) {
+                optionInitListener.onCreateBlurOption(option);
             }
             View decorView = ((Activity) getContext()).getWindow().getDecorView();
             if (decorView instanceof ViewGroup) {
@@ -689,10 +923,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     /**
-     * 应用模糊脚本
+     * <p>
+     * 应用模糊配置，更多详情请参考{@link #setBlurBackgroundEnable(boolean)}或者{@link #setBlurBackgroundEnable(boolean, OnBlurOptionInitListener)}
+     * </p>
      *
-     * @param option
-     * @return
+     * @param option 模糊配置
      */
     public BasePopupWindow setBlurOption(PopupBlurOption option) {
         mHelper.applyBlur(option);
@@ -723,6 +958,13 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return mHelper.getOnDismissListener();
     }
 
+    /**
+     * <p>
+     * 设置dismiss监听
+     * </p>
+     *
+     * @param onDismissListener 监听器
+     */
     public BasePopupWindow setOnDismissListener(OnDismissListener onDismissListener) {
         mHelper.setOnDismissListener(onDismissListener);
         return this;
@@ -732,11 +974,35 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return mHelper.getOnBeforeShowCallback();
     }
 
+    /**
+     * <p>
+     * 当您设置了{@link OnBeforeShowCallback}监听之后，在您调用｛
+     * <ul>
+     * <li>{@link #showPopupWindow()}</li>
+     * <li>{@link #showPopupWindow(int)}</li>
+     * <li>{@link #showPopupWindow(View)}</li>
+     * </ul>｝
+     * <br>
+     * 任意一个方法，在show之前回回调到该监听器。
+     * <br>
+     * </p>
+     *
+     * @param mOnBeforeShowCallback
+     * @return
+     * @see OnBeforeShowCallback#onBeforeShow(View, View, boolean)
+     */
     public BasePopupWindow setOnBeforeShowCallback(OnBeforeShowCallback mOnBeforeShowCallback) {
         mHelper.setOnBeforeShowCallback(mOnBeforeShowCallback);
         return this;
     }
 
+    /**
+     * <p>
+     * 设置展示PopupWindow的动画，详情参考{@link #onCreateShowAnimation()}
+     * </p>
+     *
+     * @param showAnimation 展示动画
+     */
     public BasePopupWindow setShowAnimation(Animation showAnimation) {
         mHelper.setShowAnimation(showAnimation);
         return this;
@@ -746,6 +1012,13 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return mHelper.getShowAnimation();
     }
 
+    /**
+     * <p>
+     * 设置展示PopupWindow的动画，详情参考{@link #onCreateShowAnimator()}
+     * </p>
+     *
+     * @param showAnimator 展示动画
+     */
     public BasePopupWindow setShowAnimator(Animator showAnimator) {
         mHelper.setShowAnimator(showAnimator);
         return this;
@@ -755,39 +1028,62 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return mHelper.getShowAnimator();
     }
 
-    public BasePopupWindow setExitAnimation(Animation exitAnimation) {
-        mHelper.setExitAnimation(exitAnimation);
+    /**
+     * <p>
+     * 设置退出PopupWindow的动画，详情参考{@link #onCreateDismissAnimation()}
+     * </p>
+     *
+     * @param dismissAnimation 退出动画
+     */
+    public BasePopupWindow setDismissAnimation(Animation dismissAnimation) {
+        mHelper.setDismissAnimation(dismissAnimation);
         return this;
     }
 
-    public Animation getExitAnimation() {
-        return mHelper.getExitAnimation();
+    public Animation getDismissAnimation() {
+        return mHelper.getDismissAnimation();
     }
 
-    public BasePopupWindow setExitAnimator(Animator exitAnimator) {
-        mHelper.setExitAnimator(exitAnimator);
+    /**
+     * <p>
+     * 设置退出PopupWindow的动画，详情参考{@link #onCreateDismissAnimator()}
+     * </p>
+     *
+     * @param dismissAnimator 退出动画
+     */
+    public BasePopupWindow setDismissAnimator(Animator dismissAnimator) {
+        mHelper.setDismissAnimator(dismissAnimator);
         return this;
     }
 
-    public Animator getExitAnimator() {
-        return mHelper.getExitAnimator();
+    public Animator getDismissAnimator() {
+        return mHelper.getDismissAnimator();
     }
 
+    /**
+     * <p>
+     * 获取context，请留意是否为空{@code null}
+     * </p>
+     *
+     * @return 返回对应的context。如果为空，则返回{@code null}
+     */
     public Context getContext() {
         return mContext == null ? null : mContext.get();
     }
 
     /**
-     * 获取popupwindow的根布局
+     * <p>
+     * 获取PopupWindow的根布局
+     * </p>
      *
-     * @return
+     * @see #onCreateContentView()，该布局在这里初始化。
      */
-    public View getPopupWindowView() {
-        return mPopupView;
+    public View getContentView() {
+        return mContentView;
     }
 
     /**
-     * 获取popupwindow实例
+     * 获取PopupWindow实例
      *
      * @return
      */
@@ -829,7 +1125,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     /**
-     * 设置参考点，一般情况下，参考对象指的不是指定的view，而是它的windoToken，可以看作为整个screen
+     * 设置参考点，一般情况下，参考对象指的不是指定的view，而是它的windowToken，可以看作为整个screen
      *
      * @param popupGravity
      */
@@ -842,58 +1138,117 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return mHelper.isAutoLocatePopup();
     }
 
+    /**
+     * <p>
+     * 是否自动设置PopupWindow位置
+     * <br>
+     * <br>
+     * 如果当前屏幕不足以完整显示您的PopupWindow，则PopupWindow会自行布置在其镜像位置。
+     * <br>
+     * <br>
+     * <pre>
+     * 比如当前PopupWindow显示在某个View的下方，而屏幕下方不够位置展示完整改PopupWindow，
+     * 当本设置为true，PopupWindow将会显示在原来的View的上方以满足完整显示PopupWindow的情况。
+     * </pre>
+     * <br>
+     * <br>
+     * <strong>如果您配置了{@link #setOffsetY(int)}，则对应的偏移量也是在其适配后的位置生效</strong>
+     * </p>
+     *
+     * @param autoLocatePopup 是否自适配
+     */
     public BasePopupWindow setAutoLocatePopup(boolean autoLocatePopup) {
-        mHelper.setShowAtDown(true).setAutoLocatePopup(true);
+        mHelper.setShowAsDropDown(true).setAutoLocatePopup(true);
         return this;
     }
 
     /**
-     * 获取poupwindow的高度，当popupwindow没show出来的时候高度会是0，此时则返回pre measure的高度，不一定精准
+     * <p>
+     * 获取PoupWindow的高度。
+     * <br>
+     * <br>
+     * 当PopupWindow没show出来的时候高度会是0，此时则返回pre measure的高度，不一定精准
+     * </p>
      *
-     * @return
+     * @see #preMeasurePopupView(int, int)
      */
     public int getHeight() {
         return mPopupWindow.getHeight() <= 0 ? mHelper.getPreMeasureHeight() : mPopupWindow.getHeight();
     }
 
     /**
-     * 获取poupwindow的宽度，当popupwindow没show出来的时候高度会是0，此时则返回pre measure的宽度，不一定精准
+     * <p>
+     * 获取PoupWindow的宽度。
+     * <br>
+     * <br>
+     * 当popupwindow没show出来的时候高度会是0，此时则返回pre measure的宽度，不一定精准
+     * </p>
      *
-     * @return
+     * @see #preMeasurePopupView(int, int)
      */
     public int getWidth() {
         return mPopupWindow.getWidth() <= 0 ? mHelper.getPreMeasureWidth() : mPopupWindow.getWidth();
     }
 
     /**
-     * 点击外部是否消失
      * <p>
-     * dismiss popup when touch ouside from popup
+     * 是否允许点击PopupWindow外部时触发dismiss
+     * </p>
+     * <br>
+     * dismiss popup when touch outside from popup
      *
-     * @param dismissWhenTouchOutside true for dismiss
+     * @param dismissWhenTouchOutside true for allow
      */
-    public BasePopupWindow setDismissWhenTouchOutside(boolean dismissWhenTouchOutside) {
+    public BasePopupWindow setAllowDismissWhenTouchOutside(boolean dismissWhenTouchOutside) {
         mHelper.setDismissWhenTouchOutside(mPopupWindow, dismissWhenTouchOutside);
         return this;
     }
 
     /**
-     * popupwindow是否拦截事件，这会影响到返回键dismiss的问题
+     * <p>
+     * 是否允许点击PopupWindow拦截事件。
+     * <br>
+     * <br>
+     * 如果允许拦截事件，则PopupWindow外部无法响应事件。
+     * </p>
      *
-     * @param touchable ture:popupwindow拦截事件,false：不拦截事件
-     * @return
+     * @param touchable <ul>
+     *                  <li>ture:PopupWindow拦截事件</li>
+     *                  <li>false：不拦截事件</li>
+     *                  </ul>
      */
-    public BasePopupWindow setInterceptTouchEvent(boolean touchable) {
+    public BasePopupWindow setAllowInterceptTouchEvent(boolean touchable) {
         mHelper.setInterceptTouchEvent(mPopupWindow, touchable);
         return this;
     }
 
-    public boolean isDismissWhenTouchOutside() {
+    public boolean isAllowDismissWhenTouchOutside() {
         return mHelper.isDismissWhenTouchOutside();
     }
 
-    public boolean isInterceptTouchEvent() {
+    public boolean isAllowInterceptTouchEvent() {
         return mHelper.isInterceptTouchEvent();
+    }
+
+    public boolean isAlignMaskToPopup() {
+        return mHelper.isAlignBackground();
+    }
+
+
+    /**
+     * <p>
+     * 设置PopupWindow的背景是否对齐到PopupWindow。
+     * <br>
+     * <br>
+     * 默认情况下，PopupWindow背景都是铺满整个屏幕的。
+     * 但在某些情况下您可能在PopupWindow之上不需要展示背景，这时候您可以调用这个方法来强制Background对齐到PopupWindow的顶部。
+     * </p>
+     *
+     * @param mAlignBackground 是否对齐背景
+     */
+    public BasePopupWindow setAlignBackground(boolean mAlignBackground) {
+        mHelper.setAlignBackgound(mAlignBackground);
+        return this;
     }
 
     //------------------------------------------状态控制-----------------------------------------------
@@ -904,7 +1259,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *
      * @param listener
      */
-    void setOnInnerPopupWIndowStateListener(InnerPopupWindowStateListener listener) {
+    void setOnInnerPopupWindowStateListener(InnerPopupWindowStateListener listener) {
         this.mStateListener = listener;
     }
 
@@ -915,7 +1270,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         try {
             mPopupWindow.dismiss();
         } catch (Exception e) {
-            Log.e(TAG, "dismiss error");
+            PopupLogUtil.trace(LogTag.e, TAG, "dismiss error");
             e.printStackTrace();
         }
     }
@@ -928,20 +1283,20 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     @Override
     public boolean callDismissAtOnce() {
         boolean hasAnima = false;
-        if (mHelper.getExitAnimation() != null && mAnimateApplyView != null) {
-            if (!isExitAnimaPlaying) {
-                mHelper.getExitAnimation().setAnimationListener(mAnimationListener);
-                mHelper.getExitAnimation().cancel();
-                mAnimateApplyView.startAnimation(mHelper.getExitAnimation());
-                isExitAnimaPlaying = true;
+        if (mHelper.getDismissAnimation() != null && mDisplayAnimateView != null) {
+            if (!isExitAnimatePlaying) {
+                mHelper.getDismissAnimation().setAnimationListener(mAnimationListener);
+                mHelper.getDismissAnimation().cancel();
+                mDisplayAnimateView.startAnimation(mHelper.getDismissAnimation());
+                isExitAnimatePlaying = true;
                 hasAnima = true;
             }
-        } else if (mHelper.getExitAnimator() != null) {
-            if (!isExitAnimaPlaying) {
-                mHelper.getExitAnimator().removeListener(mAnimatorListener);
-                mHelper.getExitAnimator().addListener(mAnimatorListener);
-                mHelper.getExitAnimator().start();
-                isExitAnimaPlaying = true;
+        } else if (mHelper.getDismissAnimator() != null) {
+            if (!isExitAnimatePlaying) {
+                mHelper.getDismissAnimator().removeListener(mAnimatorListener);
+                mHelper.getDismissAnimator().addListener(mAnimatorListener);
+                mHelper.getDismissAnimator().start();
+                isExitAnimatePlaying = true;
                 hasAnima = true;
             }
         }
@@ -955,15 +1310,15 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     /**
-     * 直接消掉popup而不需要动画
+     * 直接消掉PopupWindow而不需要动画
      */
     public void dismissWithOutAnimate() {
         if (!checkPerformDismiss()) return;
-        if (mHelper.getExitAnimation() != null && mAnimateApplyView != null) {
-            mHelper.getExitAnimation().cancel();
+        if (mHelper.getDismissAnimation() != null && mDisplayAnimateView != null) {
+            mHelper.getDismissAnimation().cancel();
         }
-        if (mHelper.getExitAnimator() != null) {
-            mHelper.getExitAnimator().removeAllListeners();
+        if (mHelper.getDismissAnimator() != null) {
+            mHelper.getDismissAnimator().removeAllListeners();
         }
         mPopupWindow.callSuperDismiss();
         if (mStateListener != null) {
@@ -977,13 +1332,13 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         if (mHelper.getOnDismissListener() != null) {
             callDismiss = mHelper.getOnDismissListener().onBeforeDismiss();
         }
-        return callDismiss && !isExitAnimaPlaying;
+        return callDismiss && !isExitAnimatePlaying;
     }
 
     private boolean checkPerformShow(View v) {
         boolean result = true;
         if (mHelper.getOnBeforeShowCallback() != null) {
-            result = mHelper.getOnBeforeShowCallback().onBeforeShow(mPopupView, v,
+            result = mHelper.getOnBeforeShowCallback().onBeforeShow(mContentView, v,
                     mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
         }
         return result;
@@ -1026,7 +1381,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     /**
-     * popupwindow外的事件点击回调，请注意您的popupwindow大小
+     * PopupWindow外的事件点击回调，请注意您的PopupWindow大小
      *
      * @return true意味着你已经处理消耗了事件，后续不再传递
      */
@@ -1048,7 +1403,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
         @Override
         public void onAnimationStart(Animator animation) {
-            isExitAnimaPlaying = true;
+            isExitAnimatePlaying = true;
             if (mStateListener != null) {
                 mStateListener.onAnimateDismissStart();
             }
@@ -1056,11 +1411,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
         @Override
         public void onAnimationEnd(Animator animation) {
-            mPopupView.post(new Runnable() {
+            mContentView.post(new Runnable() {
                 @Override
                 public void run() {
                     mPopupWindow.callSuperDismiss();
-                    isExitAnimaPlaying = false;
+                    isExitAnimatePlaying = false;
                 }
             });
 
@@ -1068,7 +1423,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
         @Override
         public void onAnimationCancel(Animator animation) {
-            isExitAnimaPlaying = false;
+            isExitAnimatePlaying = false;
         }
 
     };
@@ -1076,7 +1431,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private Animation.AnimationListener mAnimationListener = new SimpleAnimationUtils.AnimationListenerAdapter() {
         @Override
         public void onAnimationStart(Animation animation) {
-            isExitAnimaPlaying = true;
+            isExitAnimatePlaying = true;
             if (mStateListener != null) {
                 mStateListener.onAnimateDismissStart();
             }
@@ -1084,11 +1439,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            mPopupView.post(new Runnable() {
+            mContentView.post(new Runnable() {
                 @Override
                 public void run() {
                     mPopupWindow.callSuperDismiss();
-                    isExitAnimaPlaying = false;
+                    isExitAnimatePlaying = false;
                 }
             });
         }
@@ -1170,21 +1525,27 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 从下方滑动上来
      */
     protected AnimatorSet getDefaultSlideFromBottomAnimationSet() {
-        return SimpleAnimationUtils.getDefaultSlideFromBottomAnimationSet(mAnimateApplyView);
+        return SimpleAnimationUtils.getDefaultSlideFromBottomAnimationSet(mDisplayAnimateView);
     }
 
     /**
      * 获取屏幕高度(px)
      */
     public int getScreenHeight() {
-        return getContext().getResources().getDisplayMetrics().heightPixels;
+        if (SCREEN_HEIGHT == 0) {
+            SCREEN_HEIGHT = getContext().getResources().getDisplayMetrics().heightPixels;
+        }
+        return SCREEN_HEIGHT;
     }
 
     /**
      * 获取屏幕宽度(px)
      */
     public int getScreenWidth() {
-        return getContext().getResources().getDisplayMetrics().widthPixels;
+        if (SCREEN_WIDTH == 0) {
+            SCREEN_WIDTH = getContext().getResources().getDisplayMetrics().widthPixels;
+        }
+        return SCREEN_WIDTH;
     }
 
 
@@ -1193,7 +1554,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     /**
      * 在anchorView上方显示，autoLocatePopup为true时适用
      *
-     * @param mPopupView {@link #onCreatePopupView()}返回的View
+     * @param mPopupView {@link #onCreateContentView()}返回的View
      * @param anchorView {@link #showPopupWindow(View)}传入的View
      */
     protected void onAnchorTop(View mPopupView, View anchorView) {
@@ -1203,7 +1564,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     /**
      * 在anchorView下方显示，autoLocatePopup为true时适用
      *
-     * @param mPopupView {@link #onCreatePopupView()}返回的View
+     * @param mPopupView {@link #onCreateContentView()}返回的View
      * @param anchorView {@link #showPopupWindow(View)}传入的View
      */
     protected void onAnchorBottom(View mPopupView, View anchorView) {
@@ -1215,7 +1576,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         if (mHelper.getOnDismissListener() != null) {
             mHelper.getOnDismissListener().onDismiss();
         }
-        isExitAnimaPlaying = false;
+        isExitAnimatePlaying = false;
     }
 
 
@@ -1226,21 +1587,27 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return dip * getContext().getResources().getDisplayMetrics().density + 0.5f;
     }
 
-    public static void debugLog(boolean printLog) {
+    public static void setDebugLogEnable(boolean printLog) {
         PopupLogUtil.setOpenLog(printLog);
     }
 
     //------------------------------------------Interface-----------------------------------------------
     public interface OnBeforeShowCallback {
         /**
-         * <b>return true for perform show</b>
+         * <p>
+         * 在PopupWindow展示出来之前，如果您设置好了该监听器{@link #setOnBeforeShowCallback(OnBeforeShowCallback)}
+         * 那么show之前将会回调到本方法，在这里您可以进一步决定是否可以展示PopupWindow
+         * </p>
          *
-         * @param popupRootView The rootView of popup,it's usually be your layout
-         * @param anchorView    The anchorView whitch popup show
-         * @param hasShowAnimate  Check if show your popup with animate?
-         * @return
+         * @param contentView    PopupWindow的ContentView
+         * @param anchorView     锚点View
+         * @param hasShowAnimate 是否有showAnimation
+         * @return <ul>
+         * <li>【true】：允许展示PopupWindow</li>
+         * <li>【false】：不允许展示PopupWindow</li>
+         * </ul>
          */
-        boolean onBeforeShow(View popupRootView, View anchorView, boolean hasShowAnimate);
+        boolean onBeforeShow(View contentView, View anchorView, boolean hasShowAnimate);
 
 
     }
@@ -1251,9 +1618,15 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     public static abstract class OnDismissListener implements PopupWindow.OnDismissListener {
         /**
-         * <b>return true for perform dismiss</b>
+         * <p>
+         * 在PopupWindow消失之前，如果您设置好了该监听器{@link #setOnDismissListener(OnDismissListener)}
+         * 那么dismiss之前将会回调到本方法，在这里您可以进一步决定是否可以继续取消PopupWindow
+         * </p>
          *
-         * @return
+         * @return <ul>
+         * <li>【true】：继续取消PopupWindow</li>
+         * <li>【false】：不允许取消PopupWindow</li>
+         * </ul>
          */
         public boolean onBeforeDismiss() {
             return true;

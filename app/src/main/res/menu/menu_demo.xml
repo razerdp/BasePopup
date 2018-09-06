@@ -3,6 +3,11 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="razerdp.demo.DemoActivity">
     <item
+        android:id="@+id/id_full_activity"
+        android:orderInCategory="99"
+        android:title="full_screen_activity"
+        app:showAsAction="never"/>
+    <item
         android:id="@+id/id_scale_popup"
         android:orderInCategory="100"
         android:title="scale popup"
@@ -47,11 +52,6 @@
         android:id="@+id/id_custom_interpolator_popup"
         android:orderInCategory="107"
         android:title="custom interpolator popup"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/id_full_screen_popup"
-        android:orderInCategory="108"
-        android:title="full screen popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_auto_located_popup"
