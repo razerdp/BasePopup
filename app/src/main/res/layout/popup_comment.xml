@@ -1,75 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_comment_popup"
+    android:clipChildren="false"
+    android:gravity="center"
+    android:orientation="horizontal"
+    >
 
     <LinearLayout
-        android:layout_width="180dp"
-        android:layout_height="40dp"
-        android:background="@drawable/bg_comment_popup"
+        android:id="@+id/item_like"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
         android:clipChildren="false"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:weightSum="2"
         >
 
-        <RelativeLayout
-            android:id="@+id/item_like"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:clipChildren="false"
-            android:gravity="center"
-            >
-
-            <TextView
-                android:id="@+id/tv_like"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:drawablePadding="5dp"
-                android:text="赞  "
-                android:textColor="@color/comment_popup_tx_bg"
-                android:textSize="12sp"
-                />
-
-            <ImageView
-                android:id="@+id/iv_like"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginRight="5dp"
-                android:layout_toLeftOf="@id/tv_like"
-                android:src="@drawable/ic_like"
-                />
-        </RelativeLayout>
-
-        <View
-            android:id="@+id/v_line"
-            android:layout_width="0.5dp"
-            android:layout_height="15dp"
-            android:layout_gravity="center_vertical"
-            android:background="#6c6c6c"
+        <ImageView
+            android:id="@+id/iv_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/ic_like"
             />
 
-        <RelativeLayout
-            android:id="@+id/item_comment"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            >
+        <TextView
+            android:id="@+id/tv_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawablePadding="5dp"
+            android:text="赞  "
+            android:textColor="@color/comment_popup_tx_bg"
+            android:textSize="12sp"
+            />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_centerVertical="true"
-                android:drawableLeft="@drawable/ic_comment"
-                android:drawablePadding="5dp"
-                android:text="评论"
-                android:textColor="@color/comment_popup_tx_bg"
-                android:textSize="12sp"
-                />
-        </RelativeLayout>
     </LinearLayout>
-</FrameLayout>
+
+    <View
+        android:id="@+id/v_line"
+        android:layout_width="0.5dp"
+        android:layout_height="15dp"
+        android:layout_gravity="center_vertical"
+        android:background="#6c6c6c"
+        />
+
+    <FrameLayout
+        android:id="@+id/item_comment"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:drawableLeft="@drawable/ic_comment"
+            android:drawablePadding="5dp"
+            android:padding="8dp"
+            android:text="评论"
+            android:textColor="@color/comment_popup_tx_bg"
+            android:textSize="12sp"
+            />
+    </FrameLayout>
+</LinearLayout>

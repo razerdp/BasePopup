@@ -23,6 +23,7 @@ import razerdp.demo.fragment.DialogPopupFrag;
 import razerdp.demo.fragment.DismissControlPopupFrag;
 import razerdp.demo.fragment.InputPopupFrag;
 import razerdp.demo.fragment.ListPopupFrag;
+import razerdp.demo.fragment.LocatePopupFrag;
 import razerdp.demo.fragment.MenuPopupFrag;
 import razerdp.demo.fragment.ScalePopupFrag;
 import razerdp.demo.fragment.SimpleBaseFrag;
@@ -59,6 +60,7 @@ public class DemoActivity extends AppCompatActivity {
         fragMap.put(R.id.id_slide_from_top_popup2, new SlideFromTopPopupFrag2());
         fragMap.put(R.id.id_dismiss_control_popup, new DismissControlPopupFrag());
         fragMap.put(R.id.id_blur_slide_from_bottom_popup, new BlurSlideFromBottomPopupFrag());
+        fragMap.put(R.id.id_locate_with_view,new LocatePopupFrag());
 
 
         SimpleBaseFrag firstShowFrag = fragMap.get(R.id.id_scale_popup);
