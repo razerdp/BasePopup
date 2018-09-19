@@ -38,7 +38,7 @@ public class QuickPopup extends BasePopupWindow {
         if (mConfig.getPopupBlurOption() != null) {
             setBlurOption(mConfig.getPopupBlurOption());
         } else {
-            setBlurBackgroundEnable(mConfig.isBlurBackground());
+            setBlurBackgroundEnable(mConfig.isBlurBackground(), mConfig.getOnBlurOptionInitListener());
         }
 
         setPopupFadeEnable(mConfig.isFadeEnable());

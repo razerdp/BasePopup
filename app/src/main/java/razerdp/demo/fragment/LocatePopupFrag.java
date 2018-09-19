@@ -11,6 +11,7 @@ import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.QuickPopupBuilder;
 import razerdp.basepopup.QuickPopupConfig;
 import razerdp.basepopup.R;
+import razerdp.blur.PopupBlurOption;
 
 /**
  * Created by 大灯泡 on 2016/1/16.
@@ -82,7 +83,14 @@ public class LocatePopupFrag extends SimpleBaseFrag {
                                 .withShowAnimation(enterAnimation)
                                 .withDismissAnimation(dismissAnimation)
                                 .offsetX(offsetX, offsetRatioOfPopupWidth)
-                                .offsetY(offsetY, offsetRatioOfPopupHeight))
+                                .offsetY(offsetY, offsetRatioOfPopupHeight)
+                                .blurBackground(true, new BasePopupWindow.OnBlurOptionInitListener() {
+                                    @Override
+                                    public void onCreateBlurOption(PopupBlurOption option) {
+                                        option.setBlurRadius(6)
+                                        .setBlurPreScaleRatio(0.9f);
+                                    }
+                                }))
                         .show(v);
             }
         });
