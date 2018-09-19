@@ -239,7 +239,7 @@ defaultConfig {
 
 | 对应popup | 预览 |
 | :---- | ---- |
-| [LocatePopupFrag.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/fragment/BlurSlideFromBottomPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/locate_popup.gif) |
+| [LocatePopupFrag.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/fragment/LocatePopupFrag.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/locate_popup.gif) |
 | [BlurSlideFromBottomPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/BlurSlideFromBottomPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/blur_popup.gif) |
 | [CommentPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/CommentPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/comment_popup_with_exitAnima.gif) |
 | [ScalePopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/ScalePopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/scale_popup.gif) |
