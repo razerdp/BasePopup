@@ -34,49 +34,44 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     public BasePopupWindowProxy(Context context, PopupTouchController mController) {
         super(context);
         this.mController = mController;
-        init();
+        init(context);
     }
 
     public BasePopupWindowProxy(Context context, AttributeSet attrs, PopupTouchController mController) {
         super(context, attrs);
         this.mController = mController;
-        init();
+        init(context);
     }
 
     public BasePopupWindowProxy(Context context, AttributeSet attrs, int defStyleAttr, PopupTouchController mController) {
         super(context, attrs, defStyleAttr);
         this.mController = mController;
-        init();
+        init(context);
     }
 
     public BasePopupWindowProxy(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes, PopupTouchController mController) {
         super(context, attrs, defStyleAttr, defStyleRes);
         this.mController = mController;
-        init();
+        init(context);
     }
 
     public BasePopupWindowProxy(View contentView, PopupTouchController mController) {
         super(contentView);
         this.mController = mController;
-        init();
+        init(contentView.getContext());
     }
 
-    public BasePopupWindowProxy(int width, int height, PopupTouchController mController) {
-        super(width, height);
-        this.mController = mController;
-        init();
-    }
 
     public BasePopupWindowProxy(View contentView, int width, int height, PopupTouchController mController) {
         super(contentView, width, height);
         this.mController = mController;
-        init();
+        init(contentView.getContext());
     }
 
     public BasePopupWindowProxy(View contentView, int width, int height, boolean focusable, PopupTouchController mController) {
         super(contentView, width, height, focusable);
         this.mController = mController;
-        init();
+        init(contentView.getContext());
     }
 
     void bindPopupHelper(BasePopupHelper mHelper) {
@@ -86,7 +81,9 @@ abstract class BasePopupWindowProxy extends PopupWindow {
         hackWindowManager.bindPopupHelper(mHelper);
     }
 
-    private void init() {
+    private void init(Context context) {
+//       int i = Reflection.unseal(context);
+//        Log.d(TAG, "init: "+i);
         setFocusable(true);
         setOutsideTouchable(true);
         setBackgroundDrawable(new ColorDrawable());

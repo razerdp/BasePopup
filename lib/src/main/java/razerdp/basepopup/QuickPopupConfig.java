@@ -27,6 +27,14 @@ public final class QuickPopupConfig {
     boolean blurBackground;
     PopupBlurOption mPopupBlurOption;
 
+    int offsetX;
+    int offsetY;
+
+    float offsetRatioOfPopupWidth;
+    float offsetRatioOfPopupHeight;
+
+    boolean alignBackground;
+
     HashMap<Integer, Pair<View.OnClickListener, Boolean>> mListenersHolderMap;
 
 
@@ -89,6 +97,31 @@ public final class QuickPopupConfig {
         return this;
     }
 
+    public QuickPopupConfig offsetX(int offsetX) {
+        return offsetX(offsetX, 0);
+    }
+
+    public QuickPopupConfig offsetY(int offsetY) {
+        return offsetY(offsetY, 0);
+    }
+
+    public QuickPopupConfig offsetX(int offsetX, float ratioOfPopupWidth) {
+        this.offsetX = offsetX;
+        this.offsetRatioOfPopupWidth = ratioOfPopupWidth;
+        return this;
+    }
+
+    public QuickPopupConfig offsetY(int offsetY, float ratioOfPopupHeight) {
+        this.offsetY = offsetY;
+        this.offsetRatioOfPopupHeight = ratioOfPopupHeight;
+        return this;
+    }
+
+    public QuickPopupConfig alignBackground(boolean alignBackground) {
+        this.alignBackground = alignBackground;
+        return this;
+    }
+
     //-----------------------------------------getter-----------------------------------------
 
     public Animation getShowAnimation() {
@@ -117,6 +150,26 @@ public final class QuickPopupConfig {
 
     public boolean isFadeEnable() {
         return fadeEnable;
+    }
+
+    public int getOffsetX() {
+        return offsetX;
+    }
+
+    public int getOffsetY() {
+        return offsetY;
+    }
+
+    public float getOffsetRatioOfPopupWidth() {
+        return offsetRatioOfPopupWidth;
+    }
+
+    public float getOffsetRatioOfPopupHeight() {
+        return offsetRatioOfPopupHeight;
+    }
+
+    public boolean isAlignBackground() {
+        return alignBackground;
     }
 
     public HashMap<Integer, Pair<View.OnClickListener, Boolean>> getListenersHolderMap() {

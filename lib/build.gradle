@@ -5,7 +5,7 @@ android {
     compileSdkVersion 27
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 27
         versionCode 23
         versionName "2.0.1-alpha2"
@@ -24,6 +24,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
+    api 'me.weishu:free_reflection:1.2.0'
 }
 
 publish {

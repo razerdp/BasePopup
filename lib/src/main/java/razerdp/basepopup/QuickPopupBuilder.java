@@ -51,6 +51,11 @@ public class QuickPopupBuilder {
         return this;
     }
 
+    public QuickPopupBuilder wrapContentMode() {
+        return width(ViewGroup.LayoutParams.WRAP_CONTENT)
+                .height(ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
     public QuickPopupBuilder config(QuickPopupConfig quickPopupConfig) {
         this.mConfig = quickPopupConfig;
         return this;
