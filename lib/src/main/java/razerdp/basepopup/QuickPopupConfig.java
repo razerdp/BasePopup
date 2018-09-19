@@ -5,6 +5,7 @@ import android.util.Pair;
 import android.view.View;
 import android.view.animation.Animation;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 import razerdp.blur.PopupBlurOption;
@@ -20,11 +21,12 @@ public final class QuickPopupConfig {
     Animator mShowAnimator;
     Animator mDismissAnimator;
 
-    boolean fadeEnable;
+    boolean fadeEnable = true;
 
     BasePopupWindow.OnDismissListener mDismissListener;
 
     boolean blurBackground;
+    WeakReference<BasePopupWindow.OnBlurOptionInitListener> mOnBlurOptionInitListener;
     PopupBlurOption mPopupBlurOption;
 
     int offsetX;
@@ -71,7 +73,12 @@ public final class QuickPopupConfig {
     }
 
     public QuickPopupConfig blurBackground(boolean blurBackground) {
+        return blurBackground(blurBackground, null);
+    }
+
+    public QuickPopupConfig blurBackground(boolean blurBackground, BasePopupWindow.OnBlurOptionInitListener mInitListener) {
         this.blurBackground = blurBackground;
+        this.mOnBlurOptionInitListener = new WeakReference<>(mInitListener);
         return this;
     }
 
@@ -174,6 +181,11 @@ public final class QuickPopupConfig {
 
     public HashMap<Integer, Pair<View.OnClickListener, Boolean>> getListenersHolderMap() {
         return mListenersHolderMap;
+    }
+
+    public BasePopupWindow.OnBlurOptionInitListener getOnBlurOptionInitListener() {
+        if (mOnBlurOptionInitListener == null) return null;
+        return mOnBlurOptionInitListener.get();
     }
 
     public BasePopupWindow.OnDismissListener getDismissListener() {
