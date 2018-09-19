@@ -44,6 +44,16 @@ public class QuickPopup extends BasePopupWindow {
         setPopupFadeEnable(mConfig.isFadeEnable());
 
         applyClick();
+
+        if (mConfig.getOffsetX() != 0 || mConfig.getOffsetRatioOfPopupWidth() != 0) {
+            setOffsetX((int) (mConfig.getOffsetX() + getWidth() * mConfig.getOffsetRatioOfPopupWidth()));
+        }
+
+        if (mConfig.getOffsetY() != 0 || mConfig.getOffsetRatioOfPopupHeight() != 0) {
+            setOffsetY((int) (mConfig.getOffsetY() + getHeight() * mConfig.getOffsetRatioOfPopupHeight()));
+        }
+
+        setAlignBackground(mConfig.isAlignBackground());
     }
 
     private void applyClick() {

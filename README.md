@@ -217,6 +217,10 @@ defaultConfig {
 更新日志([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 ---------------------------------------------------------------------------
 
+* 2018/09/19
+  * 继续丰富QuickPopupBuilder
+  * 增加Demo:根据某个View控制各个方向的Popup。[示例](https://github.com/razerdp/BasePopup/blob/HEAD/app/src/main/java/razerdp/demo/fragment/LocatePopupFrag.java)
+  
 * **2.0.1-alpha2**(2018/09/06)
   * 增加快速构建QuickPopupBuilder
   * 尝试修复[#59](https://github.com/razerdp/BasePopup/issues/59)

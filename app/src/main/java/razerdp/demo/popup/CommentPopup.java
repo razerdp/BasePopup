@@ -13,7 +13,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import razerdp.basepopup.BasePopupWindow;
@@ -28,8 +27,8 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
     private ImageView mLikeAnimaView;
     private TextView mLikeText;
 
-    private RelativeLayout mLikeClikcLayout;
-    private RelativeLayout mCommentClickLayout;
+    private View mLikeClikcLayout;
+    private View mCommentClickLayout;
 
 
     private OnCommentPopupClickListener mOnCommentPopupClickListener;
@@ -43,8 +42,8 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
         mLikeAnimaView = (ImageView) findViewById(R.id.iv_like);
         mLikeText = (TextView) findViewById(R.id.tv_like);
 
-        mLikeClikcLayout = (RelativeLayout) findViewById(R.id.item_like);
-        mCommentClickLayout = (RelativeLayout) findViewById(R.id.item_comment);
+        mLikeClikcLayout =  findViewById(R.id.item_like);
+        mCommentClickLayout =  findViewById(R.id.item_comment);
 
         mLikeClikcLayout.setOnClickListener(this);
         mCommentClickLayout.setOnClickListener(this);
