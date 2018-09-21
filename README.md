@@ -166,13 +166,28 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 如果您并不需要很详细的定义一个PopupWindow，您也可以选择`QuickPopupBuilder`采取链式写法快速编写出一个Popup以使用。
 
 ```java
-    QuickPopupBuilder.with(this)
-        .contentView(R.layout.popup_normal)
-        .config(new QuickPopupConfig()
-                .blurBackground(true)
-                .withShowAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(true))
-                .withDismissAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(false)))
-        .show();
+    QuickPopupBuilder.with(getContext())
+                     .contentView(R.layout.popup_menu_small)
+                     .wrapContentMode()
+                     .config(new QuickPopupConfig()
+                                .withShowAnimation(enterAnimation)
+                                .withDismissAnimation(dismissAnimation)
+                                .offsetX(offsetX, offsetRatioOfPopupWidth)
+                                .offsetY(offsetY, offsetRatioOfPopupHeight)
+                                .blurBackground(true, new BasePopupWindow.OnBlurOptionInitListener() {
+                                    @Override
+                                    public void onCreateBlurOption(PopupBlurOption option) {
+                                        option.setBlurRadius(6)
+                                                .setBlurPreScaleRatio(0.9f);
+                                    }
+                                })
+                                .withClick(R.id.tx_1, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        ToastUtils.ToastMessage(getContext(), "tx1");
+                                    }
+                                }))
+                     .show(v);
 ````
 
 
