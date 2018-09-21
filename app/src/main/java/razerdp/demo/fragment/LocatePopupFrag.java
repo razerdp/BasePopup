@@ -12,6 +12,7 @@ import razerdp.basepopup.QuickPopupBuilder;
 import razerdp.basepopup.QuickPopupConfig;
 import razerdp.basepopup.R;
 import razerdp.blur.PopupBlurOption;
+import razerdp.demo.utils.ToastUtils;
 
 /**
  * Created by 大灯泡 on 2016/1/16.
@@ -88,7 +89,13 @@ public class LocatePopupFrag extends SimpleBaseFrag {
                                     @Override
                                     public void onCreateBlurOption(PopupBlurOption option) {
                                         option.setBlurRadius(6)
-                                        .setBlurPreScaleRatio(0.9f);
+                                                .setBlurPreScaleRatio(0.9f);
+                                    }
+                                })
+                                .withClick(R.id.tx_1, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        ToastUtils.ToastMessage(getContext(), "tx1");
                                     }
                                 }))
                         .show(v);
