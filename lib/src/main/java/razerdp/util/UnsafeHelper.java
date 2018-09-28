@@ -24,7 +24,7 @@ public class UnsafeHelper {
             Field f = unsafeClass.getDeclaredField("theUnsafe");
             f.setAccessible(true);
             //获取UnSafe
-            unSafe = f.get(unsafeClass);
+            unSafe = f.get(null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,6 +63,70 @@ public class UnsafeHelper {
         final Method field_putObjectVolatile = unSafe.getClass().getMethod("putObjectVolatile", Object.class, long.class, Object.class);
         field_putObjectVolatile.invoke(unSafe, var1, var2, var4);
     }
+
+    public static int arrayBaseOffset(Class<?> var1) throws Exception {
+        checkUnSafe();
+
+        final Method field_arrayBaseOffset = unSafe.getClass().getMethod("arrayBaseOffset", Class.class);
+        return (int) field_arrayBaseOffset.invoke(unSafe, var1);
+    }
+
+    public static int addressSize() throws Exception {
+        checkUnSafe();
+
+        final Method field_addressSize = unSafe.getClass().getMethod("addressSize");
+        return (int) field_addressSize.invoke(unSafe);
+    }
+
+    public static int getInt(long var1) throws Exception {
+        checkUnSafe();
+
+        final Method field_getInt = unSafe.getClass().getMethod("getInt", long.class);
+        return (int) field_getInt.invoke(unSafe, var1);
+    }
+
+    public static int getInt(Object var1, long var2) throws Exception {
+        checkUnSafe();
+
+        final Method field_getInt = unSafe.getClass().getMethod("getInt", Object.class, long.class);
+        return (int) field_getInt.invoke(unSafe, var1, var2);
+    }
+
+    public static int getLong(long var1) throws Exception {
+        checkUnSafe();
+
+        final Method field_getLong = unSafe.getClass().getMethod("getLong", long.class);
+        return (int) field_getLong.invoke(unSafe, var1);
+    }
+
+    public static int getLong(Object var1, long var2) throws Exception {
+        checkUnSafe();
+
+        final Method field_getLong = unSafe.getClass().getMethod("getLong", Object.class, long.class);
+        return (int) field_getLong.invoke(unSafe, var1, var2);
+    }
+
+    public static long addressOf(Object o) throws Exception {
+        checkUnSafe();
+
+        Object[] array = new Object[]{o};
+
+        long baseOffset = arrayBaseOffset(Object[].class);
+        int addressSize = addressSize();
+        long result;
+        switch (addressSize) {
+            case 4:
+                result = getInt(array, baseOffset);
+                break;
+            case 8:
+                result = getLong(array, baseOffset);
+                break;
+            default:
+                throw new Error("unsupported address size: " + addressSize);
+        }
+        return result;
+    }
+
 
     public static Object getObjectVolatile(Object var1, long var2) throws Exception {
         checkUnSafe();
