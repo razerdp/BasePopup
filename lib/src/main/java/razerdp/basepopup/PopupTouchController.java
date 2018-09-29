@@ -16,6 +16,8 @@ interface PopupTouchController {
 
     boolean onDispatchKeyEvent(KeyEvent event);
 
+    boolean onInterceptTouchEvent(MotionEvent event);
+
     boolean onTouchEvent(MotionEvent event);
 
     boolean onBackPressed();
