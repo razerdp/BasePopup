@@ -1356,6 +1356,16 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     /**
+     * 捕捉interceptTouchEvent
+     *
+     * @param event
+     * @return true意味着你已经处理消耗了事件，后续不再传递
+     */
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        return false;
+    }
+
+    /**
      * 捕捉touchevent
      *
      * @param event

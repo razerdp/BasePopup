@@ -1,5 +1,6 @@
 package razerdp.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -36,5 +37,39 @@ public class InputMethodUtils {
                 InputMethodUtils.showInputMethod(view);
             }
         }, delayMillis);
+    }
+
+    /**
+     * 隐藏软键盘
+     */
+    public static void close(Activity activity) {
+        if (activity == null) {
+            return;
+        }
+        View view = activity.getWindow().getDecorView().getRootView();
+        try {
+            InputMethodManager imm = (InputMethodManager) view.getContext()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 隐藏软键盘
+     */
+    public static void close(View view) {
+        try {
+            InputMethodManager imm = (InputMethodManager) view.getContext()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
