@@ -195,7 +195,7 @@ abstract class BasePopupWindowProxy extends PopupWindow {
      */
     private void tryToProxyWindowManagerMethod(PopupWindow popupWindow) {
         if (mController == null || hackWindowManager != null) return;
-        if (Build.VERSION.SDK_INT < 27) {
+        if (Build.VERSION.SDK_INT <= 27) {
             // Below Android P, ignore
             troToProxyWindowManagerMethodBeforeP(popupWindow);
         } else {
