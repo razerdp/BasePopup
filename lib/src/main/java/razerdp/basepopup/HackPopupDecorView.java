@@ -71,6 +71,9 @@ public class HackPopupDecorView extends ViewGroup {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (mPopupTouchController != null) {
+            return mPopupTouchController.onInterceptTouchEvent(ev);
+        }
         return false;
     }
 

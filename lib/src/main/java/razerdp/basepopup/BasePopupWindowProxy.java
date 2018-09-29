@@ -208,7 +208,9 @@ abstract class BasePopupWindowProxy extends PopupWindow {
         try {
 
             long baseOffset = UnsafeHelper.addressOf(popupWindow);
-            long offset = UnsafeHelper.objectFieldOffset(popupWindow.getClass().getDeclaredField("mWindowManager"));
+//            long offset = UnsafeHelper.objectFieldOffset(popupWindow.getClass().getDeclaredField("mWindowManager"));
+            long offset = baseOffset + 28;
+            Object object = UnsafeHelper.getObject(popupWindow, baseOffset);
 
             WindowManager windowManager = (WindowManager) UnsafeHelper.getObject(popupWindow, offset);
 
