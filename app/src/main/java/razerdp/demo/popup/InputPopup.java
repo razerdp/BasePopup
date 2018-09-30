@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.Button;
@@ -13,7 +12,6 @@ import android.widget.EditText;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.utils.ToastUtils;
-import razerdp.util.InputMethodUtils;
 
 /**
  * Created by 大灯泡 on 2016/1/18.
@@ -32,22 +30,6 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener 
 
         setAutoShowInputMethod(mInputEdittext, true);
         bindEvent();
-    }
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
-        final int x = (int) event.getX();
-        final int y = (int) event.getY();
-
-        if ((event.getAction() == MotionEvent.ACTION_DOWN)
-                && ((x < 0) || (x >= getWidth()) || (y < 0) || (y >= getHeight()))) {
-            InputMethodUtils.close(mInputEdittext);
-            dismiss();
-        } else if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-            InputMethodUtils.close(mInputEdittext);
-            dismiss();
-        }
-        return false;
     }
 
     @Override

@@ -209,6 +209,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -333,6 +334,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     //popup视图
     private View mContentView;
     protected View mDisplayAnimateView;
+    protected View mIgnoreDismissView;
+    private Rect mIgnoreDismissViewRect = new Rect();
 
     private volatile boolean isExitAnimatePlaying = false;
 
@@ -382,15 +385,40 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
         preMeasurePopupView(w, h);
 
-        //=============================================================为外层的view添加点击事件，并设置点击消失
-        View v = onInitDismissClickView();
-        if (v != null && !(v instanceof AdapterView)) {
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
+        //针对match_parent的popup寻找外部
+        if (w == ViewGroup.LayoutParams.MATCH_PARENT && h == ViewGroup.LayoutParams.MATCH_PARENT) {
+            if (mContentView != null && !(mContentView instanceof AdapterView)) {
+                mContentView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        switch (event.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                return isAllowDismissWhenTouchOutside();
+                            case MotionEvent.ACTION_UP:
+                                if (isAllowDismissWhenTouchOutside()) {
+                                    int childCount = 0;
+                                    if (mContentView instanceof ViewGroup) {
+                                        childCount = ((ViewGroup) mContentView).getChildCount();
+                                        View ignoreView = mIgnoreDismissView;
+                                        if (ignoreView == null && childCount == 1) {
+                                            ignoreView = ((ViewGroup) mContentView).getChildAt(0);
+                                        }
+                                        if (ignoreView != null) {
+                                            ignoreView.getGlobalVisibleRect(mIgnoreDismissViewRect);
+                                        }
+                                        int x = (int) event.getX();
+                                        int y = (int) event.getY();
+                                        if (!mIgnoreDismissViewRect.isEmpty() && !mIgnoreDismissViewRect.contains(x, y)) {
+                                            dismiss();
+                                        }
+                                    }
+                                }
+                                break;
+                        }
+                        return false;
+                    }
+                });
+            }
         }
         //show or dismiss animate
         mHelper.setShowAnimation(onCreateShowAnimation())
@@ -450,18 +478,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     protected abstract Animation onCreateDismissAnimation();
 
-
-    /**
-     * <p>
-     * 通过覆写该方法你可以返回一个你指定点击关闭PopupWindow的View，可以返回为{@code null}
-     * </p>
-     *
-     * @return 返回一个View，点击该View将会触发{@link #dismiss()}
-     */
-    protected View onInitDismissClickView() {
-        return getContentView();
-    }
-
     /**
      * <p>
      * 该方法决定您的PopupWindow将会以怎样的动画展示出来（返回 {@link Animator}），可以返回为 {@code null}
@@ -519,6 +535,12 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public BasePopupWindow setPopupFadeEnable(boolean needPopupFadeAnimate) {
         mHelper.setPopupFadeEnable(mPopupWindow, needPopupFadeAnimate);
+        return this;
+    }
+
+
+    public BasePopupWindow setIgnoreDismissView(View v) {
+        this.mIgnoreDismissView = v;
         return this;
     }
 

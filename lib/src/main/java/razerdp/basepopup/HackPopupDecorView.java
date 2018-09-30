@@ -1,6 +1,7 @@
 package razerdp.basepopup;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -21,6 +22,7 @@ public class HackPopupDecorView extends ViewGroup {
     private PopupTouchController mPopupTouchController;
     private View mPopupDecorView;
     private BasePopupHelper mBasePopupHelper;
+    private Rect mPopupDecorViewRect = new Rect();
 
     public HackPopupDecorView(Context context) {
         super(context);

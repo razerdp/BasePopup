@@ -51,7 +51,7 @@ final class BasePopupHelper {
     //是否showAsDropDown
     private boolean isShowAsDropDown;
     //点击popup外部是否消失
-    private boolean dismissWhenTouchOutside;
+    private boolean dismissWhenTouchOutside = true;
     //是否全屏
     private boolean fullScreen = false;
     //是否需要淡入window动画
