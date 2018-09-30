@@ -232,6 +232,11 @@ defaultConfig {
 更新日志([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 ---------------------------------------------------------------------------
 
+* 2018/09/30
+  * 针对Match_Parent的dismissOutSide适配
+  * 因为代码默认处理childCount==1的情况，如果有别的情况需要忽略点击的view，请调用setIgnoreDismissView()指定
+  * 删除~~onInitDismissClickView()~~方法
+  
 * 2018/09/19
   * 继续丰富QuickPopupBuilder
   * 增加Demo:根据某个View控制各个方向的Popup。[示例](https://github.com/razerdp/BasePopup/blob/HEAD/app/src/main/java/razerdp/demo/fragment/LocatePopupFrag.java)
