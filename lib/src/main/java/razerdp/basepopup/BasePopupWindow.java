@@ -539,6 +539,12 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
 
+    /**
+     * 在Match_parent情况下，默认整个PopupWindow都是出于dismiss范围
+     * 代码已经默认处理了这种情况，如果您需要特殊指定忽略dismiss的view，则调用该方法指定
+     *
+     * @return
+     */
     public BasePopupWindow setIgnoreDismissView(View v) {
         this.mIgnoreDismissView = v;
         return this;
