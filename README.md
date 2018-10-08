@@ -98,7 +98,7 @@ etc.
 
 实现必要的几个方法：
 
-`onCreateShowAnimation()`/`onCreateDismissAnimation()`:初始化一个显示/退出动画，该动画将会用到`onCreatePopupView()`所返回的view,可以为空。
+`**该方法从2.0.6开始不再抽象强制实现，但建议实现入场和退场动画** onCreateShowAnimation()`/`onCreateDismissAnimation()`:初始化一个显示/退出动画，该动画将会用到`onCreatePopupView()`所返回的view,可以为空。
 
 `onCreatePopupView()`:初始化您的popupwindow界面，建议直接使用`createPopupById()`
 
@@ -231,6 +231,10 @@ defaultConfig {
 
 更新日志([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 ---------------------------------------------------------------------------
+
+* **2.0.6**(2018/10/09)
+  * 不再抽象强制实现入场和退场动画
+  * 针对自动弹出输入法的Popup，在dismiss()中默认关闭输入法
 
 * 2018/09/30
   * 针对Match_Parent的dismissOutSide适配
