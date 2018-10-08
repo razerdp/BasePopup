@@ -37,6 +37,8 @@ public final class QuickPopupConfig {
 
     boolean alignBackground;
 
+    boolean autoLocated;
+
     HashMap<Integer, Pair<WeakReference<View.OnClickListener>, Boolean>> mListenersHolderMap;
 
 
@@ -129,6 +131,11 @@ public final class QuickPopupConfig {
         return this;
     }
 
+    public QuickPopupConfig autoLocated(boolean autoLocated) {
+        this.autoLocated = autoLocated;
+        return this;
+    }
+
     //-----------------------------------------getter-----------------------------------------
 
     public Animation getShowAnimation() {
@@ -186,6 +193,10 @@ public final class QuickPopupConfig {
     public BasePopupWindow.OnBlurOptionInitListener getOnBlurOptionInitListener() {
         if (mOnBlurOptionInitListener == null) return null;
         return mOnBlurOptionInitListener.get();
+    }
+
+    public boolean isAutoLocated() {
+        return autoLocated;
     }
 
     public BasePopupWindow.OnDismissListener getDismissListener() {

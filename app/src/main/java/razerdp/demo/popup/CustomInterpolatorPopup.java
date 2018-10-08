@@ -30,7 +30,7 @@ public class CustomInterpolatorPopup extends BasePopupWindow implements View.OnC
 
     @Override
     protected Animation onCreateDismissAnimation() {
-        return null;
+        return getDefaultAlphaAnimation(false);
     }
 
     @Override

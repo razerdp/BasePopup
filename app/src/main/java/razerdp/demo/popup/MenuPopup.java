@@ -38,7 +38,6 @@ public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
         set.addAnimation(getScaleAnimation(0, 1, 0, 1, Animation.RELATIVE_TO_SELF, 1, Animation.RELATIVE_TO_SELF, 0));
         set.addAnimation(getDefaultAlphaAnimation());
         return set;
-        //return null;
     }
 
     @Override
