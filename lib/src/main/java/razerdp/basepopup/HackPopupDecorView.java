@@ -1,7 +1,6 @@
 package razerdp.basepopup;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -20,9 +19,6 @@ import razerdp.util.log.PopupLogUtil;
 public class HackPopupDecorView extends ViewGroup {
     private static final String TAG = "HackPopupDecorView";
     private PopupTouchController mPopupTouchController;
-    private View mPopupDecorView;
-    private BasePopupHelper mBasePopupHelper;
-    private Rect mPopupDecorViewRect = new Rect();
 
     public HackPopupDecorView(Context context) {
         super(context);
@@ -143,9 +139,7 @@ public class HackPopupDecorView extends ViewGroup {
     }
 
     ViewGroup.LayoutParams addPopupDecorView(View view, ViewGroup.LayoutParams sourcePopupDecorViewParams, BasePopupHelper helper, PopupTouchController controller) {
-        this.mPopupDecorView = view;
         this.mPopupTouchController = controller;
-        this.mBasePopupHelper = helper;
         /**
          * 此时的params是WindowManager.LayoutParams，需要留意强转问题
          * popup内部有scrollChangeListener，会有params强转为WindowManager.LayoutParams的情况
