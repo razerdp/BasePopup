@@ -55,6 +55,7 @@ public class QuickPopup extends BasePopupWindow {
         }
 
         setAlignBackground(mConfig.isAlignBackground());
+        setAutoLocatePopup(mConfig.isAutoLocated());
     }
 
     private void applyClick() {

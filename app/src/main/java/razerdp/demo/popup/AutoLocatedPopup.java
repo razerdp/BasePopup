@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.widget.Toast;
 
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
@@ -19,7 +20,7 @@ public class AutoLocatedPopup extends BasePopupWindow implements View.OnClickLis
     public AutoLocatedPopup(Activity context) {
         super(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         setAutoLocatePopup(true)
-        .setAlignBackground(false);
+                .setAlignBackground(false);
         bindEvent();
     }
 
@@ -45,6 +46,16 @@ public class AutoLocatedPopup extends BasePopupWindow implements View.OnClickLis
         findViewById(R.id.tx_2).setOnClickListener(this);
         findViewById(R.id.tx_3).setOnClickListener(this);
 
+    }
+
+    @Override
+    protected void onAnchorTop(View mPopupView, View anchorView) {
+        Toast.makeText(getContext(), "显示在上方（下方位置不足）", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onAnchorBottom(View mPopupView, View anchorView) {
+        Toast.makeText(getContext(), "显示在下方（上位置不足）", Toast.LENGTH_SHORT).show();
     }
 
     @Override
