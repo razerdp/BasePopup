@@ -1,5 +1,9 @@
 * BasePopup
 
+* **2.0.6**(2018/10/09)
+  * 不再抽象强制实现入场和退场动画
+  * 针对自动弹出输入法的Popup，在dismiss()中默认关闭输入法
+
 * 2018/09/30
   * 针对Match_Parent的dismissOutSide适配
   * 因为代码默认处理childCount==1的情况，如果有别的情况需要忽略点击的view，请调用setIgnoreDismissView()指定

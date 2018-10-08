@@ -456,7 +456,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *
      * @return 返回显示PopupWindow的动画
      */
-    protected abstract Animation onCreateShowAnimation();
+    protected Animation onCreateShowAnimation() {
+        return null;
+    }
+
 
     /**
      * <p>
@@ -476,7 +479,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *
      * @return 返回PopupWindow消失前的动画
      */
-    protected abstract Animation onCreateDismissAnimation();
+    protected Animation onCreateDismissAnimation() {
+        return null;
+    }
 
     /**
      * <p>
