@@ -1,1 +1,4 @@
 include ':app', ':lib'
+
+//def submoduleProject = project(':lib')
+//submoduleProject.name = 'BasePopup'

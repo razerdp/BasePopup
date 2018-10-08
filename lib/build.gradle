@@ -27,8 +27,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 }
 
-def siteUrl = 'https://github.com/razerdp/BasePopup' // 项目主页。
-def gitUrl = 'git@github.com:razerdp/BasePopup.git' // Git仓库的url。
+def siteUrl = 'https://github.com/razerdp/BasePopup'
+def gitUrl = 'git@github.com:razerdp/BasePopup.git'
 //def moduleName = 'BasePopup'
 def moduleName = 'BasePopup_Candy'
 
@@ -38,12 +38,13 @@ version = "2.0.6"
 
 install {
     repositories.mavenInstaller {
+        pom.artifactId = moduleName
         pom {
             project {
                 packaging 'aar'
-                name = moduleName
+                name  moduleName
                 description '打造一个通用的Popup'
-                url siteUrl // 项目主页，这里是引用上面定义好。
+                url siteUrl
 
                 licenses {
                     license {
