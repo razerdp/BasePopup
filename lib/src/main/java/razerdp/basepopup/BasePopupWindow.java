@@ -1296,6 +1296,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public void dismiss() {
         try {
+            if (mAutoShowInputEdittext != null && mHelper.isAutoShowInputMethod()) {
+                InputMethodUtils.close(mAutoShowInputEdittext);
+            }
             mPopupWindow.dismiss();
         } catch (Exception e) {
             PopupLogUtil.trace(LogTag.e, TAG, "dismiss error");
@@ -1347,6 +1350,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         if (mHelper.getDismissAnimator() != null) {
             mHelper.getDismissAnimator().removeAllListeners();
+        }
+        if (mAutoShowInputEdittext != null && mHelper.isAutoShowInputMethod()) {
+            InputMethodUtils.close(mAutoShowInputEdittext);
         }
         mPopupWindow.callSuperDismiss();
         if (mStateListener != null) {

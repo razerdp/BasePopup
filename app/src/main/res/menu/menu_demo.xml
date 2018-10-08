@@ -17,66 +17,70 @@
         android:orderInCategory="101"
         android:title="从底部上滑"
         app:showAsAction="never"/>
-
+    <item
+        android:id="@+id/id_slide_from_bottom_input_popup"
+        android:orderInCategory="102"
+        android:title="从底部上滑的输入法"
+        app:showAsAction="never"/>
     <item
         android:id="@+id/id_blur_slide_from_bottom_popup"
-        android:orderInCategory="112"
+        android:orderInCategory="103"
         android:title="从底部上滑同时模糊背景"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_comment_popup"
-        android:orderInCategory="102"
+        android:orderInCategory="104"
         android:title="朋友圈评论Popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_input_popup"
-        android:orderInCategory="103"
+        android:orderInCategory="105"
         android:title="带输入的Popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_list_popup"
-        android:orderInCategory="104"
+        android:orderInCategory="106"
         android:title="列表Popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_menu_popup"
-        android:orderInCategory="105"
+        android:orderInCategory="107"
         android:title="菜单Popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_dialog_popup"
-        android:orderInCategory="106"
+        android:orderInCategory="108"
         android:title="对话框Popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_custom_interpolator_popup"
-        android:orderInCategory="107"
+        android:orderInCategory="109"
         android:title="动画插值器Popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_auto_located_popup"
-        android:orderInCategory="109"
+        android:orderInCategory="110"
         android:title="自动定位Popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_slide_from_top_popup"
-        android:orderInCategory="110"
+        android:orderInCategory="111"
         android:title="从顶部往下展开Popup（填充全屏）"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_slide_from_top_popup2"
-        android:orderInCategory="111"
+        android:orderInCategory="112"
         android:title="从顶部往下展开Popup（非填充）"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_dismiss_control_popup"
-        android:orderInCategory="112"
+        android:orderInCategory="113"
         android:title="控制各种键能否dismiss的popup"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/id_locate_with_view"
-        android:orderInCategory="113"
+        android:orderInCategory="114"
         android:title="根据AnchorView往各个方向偏移的Popup"
         app:showAsAction="never"/>
 </menu>
