@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
 
 android {
     compileSdkVersion 27
@@ -26,14 +27,97 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 }
 
-publish {
-    userOrg = 'razerdp'
-    groupId = 'com.github.razerdp'
-    artifactId = 'BasePopup'
-//    artifactId = 'BasePopup_Candy'
-    publishVersion = '2.0.6'
-    desc = '打造一个通用的Popup'
-    website = 'https://github.com/razerdp/BasePopup'
+def siteUrl = 'https://github.com/razerdp/BasePopup' // 项目主页。
+def gitUrl = 'git@github.com:razerdp/BasePopup.git' // Git仓库的url。
+//def moduleName = 'BasePopup'
+def moduleName = 'BasePopup_Candy'
+
+
+group = "com.github.razerdp"
+version = "2.0.6"
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                name = moduleName
+                description '打造一个通用的Popup'
+                url siteUrl // 项目主页，这里是引用上面定义好。
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'razerdp'
+                        name 'razerdp'
+                        email 'razerdp123@gmail.com'
+                    }
+                }
+
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
 }
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    failOnError false
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+javadoc {
+    options {
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        author true
+        version true
+        links "https://developer.android.google.cn/reference/"
+        addStringOption('Xdoclint:none', '-quiet')
+    }
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = moduleName
+        userOrg = 'razerdp'
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}
+
 
 
