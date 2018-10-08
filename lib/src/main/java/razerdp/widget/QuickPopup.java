@@ -6,6 +6,7 @@ import android.util.Pair;
 import android.view.View;
 import android.view.animation.Animation;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public class QuickPopup extends BasePopupWindow {
         applyConfigSetting();
     }
 
-    private void applyConfigSetting() {
+    protected void applyConfigSetting() {
         if (mConfig.getPopupBlurOption() != null) {
             setBlurOption(mConfig.getPopupBlurOption());
         } else {
@@ -57,25 +58,25 @@ public class QuickPopup extends BasePopupWindow {
     }
 
     private void applyClick() {
-        HashMap<Integer, Pair<View.OnClickListener, Boolean>> eventsMap = mConfig.getListenersHolderMap();
+        HashMap<Integer, Pair<WeakReference<View.OnClickListener>, Boolean>> eventsMap = mConfig.getListenersHolderMap();
         if (eventsMap == null || eventsMap.isEmpty()) return;
-        for (Map.Entry<Integer, Pair<View.OnClickListener, Boolean>> entry : eventsMap.entrySet()) {
+        for (Map.Entry<Integer, Pair<WeakReference<View.OnClickListener>, Boolean>> entry : eventsMap.entrySet()) {
             int viewId = entry.getKey();
-            final Pair<View.OnClickListener, Boolean> event = entry.getValue();
+            final Pair<WeakReference<View.OnClickListener>, Boolean> event = entry.getValue();
             View v = findViewById(viewId);
             if (v != null) {
                 if (event.second) {
                     v.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (event.first != null) {
-                                event.first.onClick(v);
+                            if (event.first != null && event.first.get() != null) {
+                                event.first.get().onClick(v);
                             }
                             dismiss();
                         }
                     });
                 } else {
-                    v.setOnClickListener(event.first);
+                    v.setOnClickListener(event.first == null ? null : event.first.get());
                 }
             }
         }

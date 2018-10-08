@@ -37,7 +37,7 @@ public final class QuickPopupConfig {
 
     boolean alignBackground;
 
-    HashMap<Integer, Pair<View.OnClickListener, Boolean>> mListenersHolderMap;
+    HashMap<Integer, Pair<WeakReference<View.OnClickListener>, Boolean>> mListenersHolderMap;
 
 
     public static QuickPopupConfig generateDefault() {
@@ -95,7 +95,7 @@ public final class QuickPopupConfig {
         if (mListenersHolderMap == null) {
             mListenersHolderMap = new HashMap<>();
         }
-        mListenersHolderMap.put(viewId, Pair.create(listener, dismissWhenClick));
+        mListenersHolderMap.put(viewId, Pair.create(new WeakReference<View.OnClickListener>(listener), dismissWhenClick));
         return this;
     }
 
@@ -179,7 +179,7 @@ public final class QuickPopupConfig {
         return alignBackground;
     }
 
-    public HashMap<Integer, Pair<View.OnClickListener, Boolean>> getListenersHolderMap() {
+    public HashMap<Integer, Pair<WeakReference<View.OnClickListener>, Boolean>> getListenersHolderMap() {
         return mListenersHolderMap;
     }
 

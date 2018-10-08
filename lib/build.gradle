@@ -8,7 +8,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 23
-        versionName "2.0.5"
+        versionName "2.0.6"
     }
     buildTypes {
         release {
@@ -24,15 +24,14 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
-    api 'me.weishu:free_reflection:1.2.0'
 }
 
 publish {
     userOrg = 'razerdp'
     groupId = 'com.github.razerdp'
-//    artifactId = 'BasePopup'
-    artifactId = 'BasePopup_Candy'
-    publishVersion = '2.0.5'
+    artifactId = 'BasePopup'
+//    artifactId = 'BasePopup_Candy'
+    publishVersion = '2.0.6'
     desc = '打造一个通用的Popup'
     website = 'https://github.com/razerdp/BasePopup'
 }
