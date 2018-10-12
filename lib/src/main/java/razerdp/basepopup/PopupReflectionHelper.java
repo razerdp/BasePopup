@@ -12,6 +12,10 @@ import razerdp.util.log.PopupLogUtil;
  * Created by 大灯泡 on 2018/10/12.
  * <p>
  * 针对android p 的反射绕过
+ * <p>
+ * 思路参考：https://github.com/Guolei1130/android_p_no_sdkapi_support#%E6%96%B9%E6%B3%95%E4%BA%94%E8%B6%85%E7%BA%A7%E5%A5%BD1
+ * <p>
+ * 感谢这位大佬的分享~
  */
 final class PopupReflectionHelper {
 
