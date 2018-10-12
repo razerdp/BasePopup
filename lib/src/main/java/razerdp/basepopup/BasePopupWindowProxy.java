@@ -203,21 +203,17 @@ abstract class BasePopupWindowProxy extends PopupWindow {
 
     }
 
+    private PopupReflectionHelper popupReflectionHelper;
+
     private void troToProxyWindowManagerMethodOverP(PopupWindow popupWindow) {
         try {
-
-            new PopupReflectionHelper();
-//            long baseOffset = UnsafeHelper.addressOf(popupWindow);
-////            long offset = UnsafeHelper.objectFieldOffset(popupWindow.getClass().getDeclaredField("mWindowManager"));
-//            long offset = baseOffset + 28;
-//            Object object = UnsafeHelper.getObject(popupWindow, baseOffset);
-//
-//            WindowManager windowManager = (WindowManager) UnsafeHelper.getObject(popupWindow, offset);
-//
-//            if (windowManager == null) return;
-//            hackWindowManager = new HackWindowManager(windowManager, mController);
-//            UnsafeHelper.putObject(popupWindow, offset, hackWindowManager);
-//            PopupLogUtil.trace(LogTag.i, TAG, "尝试代理WindowManager成功");
+            if (popupReflectionHelper == null) {
+                popupReflectionHelper = new PopupReflectionHelper();
+            }
+            WindowManager windowManager = popupReflectionHelper.getPopupWindowManager(popupWindow);
+            if (windowManager == null) return;
+            hackWindowManager = new HackWindowManager(windowManager, mController);
+            popupReflectionHelper.setPopupWindowManager(popupWindow, hackWindowManager);
         } catch (Exception e) {
             e.printStackTrace();
         }
