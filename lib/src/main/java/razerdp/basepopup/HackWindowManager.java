@@ -2,6 +2,7 @@ package razerdp.basepopup;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.View;
@@ -53,6 +54,9 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
                 }
             }
             HackPopupDecorView hackPopupDecorView = getHackPopupDecorView();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                if (!hackPopupDecorView.isAttachedToWindow())return;
+            }
             mWindowManager.removeViewImmediate(hackPopupDecorView);
             mHackPopupDecorView.clear();
             mHackPopupDecorView = null;
