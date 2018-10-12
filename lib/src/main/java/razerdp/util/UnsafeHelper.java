@@ -57,12 +57,6 @@ public class UnsafeHelper {
         field_putObject.invoke(unSafe, var1, var2, var4);
     }
 
-    public static void putObjectVolatile(Object var1, long var2, Object var4) throws Exception {
-        checkUnSafe();
-
-        final Method field_putObjectVolatile = unSafe.getClass().getMethod("putObjectVolatile", Object.class, long.class, Object.class);
-        field_putObjectVolatile.invoke(unSafe, var1, var2, var4);
-    }
 
     public static int arrayBaseOffset(Class<?> var1) throws Exception {
         checkUnSafe();
@@ -133,5 +127,12 @@ public class UnsafeHelper {
 
         final Method field_getObjectVolatile = unSafe.getClass().getMethod("getObjectVolatile", Object.class, long.class);
         return field_getObjectVolatile.invoke(unSafe, var1, var2);
+    }
+
+    public static void putObjectVolatile(Object var1, long var2, Object var4) throws Exception {
+        checkUnSafe();
+
+        final Method field_putObjectVolatile = unSafe.getClass().getMethod("putObjectVolatile", Object.class, long.class, Object.class);
+        field_putObjectVolatile.invoke(unSafe, var1, var2, var4);
     }
 }

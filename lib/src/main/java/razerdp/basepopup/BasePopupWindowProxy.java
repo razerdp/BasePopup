@@ -14,7 +14,6 @@ import android.widget.PopupWindow;
 import java.lang.reflect.Field;
 
 import razerdp.util.PopupUtil;
-import razerdp.util.UnsafeHelper;
 import razerdp.util.log.LogTag;
 import razerdp.util.log.PopupLogUtil;
 
@@ -195,7 +194,7 @@ abstract class BasePopupWindowProxy extends PopupWindow {
      */
     private void tryToProxyWindowManagerMethod(PopupWindow popupWindow) {
         if (mController == null || hackWindowManager != null) return;
-        if (Build.VERSION.SDK_INT <= 27) {
+        if (Build.VERSION.SDK_INT < 27) {
             // Below Android P, ignore
             troToProxyWindowManagerMethodBeforeP(popupWindow);
         } else {
@@ -207,17 +206,18 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     private void troToProxyWindowManagerMethodOverP(PopupWindow popupWindow) {
         try {
 
-            long baseOffset = UnsafeHelper.addressOf(popupWindow);
-//            long offset = UnsafeHelper.objectFieldOffset(popupWindow.getClass().getDeclaredField("mWindowManager"));
-            long offset = baseOffset + 28;
-            Object object = UnsafeHelper.getObject(popupWindow, baseOffset);
-
-            WindowManager windowManager = (WindowManager) UnsafeHelper.getObject(popupWindow, offset);
-
-            if (windowManager == null) return;
-            hackWindowManager = new HackWindowManager(windowManager, mController);
-            UnsafeHelper.putObject(popupWindow, offset, hackWindowManager);
-            PopupLogUtil.trace(LogTag.i, TAG, "尝试代理WindowManager成功");
+            new PopupReflectionHelper();
+//            long baseOffset = UnsafeHelper.addressOf(popupWindow);
+////            long offset = UnsafeHelper.objectFieldOffset(popupWindow.getClass().getDeclaredField("mWindowManager"));
+//            long offset = baseOffset + 28;
+//            Object object = UnsafeHelper.getObject(popupWindow, baseOffset);
+//
+//            WindowManager windowManager = (WindowManager) UnsafeHelper.getObject(popupWindow, offset);
+//
+//            if (windowManager == null) return;
+//            hackWindowManager = new HackWindowManager(windowManager, mController);
+//            UnsafeHelper.putObject(popupWindow, offset, hackWindowManager);
+//            PopupLogUtil.trace(LogTag.i, TAG, "尝试代理WindowManager成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
