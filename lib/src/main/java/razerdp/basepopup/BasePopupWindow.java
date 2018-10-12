@@ -682,7 +682,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             retryCounter = 0;
         } catch (Exception e) {
             retryToShowPopup(v);
-            PopupLogUtil.trace(LogTag.e, TAG, "show error\n" + e.getMessage());
+            PopupLogUtil.trace(LogTag.e, TAG, "show error\n" + e);
             e.printStackTrace();
         }
     }
