@@ -19,7 +19,11 @@ import razerdp.util.log.PopupLogUtil;
  */
 final class PopupReflectionHelper {
 
-    public PopupReflectionHelper() {
+    private static class PopupReflectionHelperHolder {
+        private static PopupReflectionHelper instance = new PopupReflectionHelper();
+    }
+
+    private PopupReflectionHelper() {
         try {
             //获取伪造的Class类的classLoader地址
             InnerHackClazz hackClazz = new InnerHackClazz();
@@ -33,6 +37,10 @@ final class PopupReflectionHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static PopupReflectionHelper getInstance() {
+        return PopupReflectionHelperHolder.instance;
     }
 
     public WindowManager getPopupWindowManager(PopupWindow popupWindow) throws Exception {

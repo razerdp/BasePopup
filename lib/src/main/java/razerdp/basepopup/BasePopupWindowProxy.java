@@ -194,26 +194,17 @@ abstract class BasePopupWindowProxy extends PopupWindow {
      */
     private void tryToProxyWindowManagerMethod(PopupWindow popupWindow) {
         if (mController == null || hackWindowManager != null) return;
-        if (Build.VERSION.SDK_INT < 27) {
-            // Below Android P, ignore
-            troToProxyWindowManagerMethodBeforeP(popupWindow);
-        } else {
-            troToProxyWindowManagerMethodOverP(popupWindow);
-        }
-
+        PopupLogUtil.trace("cur api >> " + Build.VERSION.SDK_INT);
+        troToProxyWindowManagerMethodBeforeP(popupWindow);
     }
 
-    private PopupReflectionHelper popupReflectionHelper;
 
     private void troToProxyWindowManagerMethodOverP(PopupWindow popupWindow) {
         try {
-            if (popupReflectionHelper == null) {
-                popupReflectionHelper = new PopupReflectionHelper();
-            }
-            WindowManager windowManager = popupReflectionHelper.getPopupWindowManager(popupWindow);
+            WindowManager windowManager = PopupReflectionHelper.getInstance().getPopupWindowManager(popupWindow);
             if (windowManager == null) return;
             hackWindowManager = new HackWindowManager(windowManager, mController);
-            popupReflectionHelper.setPopupWindowManager(popupWindow, hackWindowManager);
+            PopupReflectionHelper.getInstance().setPopupWindowManager(popupWindow, hackWindowManager);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -229,6 +220,12 @@ abstract class BasePopupWindowProxy extends PopupWindow {
             hackWindowManager = new HackWindowManager(windowManager, mController);
             fieldWindowManager.set(popupWindow, hackWindowManager);
             PopupLogUtil.trace(LogTag.i, TAG, "尝试代理WindowManager成功");
+        } catch (NoSuchFieldException e) {
+            if (Build.VERSION.SDK_INT >= 27) {
+                troToProxyWindowManagerMethodOverP(popupWindow);
+            } else {
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
