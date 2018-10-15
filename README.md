@@ -11,9 +11,17 @@ BasePopup（v2）
 注意事项
 ----
 
-Android P 未进行适配！！！因目前Native绕过API限制方法尚未稳定，且不知道官方是否会有进一步限制，因此暂时不进行P的适配。
+Android P已经适配，感谢[@Guolei1130](https://github.com/Guolei1130)收集的方法。
 
-如果您用到本库并且考虑到Android P用户，请慎重！！！
+文章地址：[android_p_no_sdkapi_support](https://github.com/Guolei1130/android_p_no_sdkapi_support)
+
+本库一开始采用360的方法，但不得不走Native，为了个Popup不得不引入so感觉很不值得，在看到这篇文章后，才想起UnSafe类
+
+本库采用方法5。
+
+如果以后UnSafe类移除掉的话，再考虑Native方法。
+
+最后再一次感谢大牛提供的方法~
 
 ---
 
@@ -98,7 +106,7 @@ etc.
 
 实现必要的几个方法：
 
-`**该方法从2.0.6开始不再抽象强制实现，但建议实现入场和退场动画** onCreateShowAnimation()`/`onCreateDismissAnimation()`:初始化一个显示/退出动画，该动画将会用到`onCreatePopupView()`所返回的view,可以为空。
+**该方法从2.0.6开始不再抽象强制实现，但建议实现入场和退场动画** `onCreateShowAnimation()`/`onCreateDismissAnimation()`:初始化一个显示/退出动画，该动画将会用到`onCreatePopupView()`所返回的view,可以为空。
 
 `onCreatePopupView()`:初始化您的popupwindow界面，建议直接使用`createPopupById()`
 
@@ -232,6 +240,12 @@ defaultConfig {
 更新日志([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 ---------------------------------------------------------------------------
 
+* **2.0.7**(2018/10/15)
+  * 绕开Android P的非公开api方法反射
+    * 思路参考&&感谢[android_p_no_sdkapi_support](https://github.com/Guolei1130/android_p_no_sdkapi_support)
+  * 发布2.0.7 release
+    
+  
 * **2.0.6**(2018/10/09)
   * 不再抽象强制实现入场和退场动画
   * 针对自动弹出输入法的Popup，在dismiss()中默认关闭输入法
@@ -249,14 +263,6 @@ defaultConfig {
   * 增加快速构建QuickPopupBuilder
   * 尝试修复[#59](https://github.com/razerdp/BasePopup/issues/59)
   
-* **2.0.1-alpha1** (2018/08/22)
-  * 修复无法在onCreate()里面显示的问题
-  * 增加setBackground(Drawable/ResourceId)方法，fixed [#79](https://github.com/razerdp/BasePopup/issues/79)
-  * 正式版即将发布，。
-
-* **2.0.0-alpha1(candy)**
-  * 发布预览v2版本
-
 
 一些例子
 ---

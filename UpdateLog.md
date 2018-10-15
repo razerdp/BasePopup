@@ -1,5 +1,11 @@
 * BasePopup
 
+
+* **2.0.7**(2018/10/15)
+  * 绕开Android P的非公开api方法反射
+    * 思路参考&&感谢[android_p_no_sdkapi_support](https://github.com/Guolei1130/android_p_no_sdkapi_support)
+  * 发布2.0.7 release
+
 * **2.0.6**(2018/10/09)
   * 不再抽象强制实现入场和退场动画
   * 针对自动弹出输入法的Popup，在dismiss()中默认关闭输入法
