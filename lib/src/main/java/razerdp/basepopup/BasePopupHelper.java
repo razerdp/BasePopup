@@ -63,7 +63,7 @@ final class BasePopupHelper {
     //模糊option(为空的话则不模糊）
     private PopupBlurOption mBlurOption;
     //背景层是否对齐popup
-    private boolean mAlignBackground = true;
+    private boolean mAlignBackground = false;
     //背景颜色
     private Drawable mBackgroundDrawable = new ColorDrawable(Color.parseColor("#8f000000"));
 
