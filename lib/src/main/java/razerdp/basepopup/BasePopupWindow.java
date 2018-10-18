@@ -869,6 +869,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param drawableIds 背景Drawable id
      */
     public BasePopupWindow setBackground(int drawableIds) {
+        if (drawableIds==0){
+            return setBackground(null);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return setBackground(getContext().getDrawable(drawableIds));
         } else {
