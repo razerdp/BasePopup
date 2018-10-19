@@ -1,5 +1,6 @@
 package razerdp.demo.fragment;
 
+import android.graphics.Color;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
@@ -81,6 +82,7 @@ public class LocatePopupFrag extends SimpleBaseFrag {
                         .contentView(R.layout.popup_menu_small)
                         .wrapContentMode()
                         .config(new QuickPopupConfig()
+                                .backgroundColor(Color.parseColor("#8F617D8A"))
                                 .withShowAnimation(enterAnimation)
                                 .withDismissAnimation(dismissAnimation)
                                 .offsetX(offsetX, offsetRatioOfPopupWidth)
@@ -97,7 +99,7 @@ public class LocatePopupFrag extends SimpleBaseFrag {
                                     public void onClick(View v) {
                                         ToastUtils.ToastMessage(getContext(), "tx1");
                                     }
-                                }))
+                                },true))
                         .show(v);
             }
         });

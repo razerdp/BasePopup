@@ -1,6 +1,8 @@
 package razerdp.basepopup;
 
 import android.animation.Animator;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Pair;
 import android.view.View;
 import android.view.animation.Animation;
@@ -39,7 +41,9 @@ public final class QuickPopupConfig {
 
     boolean autoLocated;
 
-    HashMap<Integer, Pair<WeakReference<View.OnClickListener>, Boolean>> mListenersHolderMap;
+    Drawable background;
+
+    HashMap<Integer, Pair<View.OnClickListener, Boolean>> mListenersHolderMap;
 
 
     public static QuickPopupConfig generateDefault() {
@@ -97,7 +101,7 @@ public final class QuickPopupConfig {
         if (mListenersHolderMap == null) {
             mListenersHolderMap = new HashMap<>();
         }
-        mListenersHolderMap.put(viewId, Pair.create(new WeakReference<View.OnClickListener>(listener), dismissWhenClick));
+        mListenersHolderMap.put(viewId, Pair.create(listener, dismissWhenClick));
         return this;
     }
 
@@ -136,6 +140,14 @@ public final class QuickPopupConfig {
         return this;
     }
 
+    public QuickPopupConfig background(Drawable background) {
+        this.background = background;
+        return this;
+    }
+
+    public QuickPopupConfig backgroundColor(int color) {
+        return background(new ColorDrawable(color));
+    }
     //-----------------------------------------getter-----------------------------------------
 
     public Animation getShowAnimation() {
@@ -186,7 +198,7 @@ public final class QuickPopupConfig {
         return alignBackground;
     }
 
-    public HashMap<Integer, Pair<WeakReference<View.OnClickListener>, Boolean>> getListenersHolderMap() {
+    public HashMap<Integer, Pair<View.OnClickListener, Boolean>> getListenersHolderMap() {
         return mListenersHolderMap;
     }
 
@@ -201,5 +213,9 @@ public final class QuickPopupConfig {
 
     public BasePopupWindow.OnDismissListener getDismissListener() {
         return mDismissListener;
+    }
+
+    public Drawable getBackground() {
+        return background;
     }
 }
