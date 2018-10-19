@@ -1,5 +1,8 @@
 * BasePopup
 
+* **2.0.8-alpha2**(2018/10/19)
+  * 修复QuickPopupBuilder的click事件无响应问题，增加background方法
+  * 修复设置background(0)时无法找到资源而崩溃的问题
 
 * **2.0.7**(2018/10/15)
   * 绕开Android P的非公开api方法反射

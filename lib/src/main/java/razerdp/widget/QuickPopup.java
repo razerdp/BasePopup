@@ -6,7 +6,6 @@ import android.util.Pair;
 import android.view.View;
 import android.view.animation.Animation;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,52 +31,55 @@ public class QuickPopup extends BasePopupWindow {
         } else {
             throw new NullPointerException("QuickPopupConfig must be not null!");
         }
-        applyConfigSetting();
+        applyConfigSetting(mConfig);
     }
 
-    protected void applyConfigSetting() {
-        if (mConfig.getPopupBlurOption() != null) {
-            setBlurOption(mConfig.getPopupBlurOption());
+    protected void applyConfigSetting(QuickPopupConfig config) {
+        if (config.getPopupBlurOption() != null) {
+            setBlurOption(config.getPopupBlurOption());
         } else {
-            setBlurBackgroundEnable(mConfig.isBlurBackground(), mConfig.getOnBlurOptionInitListener());
+            setBlurBackgroundEnable(config.isBlurBackground(), config.getOnBlurOptionInitListener());
         }
 
-        setPopupFadeEnable(mConfig.isFadeEnable());
+        setPopupFadeEnable(config.isFadeEnable());
 
         applyClick();
 
-        if (mConfig.getOffsetX() != 0 || mConfig.getOffsetRatioOfPopupWidth() != 0) {
-            setOffsetX((int) (mConfig.getOffsetX() + getWidth() * mConfig.getOffsetRatioOfPopupWidth()));
+        if (config.getOffsetX() != 0 || config.getOffsetRatioOfPopupWidth() != 0) {
+            setOffsetX((int) (config.getOffsetX() + getWidth() * config.getOffsetRatioOfPopupWidth()));
         }
 
-        if (mConfig.getOffsetY() != 0 || mConfig.getOffsetRatioOfPopupHeight() != 0) {
-            setOffsetY((int) (mConfig.getOffsetY() + getHeight() * mConfig.getOffsetRatioOfPopupHeight()));
+        if (config.getOffsetY() != 0 || config.getOffsetRatioOfPopupHeight() != 0) {
+            setOffsetY((int) (config.getOffsetY() + getHeight() * config.getOffsetRatioOfPopupHeight()));
         }
 
-        setAlignBackground(mConfig.isAlignBackground());
-        setAutoLocatePopup(mConfig.isAutoLocated());
+        setAlignBackground(config.isAlignBackground());
+        setAutoLocatePopup(config.isAutoLocated());
+        if (config.getBackground() != null) {
+            setBackground(config.getBackground());
+        }
     }
 
     private void applyClick() {
-        HashMap<Integer, Pair<WeakReference<View.OnClickListener>, Boolean>> eventsMap = mConfig.getListenersHolderMap();
+        HashMap<Integer, Pair<View.OnClickListener, Boolean>> eventsMap = mConfig.getListenersHolderMap();
         if (eventsMap == null || eventsMap.isEmpty()) return;
-        for (Map.Entry<Integer, Pair<WeakReference<View.OnClickListener>, Boolean>> entry : eventsMap.entrySet()) {
+        for (Map.Entry<Integer, Pair<View.OnClickListener, Boolean>> entry : eventsMap.entrySet()) {
             int viewId = entry.getKey();
-            final Pair<WeakReference<View.OnClickListener>, Boolean> event = entry.getValue();
+            final Pair<View.OnClickListener, Boolean> event = entry.getValue();
             View v = findViewById(viewId);
             if (v != null) {
                 if (event.second) {
                     v.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (event.first != null && event.first.get() != null) {
-                                event.first.get().onClick(v);
+                            if (event.first != null) {
+                                event.first.onClick(v);
                             }
                             dismiss();
                         }
                     });
                 } else {
-                    v.setOnClickListener(event.first == null ? null : event.first.get());
+                    v.setOnClickListener(event.first);
                 }
             }
         }

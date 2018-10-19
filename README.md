@@ -240,6 +240,10 @@ defaultConfig {
 更新日志([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 ---------------------------------------------------------------------------
 
+* **2.0.8-alpha2**(2018/10/19)
+  * 修复QuickPopupBuilder的click事件无响应问题，增加background方法
+  * 修复设置background(0)时无法找到资源而崩溃的问题
+
 * **2.0.7**(2018/10/15)
   * 绕开Android P的非公开api方法反射
     * 思路参考&&感谢[android_p_no_sdkapi_support](https://github.com/Guolei1130/android_p_no_sdkapi_support)
