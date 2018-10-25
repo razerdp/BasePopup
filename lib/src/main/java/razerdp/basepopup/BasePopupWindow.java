@@ -875,7 +875,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return setBackground(getContext().getDrawable(drawableIds));
         } else {
-            return setBackground(getContext().getResources().getDrawable(drawableIds, getContext().getTheme()));
+            return setBackground(getContext().getResources().getDrawable(drawableIds));
         }
     }
 

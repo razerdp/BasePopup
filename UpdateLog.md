@@ -1,4 +1,6 @@
 * BasePopup
+* **2.0.8-alpha3**(2018/10/25)
+  * fixed [#87](https://github.com/razerdp/BasePopup/issues/87)、[#89](https://github.com/razerdp/BasePopup/issues/89)、[#90](https://github.com/razerdp/BasePopup/issues/90)
 
 * **2.0.8-alpha2**(2018/10/19)
   * 修复QuickPopupBuilder的click事件无响应问题，增加background方法

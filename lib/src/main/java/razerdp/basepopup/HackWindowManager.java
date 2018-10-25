@@ -40,9 +40,9 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
 
     @Override
     public void removeViewImmediate(View view) {
-        if (mWindowManager == null) return;
+        PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.removeViewImmediate  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
+        if (mWindowManager == null || view == null) return;
         checkStatusBarHeight(view.getContext());
-        PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.removeViewImmediate  >>>  " + view.getClass().getSimpleName());
         if (isPopupInnerDecorView(view) && getHackPopupDecorView() != null) {
             if (getMaskLayout() != null) {
                 try {
@@ -55,7 +55,7 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
             }
             HackPopupDecorView hackPopupDecorView = getHackPopupDecorView();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                if (!hackPopupDecorView.isAttachedToWindow())return;
+                if (!hackPopupDecorView.isAttachedToWindow()) return;
             }
             mWindowManager.removeViewImmediate(hackPopupDecorView);
             mHackPopupDecorView.clear();
@@ -67,9 +67,9 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
 
     @Override
     public void addView(View view, ViewGroup.LayoutParams params) {
-        if (mWindowManager == null) return;
+        PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.addView  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
+        if (mWindowManager == null || view == null) return;
         checkStatusBarHeight(view.getContext());
-        PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.addView  >>>  " + view.getClass().getSimpleName());
         if (isPopupInnerDecorView(view)) {
             /**
              * 此时的params是WindowManager.LayoutParams，需要留意强转问题
@@ -106,6 +106,7 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
     private ViewGroup.LayoutParams fitLayoutParamsPosition(ViewGroup.LayoutParams params) {
         if (params instanceof WindowManager.LayoutParams) {
             WindowManager.LayoutParams p = (LayoutParams) params;
+            p.type = LayoutParams.TYPE_APPLICATION_SUB_PANEL;
             BasePopupHelper helper = getBasePopupHelper();
             if (helper != null && helper.isShowAsDropDown() && p.y <= helper.getAnchorY()) {
                 int y = helper.getAnchorY() + helper.getAnchorHeight() + helper.getInternalOffsetY();
@@ -117,9 +118,9 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
 
     @Override
     public void updateViewLayout(View view, ViewGroup.LayoutParams params) {
-        if (mWindowManager == null) return;
+        PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.updateViewLayout  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
+        if (mWindowManager == null || view == null) return;
         checkStatusBarHeight(view.getContext());
-        PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.updateViewLayout  >>>  " + view.getClass().getSimpleName());
         if (isPopupInnerDecorView(view) && getHackPopupDecorView() != null) {
             HackPopupDecorView hackPopupDecorView = getHackPopupDecorView();
             mWindowManager.updateViewLayout(hackPopupDecorView, fitLayoutParamsPosition(params));
@@ -130,15 +131,17 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
 
     @Override
     public void removeView(View view) {
-        if (mWindowManager == null) return;
+        PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.removeView  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
+        if (mWindowManager == null || view == null) return;
         checkStatusBarHeight(view.getContext());
-        PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.removeView  >>>  " + view.getClass().getSimpleName());
         if (isPopupInnerDecorView(view) && getHackPopupDecorView() != null) {
             if (getMaskLayout() != null) {
                 try {
                     mWindowManager.removeView(getMaskLayout());
-                    mMaskLayout.clear();
-                    mMaskLayout = null;
+                    if (mMaskLayout != null) {
+                        mMaskLayout.clear();
+                        mMaskLayout = null;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -157,7 +160,9 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
             removeViewImmediate(mHackPopupDecorView.get());
             removeViewImmediate(getMaskLayout());
             mHackPopupDecorView.clear();
-            mMaskLayout.clear();
+            if (mMaskLayout != null) {
+                mMaskLayout.clear();
+            }
         } catch (Exception e) {
             //no print
         }
