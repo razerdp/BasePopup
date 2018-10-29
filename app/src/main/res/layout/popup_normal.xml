@@ -17,7 +17,7 @@
 
         <TextView
             android:id="@+id/tx_1"
-            android:layout_width="50dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
             android:gravity="center"
             android:text="test1"
