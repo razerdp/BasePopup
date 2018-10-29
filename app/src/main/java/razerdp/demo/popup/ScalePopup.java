@@ -17,12 +17,6 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener 
     public ScalePopup(Activity context) {
         super(context);
         bindEvent();
-        getContentView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ToastUtils.ToastMessage(getContext(),"click content");
-            }
-        });
     }
 
 
@@ -52,6 +46,15 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.tx_1:
                 ToastUtils.ToastMessage(getContext(), "click tx_1");
+//                int[] location = new int[2];
+//                v.getLocationOnScreen(location);
+//                QuickPopupBuilder.with(getContext())
+//                        .contentView(R.layout.popup_menu)
+//                        .wrapContentMode()
+//                        .config(new QuickPopupConfig()
+//                                .offsetX((int) (location[0] + v.getWidth() / 2),-0.5f)
+//                                .offsetY((int) location[1] + v.getHeight()))
+//                        .show();
                 break;
             case R.id.tx_2:
                 ToastUtils.ToastMessage(getContext(), "click tx_2");
