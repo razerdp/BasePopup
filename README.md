@@ -240,36 +240,27 @@ defaultConfig {
 更新日志([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 ---------------------------------------------------------------------------
 
-* **2.0.8-alpha3**(2018/10/25)
+* **【Release】2.0.8**(2018/10/29)
+  * fixed [#93](https://github.com/razerdp/BasePopup/issues/93)
+  * 修复部分崩溃问题，发布release
+
+* **【Candy】2.0.8-alpha3**(2018/10/25)
   * fixed [#87](https://github.com/razerdp/BasePopup/issues/87)、[#89](https://github.com/razerdp/BasePopup/issues/89)、[#90](https://github.com/razerdp/BasePopup/issues/90)
 
-* **2.0.8-alpha2**(2018/10/19)
+* **【Candy】2.0.8-alpha2**(2018/10/19)
   * 修复QuickPopupBuilder的click事件无响应问题，增加background方法
   * 修复设置background(0)时无法找到资源而崩溃的问题
 
-* **2.0.7**(2018/10/15)
+* **【Release】2.0.7**(2018/10/15)
   * 绕开Android P的非公开api方法反射
     * 思路参考&&感谢[android_p_no_sdkapi_support](https://github.com/Guolei1130/android_p_no_sdkapi_support)
   * 发布2.0.7 release
     
   
-* **2.0.6**(2018/10/09)
+* **【Release】2.0.6**(2018/10/09)
   * 不再抽象强制实现入场和退场动画
   * 针对自动弹出输入法的Popup，在dismiss()中默认关闭输入法
 
-* 2018/09/30
-  * 针对Match_Parent的dismissOutSide适配
-  * 因为代码默认处理childCount==1的情况，如果有别的情况需要忽略点击的view，请调用setIgnoreDismissView()指定
-  * 删除~~onInitDismissClickView()~~方法
-  
-* 2018/09/19
-  * 继续丰富QuickPopupBuilder
-  * 增加Demo:根据某个View控制各个方向的Popup。[示例](https://github.com/razerdp/BasePopup/blob/HEAD/app/src/main/java/razerdp/demo/fragment/LocatePopupFrag.java)
-  
-* **2.0.1-alpha2**(2018/09/06)
-  * 增加快速构建QuickPopupBuilder
-  * 尝试修复[#59](https://github.com/razerdp/BasePopup/issues/59)
-  
 
 一些例子
 ---

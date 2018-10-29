@@ -1,4 +1,9 @@
 * BasePopup
+
+* **【Release】2.0.8**(2018/10/29)
+  * fixed [#93](https://github.com/razerdp/BasePopup/issues/93)
+  * 修复部分崩溃问题，发布release
+
 * **2.0.8-alpha3**(2018/10/25)
   * fixed [#87](https://github.com/razerdp/BasePopup/issues/87)、[#89](https://github.com/razerdp/BasePopup/issues/89)、[#90](https://github.com/razerdp/BasePopup/issues/90)
 
