@@ -17,6 +17,12 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener 
     public ScalePopup(Activity context) {
         super(context);
         bindEvent();
+        getContentView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastUtils.ToastMessage(getContext(),"click content");
+            }
+        });
     }
 
 
