@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import java.util.List;
+
 /**
  * Created by 大灯泡 on 2018/8/15.
  */
@@ -32,5 +34,12 @@ public class PopupUtil {
         }
         return v;
 
+    }
+
+    public static boolean isListEmpty(List<?> datas) {
+        return datas == null || datas.size() <= 0;
+    }
+    public static boolean isListEmpty(Object...obj) {
+        return obj == null || obj.length <= 0;
     }
 }

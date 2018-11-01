@@ -215,6 +215,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -226,10 +227,14 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 
+import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
+import java.util.Collection;
+import java.util.HashMap;
 
 import razerdp.blur.PopupBlurOption;
 import razerdp.util.InputMethodUtils;
+import razerdp.util.PopupUtil;
 import razerdp.util.SimpleAnimationUtils;
 import razerdp.util.log.LogTag;
 import razerdp.util.log.PopupLogUtil;
@@ -334,8 +339,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     //popup视图
     private View mContentView;
     protected View mDisplayAnimateView;
-    protected View mIgnoreDismissView;
-    private Rect mIgnoreDismissViewRect = new Rect();
+    private HashMap<Integer, Pair<SoftReference<View>, Rect>> mIgnoreDismissViewMaps;
 
     private volatile boolean isExitAnimatePlaying = false;
 
@@ -376,6 +380,15 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
         //默认占满全屏
         mPopupWindow = new PopupWindowProxy(mContentView, w, h, this);
+        if (mContentView instanceof ViewGroup) {
+            //取第一层子控件，用于自动适配非内容区域
+            ViewGroup tContentView = ((ViewGroup) mContentView);
+            final int childCount = tContentView.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View child = tContentView.getChildAt(i);
+                addIgnoreDismissView(child);
+            }
+        }
         mPopupWindow.setOnDismissListener(this);
         mPopupWindow.bindPopupHelper(mHelper);
         setAllowDismissWhenTouchOutside(true);
@@ -398,19 +411,23 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                                 v.performClick();
                                 v.performLongClick();
                                 if (isAllowDismissWhenTouchOutside()) {
-                                    int childCount = 0;
-                                    if (mContentView instanceof ViewGroup) {
-                                        childCount = ((ViewGroup) mContentView).getChildCount();
-                                        View ignoreView = mIgnoreDismissView;
-                                        if (ignoreView == null && childCount == 1) {
-                                            ignoreView = ((ViewGroup) mContentView).getChildAt(0);
+                                    int x = (int) event.getX();
+                                    int y = (int) event.getY();
+                                    int containsTouchCount = 0;
+                                    if (mIgnoreDismissViewMaps != null) {
+                                        Collection<Pair<SoftReference<View>, Rect>> values = mIgnoreDismissViewMaps.values();
+                                        for (Pair<SoftReference<View>, Rect> value : values) {
+                                            if (value.first == null || value.first.get() == null || value.second == null) {
+                                                continue;
+                                            }
+                                            View ignoreTarget = value.first.get();
+                                            Rect bounds = value.second;
+                                            ignoreTarget.getGlobalVisibleRect(bounds);
+                                            if (bounds.contains(x, y)) {
+                                                containsTouchCount++;
+                                            }
                                         }
-                                        if (ignoreView != null) {
-                                            ignoreView.getGlobalVisibleRect(mIgnoreDismissViewRect);
-                                        }
-                                        int x = (int) event.getX();
-                                        int y = (int) event.getY();
-                                        if (!mIgnoreDismissViewRect.isEmpty() && !mIgnoreDismissViewRect.contains(x, y)) {
+                                        if (containsTouchCount <= 0) {
                                             dismiss();
                                         }
                                     }
@@ -551,9 +568,35 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 代码已经默认处理了这种情况，如果您需要特殊指定忽略dismiss的view，则调用该方法指定
      *
      * @return
+     * @deprecated 请使用 {@link #addIgnoreDismissView(View...)}
      */
     public BasePopupWindow setIgnoreDismissView(View v) {
-        this.mIgnoreDismissView = v;
+        return addIgnoreDismissView(v);
+    }
+
+    /**
+     * 在Match_parent情况下，默认整个PopupWindow都是出于dismiss范围
+     * 代码已经默认处理了这种情况，如果您需要特殊指定忽略dismiss的view，则调用该方法指定
+     *
+     * @return
+     */
+    public BasePopupWindow addIgnoreDismissView(View... views) {
+        if (PopupUtil.isListEmpty(views)) return this;
+        if (mIgnoreDismissViewMaps == null) {
+            mIgnoreDismissViewMaps = new HashMap<>();
+        }
+        for (View view : views) {
+            if (view == null) continue;
+            int id = view.getId();
+            if (id == View.NO_ID) {
+                id = view.hashCode();
+            }
+            if (mIgnoreDismissViewMaps.containsKey(view.getId())) {
+                continue;
+            }
+            mIgnoreDismissViewMaps.put(id,
+                    Pair.create(new SoftReference<View>(view), new Rect()));
+        }
         return this;
     }
 

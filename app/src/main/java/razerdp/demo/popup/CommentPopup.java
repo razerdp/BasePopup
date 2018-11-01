@@ -1,6 +1,6 @@
 package razerdp.demo.popup;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
 import android.view.View;
@@ -35,7 +35,7 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
 
     private Handler mHandler;
 
-    public CommentPopup(Activity context) {
+    public CommentPopup(Context context) {
         super(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mHandler = new Handler();
 

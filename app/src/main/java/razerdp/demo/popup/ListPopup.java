@@ -30,11 +30,11 @@ public class ListPopup extends BasePopupWindow {
     private ListView mListView;
     private OnListPopupItemClickListener mOnListPopupItemClickListener;
 
-    private ListPopup(Activity context) {
+    private ListPopup(Context context) {
         super(context);
     }
 
-    private ListPopup(Activity context, Builder builder) {
+    private ListPopup(Context context, Builder builder) {
         this(context);
         mListView = (ListView) findViewById(R.id.popup_list);
         setAdapter(context, builder);
@@ -153,7 +153,7 @@ public class ListPopup extends BasePopupWindow {
     }
 
     //=============================================================init
-    private void setAdapter(Activity context, Builder builder) {
+    private void setAdapter(Context context, Builder builder) {
         if (builder.getItemEventList() == null || builder.getItemEventList().size() == 0) return;
         final ListPopupAdapter adapter = new ListPopupAdapter(context, builder.getItemEventList());
         mListView.setAdapter(adapter);

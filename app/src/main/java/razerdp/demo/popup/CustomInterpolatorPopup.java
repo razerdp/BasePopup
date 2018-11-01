@@ -1,6 +1,6 @@
 package razerdp.demo.popup;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.animation.Animation;
 
@@ -17,7 +17,7 @@ public class CustomInterpolatorPopup extends BasePopupWindow implements View.OnC
     private View popupView;
     private Animation mAnimation;
 
-    public CustomInterpolatorPopup(Activity context) {
+    public CustomInterpolatorPopup(Context context) {
         super(context);
         bindEvent();
     }

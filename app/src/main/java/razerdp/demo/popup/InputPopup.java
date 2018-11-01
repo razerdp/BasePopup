@@ -3,7 +3,7 @@ package razerdp.demo.popup;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.Button;
@@ -22,7 +22,7 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener 
     private Button mCompeleteButton;
     private EditText mInputEdittext;
 
-    public InputPopup(Activity context) {
+    public InputPopup(Context context) {
         super(context);
         mCancelButton = (Button) findViewById(R.id.btn_cancel);
         mCompeleteButton = (Button) findViewById(R.id.btn_Compelete);
