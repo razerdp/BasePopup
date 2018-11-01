@@ -1,6 +1,6 @@
 package razerdp.demo.popup;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.animation.Animation;
 
@@ -16,7 +16,7 @@ public class BlurSlideFromBottomPopup extends BasePopupWindow implements View.On
 
     private View popupView;
 
-    public BlurSlideFromBottomPopup(Activity context) {
+    public BlurSlideFromBottomPopup(Context context) {
         super(context);
         bindEvent();
     }

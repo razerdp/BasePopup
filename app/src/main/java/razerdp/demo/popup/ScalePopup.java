@@ -55,6 +55,7 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener 
 //                                .offsetX((int) (location[0] + v.getWidth() / 2),-0.5f)
 //                                .offsetY((int) location[1] + v.getHeight()))
 //                        .show();
+                new DialogPopup(getContext()).showPopupWindow();
                 break;
             case R.id.tx_2:
                 ToastUtils.ToastMessage(getContext(), "click tx_2");

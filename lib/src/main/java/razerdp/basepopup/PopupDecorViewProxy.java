@@ -16,19 +16,19 @@ import razerdp.util.log.PopupLogUtil;
  * <p>
  * 旨在用来拦截keyevent
  */
-public class HackPopupDecorView extends ViewGroup {
+public class PopupDecorViewProxy extends ViewGroup {
     private static final String TAG = "HackPopupDecorView";
     private PopupTouchController mPopupTouchController;
 
-    public HackPopupDecorView(Context context) {
+    public PopupDecorViewProxy(Context context) {
         super(context);
     }
 
-    public HackPopupDecorView(Context context, AttributeSet attrs) {
+    public PopupDecorViewProxy(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public HackPopupDecorView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public PopupDecorViewProxy(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

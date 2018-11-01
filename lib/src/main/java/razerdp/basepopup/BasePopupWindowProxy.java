@@ -29,7 +29,7 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     private static final int MAX_SCAN_ACTIVITY_COUNT = 50;
     private int tryScanActivityCount = 0;
     private PopupTouchController mController;
-    private HackWindowManager hackWindowManager;
+    private WindowManagerWrapper mWindowManagerWrapper;
 
     public BasePopupWindowProxy(Context context, PopupTouchController mController) {
         super(context);
@@ -75,10 +75,10 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     }
 
     void bindPopupHelper(BasePopupHelper mHelper) {
-        if (hackWindowManager == null) {
+        if (mWindowManagerWrapper == null) {
             tryToProxyWindowManagerMethod(this);
         }
-        hackWindowManager.bindPopupHelper(mHelper);
+        mWindowManagerWrapper.bindPopupHelper(mHelper);
     }
 
     private void init(Context context) {
@@ -180,8 +180,8 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     }
 
     void clear() {
-        if (hackWindowManager != null) {
-            hackWindowManager.clear();
+        if (mWindowManagerWrapper != null) {
+            mWindowManagerWrapper.clear();
         }
         PopupUtil.clearViewFromParent(getContentView());
     }
@@ -193,7 +193,7 @@ abstract class BasePopupWindowProxy extends PopupWindow {
      * @param popupWindow
      */
     private void tryToProxyWindowManagerMethod(PopupWindow popupWindow) {
-        if (mController == null || hackWindowManager != null) return;
+        if (mController == null || mWindowManagerWrapper != null) return;
         PopupLogUtil.trace("cur api >> " + Build.VERSION.SDK_INT);
         troToProxyWindowManagerMethodBeforeP(popupWindow);
     }
@@ -203,8 +203,8 @@ abstract class BasePopupWindowProxy extends PopupWindow {
         try {
             WindowManager windowManager = PopupReflectionHelper.getInstance().getPopupWindowManager(popupWindow);
             if (windowManager == null) return;
-            hackWindowManager = new HackWindowManager(windowManager, mController);
-            PopupReflectionHelper.getInstance().setPopupWindowManager(popupWindow, hackWindowManager);
+            mWindowManagerWrapper = new WindowManagerWrapper(windowManager, mController);
+            PopupReflectionHelper.getInstance().setPopupWindowManager(popupWindow, mWindowManagerWrapper);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -217,8 +217,8 @@ abstract class BasePopupWindowProxy extends PopupWindow {
             fieldWindowManager.setAccessible(true);
             final WindowManager windowManager = (WindowManager) fieldWindowManager.get(popupWindow);
             if (windowManager == null) return;
-            hackWindowManager = new HackWindowManager(windowManager, mController);
-            fieldWindowManager.set(popupWindow, hackWindowManager);
+            mWindowManagerWrapper = new WindowManagerWrapper(windowManager, mController);
+            fieldWindowManager.set(popupWindow, mWindowManagerWrapper);
             PopupLogUtil.trace(LogTag.i, TAG, "尝试代理WindowManager成功");
         } catch (NoSuchFieldException e) {
             if (Build.VERSION.SDK_INT >= 27) {

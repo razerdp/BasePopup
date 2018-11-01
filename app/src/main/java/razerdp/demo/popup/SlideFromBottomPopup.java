@@ -1,6 +1,6 @@
 package razerdp.demo.popup;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.animation.Animation;
 
@@ -16,7 +16,7 @@ public class SlideFromBottomPopup extends BasePopupWindow implements View.OnClic
 
     private View popupView;
 
-    public SlideFromBottomPopup(Activity context) {
+    public SlideFromBottomPopup(Context context) {
         super(context);
         bindEvent();
     }

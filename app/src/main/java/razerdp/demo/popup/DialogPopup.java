@@ -1,6 +1,6 @@
 package razerdp.demo.popup;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -8,6 +8,7 @@ import android.view.animation.CycleInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 
@@ -21,7 +22,7 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
     private TextView ok;
     private TextView cancel;
 
-    public DialogPopup(Activity context) {
+    public DialogPopup(Context context) {
         super(context);
 
         ok= (TextView) findViewById(R.id.ok);
@@ -59,6 +60,7 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
                 break;
             case R.id.cancel:
                 Toast.makeText(getContext(),"click the cancel button",Toast.LENGTH_SHORT).show();
+                dismiss();
                 break;
             default:
                 break;

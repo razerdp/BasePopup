@@ -19,16 +19,16 @@ import razerdp.util.log.PopupLogUtil;
  * <p>
  * 代理掉popup的windowmanager，在addView操作，拦截decorView的操作
  */
-final class HackWindowManager extends InnerPopupWindowStateListener implements WindowManager {
-    private static final String TAG = "HackWindowManager";
+final class WindowManagerWrapper extends InnerPopupWindowStateListener implements WindowManager {
+    private static final String TAG = "WindowManagerWrapper";
     private WindowManager mWindowManager;
     private WeakReference<PopupTouchController> mPopupController;
-    private WeakReference<HackPopupDecorView> mHackPopupDecorView;
+    private WeakReference<PopupDecorViewProxy> mHackPopupDecorView;
     private WeakReference<BasePopupHelper> mPopupHelper;
     private WeakReference<PopupMaskLayout> mMaskLayout;
     private static int statusBarHeight;
 
-    public HackWindowManager(WindowManager windowManager, PopupTouchController popupTouchController) {
+    public WindowManagerWrapper(WindowManager windowManager, PopupTouchController popupTouchController) {
         mWindowManager = windowManager;
         mPopupController = new WeakReference<PopupTouchController>(popupTouchController);
     }
@@ -53,11 +53,11 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
                     e.printStackTrace();
                 }
             }
-            HackPopupDecorView hackPopupDecorView = getHackPopupDecorView();
+            PopupDecorViewProxy popupDecorViewProxy = getHackPopupDecorView();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                if (!hackPopupDecorView.isAttachedToWindow()) return;
+                if (!popupDecorViewProxy.isAttachedToWindow()) return;
             }
-            mWindowManager.removeViewImmediate(hackPopupDecorView);
+            mWindowManager.removeViewImmediate(popupDecorViewProxy);
             mHackPopupDecorView.clear();
             mHackPopupDecorView = null;
         } else {
@@ -78,15 +78,15 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
             BasePopupHelper helper = getBasePopupHelper();
 
             //添加popup主体
-            final HackPopupDecorView hackPopupDecorView = new HackPopupDecorView(view.getContext());
-            params = hackPopupDecorView.addPopupDecorView(view, params, helper, getPopupController());
+            final PopupDecorViewProxy popupDecorViewProxy = new PopupDecorViewProxy(view.getContext());
+            params = popupDecorViewProxy.addPopupDecorView(view, params, helper, getPopupController());
             mMaskLayout = new WeakReference<>(PopupMaskLayout.create(view.getContext(), helper, fitLayoutParamsPosition(params)));
-            mHackPopupDecorView = new WeakReference<HackPopupDecorView>(hackPopupDecorView);
+            mHackPopupDecorView = new WeakReference<PopupDecorViewProxy>(popupDecorViewProxy);
 
             if (getPopupController() instanceof BasePopupWindow) {
                 ((BasePopupWindow) getPopupController()).setOnInnerPopupWindowStateListener(this);
             }
-            hackPopupDecorView.setOnAttachListener(new HackPopupDecorView.OnAttachListener() {
+            popupDecorViewProxy.setOnAttachListener(new PopupDecorViewProxy.OnAttachListener() {
                 @Override
                 public void onAttachtoWindow() {
                     if (getMaskLayout() != null) {
@@ -97,7 +97,7 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
             if (getMaskLayout() != null) {
                 mWindowManager.addView(getMaskLayout(), createBlurBackgroundWindowParams(params));
             }
-            mWindowManager.addView(hackPopupDecorView, fitLayoutParamsPosition(params));
+            mWindowManager.addView(popupDecorViewProxy, fitLayoutParamsPosition(params));
         } else {
             mWindowManager.addView(view, params);
         }
@@ -106,7 +106,7 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
     private ViewGroup.LayoutParams fitLayoutParamsPosition(ViewGroup.LayoutParams params) {
         if (params instanceof WindowManager.LayoutParams) {
             WindowManager.LayoutParams p = (LayoutParams) params;
-            p.type = LayoutParams.TYPE_APPLICATION_SUB_PANEL;
+            p.type =  LayoutParams.TYPE_APPLICATION_SUB_PANEL;
             BasePopupHelper helper = getBasePopupHelper();
             if (helper != null && helper.isShowAsDropDown() && p.y <= helper.getAnchorY()) {
                 int y = helper.getAnchorY() + helper.getAnchorHeight() + helper.getInternalOffsetY();
@@ -122,8 +122,8 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
         if (mWindowManager == null || view == null) return;
         checkStatusBarHeight(view.getContext());
         if (isPopupInnerDecorView(view) && getHackPopupDecorView() != null) {
-            HackPopupDecorView hackPopupDecorView = getHackPopupDecorView();
-            mWindowManager.updateViewLayout(hackPopupDecorView, fitLayoutParamsPosition(params));
+            PopupDecorViewProxy popupDecorViewProxy = getHackPopupDecorView();
+            mWindowManager.updateViewLayout(popupDecorViewProxy, fitLayoutParamsPosition(params));
         } else {
             mWindowManager.updateViewLayout(view, params);
         }
@@ -146,8 +146,8 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
                     e.printStackTrace();
                 }
             }
-            HackPopupDecorView hackPopupDecorView = getHackPopupDecorView();
-            mWindowManager.removeView(hackPopupDecorView);
+            PopupDecorViewProxy popupDecorViewProxy = getHackPopupDecorView();
+            mWindowManager.removeView(popupDecorViewProxy);
             mHackPopupDecorView.clear();
             mHackPopupDecorView = null;
         } else {
@@ -186,6 +186,7 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
             mResults.flags |= LayoutParams.FLAG_NOT_TOUCHABLE;
             mResults.flags |= LayoutParams.FLAG_LAYOUT_IN_SCREEN;
             mResults.windowAnimations = 0;
+            mResults.type = LayoutParams.TYPE_APPLICATION_PANEL;
             mResults.x = 0;
             mResults.y = 0;
             mResults.format = PixelFormat.RGBA_8888;
@@ -203,7 +204,7 @@ final class HackWindowManager extends InnerPopupWindowStateListener implements W
         return TextUtils.equals(viewSimpleClassName, "PopupDecorView") || TextUtils.equals(viewSimpleClassName, "PopupViewContainer");
     }
 
-    private HackPopupDecorView getHackPopupDecorView() {
+    private PopupDecorViewProxy getHackPopupDecorView() {
         if (mHackPopupDecorView == null) return null;
         return mHackPopupDecorView.get();
     }

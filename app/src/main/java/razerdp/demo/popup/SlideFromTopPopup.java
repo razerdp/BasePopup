@@ -1,6 +1,5 @@
 package razerdp.demo.popup;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -32,7 +31,7 @@ public class SlideFromTopPopup extends BasePopupWindow {
 
     private List<String> testList;
 
-    public SlideFromTopPopup(Activity context) {
+    public SlideFromTopPopup(Context context) {
         super(context);
         setBackPressEnable(false);
         setAllowDismissWhenTouchOutside(true);
