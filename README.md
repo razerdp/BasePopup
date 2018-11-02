@@ -238,7 +238,6 @@ defaultConfig {
 
 
 更新日志([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
-
 ----------------------------------------
 
 * **【Release】2.0.8.1**(2018/10/29)
