@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 27
-        versionName "2.0.8.1"
+        versionCode 28
+        versionName "2.0.9"
     }
     buildTypes {
         release {
@@ -34,7 +34,7 @@ def moduleName = 'BasePopup'
 
 
 group = "com.github.razerdp"
-version = "2.0.8.1"
+version = "2.0.9"
 
 install {
     repositories.mavenInstaller {

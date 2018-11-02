@@ -408,8 +408,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                             case MotionEvent.ACTION_DOWN:
                                 return isAllowDismissWhenTouchOutside();
                             case MotionEvent.ACTION_UP:
-                                v.performClick();
                                 if (isAllowDismissWhenTouchOutside()) {
+                                    v.performClick();
                                     int x = (int) event.getX();
                                     int y = (int) event.getY();
                                     int containsTouchCount = 0;
