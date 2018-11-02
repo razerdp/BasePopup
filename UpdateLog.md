@@ -1,5 +1,11 @@
 * BasePopup
 
+* **【Release】2.0.8.1**(2018/10/29)
+  * **建议更新到这个版本！**
+  * fixed [#94](https://github.com/razerdp/BasePopup/issues/94)
+  * 紧急修复一个严重的bug[#95](https://github.com/razerdp/BasePopup/issues/95)，感谢[@tpnet](https://github.com/tpnet)
+  * 优化代码
+
 * **【Release】2.0.8**(2018/10/29)
   * fixed [#93](https://github.com/razerdp/BasePopup/issues/93)
   * 修复部分崩溃问题，发布release
