@@ -23,11 +23,11 @@ public class QuickPopup extends BasePopupWindow {
     private View content;
 
     public QuickPopup(Context context, QuickPopupConfig config, View contentView, int w, int h) {
-        super(context, w, h, false);
+        super(context, w, h);
         mConfig = config;
         content = contentView;
         if (mConfig != null) {
-            callInit(context, w, h);
+            callInitInternal(context, w, h);
         } else {
             throw new NullPointerException("QuickPopupConfig must be not null!");
         }
