@@ -209,6 +209,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -233,11 +234,13 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import razerdp.blur.PopupBlurOption;
+import razerdp.controller.PopupWindowEventInterceptor;
 import razerdp.util.InputMethodUtils;
 import razerdp.util.PopupUtil;
 import razerdp.util.SimpleAnimationUtils;
 import razerdp.util.log.LogTag;
 import razerdp.util.log.PopupLogUtil;
+import razerdp.widget.QuickPopup;
 
 /**
  * <br>
@@ -251,7 +254,7 @@ import razerdp.util.log.PopupLogUtil;
  * <p>
  * <a name="简单使用"></a>
  * <h2>简单使用说明：</h2>
- * 在继承了BasePopupWindow之后，会要求您实现三个方法：
+ * 在继承了BasePopupWindow之后，会要求您实现三个方法（现仅强制实现{@link BasePopup#onCreateContentView()}）：
  * <br>
  * <ul>
  * <li>{@link #onCreateShowAnimation()} 该方法决定您的PopupWindow将会以怎样的动画展示出来，可以返回为 {@code null}</li>
@@ -333,6 +336,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public static int SCREEN_WIDTH = 0;
     public static int SCREEN_HEIGHT = 0;
     private WeakReference<Context> mContext;
+    private PopupWindowEventInterceptor mEventInterceptor;
 
     //元素定义
     private PopupWindowProxy mPopupWindow;
@@ -347,25 +351,19 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private int retryCounter;
     private InnerPopupWindowStateListener mStateListener;
     private EditText mAutoShowInputEdittext;
-    private boolean initImmediately;
 
     public BasePopupWindow(Context context) {
         this(context, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
     public BasePopupWindow(Context context, int w, int h) {
-        this(context, w, h, true);
-    }
-
-    protected BasePopupWindow(Context context, int w, int h, boolean initImmediately) {
-        this.initImmediately = initImmediately;
-        if (initImmediately) {
+        if (!(this instanceof QuickPopup)) {
             initView(context, w, h);
         }
     }
 
-    protected void callInit(Context context, int w, int h) {
-        if (initImmediately) return;
+    protected void callInitInternal(Context context, int w, int h) {
+        if (!(this instanceof QuickPopup)) return;
         initView(context, w, h);
     }
 
@@ -447,9 +445,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     private void preMeasurePopupView(int w, int h) {
         if (mContentView != null) {
-            int measureWidth = View.MeasureSpec.makeMeasureSpec(w, View.MeasureSpec.UNSPECIFIED);
-            int measureHeight = View.MeasureSpec.makeMeasureSpec(h, View.MeasureSpec.UNSPECIFIED);
-            mContentView.measure(measureWidth, measureHeight);
+            if (mEventInterceptor != null && !mEventInterceptor.onPreMeasurePopupView(this, mContentView, w, h)) {
+                int measureWidth = View.MeasureSpec.makeMeasureSpec(w, View.MeasureSpec.UNSPECIFIED);
+                int measureHeight = View.MeasureSpec.makeMeasureSpec(h, View.MeasureSpec.UNSPECIFIED);
+                mContentView.measure(measureWidth, measureHeight);
+            }
             mHelper.setPreMeasureWidth(mContentView.getMeasuredWidth())
                     .setPreMeasureHeight(mContentView.getMeasuredHeight());
             mContentView.setFocusableInTouchMode(true);
@@ -683,16 +683,27 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     //------------------------------------------Methods-----------------------------------------------
     private void tryToShowPopup(View v) {
+        if (mEventInterceptor != null && mEventInterceptor.onTryToShowPopup(this,
+                mPopupWindow,
+                v,
+                mHelper.getPopupGravity(),
+                mHelper.getOffsetX(),
+                mHelper.getOffsetY())) {
+            return;
+        }
         try {
             if (isShowing()) return;
-            int[] offset;
+            Point offset;
             //传递了view
             if (v != null) {
                 offset = calculateOffset(v);
+                if (mEventInterceptor != null) {
+                    mEventInterceptor.onCalculateOffsetResult(this, v, offset, mHelper.getOffsetX(), mHelper.getOffsetY());
+                }
                 if (mHelper.isShowAsDropDown()) {
-                    mPopupWindow.showAsDropDownProxy(v, offset[0], offset[1]);
+                    mPopupWindow.showAsDropDownProxy(v, offset.x, offset.y);
                 } else {
-                    mPopupWindow.showAtLocationProxy(v, mHelper.getPopupGravity(), offset[0], offset[1]);
+                    mPopupWindow.showAtLocationProxy(v, mHelper.getPopupGravity(), offset.x, offset.y);
                 }
             } else {
                 //什么都没传递，取顶级view的id
@@ -768,17 +779,22 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 计算popupwindow的偏移量
      *
      * @param anchorView
-     * @return
      * @see #showPopupWindow(View)
      */
-    private int[] calculateOffset(View anchorView) {
-        int[] offset = {mHelper.getOffsetX(), mHelper.getOffsetY()};
+    private Point calculateOffset(View anchorView) {
+        Point offset = null;
+        if (mEventInterceptor != null) {
+            offset = mEventInterceptor.onCalculateOffset(this, anchorView, mHelper.getOffsetX(), mHelper.getOffsetY());
+        }
+        if (offset == null) {
+            offset = new Point(mHelper.getOffsetX(), mHelper.getOffsetY());
+        }
         mHelper.getAnchorLocation(anchorView);
         if (mHelper.isAutoLocatePopup()) {
-            final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offset[1]) < getHeight());
+            final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offset.y) < getHeight());
             if (onTop) {
-                offset[1] = -anchorView.getHeight() - getHeight() - offset[1];
-                mHelper.setInternalOffsetY(offset[1]);
+                offset.y = -anchorView.getHeight() - getHeight() - offset.y;
+                mHelper.setInternalOffsetY(offset.y);
                 onAnchorTop(mContentView, anchorView);
             } else {
                 onAnchorBottom(mContentView, anchorView);
@@ -1333,6 +1349,16 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     //------------------------------------------状态控制-----------------------------------------------
 
+
+    /**
+     * 添加BasePopupWindow事件拦截器
+     *
+     * @param eventInterceptor
+     */
+    public <P extends BasePopupWindow> BasePopupWindow setEventInterceptor(PopupWindowEventInterceptor<P> eventInterceptor) {
+        mEventInterceptor = eventInterceptor;
+        return this;
+    }
 
     /**
      * 内部状态监听
