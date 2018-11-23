@@ -445,7 +445,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     private void preMeasurePopupView(int w, int h) {
         if (mContentView != null) {
-            if (mEventInterceptor != null && !mEventInterceptor.onPreMeasurePopupView(this, mContentView, w, h)) {
+            boolean breakPreMeasure = mEventInterceptor != null && !mEventInterceptor.onPreMeasurePopupView(this, mContentView, w, h);
+            if (!breakPreMeasure) {
                 int measureWidth = View.MeasureSpec.makeMeasureSpec(w, View.MeasureSpec.UNSPECIFIED);
                 int measureHeight = View.MeasureSpec.makeMeasureSpec(h, View.MeasureSpec.UNSPECIFIED);
                 mContentView.measure(measureWidth, measureHeight);
@@ -792,6 +793,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         mHelper.getAnchorLocation(anchorView);
         if (mHelper.isAutoLocatePopup()) {
             final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offset.y) < getHeight());
+            PopupLogUtil.trace("screen > " + getScreenHeight() + "  anchorY > " + mHelper.getAnchorY() + "  offsetY > " + offset.y + "  height > " + getHeight());
             if (onTop) {
                 offset.y = -anchorView.getHeight() - getHeight() - offset.y;
                 mHelper.setInternalOffsetY(offset.y);
@@ -1397,7 +1399,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 mHelper.getDismissAnimation().setAnimationListener(mAnimationListener);
                 mHelper.getDismissAnimation().cancel();
                 mDisplayAnimateView.startAnimation(mHelper.getDismissAnimation());
-                isExitAnimatePlaying = true;
                 hasAnima = true;
             }
         } else if (mHelper.getDismissAnimator() != null) {
@@ -1405,7 +1406,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 mHelper.getDismissAnimator().removeListener(mAnimatorListener);
                 mHelper.getDismissAnimator().addListener(mAnimatorListener);
                 mHelper.getDismissAnimator().start();
-                isExitAnimatePlaying = true;
                 hasAnima = true;
             }
         }
@@ -1536,8 +1536,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             mContentView.post(new Runnable() {
                 @Override
                 public void run() {
-                    mPopupWindow.callSuperDismiss();
                     isExitAnimatePlaying = false;
+                    mPopupWindow.callSuperDismiss();
                 }
             });
 
@@ -1564,8 +1564,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             mContentView.post(new Runnable() {
                 @Override
                 public void run() {
-                    mPopupWindow.callSuperDismiss();
                     isExitAnimatePlaying = false;
+                    mPopupWindow.callSuperDismiss();
                 }
             });
         }
