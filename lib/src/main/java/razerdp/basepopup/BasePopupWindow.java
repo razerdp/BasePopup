@@ -445,7 +445,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     private void preMeasurePopupView(int w, int h) {
         if (mContentView != null) {
-            boolean breakPreMeasure = mEventInterceptor != null && !mEventInterceptor.onPreMeasurePopupView(this, mContentView, w, h);
+            boolean breakPreMeasure = mEventInterceptor != null && mEventInterceptor.onPreMeasurePopupView(this, mContentView, w, h);
             if (!breakPreMeasure) {
                 int measureWidth = View.MeasureSpec.makeMeasureSpec(w, View.MeasureSpec.UNSPECIFIED);
                 int measureHeight = View.MeasureSpec.makeMeasureSpec(h, View.MeasureSpec.UNSPECIFIED);
