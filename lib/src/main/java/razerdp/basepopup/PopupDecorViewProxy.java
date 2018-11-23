@@ -49,7 +49,6 @@ public class PopupDecorViewProxy extends ViewGroup {
             }
             setMeasuredDimension(maxWidth, maxHeight);
         }
-        PopupLogUtil.trace(LogTag.d, TAG, "onMeasure");
     }
 
     @Override
