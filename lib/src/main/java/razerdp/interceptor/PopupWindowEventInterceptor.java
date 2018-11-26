@@ -1,4 +1,4 @@
-package razerdp.controller;
+package razerdp.interceptor;
 
 import android.graphics.Point;
 import android.view.View;

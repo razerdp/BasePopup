@@ -2,8 +2,6 @@ package razerdp.basepopup;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import razerdp.blur.BlurImageView;
@@ -31,13 +29,13 @@ class PopupMaskLayout extends FrameLayout {
         super(context, attrs, defStyleAttr);
     }
 
-    public static PopupMaskLayout create(Context context, BasePopupHelper helper, ViewGroup.LayoutParams params) {
+    public static PopupMaskLayout create(Context context, BasePopupHelper helper) {
         PopupMaskLayout view = new PopupMaskLayout(context);
-        view.init(context, helper, params);
+        view.init(context, helper);
         return view;
     }
 
-    private void init(Context context, BasePopupHelper mHelper, ViewGroup.LayoutParams params) {
+    private void init(Context context, BasePopupHelper mHelper) {
         if (mHelper == null) {
             setVisibility(GONE);
             return;
@@ -52,11 +50,22 @@ class PopupMaskLayout extends FrameLayout {
         if (!PopupUtil.isBackgroundInvalidated(mHelper.getPopupBackground())) {
             mBackgroundView = PopupBackgroundView.creaete(context, mHelper);
             LayoutParams backgroundViewParams = generateDefaultLayoutParams();
-            if (mHelper.isAlignBackground() && params instanceof WindowManager.LayoutParams) {
-                backgroundViewParams.topMargin = ((WindowManager.LayoutParams) params).y;
-            }
+//            if (mHelper.isAlignBackground() && params instanceof WindowManager.LayoutParams) {
+//                backgroundViewParams.topMargin = ((WindowManager.LayoutParams) params).y;
+//            }
             addViewInLayout(mBackgroundView, -1, backgroundViewParams);
         }
+        mHelper.registerActionListener(new PopupWindowActionListener() {
+            @Override
+            public void onShow(boolean hasAnimate) {
+
+            }
+
+            @Override
+            public void onDismiss(boolean hasAnimate) {
+                handleDismiss(hasAnimate ? -2 : 0);
+            }
+        });
     }
 
     @Override
