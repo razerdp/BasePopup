@@ -39,7 +39,4 @@ public class PopupUtil {
     public static boolean isListEmpty(List<?> datas) {
         return datas == null || datas.size() <= 0;
     }
-    public static boolean isListEmpty(Object...obj) {
-        return obj == null || obj.length <= 0;
-    }
 }

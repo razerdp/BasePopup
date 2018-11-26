@@ -124,6 +124,7 @@ public class BlurImageView extends ImageView {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             isAnimating = false;
+                            animate().setListener(null);
                         }
                     })
                     .start();
@@ -136,6 +137,7 @@ public class BlurImageView extends ImageView {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             isAnimating = false;
+                            animate().setListener(null);
                         }
                     })
                     .start();

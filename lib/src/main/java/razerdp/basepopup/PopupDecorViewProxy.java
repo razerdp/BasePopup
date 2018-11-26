@@ -1,7 +1,9 @@
 package razerdp.basepopup;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,56 +16,131 @@ import razerdp.util.log.PopupLogUtil;
 /**
  * Created by 大灯泡 on 2017/12/25.
  * <p>
- * 旨在用来拦截keyevent
+ * 旨在用来拦截keyevent、以及蒙层
  */
-public class PopupDecorViewProxy extends ViewGroup {
+final class PopupDecorViewProxy extends ViewGroup {
     private static final String TAG = "HackPopupDecorView";
     private PopupTouchController mPopupTouchController;
+    //模糊层
+    private PopupMaskLayout mMaskLayout;
+    private BasePopupHelper mHelper;
 
-    public PopupDecorViewProxy(Context context) {
-        super(context);
+    private PopupDecorViewProxy(Context context) {
+        this(context, null);
     }
 
-    public PopupDecorViewProxy(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    private PopupDecorViewProxy(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
 
-    public PopupDecorViewProxy(Context context, AttributeSet attrs, int defStyleAttr) {
+    private PopupDecorViewProxy(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    public static PopupDecorViewProxy create(Context context, BasePopupHelper helper) {
+        PopupDecorViewProxy result = new PopupDecorViewProxy(context);
+        result.init(helper);
+        return result;
+    }
+
+    private void init(BasePopupHelper helper) {
+        mHelper = helper;
+        setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        if (mHelper != null) {
+            mMaskLayout = PopupMaskLayout.create(getContext(), mHelper);
+            addViewInLayout(mMaskLayout, -1, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        }
+    }
+
+    public void addPopupDecorView(View target) {
+        if (target == null) {
+            throw new NullPointerException("contentView不能为空");
+        }
+        if (getChildCount() == 2) {
+            removeViewsInLayout(1, 1);
+        }
+
+        final ViewGroup.LayoutParams layoutParams = target.getLayoutParams();
+        final int height;
+        final int width;
+        if (layoutParams != null) {
+            width = layoutParams.width;
+            height = layoutParams.height;
+        } else {
+            width = mHelper.getPopupViewWidth();
+            height = mHelper.getPopupViewHeight();
+        }
+        addView(target, width, height);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         final int childCount = getChildCount();
-        if (childCount <= 0) {
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        } else {
-            int maxWidth = 0;
-            int maxHeight = 0;
-
-            for (int i = 0; i < childCount; i++) {
-                View child = getChildAt(i);
+        for (int i = 0; i < childCount; i++) {
+            View child = getChildAt(i);
+            //蒙层给最大值
+            if (child == mMaskLayout) {
+                measureChild(child, MeasureSpec.makeMeasureSpec(getScreenWidth(), MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(getScreenHeight(), MeasureSpec.EXACTLY));
+            } else {
                 measureChild(child, widthMeasureSpec, heightMeasureSpec);
-                maxWidth = Math.max(maxWidth, child.getMeasuredWidth());
-                maxHeight = Math.max(maxHeight, child.getMeasuredHeight());
             }
-            setMeasuredDimension(maxWidth, maxHeight);
         }
+        setMeasuredDimension(getScreenWidth(), getScreenHeight());
+
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         final int childCount = getChildCount();
-        if (childCount <= 0) {
-            return;
-        } else {
-            for (int i = 0; i < childCount; i++) {
-                View child = getChildAt(i);
+        for (int i = 0; i < childCount; i++) {
+            View child = getChildAt(i);
+            if (child == mMaskLayout) {
                 child.layout(l, t, r, b);
+            } else {
+                int width = child.getMeasuredWidth();
+                int height = child.getMeasuredHeight();
+
+                int gravity = mHelper.getPopupGravity();
+
+                int childLeft;
+                int childTop;
+
+                switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
+                    case Gravity.CENTER_HORIZONTAL:
+                        childLeft = (r - l - width) >> 1;
+                        break;
+                    case Gravity.RIGHT:
+                    case Gravity.LEFT:
+                    default:
+                        childLeft = 0;
+                        break;
+                }
+
+                switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
+                    case Gravity.CENTER_VERTICAL:
+                        childTop = (b - t - height) >> 1;
+                        break;
+                    case Gravity.TOP:
+                        childTop = 0;
+                        break;
+                    case Gravity.BOTTOM:
+                        childTop = b - t - height;
+                        break;
+                    default:
+                        childTop = 0;
+                        break;
+                }
+                child.layout(childLeft, childTop, childLeft + width, childTop + height);
             }
         }
-        PopupLogUtil.trace(LogTag.d, TAG, "onLayout");
+    }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (mMaskLayout != null) {
+            mMaskLayout.handleStart(-2);
+        }
     }
 
     @Override
@@ -129,40 +206,6 @@ public class PopupDecorViewProxy extends ViewGroup {
         return super.onTouchEvent(event);
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        if (mOnAttachListener != null) {
-            mOnAttachListener.onAttachtoWindow();
-        }
-    }
-
-    ViewGroup.LayoutParams addPopupDecorView(View view, ViewGroup.LayoutParams sourcePopupDecorViewParams, BasePopupHelper helper, PopupTouchController controller) {
-        this.mPopupTouchController = controller;
-        /**
-         * 此时的params是WindowManager.LayoutParams，需要留意强转问题
-         * popup内部有scrollChangeListener，会有params强转为WindowManager.LayoutParams的情况
-         */
-        sourcePopupDecorViewParams = applyHelper(sourcePopupDecorViewParams, helper);
-        ViewGroup.LayoutParams decorViewLayoutParams;
-        if (sourcePopupDecorViewParams instanceof WindowManager.LayoutParams) {
-            WindowManager.LayoutParams wp = new WindowManager.LayoutParams();
-            wp.copyFrom((WindowManager.LayoutParams) sourcePopupDecorViewParams);
-            decorViewLayoutParams = wp;
-        } else {
-            // FIXME: 2018/1/23 可能会导致cast exception
-            //{#52}https://github.com/razerdp/BasePopup/issues/52
-            decorViewLayoutParams = new ViewGroup.LayoutParams(sourcePopupDecorViewParams);
-        }
-
-        if (helper != null) {
-            decorViewLayoutParams.width = helper.getPopupViewWidth();
-            decorViewLayoutParams.height = helper.getPopupViewHeight();
-        }
-        addView(view, decorViewLayoutParams);
-
-        return sourcePopupDecorViewParams;
-    }
 
     /**
      * 应用helper的设置到popup的params
@@ -190,17 +233,11 @@ public class PopupDecorViewProxy extends ViewGroup {
         return p;
     }
 
-    private OnAttachListener mOnAttachListener;
-
-    public OnAttachListener getOnAttachListener() {
-        return mOnAttachListener;
+    int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
     }
 
-    public void setOnAttachListener(OnAttachListener onAttachListener) {
-        mOnAttachListener = onAttachListener;
-    }
-
-    interface OnAttachListener {
-        void onAttachtoWindow();
+    int getScreenHeight() {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
 }

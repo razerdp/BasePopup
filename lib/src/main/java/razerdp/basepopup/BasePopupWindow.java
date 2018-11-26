@@ -234,9 +234,8 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import razerdp.blur.PopupBlurOption;
-import razerdp.controller.PopupWindowEventInterceptor;
+import razerdp.interceptor.PopupWindowEventInterceptor;
 import razerdp.util.InputMethodUtils;
-import razerdp.util.PopupUtil;
 import razerdp.util.SimpleAnimationUtils;
 import razerdp.util.log.LogTag;
 import razerdp.util.log.PopupLogUtil;
@@ -349,7 +348,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     //重试次数
     private int retryCounter;
-    private InnerPopupWindowStateListener mStateListener;
     private EditText mAutoShowInputEdittext;
 
     public BasePopupWindow(Context context) {
@@ -369,7 +367,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     private void initView(Context context, int w, int h) {
         mContext = new WeakReference<Context>(context);
-        mHelper = new BasePopupHelper();
+        mHelper = new BasePopupHelper(this);
         mContentView = onCreateContentView();
         mDisplayAnimateView = onCreateAnimateView();
         if (mDisplayAnimateView == null) {
@@ -377,7 +375,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
 
         //默认占满全屏
-        mPopupWindow = new PopupWindowProxy(mContentView, w, h, this);
+        mPopupWindow = new PopupWindowProxy(mContentView, w, h, mHelper);
         if (mContentView instanceof ViewGroup) {
             //取第一层子控件，用于自动适配非内容区域
             ViewGroup tContentView = ((ViewGroup) mContentView);
@@ -581,7 +579,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @return
      */
     public BasePopupWindow addIgnoreDismissView(View... views) {
-        if (PopupUtil.isListEmpty(views)) return this;
+        if (views == null || views.length <= 0) return this;
         if (mIgnoreDismissViewMaps == null) {
             mIgnoreDismissViewMaps = new HashMap<>();
         }
@@ -719,9 +717,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                     Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
                 }
             }
-            if (mStateListener != null) {
-                mStateListener.onTryToShow(mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
-            }
+            mHelper.onShow(mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
             if (mDisplayAnimateView != null) {
                 if (mHelper.getShowAnimation() != null) {
                     mHelper.getShowAnimation().cancel();
@@ -1362,14 +1358,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return this;
     }
 
-    /**
-     * 内部状态监听
-     *
-     * @param listener
-     */
-    void setOnInnerPopupWindowStateListener(InnerPopupWindowStateListener listener) {
-        this.mStateListener = listener;
-    }
 
     /**
      * 取消一个PopupWindow，如果有退出动画，PopupWindow的消失将会在动画结束后执行
@@ -1410,9 +1398,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             }
         }
         if (!hasAnima) {
-            if (mStateListener != null) {
-                mStateListener.onNoAnimateDismiss();
-            }
+            mHelper.onDismiss(false);
         }
         //如果有动画，则不立刻执行dismiss
         return !hasAnima;
@@ -1433,9 +1419,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             InputMethodUtils.close(mAutoShowInputEdittext);
         }
         mPopupWindow.callSuperDismiss();
-        if (mStateListener != null) {
-            mStateListener.onNoAnimateDismiss();
-        }
+        mHelper.onDismiss(false);
     }
 
 
@@ -1526,9 +1510,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         @Override
         public void onAnimationStart(Animator animation) {
             isExitAnimatePlaying = true;
-            if (mStateListener != null) {
-                mStateListener.onAnimateDismissStart();
-            }
+            mHelper.onDismiss(true);
         }
 
         @Override
@@ -1554,9 +1536,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         @Override
         public void onAnimationStart(Animation animation) {
             isExitAnimatePlaying = true;
-            if (mStateListener != null) {
-                mStateListener.onAnimateDismissStart();
-            }
+            mHelper.onDismiss(true);
         }
 
         @Override

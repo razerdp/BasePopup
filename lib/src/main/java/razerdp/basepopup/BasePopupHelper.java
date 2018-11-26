@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -18,7 +20,7 @@ import razerdp.library.R;
  * <p>
  * popupoption
  */
-final class BasePopupHelper {
+final class BasePopupHelper implements PopupTouchController, PopupWindowActionListener {
     //是否自动弹出输入框(default:false)
     private boolean autoShowInputMethod = false;
 
@@ -67,9 +69,18 @@ final class BasePopupHelper {
     //背景颜色
     private Drawable mBackgroundDrawable = new ColorDrawable(Color.parseColor("#8f000000"));
 
-    BasePopupHelper() {
+    private PopupTouchController mTouchControllerDelegate;
+    private PopupWindowActionListener mActionListener;
+
+    BasePopupHelper(PopupTouchController controller) {
         mAnchorViewLocation = new int[2];
+        this.mTouchControllerDelegate = controller;
     }
+
+    public void registerActionListener(PopupWindowActionListener actionListener) {
+        this.mActionListener = actionListener;
+    }
+
 
     Animation getShowAnimation() {
         return mShowAnimation;
@@ -371,4 +382,54 @@ final class BasePopupHelper {
         return mBlurOption != null && mBlurOption.isAllowToBlur();
     }
 
+
+    //-----------------------------------------controller-----------------------------------------
+    @Override
+    public boolean onBeforeDismiss() {
+        return mTouchControllerDelegate.onBeforeDismiss();
+    }
+
+    @Override
+    public boolean callDismissAtOnce() {
+        return mTouchControllerDelegate.callDismissAtOnce();
+    }
+
+    @Override
+    public boolean onDispatchKeyEvent(KeyEvent event) {
+        return mTouchControllerDelegate.onDispatchKeyEvent(event);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        return mTouchControllerDelegate.onInterceptTouchEvent(event);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return mTouchControllerDelegate.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return mTouchControllerDelegate.onBackPressed();
+    }
+
+    @Override
+    public boolean onOutSideTouch() {
+        return mTouchControllerDelegate.onOutSideTouch();
+    }
+
+    @Override
+    public void onShow(boolean hasAnimate) {
+        if (mActionListener != null) {
+            mActionListener.onShow(hasAnimate);
+        }
+    }
+
+    @Override
+    public void onDismiss(boolean hasAnimate) {
+        if (mActionListener != null) {
+            mActionListener.onDismiss(hasAnimate);
+        }
+    }
 }
