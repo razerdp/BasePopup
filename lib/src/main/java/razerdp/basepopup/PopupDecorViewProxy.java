@@ -1,7 +1,9 @@
 package razerdp.basepopup;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -20,11 +22,11 @@ import razerdp.util.log.PopupLogUtil;
  */
 final class PopupDecorViewProxy extends ViewGroup {
     private static final String TAG = "HackPopupDecorView";
-    private PopupTouchController mPopupTouchController;
     //模糊层
     private PopupMaskLayout mMaskLayout;
     private BasePopupHelper mHelper;
     private View mTarget;
+    private Rect mTouchRect = new Rect();
 
     private PopupDecorViewProxy(Context context) {
         this(context, null);
@@ -44,6 +46,7 @@ final class PopupDecorViewProxy extends ViewGroup {
         return result;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void init(BasePopupHelper helper) {
         mHelper = helper;
         setClipChildren(false);
@@ -51,10 +54,26 @@ final class PopupDecorViewProxy extends ViewGroup {
         setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         mMaskLayout = PopupMaskLayout.create(getContext(), mHelper);
         addViewInLayout(mMaskLayout, -1, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        mMaskLayout.setOnClickListener(new OnClickListener() {
+        mMaskLayout.setOnTouchListener(new OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                mHelper.onOutSideTouch();
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        return mHelper.isDismissWhenTouchOutside();
+                    case MotionEvent.ACTION_UP:
+                        if (mHelper.isDismissWhenTouchOutside()) {
+                            int x = (int) event.getX();
+                            int y = (int) event.getY();
+                            if (mTarget != null) {
+                                mTarget.getGlobalVisibleRect(mTouchRect);
+                            }
+                            if (!mTouchRect.contains(x, y)) {
+                                mHelper.onOutSideTouch();
+                            }
+                        }
+                        break;
+                }
+                return false;
             }
         });
     }
@@ -67,6 +86,7 @@ final class PopupDecorViewProxy extends ViewGroup {
             removeViewsInLayout(1, 1);
         }
 
+        mTarget = target;
         final ViewGroup.LayoutParams layoutParams = target.getLayoutParams();
         final int height;
         final int width;
@@ -204,15 +224,15 @@ final class PopupDecorViewProxy extends ViewGroup {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (mPopupTouchController != null) {
-            return mPopupTouchController.onInterceptTouchEvent(ev);
+        if (mHelper != null) {
+            return mHelper.onInterceptTouchEvent(ev);
         }
         return false;
     }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        boolean intercept = mPopupTouchController != null && mPopupTouchController.onDispatchKeyEvent(event);
+        boolean intercept = mHelper != null && mHelper.onDispatchKeyEvent(event);
         if (intercept) return true;
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             if (getKeyDispatcherState() == null) {
@@ -228,9 +248,9 @@ final class PopupDecorViewProxy extends ViewGroup {
             } else if (event.getAction() == KeyEvent.ACTION_UP) {
                 final KeyEvent.DispatcherState state = getKeyDispatcherState();
                 if (state != null && state.isTracking(event) && !event.isCanceled()) {
-                    if (mPopupTouchController != null) {
+                    if (mHelper != null) {
                         PopupLogUtil.trace(LogTag.i, TAG, "dispatchKeyEvent: >>> onBackPressed");
-                        return mPopupTouchController.onBackPressed();
+                        return mHelper.onBackPressed();
                     }
                 }
             }
@@ -242,8 +262,8 @@ final class PopupDecorViewProxy extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mPopupTouchController != null) {
-            if (mPopupTouchController.onTouchEvent(event)) {
+        if (mHelper != null) {
+            if (mHelper.onTouchEvent(event)) {
                 return true;
             }
         }
@@ -252,14 +272,14 @@ final class PopupDecorViewProxy extends ViewGroup {
 
         if ((event.getAction() == MotionEvent.ACTION_DOWN)
                 && ((x < 0) || (x >= getWidth()) || (y < 0) || (y >= getHeight()))) {
-            if (mPopupTouchController != null) {
+            if (mHelper != null) {
                 PopupLogUtil.trace(LogTag.i, TAG, "onTouchEvent:[ACTION_DOWN] >>> onOutSideTouch");
-                return mPopupTouchController.onOutSideTouch();
+                return mHelper.onOutSideTouch();
             }
         } else if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-            if (mPopupTouchController != null) {
+            if (mHelper != null) {
                 PopupLogUtil.trace(LogTag.i, TAG, "onTouchEvent:[ACTION_OUTSIDE] >>> onOutSideTouch");
-                return mPopupTouchController.onOutSideTouch();
+                return mHelper.onOutSideTouch();
             }
         }
         return super.onTouchEvent(event);
