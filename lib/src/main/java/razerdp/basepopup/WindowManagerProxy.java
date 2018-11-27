@@ -79,11 +79,13 @@ final class WindowManagerProxy implements WindowManager {
         if (params instanceof WindowManager.LayoutParams) {
             WindowManager.LayoutParams p = (LayoutParams) params;
             p.type = LayoutParams.TYPE_APPLICATION_SUB_PANEL;
-            BasePopupHelper helper = getBasePopupHelper();
-            if (helper != null && helper.isShowAsDropDown() && p.y <= helper.getAnchorY()) {
-                int y = helper.getAnchorY() + helper.getAnchorHeight() + helper.getInternalOffsetY();
-                p.y = y <= 0 ? 0 : y;
-            }
+            //偏移交给PopupDecorViewProxy处理，此处固定为0
+            p.y = 0;
+            p.x = 0;
+//            if (helper != null && helper.isShowAsDropDown() && p.y <= helper.getAnchorY()) {
+//                int y = helper.getAnchorY() + helper.getAnchorHeight() + helper.getInternalOffsetY();
+//                p.y = y <= 0 ? 0 : y;
+//            }
         }
         return params;
     }

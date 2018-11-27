@@ -18,7 +18,7 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener 
 
     public ScalePopup(Activity context) {
         super(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        setPopupGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+        setPopupGravity(Gravity.CENTER);
         bindEvent();
     }
 

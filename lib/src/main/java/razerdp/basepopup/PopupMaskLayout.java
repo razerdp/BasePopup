@@ -1,6 +1,7 @@
 package razerdp.basepopup;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
@@ -36,12 +37,11 @@ class PopupMaskLayout extends FrameLayout {
     }
 
     private void init(Context context, BasePopupHelper mHelper) {
+        setLayoutAnimation(null);
         if (mHelper == null) {
-            setVisibility(GONE);
+            setBackgroundColor(Color.TRANSPARENT);
             return;
         }
-        setLayoutAnimation(null);
-        setVisibility(VISIBLE);
         if (mHelper.isAllowToBlur()) {
             mBlurImageView = new BlurImageView(context);
             mBlurImageView.applyBlurOption(mHelper.getBlurOption());

@@ -48,6 +48,8 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     //锚点view的location
     private int[] mAnchorViewLocation;
     private int mAnchorViewHeight;
+    private int mAnchorViewWidth;
+
     //是否自动适配popup的位置
     private boolean isAutoLocatePopup;
     //是否showAsDropDown
@@ -278,8 +280,13 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     BasePopupHelper getAnchorLocation(View v) {
         if (v == null) return this;
         v.getLocationOnScreen(mAnchorViewLocation);
+        mAnchorViewWidth = v.getWidth();
         mAnchorViewHeight = v.getHeight();
         return this;
+    }
+
+    int getAnchorViewWidth() {
+        return mAnchorViewWidth;
     }
 
     int getAnchorHeight() {
