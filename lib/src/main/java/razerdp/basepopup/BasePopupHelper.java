@@ -35,7 +35,8 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     private BasePopupWindow.OnBeforeShowCallback mOnBeforeShowCallback;
 
     //option
-    private int popupGravity = Gravity.NO_GRAVITY;
+    private int popupGravity = Gravity.CENTER;
+    private boolean hasSetGravity;
     private int offsetX;
     private int offsetY;
     private int internalOffsetX;
@@ -57,7 +58,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     //点击popup外部是否消失
     private boolean dismissWhenTouchOutside = true;
     //是否全屏
-    private boolean fullScreen = false;
+    private boolean fullScreen = true;
     //是否需要淡入window动画
     private volatile boolean isPopupFadeEnable = true;
     //是否禁止后退键dismiss
@@ -197,6 +198,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     }
 
     BasePopupHelper setPopupGravity(int popupGravity) {
+        this.hasSetGravity = true;
         this.popupGravity = popupGravity;
         return this;
     }
@@ -236,6 +238,9 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     BasePopupHelper setAutoLocatePopup(boolean autoLocatePopup) {
         isAutoLocatePopup = autoLocatePopup;
+        if (autoLocatePopup) {
+            isShowAsDropDown = true;
+        }
         return this;
     }
 
@@ -389,6 +394,9 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return mBlurOption != null && mBlurOption.isAllowToBlur();
     }
 
+    public boolean hasSetGravity() {
+        return hasSetGravity;
+    }
 
     //-----------------------------------------controller-----------------------------------------
     @Override

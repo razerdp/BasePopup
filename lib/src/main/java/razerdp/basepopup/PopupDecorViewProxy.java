@@ -46,6 +46,8 @@ final class PopupDecorViewProxy extends ViewGroup {
 
     private void init(BasePopupHelper helper) {
         mHelper = helper;
+        setClipChildren(false);
+        setClipToPadding(false);
         setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         mMaskLayout = PopupMaskLayout.create(getContext(), mHelper);
         addViewInLayout(mMaskLayout, -1, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
@@ -77,26 +79,6 @@ final class PopupDecorViewProxy extends ViewGroup {
         }
         addView(target, width, height);
     }
-
-//    public void updatePopupDecorView(WindowManager.LayoutParams params) {
-//        if (params == null || mTarget == null) return;
-//        int offsetHorizontal = 0;
-//        int offsetVertical = 0;
-//        if (mHelper.isShowAsDropDown()) {
-//            //依附于anchorView
-//            offsetHorizontal = mHelper.getInternalOffsetX();
-//            offsetVertical = params.y - mTarget.getTop();
-//        } else {
-//            offsetHorizontal = params.x;
-//            offsetVertical = params.y;
-//        }
-//        PopupLogUtil.trace("param.x = " + params.x + "\nparam.y = " + params.y + "\ntargetLeft = " + mTarget.getLeft() + "\ntargetTop = " + mTarget.getTop());
-//        mTarget.offsetLeftAndRight(offsetHorizontal);
-//        mTarget.offsetTopAndBottom(offsetVertical);
-//        if (mHelper.isAlignBackground() && mMaskLayout != null) {
-//            mMaskLayout.offsetTopAndBottom(mTarget.getTop());
-//        }
-//    }
 
 
     @Override
@@ -143,6 +125,14 @@ final class PopupDecorViewProxy extends ViewGroup {
                 continue;
             } else {
                 boolean isRelativeToAnchor = mHelper.isShowAsDropDown();
+                int anchorCenterX = 0;
+                int anchorCenterY = 0;
+                int targetCenterX = childLeft + (width >> 1);
+                int targetCenterY = childTop + (height >> 1);
+                if (isRelativeToAnchor) {
+                    anchorCenterX = mHelper.getAnchorX() + (mHelper.getAnchorViewWidth() >> 1);
+                    anchorCenterY = mHelper.getAnchorY() + (mHelper.getAnchorHeight() >> 1);
+                }
                 //不跟anchorView联系的情况下，gravity意味着在整个view中的方位
                 //如果跟anchorView联系，gravity意味着以anchorView为中心的方位
                 switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
@@ -160,9 +150,10 @@ final class PopupDecorViewProxy extends ViewGroup {
                         break;
                     case Gravity.CENTER_HORIZONTAL:
                         if (isRelativeToAnchor) {
-                            offsetX += mHelper.getAnchorX() + (mHelper.getAnchorViewWidth() >> 1);
+                            offsetX += anchorCenterX - targetCenterX;
                         } else {
                             childLeft = (r - l - width) >> 1;
+                            targetCenterX = childLeft + (width >> 1);
                         }
                         break;
                     default:
@@ -180,13 +171,15 @@ final class PopupDecorViewProxy extends ViewGroup {
                             offsetY += mHelper.getAnchorY() + mHelper.getAnchorHeight();
                         } else {
                             childTop = b - t - height;
+                            targetCenterY = childTop + (height >> 1);
                         }
                         break;
                     case Gravity.CENTER_VERTICAL:
                         if (isRelativeToAnchor) {
-                            offsetY += mHelper.getAnchorY() + (mHelper.getAnchorHeight() >> 1);
+                            offsetY += anchorCenterY - targetCenterY;
                         } else {
                             childTop = (b - t - height) >> 1;
+                            targetCenterY = childTop + (height >> 1);
                         }
                         break;
                     default:
@@ -194,9 +187,9 @@ final class PopupDecorViewProxy extends ViewGroup {
                 }
             }
             if (delayLayoutMask) {
-                mMaskLayout.layout(0, childTop + offsetX, width, childTop + height);
+                mMaskLayout.layout(0, childTop + offsetY, width, childTop + offsetY + height);
             }
-            child.layout(childLeft + offsetX, childTop + offsetY, childLeft + width, childTop + height);
+            child.layout(childLeft + offsetX, childTop + offsetY, childLeft + offsetX + width, childTop + offsetY + height);
         }
     }
 

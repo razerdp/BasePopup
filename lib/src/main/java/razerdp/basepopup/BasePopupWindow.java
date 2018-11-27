@@ -210,13 +210,12 @@ import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -224,14 +223,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 
-import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
-import java.util.Collection;
-import java.util.HashMap;
 
 import razerdp.blur.PopupBlurOption;
 import razerdp.interceptor.PopupWindowEventInterceptor;
@@ -342,7 +337,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     //popup视图
     private View mContentView;
     protected View mDisplayAnimateView;
-    private HashMap<Integer, Pair<SoftReference<View>, Rect>> mIgnoreDismissViewMaps;
 
     private volatile boolean isExitAnimatePlaying = false;
 
@@ -351,7 +345,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private EditText mAutoShowInputEdittext;
 
     public BasePopupWindow(Context context) {
-        this(context, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        this(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     public BasePopupWindow(Context context, int w, int h) {
@@ -376,64 +370,16 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
         //默认占满全屏
         mPopupWindow = new PopupWindowProxy(mContentView, w, h, mHelper);
-        if (mContentView instanceof ViewGroup) {
-            //取第一层子控件，用于自动适配非内容区域
-            ViewGroup tContentView = ((ViewGroup) mContentView);
-            final int childCount = tContentView.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                View child = tContentView.getChildAt(i);
-                addIgnoreDismissView(child);
-            }
-        }
         mPopupWindow.setOnDismissListener(this);
         mPopupWindow.bindPopupHelper(mHelper);
         setAllowDismissWhenTouchOutside(true);
+        setPopupAnimationStyle(0);
 
         mHelper.setPopupViewWidth(w);
         mHelper.setPopupViewHeight(h);
 
         preMeasurePopupView(w, h);
 
-        //针对match_parent的popup寻找外部
-        if (w == ViewGroup.LayoutParams.MATCH_PARENT && h == ViewGroup.LayoutParams.MATCH_PARENT) {
-            if (mContentView != null && !(mContentView instanceof AdapterView)) {
-                mContentView.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        switch (event.getAction()) {
-                            case MotionEvent.ACTION_DOWN:
-                                return isAllowDismissWhenTouchOutside();
-                            case MotionEvent.ACTION_UP:
-                                if (isAllowDismissWhenTouchOutside()) {
-                                    v.performClick();
-                                    int x = (int) event.getX();
-                                    int y = (int) event.getY();
-                                    int containsTouchCount = 0;
-                                    if (mIgnoreDismissViewMaps != null) {
-                                        Collection<Pair<SoftReference<View>, Rect>> values = mIgnoreDismissViewMaps.values();
-                                        for (Pair<SoftReference<View>, Rect> value : values) {
-                                            if (value.first == null || value.first.get() == null || value.second == null) {
-                                                continue;
-                                            }
-                                            View ignoreTarget = value.first.get();
-                                            Rect bounds = value.second;
-                                            ignoreTarget.getGlobalVisibleRect(bounds);
-                                            if (bounds.contains(x, y)) {
-                                                containsTouchCount++;
-                                            }
-                                        }
-                                        if (containsTouchCount <= 0) {
-                                            dismiss();
-                                        }
-                                    }
-                                }
-                                break;
-                        }
-                        return false;
-                    }
-                });
-            }
-        }
         //show or dismiss animate
         mHelper.setShowAnimation(onCreateShowAnimation())
                 .setShowAnimator(onCreateShowAnimator())
@@ -562,43 +508,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
 
     /**
-     * 在Match_parent情况下，默认整个PopupWindow都是出于dismiss范围
-     * 代码已经默认处理了这种情况，如果您需要特殊指定忽略dismiss的view，则调用该方法指定
-     *
-     * @return
-     * @deprecated 请使用 {@link #addIgnoreDismissView(View...)}
-     */
-    public BasePopupWindow setIgnoreDismissView(View v) {
-        return addIgnoreDismissView(v);
-    }
-
-    /**
-     * 在Match_parent情况下，默认整个PopupWindow都是出于dismiss范围
-     * 代码已经默认处理了这种情况，如果您需要特殊指定忽略dismiss的view，则调用该方法指定
-     *
-     * @return
-     */
-    public BasePopupWindow addIgnoreDismissView(View... views) {
-        if (views == null || views.length <= 0) return this;
-        if (mIgnoreDismissViewMaps == null) {
-            mIgnoreDismissViewMaps = new HashMap<>();
-        }
-        for (View view : views) {
-            if (view == null) continue;
-            int id = view.getId();
-            if (id == View.NO_ID) {
-                id = view.hashCode();
-            }
-            if (mIgnoreDismissViewMaps.containsKey(view.getId())) {
-                continue;
-            }
-            mIgnoreDismissViewMaps.put(id,
-                    Pair.create(new SoftReference<View>(view), new Rect()));
-        }
-        return this;
-    }
-
-    /**
      * <p>
      * 当前PopupWindow是否设置了淡入淡出效果
      * </p>
@@ -675,7 +584,12 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public void showPopupWindow(View anchorView) {
         if (checkPerformShow(anchorView)) {
-            mHelper.setShowAsDropDown(true);
+            if (anchorView != null) {
+                mHelper.setShowAsDropDown(true);
+                if (!mHelper.hasSetGravity()) {
+                    mHelper.setPopupGravity(Gravity.BOTTOM);
+                }
+            }
             tryToShowPopup(anchorView);
         }
     }
@@ -1252,7 +1166,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param autoLocatePopup 是否自适配
      */
     public BasePopupWindow setAutoLocatePopup(boolean autoLocatePopup) {
-        mHelper.setShowAsDropDown(true).setAutoLocatePopup(true);
+        mHelper.setAutoLocatePopup(autoLocatePopup);
         return this;
     }
 

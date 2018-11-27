@@ -19,7 +19,6 @@ import razerdp.demo.fragment.AutoLocatedPopupFrag;
 import razerdp.demo.fragment.BlurSlideFromBottomPopupFrag;
 import razerdp.demo.fragment.BottomInputFragment;
 import razerdp.demo.fragment.CommentPopupFrag;
-import razerdp.demo.fragment.CustomInterpolatorPopupFrag;
 import razerdp.demo.fragment.DialogPopupFrag;
 import razerdp.demo.fragment.DismissControlPopupFrag;
 import razerdp.demo.fragment.InputPopupFrag;
@@ -55,7 +54,6 @@ public class DemoActivity extends AppCompatActivity {
         fragMap.put(R.id.id_list_popup, new ListPopupFrag());
         fragMap.put(R.id.id_menu_popup, new MenuPopupFrag());
         fragMap.put(R.id.id_dialog_popup, new DialogPopupFrag());
-        fragMap.put(R.id.id_custom_interpolator_popup, new CustomInterpolatorPopupFrag());
         fragMap.put(R.id.id_auto_located_popup, new AutoLocatedPopupFrag());
         fragMap.put(R.id.id_slide_from_top_popup, new SlideFromTopPopupFrag());
         fragMap.put(R.id.id_slide_from_top_popup2, new SlideFromTopPopupFrag2());
@@ -99,6 +97,9 @@ public class DemoActivity extends AppCompatActivity {
             return false;
         }
         mFragmentManager.beginTransaction().replace(R.id.popup_fragment, simpleBaseFrag).commit();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(item.getTitle());
+        }
         return super.onOptionsItemSelected(item);
     }
 

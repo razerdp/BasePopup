@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Pair;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 
@@ -30,6 +31,7 @@ public final class QuickPopupConfig {
     boolean blurBackground;
     WeakReference<BasePopupWindow.OnBlurOptionInitListener> mOnBlurOptionInitListener;
     PopupBlurOption mPopupBlurOption;
+    int gravity = Gravity.CENTER;
 
     int offsetX;
     int offsetY;
@@ -148,6 +150,11 @@ public final class QuickPopupConfig {
     public QuickPopupConfig backgroundColor(int color) {
         return background(new ColorDrawable(color));
     }
+
+    public QuickPopupConfig gravity(int gravity) {
+        this.gravity = gravity;
+        return this;
+    }
     //-----------------------------------------getter-----------------------------------------
 
     public Animation getShowAnimation() {
@@ -217,5 +224,9 @@ public final class QuickPopupConfig {
 
     public Drawable getBackground() {
         return background;
+    }
+
+    public int getGravity() {
+        return gravity;
     }
 }
