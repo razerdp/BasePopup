@@ -3,6 +3,7 @@ package razerdp.demo.popup;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -42,8 +43,8 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
         mLikeAnimaView = (ImageView) findViewById(R.id.iv_like);
         mLikeText = (TextView) findViewById(R.id.tv_like);
 
-        mLikeClikcLayout =  findViewById(R.id.item_like);
-        mCommentClickLayout =  findViewById(R.id.item_comment);
+        mLikeClikcLayout = findViewById(R.id.item_like);
+        mCommentClickLayout = findViewById(R.id.item_comment);
 
         mLikeClikcLayout.setOnClickListener(this);
         mCommentClickLayout.setOnClickListener(this);
@@ -52,7 +53,8 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
         setBackgroundColor(Color.TRANSPARENT);
         setAllowDismissWhenTouchOutside(true);
         setAllowInterceptTouchEvent(false);
-        setBlurBackgroundEnable(true);
+        setPopupGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+//        setBlurBackgroundEnable(true);
     }
 
 
@@ -98,12 +100,12 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
         });
     }
 
-    @Override
-    public void showPopupWindow(View v) {
-        setOffsetX(-getWidth() - v.getWidth() / 2);
-        setOffsetY((int) (-getHeight() / 1.5));
-        super.showPopupWindow(v);
-    }
+//    @Override
+//    public void showPopupWindow(View v) {
+//        setOffsetX(-getWidth() - v.getWidth() / 2);
+//        setOffsetY((int) (-getHeight() / 1.5));
+//        super.showPopupWindow(v);
+//    }
 
 
     @Override

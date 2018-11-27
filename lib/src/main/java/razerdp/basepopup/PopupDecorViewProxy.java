@@ -24,6 +24,7 @@ final class PopupDecorViewProxy extends ViewGroup {
     //模糊层
     private PopupMaskLayout mMaskLayout;
     private BasePopupHelper mHelper;
+    private View mTarget;
 
     private PopupDecorViewProxy(Context context) {
         this(context, null);
@@ -46,10 +47,14 @@ final class PopupDecorViewProxy extends ViewGroup {
     private void init(BasePopupHelper helper) {
         mHelper = helper;
         setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        if (mHelper != null) {
-            mMaskLayout = PopupMaskLayout.create(getContext(), mHelper);
-            addViewInLayout(mMaskLayout, -1, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        }
+        mMaskLayout = PopupMaskLayout.create(getContext(), mHelper);
+        addViewInLayout(mMaskLayout, -1, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        mMaskLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mHelper.onOutSideTouch();
+            }
+        });
     }
 
     public void addPopupDecorView(View target) {
@@ -73,6 +78,27 @@ final class PopupDecorViewProxy extends ViewGroup {
         addView(target, width, height);
     }
 
+//    public void updatePopupDecorView(WindowManager.LayoutParams params) {
+//        if (params == null || mTarget == null) return;
+//        int offsetHorizontal = 0;
+//        int offsetVertical = 0;
+//        if (mHelper.isShowAsDropDown()) {
+//            //依附于anchorView
+//            offsetHorizontal = mHelper.getInternalOffsetX();
+//            offsetVertical = params.y - mTarget.getTop();
+//        } else {
+//            offsetHorizontal = params.x;
+//            offsetVertical = params.y;
+//        }
+//        PopupLogUtil.trace("param.x = " + params.x + "\nparam.y = " + params.y + "\ntargetLeft = " + mTarget.getLeft() + "\ntargetTop = " + mTarget.getTop());
+//        mTarget.offsetLeftAndRight(offsetHorizontal);
+//        mTarget.offsetTopAndBottom(offsetVertical);
+//        if (mHelper.isAlignBackground() && mMaskLayout != null) {
+//            mMaskLayout.offsetTopAndBottom(mTarget.getTop());
+//        }
+//    }
+
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         final int childCount = getChildCount();
@@ -86,54 +112,94 @@ final class PopupDecorViewProxy extends ViewGroup {
             }
         }
         setMeasuredDimension(getScreenWidth(), getScreenHeight());
-
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        if (!changed) {
+            return;
+        }
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
+            if (child.getVisibility() == GONE) continue;
+            int width = child.getMeasuredWidth();
+            int height = child.getMeasuredHeight();
+
+            int gravity = mHelper.getPopupGravity();
+
+            int childLeft = child.getLeft();
+            int childTop = child.getTop();
+
+            int offsetX = mHelper.getOffsetX();
+            int offsetY = mHelper.getOffsetY();
+
+            boolean delayLayoutMask = mHelper.isAlignBackground();
+
             if (child == mMaskLayout) {
-                child.layout(l, t, r, b);
+                if (!delayLayoutMask) {
+                    child.layout(childLeft, childTop, childLeft + width, childTop + height);
+                }
+                continue;
             } else {
-                int width = child.getMeasuredWidth();
-                int height = child.getMeasuredHeight();
-
-                int gravity = mHelper.getPopupGravity();
-
-                int childLeft;
-                int childTop;
-
+                boolean isRelativeToAnchor = mHelper.isShowAsDropDown();
+                //不跟anchorView联系的情况下，gravity意味着在整个view中的方位
+                //如果跟anchorView联系，gravity意味着以anchorView为中心的方位
                 switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
-                    case Gravity.CENTER_HORIZONTAL:
-                        childLeft = (r - l - width) >> 1;
+                    case Gravity.LEFT:
+                    case Gravity.START:
+                        if (isRelativeToAnchor) {
+                            offsetX += mHelper.getAnchorX() - width;
+                        }
                         break;
                     case Gravity.RIGHT:
-                    case Gravity.LEFT:
+                    case Gravity.END:
+                        if (isRelativeToAnchor) {
+                            offsetX += mHelper.getAnchorX() + mHelper.getAnchorViewWidth();
+                        }
+                        break;
+                    case Gravity.CENTER_HORIZONTAL:
+                        if (isRelativeToAnchor) {
+                            offsetX += mHelper.getAnchorX() + (mHelper.getAnchorViewWidth() >> 1);
+                        } else {
+                            childLeft = (r - l - width) >> 1;
+                        }
+                        break;
                     default:
-                        childLeft = 0;
                         break;
                 }
 
                 switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
-                    case Gravity.CENTER_VERTICAL:
-                        childTop = (b - t - height) >> 1;
-                        break;
                     case Gravity.TOP:
-                        childTop = 0;
+                        if (isRelativeToAnchor) {
+                            offsetY += mHelper.getAnchorY() - height;
+                        }
                         break;
                     case Gravity.BOTTOM:
-                        childTop = b - t - height;
+                        if (isRelativeToAnchor) {
+                            offsetY += mHelper.getAnchorY() + mHelper.getAnchorHeight();
+                        } else {
+                            childTop = b - t - height;
+                        }
+                        break;
+                    case Gravity.CENTER_VERTICAL:
+                        if (isRelativeToAnchor) {
+                            offsetY += mHelper.getAnchorY() + (mHelper.getAnchorHeight() >> 1);
+                        } else {
+                            childTop = (b - t - height) >> 1;
+                        }
                         break;
                     default:
-                        childTop = 0;
                         break;
                 }
-                child.layout(childLeft, childTop, childLeft + width, childTop + height);
             }
+            if (delayLayoutMask) {
+                mMaskLayout.layout(0, childTop + offsetX, width, childTop + height);
+            }
+            child.layout(childLeft + offsetX, childTop + offsetY, childLeft + width, childTop + height);
         }
     }
+
 
     @Override
     protected void onAttachedToWindow() {
