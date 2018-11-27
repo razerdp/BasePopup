@@ -1,8 +1,8 @@
 package razerdp.demo.popup;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
@@ -18,11 +18,12 @@ import razerdp.demo.utils.ToastUtils;
 public class DismissControlPopup extends BasePopupWindow implements View.OnClickListener {
 
     public DismissControlPopup(Context context) {
-        super(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        super(context);
         findViewById(R.id.tx_1).setOnClickListener(this);
         findViewById(R.id.tx_2).setOnClickListener(this);
         findViewById(R.id.tx_3).setOnClickListener(this);
         setAlignBackground(false);
+        setPopupGravity(Gravity.BOTTOM);
     }
 
     @Override
@@ -43,12 +44,6 @@ public class DismissControlPopup extends BasePopupWindow implements View.OnClick
         return set;
     }
 
-    @Override
-    public void showPopupWindow(View v) {
-        setOffsetX(v.getWidth() / 2);
-        setOffsetY(-v.getHeight() / 2);
-        super.showPopupWindow(v);
-    }
 
     @Override
     public View onCreateContentView() {

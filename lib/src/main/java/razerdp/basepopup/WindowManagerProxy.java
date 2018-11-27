@@ -65,6 +65,21 @@ final class WindowManagerProxy implements WindowManager {
              */
             BasePopupHelper helper = getBasePopupHelper();
 
+            if (params instanceof WindowManager.LayoutParams && helper != null) {
+                WindowManager.LayoutParams p = (WindowManager.LayoutParams) params;
+                if (!helper.isInterceptTouchEvent()) {
+                    PopupLogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  不拦截事件");
+                    p.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+                    p.flags |= WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+                }
+                if (helper.isFullScreen()) {
+                    PopupLogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  全屏");
+                    p.flags |= WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+
+                    // FIXME: 2017/12/27 全屏跟SOFT_INPUT_ADJUST_RESIZE冲突，暂时没有好的解决方案
+                    p.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED;
+                }
+            }
             //添加popup主体
             final PopupDecorViewProxy popupDecorViewProxy = PopupDecorViewProxy.create(view.getContext(), helper);
             popupDecorViewProxy.addPopupDecorView(view);

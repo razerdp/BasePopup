@@ -19,8 +19,8 @@ public class QuickPopupBuilder {
     QuickPopupConfig mConfig;
     View mContentView;
 
-    int width = ViewGroup.LayoutParams.MATCH_PARENT;
-    int height = ViewGroup.LayoutParams.MATCH_PARENT;
+    int width = ViewGroup.LayoutParams.WRAP_CONTENT;
+    int height = ViewGroup.LayoutParams.WRAP_CONTENT;
 
 
     private QuickPopupBuilder(Context context) {
@@ -51,6 +51,7 @@ public class QuickPopupBuilder {
         return this;
     }
 
+    @Deprecated
     public QuickPopupBuilder wrapContentMode() {
         return width(ViewGroup.LayoutParams.WRAP_CONTENT)
                 .height(ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -67,7 +68,6 @@ public class QuickPopupBuilder {
 
     public QuickPopup show() {
         return show(null);
-
     }
 
     public QuickPopup show(int anchorViewResid) {

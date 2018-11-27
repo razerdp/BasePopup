@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/tx_1"
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="60dp"
         android:gravity="center"
         android:text="test1"
@@ -20,7 +20,7 @@
 
     <TextView
         android:id="@+id/tx_2"
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="60dp"
         android:gravity="center"
         android:text="test2"
@@ -31,7 +31,7 @@
 
     <TextView
         android:id="@+id/tx_3"
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="60dp"
         android:gravity="center"
         android:text="test3"

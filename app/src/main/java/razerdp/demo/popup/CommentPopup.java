@@ -54,9 +54,17 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
         setAllowDismissWhenTouchOutside(true);
         setAllowInterceptTouchEvent(false);
         setPopupGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
-//        setBlurBackgroundEnable(true);
+        setBlurBackgroundEnable(true);
+        setAlignBackground(true);
     }
 
+
+//    @Override
+//    public void showPopupWindow(View v) {
+//        setOffsetX(-getWidth() - v.getWidth() / 2);
+//        setOffsetY((int) (-getHeight() / 1.5));
+//        super.showPopupWindow(v);
+//    }
 
     private AnimationSet mAnimationSet;
 
@@ -99,13 +107,6 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
             }
         });
     }
-
-//    @Override
-//    public void showPopupWindow(View v) {
-//        setOffsetX(-getWidth() - v.getWidth() / 2);
-//        setOffsetY((int) (-getHeight() / 1.5));
-//        super.showPopupWindow(v);
-//    }
 
 
     @Override

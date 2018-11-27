@@ -2,7 +2,6 @@ package razerdp.demo.popup;
 
 import android.content.Context;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.Toast;
 
@@ -18,7 +17,7 @@ import razerdp.demo.utils.ToastUtils;
 public class AutoLocatedPopup extends BasePopupWindow implements View.OnClickListener {
 
     public AutoLocatedPopup(Context context) {
-        super(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        super(context);
         setAutoLocatePopup(true);
         bindEvent();
     }
