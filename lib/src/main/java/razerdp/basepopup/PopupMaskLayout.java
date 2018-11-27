@@ -3,10 +3,12 @@ package razerdp.basepopup;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.widget.FrameLayout;
 
 import razerdp.blur.BlurImageView;
 import razerdp.util.PopupUtil;
+import razerdp.util.log.PopupLogUtil;
 
 /**
  * Created by 大灯泡 on 2018/5/9.
@@ -34,6 +36,13 @@ class PopupMaskLayout extends FrameLayout {
         PopupMaskLayout view = new PopupMaskLayout(context);
         view.init(context, helper);
         return view;
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        boolean dispatch = super.dispatchKeyEvent(event);
+        PopupLogUtil.trace("dispatch  >> " + dispatch);
+        return dispatch;
     }
 
     private void init(Context context, BasePopupHelper mHelper) {

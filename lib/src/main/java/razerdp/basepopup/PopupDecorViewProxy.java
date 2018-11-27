@@ -78,7 +78,7 @@ final class PopupDecorViewProxy extends ViewGroup {
         });
     }
 
-    public void addPopupDecorView(View target) {
+    public void addPopupDecorView(View target, WindowManager.LayoutParams params) {
         if (target == null) {
             throw new NullPointerException("contentView不能为空");
         }
@@ -87,17 +87,13 @@ final class PopupDecorViewProxy extends ViewGroup {
         }
 
         mTarget = target;
-        final ViewGroup.LayoutParams layoutParams = target.getLayoutParams();
-        final int height;
-        final int width;
-        if (layoutParams != null) {
-            width = layoutParams.width;
-            height = layoutParams.height;
-        } else {
-            width = mHelper.getPopupViewWidth();
-            height = mHelper.getPopupViewHeight();
-        }
-        addView(target, width, height);
+        WindowManager.LayoutParams wp = new WindowManager.LayoutParams();
+        wp.copyFrom(params);
+        wp.x = 0;
+        wp.y = 0;
+        wp.width = mHelper.getPopupViewWidth();
+        wp.height = mHelper.getPopupViewHeight();
+        addView(target, wp);
     }
 
 
@@ -283,33 +279,6 @@ final class PopupDecorViewProxy extends ViewGroup {
             }
         }
         return super.onTouchEvent(event);
-    }
-
-
-    /**
-     * 应用helper的设置到popup的params
-     *
-     * @param params
-     * @return
-     */
-    private ViewGroup.LayoutParams applyHelper(ViewGroup.LayoutParams params, BasePopupHelper helper) {
-        if (!(params instanceof WindowManager.LayoutParams) || helper == null) {
-            return params;
-        }
-        WindowManager.LayoutParams p = (WindowManager.LayoutParams) params;
-        if (!helper.isInterceptTouchEvent()) {
-            PopupLogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  不拦截事件");
-            p.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
-            p.flags |= WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
-        }
-        if (helper.isFullScreen()) {
-            PopupLogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  全屏");
-            p.flags |= WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-
-            // FIXME: 2017/12/27 全屏跟SOFT_INPUT_ADJUST_RESIZE冲突，暂时没有好的解决方案
-            p.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED;
-        }
-        return p;
     }
 
     int getScreenWidth() {
