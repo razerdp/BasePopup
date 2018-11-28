@@ -119,7 +119,7 @@ public class GravityPopup extends BasePopupWindow implements View.OnClickListene
     }
 
     public Animation createTranslateAnimate(float fromX, float toX, float fromY, float toY) {
-        Animation showAnima = new TranslateAnimation(Animation.RELATIVE_TO_PARENT,
+        Animation result = new TranslateAnimation(Animation.RELATIVE_TO_PARENT,
                 fromX,
                 Animation.RELATIVE_TO_PARENT,
                 toX,
@@ -127,8 +127,8 @@ public class GravityPopup extends BasePopupWindow implements View.OnClickListene
                 fromY,
                 Animation.RELATIVE_TO_PARENT,
                 toY);
-        showAnima.setInterpolator(new DecelerateInterpolator());
-        showAnima.setDuration(360);
-        return showAnima;
+        result.setInterpolator(new DecelerateInterpolator());
+        result.setDuration(360);
+        return result;
     }
 }
