@@ -242,6 +242,9 @@ final class PopupCompatManager {
         @Override
         void showAsDropDownImpl(Activity activity, BasePopupWindowProxy popupWindow, View anchor, int xoff, int yoff, int gravity) {
             popupWindow.callSuperShowAsDropDown(anchor, xoff, yoff, gravity);
+            PopupLogUtil.trace("showAsDropDownImpl  :: " +
+                    "\noffsetX = " + xoff +
+                    "\noffsetY = " + yoff);
         }
 
         @Override

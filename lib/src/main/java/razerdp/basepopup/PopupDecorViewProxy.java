@@ -49,9 +49,12 @@ final class PopupDecorViewProxy extends ViewGroup {
     @SuppressLint("ClickableViewAccessibility")
     private void init(BasePopupHelper helper) {
         mHelper = helper;
-        setClipChildren(false);
-        setClipToPadding(false);
-        setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        setClipChildren(mHelper.isClipChildren());
+        if (mHelper.isInterceptTouchEvent()) {
+            setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        } else {
+            setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        }
         mMaskLayout = PopupMaskLayout.create(getContext(), mHelper);
         addViewInLayout(mMaskLayout, -1, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         mMaskLayout.setOnTouchListener(new OnTouchListener() {
@@ -78,6 +81,7 @@ final class PopupDecorViewProxy extends ViewGroup {
         });
     }
 
+
     public void addPopupDecorView(View target, WindowManager.LayoutParams params) {
         if (target == null) {
             throw new NullPointerException("contentView不能为空");
@@ -91,14 +95,26 @@ final class PopupDecorViewProxy extends ViewGroup {
         wp.copyFrom(params);
         wp.x = 0;
         wp.y = 0;
-        wp.width = mHelper.getPopupViewWidth();
-        wp.height = mHelper.getPopupViewHeight();
+        if (wp.width == 0) {
+            wp.width = mHelper.getPopupViewWidth();
+        }
+        if (wp.height == 0) {
+            wp.height = mHelper.getPopupViewHeight();
+        }
         addView(target, wp);
     }
 
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if (mHelper.isInterceptTouchEvent()) {
+            measureWithIntercept(widthMeasureSpec, heightMeasureSpec);
+        } else {
+            measureWithOutIntercept(widthMeasureSpec, heightMeasureSpec);
+        }
+    }
+
+    private void measureWithIntercept(int widthMeasureSpec, int heightMeasureSpec) {
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
@@ -112,11 +128,51 @@ final class PopupDecorViewProxy extends ViewGroup {
         setMeasuredDimension(getScreenWidth(), getScreenHeight());
     }
 
+    private void measureWithOutIntercept(int widthMeasureSpec, int heightMeasureSpec) {
+        int maxWidth = 0;
+        int maxHeight = 0;
+        int childState = 0;
+
+        final int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View child = getChildAt(i);
+            if (child.getVisibility() != GONE && child != mMaskLayout) {
+                measureChild(child, widthMeasureSpec, heightMeasureSpec);
+                maxWidth = Math.max(maxWidth, child.getMeasuredWidth());
+                maxHeight = Math.max(maxHeight, child.getMeasuredHeight());
+                childState = combineMeasuredStates(childState, child.getMeasuredState());
+            }
+        }
+
+        //因为masklayout是match_parent的，因此测量完target后再决定自己的大小
+        measureChild(mMaskLayout, MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.EXACTLY));
+        setMeasuredDimension(resolveSizeAndState(maxWidth, widthMeasureSpec, childState), resolveSizeAndState(maxHeight, heightMeasureSpec,
+                childState << MEASURED_HEIGHT_STATE_SHIFT));
+    }
+
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         if (!changed) {
             return;
         }
+        if (mHelper.isInterceptTouchEvent()) {
+            layoutWithIntercept(l, t, r, b);
+        } else {
+            layoutWithOutIntercept(l, t, r, b);
+        }
+    }
+
+    private void layoutWithOutIntercept(int l, int t, int r, int b) {
+        final int childCount = getChildCount();
+        if (childCount > 0) {
+            for (int i = 0; i < childCount; i++) {
+                View child = getChildAt(i);
+                child.layout(l, t, r, b);
+            }
+        }
+    }
+
+    private void layoutWithIntercept(int l, int t, int r, int b) {
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
@@ -203,7 +259,7 @@ final class PopupDecorViewProxy extends ViewGroup {
                 }
             }
             if (delayLayoutMask) {
-                mMaskLayout.layout(0, childTop + offsetY, width, childTop + offsetY + height);
+                mMaskLayout.layout(0, childTop + offsetY, mMaskLayout.getMeasuredWidth(), childTop + offsetY + mMaskLayout.getMeasuredHeight());
             }
             child.layout(childLeft + offsetX, childTop + offsetY, childLeft + offsetX + width, childTop + offsetY + height);
         }

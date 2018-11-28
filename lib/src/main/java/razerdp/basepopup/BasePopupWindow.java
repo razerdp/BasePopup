@@ -614,9 +614,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                     mEventInterceptor.onCalculateOffsetResult(this, v, offset, mHelper.getOffsetX(), mHelper.getOffsetY());
                 }
                 if (mHelper.isShowAsDropDown()) {
-                    mPopupWindow.showAsDropDownProxy(v, offset.x, offset.y);
+                    mPopupWindow.showAsDropDownProxy(v, offset.x, offset.y, getPopupGravity());
                 } else {
-                    mPopupWindow.showAtLocationProxy(v, mHelper.getPopupGravity(), offset.x, offset.y);
+                    mPopupWindow.showAtLocationProxy(v, getPopupGravity(), offset.x, offset.y);
                 }
             } else {
                 //什么都没传递，取顶级view的id
@@ -694,19 +694,66 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     private Point calculateOffset(View anchorView) {
         Point offset = null;
+        boolean intercepted = false;
         if (mEventInterceptor != null) {
             offset = mEventInterceptor.onCalculateOffset(this, anchorView, mHelper.getOffsetX(), mHelper.getOffsetY());
+            if (offset != null) {
+                intercepted = true;
+            }
         }
         if (offset == null) {
             offset = new Point(mHelper.getOffsetX(), mHelper.getOffsetY());
         }
         mHelper.getAnchorLocation(anchorView);
+
+        if (!intercepted) {
+            //由于showAsDropDown系统已经帮我们定位在view的下方，因此这里的offset我们仅需要做微量偏移
+
+            switch (getPopupGravity() & Gravity.HORIZONTAL_GRAVITY_MASK) {
+                case Gravity.LEFT:
+                case Gravity.START:
+                    offset.x += -getWidth();
+                    break;
+                case Gravity.RIGHT:
+                case Gravity.END:
+                    offset.x += mHelper.getAnchorViewWidth() + getWidth();
+                    break;
+                case Gravity.CENTER_HORIZONTAL:
+                    offset.x += getWidth() >> 1;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (getPopupGravity() & Gravity.VERTICAL_GRAVITY_MASK) {
+                case Gravity.TOP:
+                    offset.y += -(mHelper.getAnchorHeight() + getHeight());
+                    break;
+                case Gravity.BOTTOM:
+                    //系统默认就在下面.
+                    break;
+                case Gravity.CENTER_VERTICAL:
+                    offset.y += -((getHeight() + mHelper.getAnchorHeight()) >> 1);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        PopupLogUtil.trace("calculateOffset  :: " +
+                "\nanchorX = " + mHelper.getAnchorX() +
+                "\nanchorY = " + mHelper.getAnchorY() +
+                "\noffsetX = " + offset.x +
+                "\noffsetY = " + offset.y);
+
+
+//        PopupLogUtil.trace("screen > " + getScreenHeight() + "  anchorY > " + mHelper.getAnchorY() + "  offsetY > " + offset.y + "  height > " + getHeight());
+
         if (mHelper.isAutoLocatePopup()) {
             final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offset.y) < getHeight());
             PopupLogUtil.trace("screen > " + getScreenHeight() + "  anchorY > " + mHelper.getAnchorY() + "  offsetY > " + offset.y + "  height > " + getHeight());
             if (onTop) {
                 offset.y = -anchorView.getHeight() - getHeight() - offset.y;
-                mHelper.setInternalOffsetY(offset.y);
                 onAnchorTop(mContentView, anchorView);
             } else {
                 onAnchorBottom(mContentView, anchorView);

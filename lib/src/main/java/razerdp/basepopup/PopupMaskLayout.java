@@ -58,11 +58,7 @@ class PopupMaskLayout extends FrameLayout {
         }
         if (!PopupUtil.isBackgroundInvalidated(mHelper.getPopupBackground())) {
             mBackgroundView = PopupBackgroundView.creaete(context, mHelper);
-            LayoutParams backgroundViewParams = generateDefaultLayoutParams();
-//            if (mHelper.isAlignBackground() && params instanceof WindowManager.LayoutParams) {
-//                backgroundViewParams.topMargin = ((WindowManager.LayoutParams) params).y;
-//            }
-            addViewInLayout(mBackgroundView, -1, backgroundViewParams);
+            addViewInLayout(mBackgroundView, -1, generateDefaultLayoutParams());
         }
         mHelper.registerActionListener(new PopupWindowActionListener() {
             @Override

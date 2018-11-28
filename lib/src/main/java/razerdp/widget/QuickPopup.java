@@ -45,13 +45,8 @@ public class QuickPopup extends BasePopupWindow {
 
         applyClick();
 
-        if (config.getOffsetX() != 0 || config.getOffsetRatioOfPopupWidth() != 0) {
-            setOffsetX((int) (config.getOffsetX() + getWidth() * config.getOffsetRatioOfPopupWidth()));
-        }
-
-        if (config.getOffsetY() != 0 || config.getOffsetRatioOfPopupHeight() != 0) {
-            setOffsetY((int) (config.getOffsetY() + getHeight() * config.getOffsetRatioOfPopupHeight()));
-        }
+        setOffsetX(config.getOffsetX());
+        setOffsetY(config.getOffsetY());
 
         setPopupGravity(config.getGravity());
         setAlignBackground(config.isAlignBackground());

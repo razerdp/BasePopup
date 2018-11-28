@@ -83,6 +83,7 @@ public class QuickPopupBuilder {
     }
 
 
+
     //-----------------------------------------tools-----------------------------------------
     private Context getContext() {
         return mContextWeakReference == null ? null : mContextWeakReference.get();

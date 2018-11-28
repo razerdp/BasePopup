@@ -17,7 +17,6 @@ import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.base.baseadapter.BaseRecyclerViewAdapter;
 import razerdp.demo.base.baseadapter.BaseRecyclerViewHolder;
-import razerdp.demo.popup.AutoLocatedPopup;
 import razerdp.demo.popup.CommentPopup;
 import razerdp.demo.utils.ToastUtils;
 
@@ -55,8 +54,6 @@ public class CommentPopupFrag extends SimpleBaseFrag {
 
     class InnerAdapter extends BaseRecyclerViewAdapter<String> {
         private CommentPopup mCommentPopup;
-
-        private AutoLocatedPopup mAutoLocatedPopup;
 
         public InnerAdapter(@NonNull Context context, @NonNull List<String> datas) {
             super(context, datas);
