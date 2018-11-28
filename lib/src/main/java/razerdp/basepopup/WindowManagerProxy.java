@@ -81,7 +81,6 @@ final class WindowManagerProxy implements WindowManager {
             LayoutParams p = (LayoutParams) params;
             if (!helper.isInterceptTouchEvent()) {
                 PopupLogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  不拦截事件");
-//                p.flags |= LayoutParams.FLAG_NOT_TOUCHABLE;
                 p.flags |= LayoutParams.FLAG_NOT_TOUCH_MODAL;
                 p.flags |= LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
             }
@@ -99,9 +98,12 @@ final class WindowManagerProxy implements WindowManager {
         if (params instanceof WindowManager.LayoutParams) {
             WindowManager.LayoutParams p = (LayoutParams) params;
             p.type = LayoutParams.TYPE_APPLICATION_SUB_PANEL;
-            //偏移交给PopupDecorViewProxy处理，此处固定为0
-            p.y = 0;
-            p.x = 0;
+            BasePopupHelper helper = getBasePopupHelper();
+            if (helper != null && helper.isInterceptTouchEvent()) {
+                //偏移交给PopupDecorViewProxy处理，此处固定为0
+                p.y = 0;
+                p.x = 0;
+            }
             applyHelper(p, getBasePopupHelper());
         }
         return params;

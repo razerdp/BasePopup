@@ -39,8 +39,6 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     private boolean hasSetGravity;
     private int offsetX;
     private int offsetY;
-    private int internalOffsetX;
-    private int internalOffsetY;
     private int preMeasureWidth;
     private int preMeasureHeight;
 
@@ -74,6 +72,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     private PopupTouchController mTouchControllerDelegate;
     private PopupWindowActionListener mActionListener;
+    private boolean mClipChildren = true;
 
     BasePopupHelper(PopupTouchController controller) {
         mAnchorViewLocation = new int[2];
@@ -198,8 +197,14 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     }
 
     BasePopupHelper setPopupGravity(int popupGravity) {
+        if (popupGravity == this.popupGravity) return this;
         this.hasSetGravity = true;
         this.popupGravity = popupGravity;
+        return this;
+    }
+
+    public BasePopupHelper setClipChildren(boolean clipChildren) {
+        mClipChildren = clipChildren;
         return this;
     }
 
@@ -306,24 +311,6 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return mAnchorViewLocation[1];
     }
 
-    int getInternalOffsetX() {
-        return internalOffsetX + offsetX;
-    }
-
-    BasePopupHelper setInternalOffsetX(int internalOffsetX) {
-        this.internalOffsetX = internalOffsetX;
-        return this;
-    }
-
-    int getInternalOffsetY() {
-        return internalOffsetY + offsetY;
-    }
-
-    BasePopupHelper setInternalOffsetY(int internalOffsetY) {
-        this.internalOffsetY = internalOffsetY;
-        return this;
-    }
-
     public boolean isBackPressEnable() {
         return backPressEnable;
     }
@@ -396,6 +383,11 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     public boolean hasSetGravity() {
         return hasSetGravity;
+    }
+
+
+    public boolean isClipChildren() {
+        return mClipChildren;
     }
 
     //-----------------------------------------controller-----------------------------------------

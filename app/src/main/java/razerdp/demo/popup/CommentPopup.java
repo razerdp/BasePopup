@@ -1,11 +1,9 @@
 package razerdp.demo.popup;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -37,7 +35,7 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
     private Handler mHandler;
 
     public CommentPopup(Context context) {
-        super(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        super(context);
         mHandler = new Handler();
 
         mLikeAnimaView = (ImageView) findViewById(R.id.iv_like);
@@ -50,21 +48,11 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
         mCommentClickLayout.setOnClickListener(this);
 
         buildAnima();
-        setBackgroundColor(Color.TRANSPARENT);
+        setBackground(0);
         setAllowDismissWhenTouchOutside(true);
-        setAllowInterceptTouchEvent(false);
         setPopupGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
         setBlurBackgroundEnable(true);
-        setAlignBackground(true);
     }
-
-
-//    @Override
-//    public void showPopupWindow(View v) {
-//        setOffsetX(-getWidth() - v.getWidth() / 2);
-//        setOffsetY((int) (-getHeight() / 1.5));
-//        super.showPopupWindow(v);
-//    }
 
     private AnimationSet mAnimationSet;
 
@@ -111,7 +99,14 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
 
     @Override
     protected Animation onCreateShowAnimation() {
-        TranslateAnimation showAnima = new TranslateAnimation(dipToPx(180f), 0, 0, 0);
+        Animation showAnima = new TranslateAnimation(Animation.RELATIVE_TO_PARENT,
+                1f,
+                Animation.RELATIVE_TO_PARENT,
+                0,
+                Animation.RELATIVE_TO_PARENT,
+                0,
+                Animation.RELATIVE_TO_PARENT,
+                0);
         showAnima.setInterpolator(new DecelerateInterpolator());
         showAnima.setDuration(350);
         return showAnima;
@@ -119,7 +114,14 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
 
     @Override
     protected Animation onCreateDismissAnimation() {
-        TranslateAnimation exitAnima = new TranslateAnimation(0, dipToPx(180f), 0, 0);
+        Animation exitAnima = new TranslateAnimation(Animation.RELATIVE_TO_PARENT,
+                0f,
+                Animation.RELATIVE_TO_PARENT,
+                1f,
+                Animation.RELATIVE_TO_PARENT,
+                0,
+                Animation.RELATIVE_TO_PARENT,
+                0);
         exitAnima.setInterpolator(new DecelerateInterpolator());
         exitAnima.setDuration(350);
         return exitAnima;

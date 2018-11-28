@@ -36,9 +36,6 @@ public final class QuickPopupConfig {
     int offsetX;
     int offsetY;
 
-    float offsetRatioOfPopupWidth;
-    float offsetRatioOfPopupHeight;
-
     boolean alignBackground;
 
     boolean autoLocated;
@@ -113,22 +110,12 @@ public final class QuickPopupConfig {
     }
 
     public QuickPopupConfig offsetX(int offsetX) {
-        return offsetX(offsetX, 0);
-    }
-
-    public QuickPopupConfig offsetY(int offsetY) {
-        return offsetY(offsetY, 0);
-    }
-
-    public QuickPopupConfig offsetX(int offsetX, float ratioOfPopupWidth) {
         this.offsetX = offsetX;
-        this.offsetRatioOfPopupWidth = ratioOfPopupWidth;
         return this;
     }
 
-    public QuickPopupConfig offsetY(int offsetY, float ratioOfPopupHeight) {
+    public QuickPopupConfig offsetY(int offsetY) {
         this.offsetY = offsetY;
-        this.offsetRatioOfPopupHeight = ratioOfPopupHeight;
         return this;
     }
 
@@ -191,14 +178,6 @@ public final class QuickPopupConfig {
 
     public int getOffsetY() {
         return offsetY;
-    }
-
-    public float getOffsetRatioOfPopupWidth() {
-        return offsetRatioOfPopupWidth;
-    }
-
-    public float getOffsetRatioOfPopupHeight() {
-        return offsetRatioOfPopupHeight;
     }
 
     public boolean isAlignBackground() {
