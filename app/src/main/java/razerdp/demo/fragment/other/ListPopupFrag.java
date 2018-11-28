@@ -1,4 +1,4 @@
-package razerdp.demo.fragment;
+package razerdp.demo.fragment.other;
 
 import android.view.View;
 import android.widget.Button;

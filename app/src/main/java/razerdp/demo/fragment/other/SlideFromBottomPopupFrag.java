@@ -1,4 +1,4 @@
-package razerdp.demo.fragment;
+package razerdp.demo.fragment.other;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,13 +8,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.demo.popup.DialogPopup;
+import razerdp.demo.popup.SlideFromBottomPopup;
 
 /**
  * Created by 大灯泡 on 2016/1/15.
- * 客串dialog
  */
-public class DialogPopupFrag extends SimpleBaseFrag {
+public class SlideFromBottomPopupFrag extends SimpleBaseFrag {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -29,7 +28,7 @@ public class DialogPopupFrag extends SimpleBaseFrag {
 
     @Override
     public BasePopupWindow getPopup() {
-        return new DialogPopup(mContext);
+        return new SlideFromBottomPopup(mContext);
     }
 
     @Override
@@ -39,6 +38,6 @@ public class DialogPopupFrag extends SimpleBaseFrag {
 
     @Override
     public View getFragment() {
-        return mInflater.inflate(R.layout.frag_dialog_popup,container,false);
+        return mInflater.inflate(R.layout.frag_slide_from_bottom_popup,container,false);
     }
 }

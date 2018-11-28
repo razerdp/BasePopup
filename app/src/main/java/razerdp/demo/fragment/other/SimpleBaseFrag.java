@@ -1,6 +1,7 @@
-package razerdp.demo.fragment;
+package razerdp.demo.fragment.other;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,6 +32,7 @@ public abstract class SimpleBaseFrag extends Fragment implements View.OnClickLis
         mFragment = getFragment();
         this.mButton = getButton();
         if (mButton != null) mButton.setOnClickListener(this);
+        if (mFragment != null) mFragment.setBackgroundColor(Color.WHITE);
         bindEvent();
         return mFragment;
     }

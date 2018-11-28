@@ -1,4 +1,4 @@
-package razerdp.demo.fragment;
+package razerdp.demo.fragment.other;
 
 import android.graphics.Color;
 import android.view.Gravity;
@@ -64,6 +64,7 @@ public class LocatePopupFrag extends SimpleBaseFrag {
                 QuickPopupBuilder.with(getContext())
                         .contentView(R.layout.popup_menu_small)
                         .config(new QuickPopupConfig()
+                                .alignBackground(true)
                                 .backgroundColor(Color.parseColor("#8F617D8A"))
                                 .withShowAnimation(enterAnimation)
                                 .withDismissAnimation(dismissAnimation)
