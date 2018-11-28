@@ -47,6 +47,13 @@ public class GravityPopup extends BasePopupWindow implements View.OnClickListene
     }
 
     @Override
+    public void showPopupWindow() {
+        setShowAnimation(getDefaultScaleAnimation());
+        setDismissAnimation(getDefaultScaleAnimation(false));
+        super.showPopupWindow();
+    }
+
+    @Override
     public void showPopupWindow(View anchorView) {
         initAnimate();
         super.showPopupWindow(anchorView);

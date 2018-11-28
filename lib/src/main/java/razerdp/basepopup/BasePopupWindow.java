@@ -716,10 +716,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                     break;
                 case Gravity.RIGHT:
                 case Gravity.END:
-                    offset.x += mHelper.getAnchorViewWidth() + getWidth();
+                    offset.x += mHelper.getAnchorViewWidth();
                     break;
                 case Gravity.CENTER_HORIZONTAL:
-                    offset.x += getWidth() >> 1;
+                    offset.x += (mHelper.getAnchorViewWidth() - getWidth()) >> 1;
                     break;
                 default:
                     break;
