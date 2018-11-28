@@ -50,6 +50,7 @@ final class PopupDecorViewProxy extends ViewGroup {
     private void init(BasePopupHelper helper) {
         mHelper = helper;
         setClipChildren(mHelper.isClipChildren());
+        setPersistentDrawingCache(ViewGroup.PERSISTENT_NO_CACHE);
         if (mHelper.isInterceptTouchEvent()) {
             setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         } else {
@@ -57,6 +58,13 @@ final class PopupDecorViewProxy extends ViewGroup {
         }
         mMaskLayout = PopupMaskLayout.create(getContext(), mHelper);
         addViewInLayout(mMaskLayout, -1, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+        if (!mHelper.isInterceptTouchEvent()) {
+            mMaskLayout.setVisibility(GONE);
+        } else {
+            mMaskLayout.setVisibility(VISIBLE);
+        }
+
         mMaskLayout.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -145,7 +153,8 @@ final class PopupDecorViewProxy extends ViewGroup {
         }
 
         //因为masklayout是match_parent的，因此测量完target后再决定自己的大小
-        measureChild(mMaskLayout, MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.EXACTLY));
+        //背景由用户自己决定。
+//        measureChild(mMaskLayout, MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.EXACTLY));
         setMeasuredDimension(resolveSizeAndState(maxWidth, widthMeasureSpec, childState), resolveSizeAndState(maxHeight, heightMeasureSpec,
                 childState << MEASURED_HEIGHT_STATE_SHIFT));
     }
