@@ -23,6 +23,9 @@
             android:name="razerdp.demo.DemoFullScreenActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity
+            android:name="razerdp.demo.OtherDemoActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
     </application>
 
 </manifest>

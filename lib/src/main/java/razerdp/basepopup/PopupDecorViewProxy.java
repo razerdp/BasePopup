@@ -191,10 +191,7 @@ final class PopupDecorViewProxy extends ViewGroup {
             boolean delayLayoutMask = mHelper.isAlignBackground();
 
             if (child == mMaskLayout) {
-                if (!delayLayoutMask) {
-                    child.layout(childLeft, childTop, childLeft + width, childTop + height);
-                }
-                continue;
+                child.layout(childLeft, childTop, childLeft + width, childTop + height);
             } else {
                 boolean isRelativeToAnchor = mHelper.isShowAsDropDown();
                 int anchorCenterX = 0;
@@ -257,11 +254,16 @@ final class PopupDecorViewProxy extends ViewGroup {
                     default:
                         break;
                 }
+                final int left = childLeft + offsetX;
+                final int top = childTop + offsetY;
+                final int right = left + width;
+                final int bottom = top + height;
+                if (delayLayoutMask) {
+                    mMaskLayout.handleAlignBackground(left, top, right, bottom);
+                }
+                child.layout(left, top, right, bottom);
             }
-            if (delayLayoutMask) {
-                mMaskLayout.layout(0, childTop + offsetY, mMaskLayout.getMeasuredWidth(), childTop + offsetY + mMaskLayout.getMeasuredHeight());
-            }
-            child.layout(childLeft + offsetX, childTop + offsetY, childLeft + offsetX + width, childTop + offsetY + height);
+
         }
     }
 

@@ -13,8 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="本页面仅为基础设置的demo\n更多例子请点击右上角->更多demo里面查看"
+        android:text="各式各样的例子"
         android:textColor="@color/color_black1"
         android:textSize="16sp"/>
 

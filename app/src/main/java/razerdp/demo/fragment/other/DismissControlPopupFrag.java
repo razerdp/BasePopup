@@ -1,4 +1,4 @@
-package razerdp.demo.fragment;
+package razerdp.demo.fragment.other;
 
 import android.app.Activity;
 import android.content.Context;

@@ -4,8 +4,14 @@
       tools:context="razerdp.demo.DemoActivity">
     <item
         android:id="@+id/id_full_activity"
-        android:orderInCategory="99"
+        android:orderInCategory="98"
         android:title="全屏Activity"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/id_gravity_popup"
+        android:orderInCategory="99"
+        android:title="Gravity设置"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_scale_popup"
