@@ -606,13 +606,12 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         try {
             if (isShowing()) return;
-            Point offset;
+            Point offset = calculateOffset(v);
+            if (mEventInterceptor != null) {
+                mEventInterceptor.onCalculateOffsetResult(this, v, offset, mHelper.getOffsetX(), mHelper.getOffsetY());
+            }
             //传递了view
             if (v != null) {
-                offset = calculateOffset(v);
-                if (mEventInterceptor != null) {
-                    mEventInterceptor.onCalculateOffsetResult(this, v, offset, mHelper.getOffsetX(), mHelper.getOffsetY());
-                }
                 if (mHelper.isShowAsDropDown()) {
                     mPopupWindow.showAsDropDownProxy(v, offset.x, offset.y, getPopupGravity());
                 } else {
@@ -625,8 +624,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 if (context instanceof Activity) {
                     mPopupWindow.showAtLocationProxy(((Activity) context).findViewById(android.R.id.content),
                             mHelper.getPopupGravity(),
-                            mHelper.getOffsetX(),
-                            mHelper.getOffsetY());
+                            offset.x,
+                            offset.y);
                 } else {
                     Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
                 }
@@ -706,7 +705,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         mHelper.getAnchorLocation(anchorView);
 
-        if (!intercepted) {
+        if (!intercepted && anchorView != null) {
             //由于showAsDropDown系统已经帮我们定位在view的下方，因此这里的offset我们仅需要做微量偏移
 
             switch (getPopupGravity() & Gravity.HORIZONTAL_GRAVITY_MASK) {
@@ -749,16 +748,16 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
 //        PopupLogUtil.trace("screen > " + getScreenHeight() + "  anchorY > " + mHelper.getAnchorY() + "  offsetY > " + offset.y + "  height > " + getHeight());
 
-        if (mHelper.isAutoLocatePopup()) {
-            final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offset.y) < getHeight());
-            PopupLogUtil.trace("screen > " + getScreenHeight() + "  anchorY > " + mHelper.getAnchorY() + "  offsetY > " + offset.y + "  height > " + getHeight());
-            if (onTop) {
-                offset.y = -anchorView.getHeight() - getHeight() - offset.y;
-                onAnchorTop(mContentView, anchorView);
-            } else {
-                onAnchorBottom(mContentView, anchorView);
-            }
-        }
+//        if (mHelper.isAutoLocatePopup()) {
+//            final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offset.y) < getHeight());
+//            PopupLogUtil.trace("screen > " + getScreenHeight() + "  anchorY > " + mHelper.getAnchorY() + "  offsetY > " + offset.y + "  height > " + getHeight());
+//            if (onTop) {
+//                offset.y = -anchorView.getHeight() - getHeight() - offset.y;
+//                onAnchorTop(mContentView, anchorView);
+//            } else {
+//                onAnchorBottom(mContentView, anchorView);
+//            }
+//        }
         return offset;
 
     }

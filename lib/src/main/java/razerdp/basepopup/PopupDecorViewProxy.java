@@ -224,6 +224,8 @@ final class PopupDecorViewProxy extends ViewGroup {
                     case Gravity.END:
                         if (isRelativeToAnchor) {
                             offsetX += mHelper.getAnchorX() + mHelper.getAnchorViewWidth();
+                        } else {
+                            offsetX += getMeasuredWidth() - width;
                         }
                         break;
                     case Gravity.CENTER_HORIZONTAL:

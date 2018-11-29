@@ -5,7 +5,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 
 import razerdp.basepopup.BasePopupWindow;
@@ -21,6 +20,7 @@ public class GravityPopup extends BasePopupWindow implements View.OnClickListene
     public GravityPopup(Activity context) {
         super(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         setPopupFadeEnable(true);
+        setAllowInterceptTouchEvent(false);
         bindEvent();
     }
 
@@ -134,8 +134,7 @@ public class GravityPopup extends BasePopupWindow implements View.OnClickListene
                 fromY,
                 Animation.RELATIVE_TO_PARENT,
                 toY);
-        result.setInterpolator(new DecelerateInterpolator());
-        result.setDuration(360);
+        result.setDuration(500);
         return result;
     }
 }
