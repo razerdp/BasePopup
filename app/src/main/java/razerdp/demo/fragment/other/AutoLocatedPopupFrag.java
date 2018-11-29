@@ -2,6 +2,7 @@ package razerdp.demo.fragment.other;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.Button;
 
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
+import razerdp.demo.popup.AutoLocatedPopup;
 import razerdp.demo.popup.AutoLocatedRecyclerViewPopup;
 
 /**
@@ -19,14 +21,17 @@ public class AutoLocatedPopupFrag extends SimpleBaseFrag implements View.OnClick
     private Button popup_show1;
     private Button popup_show2;
     private Button popup_show3;
+    private AppCompatCheckBox mUseRcv;
 
-    private AutoLocatedRecyclerViewPopup autoLocatedPopup;
+    private AutoLocatedRecyclerViewPopup mAutoLocatedRecyclerViewPopup;
+    private AutoLocatedPopup mAutoLocatedPopup;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        autoLocatedPopup = new AutoLocatedRecyclerViewPopup(getActivity());
+        mAutoLocatedRecyclerViewPopup = new AutoLocatedRecyclerViewPopup(getActivity());
+        mAutoLocatedPopup = new AutoLocatedPopup(getContext());
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -36,34 +41,18 @@ public class AutoLocatedPopupFrag extends SimpleBaseFrag implements View.OnClick
         popup_show1 = (Button) findViewById(R.id.popup_show1);
         popup_show2 = (Button) findViewById(R.id.popup_show2);
         popup_show3 = (Button) findViewById(R.id.popup_show3);
+        mUseRcv = (AppCompatCheckBox) findViewById(R.id.check_use_rcv);
 
-        popup_show.setOnClickListener(new View.OnClickListener() {
+        setViewsClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                autoLocatedPopup.showPopupWindow(v);
+                if (mUseRcv.isChecked()) {
+                    mAutoLocatedRecyclerViewPopup.showPopupWindow(v);
+                } else {
+                    mAutoLocatedPopup.showPopupWindow(v);
+                }
             }
-        });
-
-        popup_show1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                autoLocatedPopup.showPopupWindow(v);
-            }
-        });
-
-        popup_show2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                autoLocatedPopup.showPopupWindow(v);
-            }
-        });
-
-        popup_show3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                autoLocatedPopup.showPopupWindow(v);
-            }
-        });
+        }, popup_show, popup_show1, popup_show2, popup_show3);
 
     }
 
@@ -80,5 +69,13 @@ public class AutoLocatedPopupFrag extends SimpleBaseFrag implements View.OnClick
     @Override
     public View getFragment() {
         return mInflater.inflate(R.layout.frag_auto_located_popup, container, false);
+    }
+
+    public static void setViewsClickListener(@Nullable View.OnClickListener listener, View... views) {
+        for (View view : views) {
+            if (view != null) {
+                view.setOnClickListener(listener);
+            }
+        }
     }
 }
