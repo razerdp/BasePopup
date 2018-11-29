@@ -45,5 +45,5 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
-        android:text="RIGHT|Top"/>
+        android:text="RIGHT|BOTTOM"/>
 </RelativeLayout>

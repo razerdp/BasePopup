@@ -9,7 +9,7 @@ import android.widget.Button;
 
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.demo.popup.AutoLocatedPopup;
+import razerdp.demo.popup.AutoLocatedRecyclerViewPopup;
 
 /**
  * Created by 大灯泡 on 2016/11/23.
@@ -20,13 +20,13 @@ public class AutoLocatedPopupFrag extends SimpleBaseFrag implements View.OnClick
     private Button popup_show2;
     private Button popup_show3;
 
-    private AutoLocatedPopup autoLocatedPopup;
+    private AutoLocatedRecyclerViewPopup autoLocatedPopup;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        autoLocatedPopup = new AutoLocatedPopup(getActivity());
+        autoLocatedPopup = new AutoLocatedRecyclerViewPopup(getActivity());
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
