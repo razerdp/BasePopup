@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
@@ -43,12 +42,6 @@ public class GravityPopupFrag extends SimpleBaseFrag implements View.OnClickList
     public void bindEvent() {
         initView();
         mPopupWindow = new GravityPopup(mContext);
-        mPopupWindow.setOnDismissListener(new BasePopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                Toast.makeText(mContext, "dismiss", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         popupShow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,9 +68,7 @@ public class GravityPopupFrag extends SimpleBaseFrag implements View.OnClickList
                 if (checkGravityCenter.isChecked()) {
                     gravity |= Gravity.CENTER;
                 }
-                if (gravity != Gravity.NO_GRAVITY) {
-                    mPopupWindow.setPopupGravity(gravity);
-                }
+                mPopupWindow.setPopupGravity(gravity);
                 if (checkCombineAnchor.isChecked()) {
                     mPopupWindow.showPopupWindow(v);
                 } else {
