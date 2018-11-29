@@ -210,11 +210,13 @@ import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -223,10 +225,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 import razerdp.blur.PopupBlurOption;
 import razerdp.interceptor.PopupWindowEventInterceptor;
@@ -302,6 +307,7 @@ import razerdp.widget.QuickPopup;
  * 重大版本修正记录：
  * <ul>
  * <li>2018/05/14 ： 2.0版本重构</li>
+ * <li>2018/11/29 ： 2.1版本二次重构</li>
  * </ul>
  * </p>
  * 頂頂頂頂頂頂頂　頂頂頂頂頂頂頂頂頂頂頂
@@ -322,7 +328,7 @@ import razerdp.widget.QuickPopup;
  * @version 2.0
  * @since 2016/1/14
  */
-public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismissListener, PopupTouchController {
+public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismissListener, PopupTouchController, PopupWindowLocationListener {
     private static final String TAG = "BasePopupWindow";
     private static final int MAX_RETRY_SHOW_TIME = 3;
 
@@ -362,6 +368,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private void initView(Context context, int w, int h) {
         mContext = new WeakReference<Context>(context);
         mHelper = new BasePopupHelper(this);
+        registerListener(mHelper);
         mContentView = onCreateContentView();
         mDisplayAnimateView = onCreateAnimateView();
         if (mDisplayAnimateView == null) {
@@ -378,6 +385,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         mHelper.setPopupViewWidth(w);
         mHelper.setPopupViewHeight(h);
 
+        hookContentViewDismissClick(w, h);
         preMeasurePopupView(w, h);
 
         //show or dismiss animate
@@ -385,6 +393,59 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 .setShowAnimator(onCreateShowAnimator())
                 .setDismissAnimation(onCreateDismissAnimation())
                 .setDismissAnimator(onCreateDismissAnimator());
+    }
+
+    private void registerListener(BasePopupHelper helper) {
+        helper.registerLocationLisener(this);
+    }
+
+    //针对match_parent的popup寻找点击消失区域
+    private void hookContentViewDismissClick(int w, int h) {
+        if (mContentView != null && !(mContentView instanceof AdapterView) && mContentView instanceof ViewGroup) {
+            ViewGroup vp = ((ViewGroup) mContentView);
+            final int childCount = vp.getChildCount();
+            final List<Pair<WeakReference<View>, Rect>> protectViews = new ArrayList<>(childCount);
+            for (int i = 0; i < childCount; i++) {
+                View child = vp.getChildAt(i);
+                if (child.getVisibility() != View.VISIBLE) continue;
+                protectViews.add(Pair.create(new WeakReference<View>(child), new Rect()));
+            }
+            mContentView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            return isAllowDismissWhenTouchOutside();
+                        case MotionEvent.ACTION_UP:
+                            if (isAllowDismissWhenTouchOutside()) {
+                                v.performClick();
+                                int x = (int) event.getX();
+                                int y = (int) event.getY();
+                                boolean interceptDismiss = false;
+                                for (Pair<WeakReference<View>, Rect> protectView : protectViews) {
+                                    if (protectView.first == null || protectView.first.get() == null || protectView.second == null) {
+                                        continue;
+                                    }
+                                    View ignoreTarget = protectView.first.get();
+                                    Rect bounds = protectView.second;
+                                    ignoreTarget.getGlobalVisibleRect(bounds);
+                                    if (bounds.contains(x, y)) {
+                                        interceptDismiss = true;
+                                        break;
+                                    }
+                                }
+                                if (!interceptDismiss) {
+                                    dismiss();
+                                }
+                            }
+                            break;
+                    }
+                    return false;
+                }
+            });
+
+        }
+
     }
 
     private void preMeasurePopupView(int w, int h) {
@@ -586,9 +647,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         if (checkPerformShow(anchorView)) {
             if (anchorView != null) {
                 mHelper.setShowAsDropDown(true);
-                if (!mHelper.hasSetGravity()) {
-                    mHelper.setPopupGravity(Gravity.BOTTOM);
-                }
             }
             tryToShowPopup(anchorView);
         }
@@ -740,24 +798,21 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
 
         PopupLogUtil.trace("calculateOffset  :: " +
+                "\nscreenHeight = " + getScreenHeight() +
                 "\nanchorX = " + mHelper.getAnchorX() +
                 "\nanchorY = " + mHelper.getAnchorY() +
                 "\noffsetX = " + offset.x +
                 "\noffsetY = " + offset.y);
 
-
-//        PopupLogUtil.trace("screen > " + getScreenHeight() + "  anchorY > " + mHelper.getAnchorY() + "  offsetY > " + offset.y + "  height > " + getHeight());
-
-//        if (mHelper.isAutoLocatePopup()) {
-//            final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offset.y) < getHeight());
-//            PopupLogUtil.trace("screen > " + getScreenHeight() + "  anchorY > " + mHelper.getAnchorY() + "  offsetY > " + offset.y + "  height > " + getHeight());
-//            if (onTop) {
-//                offset.y = -anchorView.getHeight() - getHeight() - offset.y;
-//                onAnchorTop(mContentView, anchorView);
-//            } else {
-//                onAnchorBottom(mContentView, anchorView);
-//            }
-//        }
+        if (mHelper.isAutoLocatePopup() && intercepted) {
+            final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offset.y) < getHeight());
+            if (onTop) {
+                offset.y = -anchorView.getHeight() - getHeight() - offset.y;
+                onAnchorTop();
+            } else {
+                onAnchorBottom();
+            }
+        }
         return offset;
 
     }
@@ -1179,7 +1234,13 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     /**
-     * 设置参考点，一般情况下，参考对象指的不是指定的view，而是它的windowToken，可以看作为整个screen
+     * <p>
+     * 设置参考点
+     * <br>
+     * <ul>
+     * <li> 不跟anchorView联系的情况下，gravity意味着在整个view中的方位{@link #showPopupWindow()}</li>
+     * <li> 如果跟anchorView联系，gravity意味着以anchorView为中心的方位{@link #showPopupWindow(View)}</li>
+     * </ul>
      *
      * @param popupGravity
      */
@@ -1273,6 +1334,40 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public BasePopupWindow setAllowInterceptTouchEvent(boolean touchable) {
         mHelper.setInterceptTouchEvent(mPopupWindow, touchable);
+        return this;
+    }
+
+    /**
+     * 当{@link #setAllowInterceptTouchEvent(boolean)}为true时，该参数决定popupWindow是否被限制在绘制边界
+     * <p>
+     * <br>
+     * <ul>
+     * <li>true：PopupWindow将会被限制边界，其动画不可突破其边界</li>
+     * <li>false：PopupWindow将不会被限制绘制边界，其动画可突破其边界</li>
+     * </ul>
+     *
+     * @param clipChildren 默认为true
+     */
+    public BasePopupWindow setClipChildren(boolean clipChildren) {
+        mHelper.setClipChildren(clipChildren);
+        return this;
+    }
+
+    /**
+     * 该方法用于指定PopupWindow是否可以突破屏幕
+     * <p>
+     * <br>
+     * <ul>
+     * <li>true：PopupWindow并不能突破屏幕，如果其高宽超出屏幕高宽，则会自动进行位移</li>
+     * <li>false：PopupWindow可以突破屏幕</li>
+     * </ul>
+     * <p>
+     * 如果contentView的宽高大于屏幕宽高，因自动调整，可能会导致{@link #setAutoLocatePopup(boolean)}失效
+     *
+     * @param clipToScreen 默认为true
+     */
+    public BasePopupWindow setClipToScreen(boolean clipToScreen) {
+        mHelper.setClipToScreen(clipToScreen);
         return this;
     }
 
@@ -1615,11 +1710,30 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     /**
      * 在anchorView上方显示，autoLocatePopup为true时适用
+     */
+    @Override
+    public void onAnchorTop() {
+
+    }
+
+    /**
+     * 在anchorView下方显示，autoLocatePopup为true时适用
+     */
+    @Override
+    public void onAnchorBottom() {
+
+    }
+
+    /**
+     * 在anchorView上方显示，autoLocatePopup为true时适用
      *
      * @param mPopupView {@link #onCreateContentView()}返回的View
      * @param anchorView {@link #showPopupWindow(View)}传入的View
+     * @see #onAnchorTop()
+     * @deprecated 因为contentView和anchorView应由用户自行保存决定，此处不再返回
      */
-    protected void onAnchorTop(View mPopupView, View anchorView) {
+    @Deprecated
+    public void onAnchorTop(View mPopupView, View anchorView) {
 
     }
 
@@ -1628,8 +1742,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *
      * @param mPopupView {@link #onCreateContentView()}返回的View
      * @param anchorView {@link #showPopupWindow(View)}传入的View
+     * @see #onAnchorBottom()
+     * @deprecated 因为contentView和anchorView应由用户自行保存决定，此处不再返回
      */
-    protected void onAnchorBottom(View mPopupView, View anchorView) {
+    @Deprecated
+    public void onAnchorBottom(View mPopupView, View anchorView) {
 
     }
 

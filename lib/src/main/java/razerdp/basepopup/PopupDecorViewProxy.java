@@ -203,75 +203,122 @@ final class PopupDecorViewProxy extends ViewGroup {
                 child.layout(childLeft, childTop, childLeft + width, childTop + height);
             } else {
                 boolean isRelativeToAnchor = mHelper.isShowAsDropDown();
-                int anchorCenterX = 0;
-                int anchorCenterY = 0;
-                int targetCenterX = childLeft + (width >> 1);
-                int targetCenterY = childTop + (height >> 1);
-                if (isRelativeToAnchor) {
-                    anchorCenterX = mHelper.getAnchorX() + (mHelper.getAnchorViewWidth() >> 1);
-                    anchorCenterY = mHelper.getAnchorY() + (mHelper.getAnchorHeight() >> 1);
-                }
+                int anchorCenterX = mHelper.getAnchorX() + (mHelper.getAnchorViewWidth() >> 1);
+                int anchorCenterY = mHelper.getAnchorY() + (mHelper.getAnchorHeight() >> 1);
                 //不跟anchorView联系的情况下，gravity意味着在整个view中的方位
                 //如果跟anchorView联系，gravity意味着以anchorView为中心的方位
                 switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
                     case Gravity.LEFT:
                     case Gravity.START:
                         if (isRelativeToAnchor) {
-                            offsetX += mHelper.getAnchorX() - width;
+                            childLeft = mHelper.getAnchorX() - width;
                         }
                         break;
                     case Gravity.RIGHT:
                     case Gravity.END:
                         if (isRelativeToAnchor) {
-                            offsetX += mHelper.getAnchorX() + mHelper.getAnchorViewWidth();
+                            childLeft = mHelper.getAnchorX() + mHelper.getAnchorViewWidth();
                         } else {
-                            offsetX += getMeasuredWidth() - width;
+                            childLeft = getMeasuredWidth() - width;
                         }
                         break;
                     case Gravity.CENTER_HORIZONTAL:
                         if (isRelativeToAnchor) {
-                            offsetX += anchorCenterX - targetCenterX;
+                            childLeft = mHelper.getAnchorX();
+                            offsetX += anchorCenterX - (childLeft + (width >> 1));
                         } else {
                             childLeft = (r - l - width) >> 1;
-                            targetCenterX = childLeft + (width >> 1);
                         }
                         break;
                     default:
+                        if (isRelativeToAnchor) {
+                            childLeft = mHelper.getAnchorX();
+                        }
                         break;
                 }
 
                 switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
                     case Gravity.TOP:
                         if (isRelativeToAnchor) {
-                            offsetY += mHelper.getAnchorY() - height;
+                            childTop = mHelper.getAnchorY() - height;
                         }
                         break;
                     case Gravity.BOTTOM:
                         if (isRelativeToAnchor) {
-                            offsetY += mHelper.getAnchorY() + mHelper.getAnchorHeight();
+                            childTop = mHelper.getAnchorY() + mHelper.getAnchorHeight();
                         } else {
                             childTop = b - t - height;
-                            targetCenterY = childTop + (height >> 1);
                         }
                         break;
                     case Gravity.CENTER_VERTICAL:
                         if (isRelativeToAnchor) {
-                            offsetY += anchorCenterY - targetCenterY;
+                            childTop = mHelper.getAnchorY() + mHelper.getAnchorHeight();
+                            offsetY += anchorCenterY - (childTop + (height >> 1));
                         } else {
                             childTop = (b - t - height) >> 1;
-                            targetCenterY = childTop + (height >> 1);
                         }
                         break;
                     default:
+                        if (isRelativeToAnchor) {
+                            childTop = mHelper.getAnchorY() + mHelper.getAnchorHeight();
+                        }
                         break;
                 }
-                final int left = childLeft + offsetX;
-                final int top = childTop + offsetY;
-                final int right = left + width;
-                final int bottom = top + height;
+
+                int left = childLeft + offsetX;
+                int top = childTop + offsetY;
+                int right = left + width;
+                int bottom = top + height;
+
+
+                if (mHelper.isAutoLocatePopup()) {
+                    final boolean onTop = bottom > getMeasuredHeight();
+                    if (onTop) {
+                        top += -(mHelper.getAnchorHeight() + height);
+                        mHelper.onAnchorTop();
+                    } else {
+                        mHelper.onAnchorBottom();
+                    }
+                }
+
+                if (mHelper.isClipToScreen()) {
+                    left = Math.max(0, left);
+                    top = Math.max(0, top);
+                    int tRight = left + width;
+                    if (tRight > getMeasuredWidth()) {
+                        int tOffset = tRight - getMeasuredWidth();
+                        if (tOffset <= left) {
+                            //只需要移动left即可
+                            left -= tOffset;
+                            right = left + width;
+                        } else {
+                            //否则的话，则需要移动left并裁剪right
+                            left = 0;
+                            right = getMeasuredWidth();
+                        }
+                    } else {
+                        right = tRight;
+                    }
+
+                    int tBottom = top + height;
+                    if (tBottom > getMeasuredHeight()) {
+                        int tOffset = tBottom - getMeasuredHeight();
+                        if (tOffset <= top) {
+                            top -= tOffset;
+                            bottom = top + height;
+                        } else {
+                            top = 0;
+                            bottom = getMeasuredHeight();
+                        }
+                    } else {
+                        bottom = tBottom;
+                    }
+                }
+
                 if (delayLayoutMask) {
                     mMaskLayout.handleAlignBackground(left, top, right, bottom);
                 }
+
                 child.layout(left, top, right, bottom);
             }
 

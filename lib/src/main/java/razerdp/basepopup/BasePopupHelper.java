@@ -20,7 +20,7 @@ import razerdp.library.R;
  * <p>
  * popupoption
  */
-final class BasePopupHelper implements PopupTouchController, PopupWindowActionListener {
+final class BasePopupHelper implements PopupTouchController, PopupWindowActionListener, PopupWindowLocationListener {
     //是否自动弹出输入框(default:false)
     private boolean autoShowInputMethod = false;
 
@@ -35,8 +35,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     private BasePopupWindow.OnBeforeShowCallback mOnBeforeShowCallback;
 
     //option
-    private int popupGravity = Gravity.CENTER;
-    private boolean hasSetGravity;
+    private int popupGravity = Gravity.NO_GRAVITY;
     private int offsetX;
     private int offsetY;
     private int preMeasureWidth;
@@ -72,15 +71,24 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     private PopupTouchController mTouchControllerDelegate;
     private PopupWindowActionListener mActionListener;
+    private PopupWindowLocationListener mLocationListener;
+
     private boolean mClipChildren = true;
+    private boolean mClipToScreen = true;
 
     BasePopupHelper(PopupTouchController controller) {
         mAnchorViewLocation = new int[2];
         this.mTouchControllerDelegate = controller;
     }
 
-    public void registerActionListener(PopupWindowActionListener actionListener) {
+    BasePopupHelper registerActionListener(PopupWindowActionListener actionListener) {
         this.mActionListener = actionListener;
+        return this;
+    }
+
+    BasePopupHelper registerLocationLisener(PopupWindowLocationListener locationListener) {
+        this.mLocationListener = locationListener;
+        return this;
     }
 
 
@@ -198,7 +206,6 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     BasePopupHelper setPopupGravity(int popupGravity) {
         if (popupGravity == this.popupGravity) return this;
-        this.hasSetGravity = true;
         this.popupGravity = popupGravity;
         return this;
     }
@@ -287,6 +294,11 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return this;
     }
 
+    public BasePopupHelper setClipToScreen(boolean clipToScreen) {
+        mClipToScreen = clipToScreen;
+        return this;
+    }
+
     BasePopupHelper getAnchorLocation(View v) {
         if (v == null) return this;
         v.getLocationOnScreen(mAnchorViewLocation);
@@ -313,6 +325,10 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     public boolean isBackPressEnable() {
         return backPressEnable;
+    }
+
+    public boolean isClipToScreen() {
+        return mClipToScreen;
     }
 
     BasePopupHelper setBackPressEnable(PopupWindow popupWindow, boolean backPressEnable) {
@@ -381,10 +397,6 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return mBlurOption != null && mBlurOption.isAllowToBlur();
     }
 
-    public boolean hasSetGravity() {
-        return hasSetGravity;
-    }
-
 
     public boolean isClipChildren() {
         return mClipChildren;
@@ -437,6 +449,20 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     public void onDismiss(boolean hasAnimate) {
         if (mActionListener != null) {
             mActionListener.onDismiss(hasAnimate);
+        }
+    }
+
+    @Override
+    public void onAnchorTop() {
+        if (mLocationListener != null) {
+            mLocationListener.onAnchorTop();
+        }
+    }
+
+    @Override
+    public void onAnchorBottom() {
+        if (mLocationListener != null) {
+            mLocationListener.onAnchorBottom();
         }
     }
 }

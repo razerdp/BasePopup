@@ -20,7 +20,6 @@ public class GravityPopup extends BasePopupWindow implements View.OnClickListene
     public GravityPopup(Activity context) {
         super(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         setPopupFadeEnable(true);
-        setAllowInterceptTouchEvent(false);
         bindEvent();
     }
 
@@ -81,8 +80,8 @@ public class GravityPopup extends BasePopupWindow implements View.OnClickListene
                 break;
             case Gravity.RIGHT:
             case Gravity.END:
-                in_toX = 1f;
-                exit_fromX = 1f;
+                in_fromX = -1f;
+                exit_toX = -1f;
                 break;
             case Gravity.CENTER_HORIZONTAL:
                 break;
