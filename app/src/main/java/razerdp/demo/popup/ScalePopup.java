@@ -1,6 +1,7 @@
 package razerdp.demo.popup;
 
 import android.app.Activity;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -17,6 +18,7 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener 
 
     public ScalePopup(Activity context) {
         super(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        setPopupGravity(Gravity.CENTER);
         bindEvent();
     }
 

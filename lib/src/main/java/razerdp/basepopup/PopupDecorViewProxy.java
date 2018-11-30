@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -97,19 +98,64 @@ final class PopupDecorViewProxy extends ViewGroup {
         if (getChildCount() == 2) {
             removeViewsInLayout(1, 1);
         }
-
         mTarget = target;
         WindowManager.LayoutParams wp = new WindowManager.LayoutParams();
         wp.copyFrom(params);
         wp.x = 0;
         wp.y = 0;
-        if (wp.width == 0) {
-            wp.width = mHelper.getPopupViewWidth();
+
+        View contentView = findContentView(target);
+        boolean hasSet = false;
+
+        if (contentView != null) {
+            if (mHelper.getPopupViewWidth() == LayoutParams.WRAP_CONTENT &&
+                    mHelper.getPopupViewHeight() == LayoutParams.WRAP_CONTENT) {
+                if (wp.width <= 0) {
+                    wp.width = contentView.getMeasuredWidth() == 0 ? mHelper.getPopupViewWidth() : contentView.getMeasuredWidth();
+                    hasSet = true;
+                }
+                if (wp.height <= 0) {
+                    wp.height = contentView.getMeasuredHeight() == 0 ? mHelper.getPopupViewHeight() : contentView.getMeasuredHeight();
+                    hasSet = true;
+                }
+            }
         }
-        if (wp.height == 0) {
-            wp.height = mHelper.getPopupViewHeight();
+        if (!hasSet) {
+            if (wp.width <= 0) {
+                wp.width = mHelper.getPopupViewWidth();
+            }
+            if (wp.height <= 0) {
+                wp.height = mHelper.getPopupViewHeight();
+            }
         }
+
         addView(target, wp);
+    }
+
+    private View findContentView(View root) {
+        if (root == null) return null;
+        if (!(root instanceof ViewGroup)) return root;
+        ViewGroup rootGroup = (ViewGroup) root;
+        if (rootGroup.getChildCount() <= 0) return root;
+        String viewSimpleClassName = rootGroup.getClass().getSimpleName();
+        View result = null;
+        while (!isContentView(viewSimpleClassName)) {
+            result = rootGroup.getChildAt(0);
+            viewSimpleClassName = result.getClass().getSimpleName();
+            if (result instanceof ViewGroup) {
+                rootGroup = ((ViewGroup) result);
+            } else {
+                break;
+            }
+        }
+        return result;
+    }
+
+    private boolean isContentView(String contentClassName) {
+        return !TextUtils.equals(contentClassName, "PopupDecorView") &&
+                !TextUtils.equals(contentClassName, "PopupViewContainer") &&
+                !TextUtils.equals(contentClassName, "PopupBackgroundView");
+
     }
 
 
