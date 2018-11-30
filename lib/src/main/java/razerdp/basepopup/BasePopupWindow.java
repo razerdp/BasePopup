@@ -882,12 +882,13 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 这个方法封装了LayoutInflater.from(context).inflate，方便您设置PopupWindow所用的xml
      * </p>
      *
-     * @param resId reference of layout
+     * @param layoutId reference of layout
      * @return root View of the layout
      */
-    public View createPopupById(int resId) {
-        if (resId != 0) {
-            return LayoutInflater.from(getContext()).inflate(resId, null);
+    public View createPopupById(int layoutId) {
+        if (layoutId != 0) {
+            mHelper.setContentViewLayoutId(layoutId);
+            return LayoutInflater.from(getContext()).inflate(layoutId, null);
         } else {
             return null;
         }

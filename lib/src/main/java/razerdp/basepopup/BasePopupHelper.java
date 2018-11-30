@@ -21,6 +21,9 @@ import razerdp.library.R;
  * popupoption
  */
 final class BasePopupHelper implements PopupTouchController, PopupWindowActionListener, PopupWindowLocationListener {
+
+    private int contentViewLayoutId;
+
     //是否自动弹出输入框(default:false)
     private boolean autoShowInputMethod = false;
 
@@ -91,6 +94,10 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return this;
     }
 
+    public BasePopupHelper setContentViewLayoutId(int contentViewLayoutId) {
+        this.contentViewLayoutId = contentViewLayoutId;
+        return this;
+    }
 
     Animation getShowAnimation() {
         return mShowAnimation;
@@ -297,6 +304,10 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     public BasePopupHelper setClipToScreen(boolean clipToScreen) {
         mClipToScreen = clipToScreen;
         return this;
+    }
+
+    public int getContentViewLayoutId() {
+        return contentViewLayoutId;
     }
 
     BasePopupHelper getAnchorLocation(View v) {
