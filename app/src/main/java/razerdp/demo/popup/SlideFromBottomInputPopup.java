@@ -17,7 +17,7 @@ public class SlideFromBottomInputPopup extends BasePopupWindow {
     EditText mEditText;
 
     public SlideFromBottomInputPopup(Context context) {
-        super(context);
+        super(context, MATCH_PARENT, WRAP_CONTENT);
         mEditText = findViewById(R.id.ed_input);
         findViewById(R.id.btn_send).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -32,12 +32,12 @@ public class SlideFromBottomInputPopup extends BasePopupWindow {
 
     @Override
     protected Animation onCreateShowAnimation() {
-        return getTranslateVerticalAnimation(1f, 0, 500);
+        return getTranslateVerticalAnimation(1f, 0, 350);
     }
 
     @Override
     protected Animation onCreateDismissAnimation() {
-        return getTranslateVerticalAnimation(0, 1f, 500);
+        return getTranslateVerticalAnimation(0, 1f, 350);
     }
 
     @Override

@@ -38,8 +38,7 @@ class PopupBackgroundView extends View {
     }
 
     private void init(Context context, final BasePopupHelper mHelper) {
-        if (PopupUtil.isBackgroundInvalidated(mHelper.getPopupBackground()))
-        {
+        if (PopupUtil.isBackgroundInvalidated(mHelper.getPopupBackground())) {
             setVisibility(GONE);
             return;
         }
@@ -56,7 +55,7 @@ class PopupBackgroundView extends View {
                 public boolean onPreDraw() {
                     Animation fadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.basepopup_fade_in);
                     if (fadeIn != null) {
-                        long fadeInTime = mHelper.getShowAnimationDuration() - 300;
+                        long fadeInTime = mHelper.getShowAnimationDuration() - 200;
                         fadeIn.setDuration(Math.max(fadeIn.getDuration(), fadeInTime));
                         fadeIn.setFillAfter(true);
                         startAnimation(fadeIn);
@@ -76,7 +75,7 @@ class PopupBackgroundView extends View {
         if (mHelper != null && mHelper.isPopupFadeEnable()) {
             Animation fadeOut = AnimationUtils.loadAnimation(getContext(), R.anim.basepopup_fade_out);
             if (fadeOut != null) {
-                long fadeDismissTime = mHelper.getExitAnimationDuration() - 300;
+                long fadeDismissTime = mHelper.getExitAnimationDuration() - 200;
                 fadeOut.setDuration(Math.max(fadeOut.getDuration(), fadeDismissTime));
                 fadeOut.setFillAfter(true);
                 startAnimation(fadeOut);

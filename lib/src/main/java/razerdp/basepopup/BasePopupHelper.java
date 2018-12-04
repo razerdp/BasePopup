@@ -373,7 +373,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         } else if (mShowAnimator != null) {
             duration = mShowAnimator.getDuration();
         }
-        return duration < 0 ? 300 : duration;
+        return duration < 0 ? 500 : duration;
     }
 
     long getExitAnimationDuration() {
@@ -383,7 +383,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         } else if (mDismissAnimator != null) {
             duration = mDismissAnimator.getDuration();
         }
-        return duration < 0 ? 300 : duration;
+        return duration < 0 ? 500 : duration;
     }
 
     public Drawable getPopupBackground() {

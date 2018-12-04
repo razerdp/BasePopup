@@ -131,7 +131,7 @@ public class BlurImageView extends ImageView {
         } else if (duration == -2) {
             animate()
                     .alpha(1f)
-                    .setDuration(getOption() == null ? 300 : getOption().getBlurInDuration())
+                    .setDuration(getOption() == null ? 500 : getOption().getBlurInDuration())
                     .setInterpolator(new DecelerateInterpolator())
                     .setListener(new AnimatorListenerAdapter() {
                         @Override
@@ -149,7 +149,6 @@ public class BlurImageView extends ImageView {
     /**
      * alpha退场动画
      *
-     * @param duration
      */
     public void dismiss(long duration) {
         isAnimating = false;
@@ -163,7 +162,7 @@ public class BlurImageView extends ImageView {
         } else if (duration == -2) {
             animate()
                     .alpha(0f)
-                    .setDuration(getOption() == null ? 300 : getOption().getBlurOutDuration())
+                    .setDuration(getOption() == null ? 500 : getOption().getBlurOutDuration())
                     .setInterpolator(new DecelerateInterpolator())
                     .start();
         } else {

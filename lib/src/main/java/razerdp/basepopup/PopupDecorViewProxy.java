@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,28 +105,49 @@ final class PopupDecorViewProxy extends ViewGroup {
         wp.x = 0;
         wp.y = 0;
 
-        View contentView = findContentView(target);
-        boolean hasSet = false;
+        boolean parseLayoutParamsFromXML = false;
 
-        if (contentView != null) {
-            if (mHelper.getPopupViewWidth() == LayoutParams.WRAP_CONTENT &&
-                    mHelper.getPopupViewHeight() == LayoutParams.WRAP_CONTENT) {
-                if (wp.width <= 0) {
-                    wp.width = contentView.getMeasuredWidth() == 0 ? mHelper.getPopupViewWidth() : contentView.getMeasuredWidth();
-                    hasSet = true;
+        if (mHelper.getContentViewLayoutId() != 0) {
+            try {
+                View tempView = LayoutInflater.from(getContext()).inflate(mHelper.getContentViewLayoutId(), this, false);
+                ViewGroup.LayoutParams childParams = tempView.getLayoutParams();
+                if (childParams != null) {
+                    wp.width = childParams.width;
+                    wp.height = childParams.height;
+                    parseLayoutParamsFromXML = true;
                 }
-                if (wp.height <= 0) {
-                    wp.height = contentView.getMeasuredHeight() == 0 ? mHelper.getPopupViewHeight() : contentView.getMeasuredHeight();
-                    hasSet = true;
-                }
+                tempView = null;
+            } catch (Exception e) {
+                PopupLogUtil.trace(e);
+                parseLayoutParamsFromXML = false;
             }
         }
-        if (!hasSet) {
-            if (wp.width <= 0) {
-                wp.width = mHelper.getPopupViewWidth();
+
+        if (!parseLayoutParamsFromXML) {
+            View contentView = findContentView(target);
+            boolean hasSet = false;
+
+            if (contentView != null) {
+                if (mHelper.getPopupViewWidth() == LayoutParams.WRAP_CONTENT &&
+                        mHelper.getPopupViewHeight() == LayoutParams.WRAP_CONTENT) {
+                    if (wp.width <= 0) {
+                        wp.width = contentView.getMeasuredWidth() == 0 ? mHelper.getPopupViewWidth() : contentView.getMeasuredWidth();
+                        hasSet = true;
+                    }
+                    if (wp.height <= 0) {
+                        wp.height = contentView.getMeasuredHeight() == 0 ? mHelper.getPopupViewHeight() : contentView.getMeasuredHeight();
+                        hasSet = true;
+                    }
+                }
             }
-            if (wp.height <= 0) {
-                wp.height = mHelper.getPopupViewHeight();
+            if (!hasSet) {
+                if (wp.width <= 0) {
+                    wp.width = mHelper.getPopupViewWidth();
+                }
+                if (wp.height <= 0) {
+                    wp.height = mHelper.getPopupViewHeight();
+                }
+
             }
         }
 
