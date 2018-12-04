@@ -7,7 +7,11 @@
         android:orderInCategory="98"
         android:title="全屏Activity"
         app:showAsAction="never"/>
-
+    <item
+        android:id="@+id/id_leakcanary_activity"
+        android:orderInCategory="99"
+        android:title="检查泄漏Activity"
+        app:showAsAction="never"/>
     <item
         android:id="@+id/id_scale_popup"
         android:orderInCategory="100"

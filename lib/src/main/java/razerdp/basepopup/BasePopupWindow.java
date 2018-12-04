@@ -331,6 +331,8 @@ import razerdp.widget.QuickPopup;
 public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismissListener, PopupTouchController, PopupWindowLocationListener {
     private static final String TAG = "BasePopupWindow";
     private static final int MAX_RETRY_SHOW_TIME = 3;
+    public static final int MATCH_PARENT = ViewGroup.LayoutParams.MATCH_PARENT;
+    public static final int WRAP_CONTENT = ViewGroup.LayoutParams.WRAP_CONTENT;
 
     private BasePopupHelper mHelper;
     public static int SCREEN_WIDTH = 0;

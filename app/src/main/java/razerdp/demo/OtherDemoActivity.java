@@ -74,6 +74,9 @@ public class OtherDemoActivity extends AppCompatActivity {
             if (item.getItemId() == R.id.id_full_activity) {
                 intent = new Intent(this, DemoFullScreenActivity.class);
             }
+            if (item.getItemId() == R.id.id_leakcanary_activity) {
+                intent = new Intent(this, DemoLeakcanaryActivity.class);
+            }
             if (intent != null) {
                 startActivity(intent);
             }
