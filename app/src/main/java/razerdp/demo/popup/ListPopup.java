@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ public class ListPopup extends BasePopupWindow {
         this(context);
         mListView = (ListView) findViewById(R.id.popup_list);
         setAdapter(context, builder);
+        setPopupGravity(Gravity.CENTER);
     }
 
     public static class Builder {
@@ -190,8 +192,8 @@ public class ListPopup extends BasePopupWindow {
     public Animator onCreateShowAnimator() {
         AnimatorSet set = new AnimatorSet();
         set.playTogether(ObjectAnimator.ofFloat(mDisplayAnimateView, "rotationX", 90f, 0f).setDuration(400),
-                         ObjectAnimator.ofFloat(mDisplayAnimateView, "translationY", 250f, 0f).setDuration(400),
-                         ObjectAnimator.ofFloat(mDisplayAnimateView, "alpha", 0f, 1f).setDuration(400 * 3 / 2));
+                ObjectAnimator.ofFloat(mDisplayAnimateView, "translationY", 250f, 0f).setDuration(400),
+                ObjectAnimator.ofFloat(mDisplayAnimateView, "alpha", 0f, 1f).setDuration(400 * 3 / 2));
         return set;
     }
 
@@ -205,8 +207,8 @@ public class ListPopup extends BasePopupWindow {
     public Animator onCreateDismissAnimator() {
         AnimatorSet set = new AnimatorSet();
         set.playTogether(ObjectAnimator.ofFloat(mDisplayAnimateView, "rotationX", 0f, 90f).setDuration(400),
-                         ObjectAnimator.ofFloat(mDisplayAnimateView, "translationY", 0f, 250f).setDuration(400),
-                         ObjectAnimator.ofFloat(mDisplayAnimateView, "alpha", 1f, 0f).setDuration(400 * 3 / 2));
+                ObjectAnimator.ofFloat(mDisplayAnimateView, "translationY", 0f, 250f).setDuration(400),
+                ObjectAnimator.ofFloat(mDisplayAnimateView, "alpha", 1f, 0f).setDuration(400 * 3 / 2));
         return set;
     }
 

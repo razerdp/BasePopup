@@ -45,7 +45,7 @@ public class PopupBlurOption {
     }
 
     public PopupBlurOption setBlurRadius(float blurRadius) {
-        mBlurRadius = blurRadius;
+        mBlurRadius = Math.min(Math.max(0, blurRadius), 25);
         return this;
     }
 

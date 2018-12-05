@@ -403,6 +403,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     //针对match_parent的popup寻找点击消失区域
     private void hookContentViewDismissClick(int w, int h) {
+        if (w != MATCH_PARENT || h != MATCH_PARENT) return;
         if (mContentView != null && !(mContentView instanceof AdapterView) && mContentView instanceof ViewGroup) {
             ViewGroup vp = ((ViewGroup) mContentView);
             final int childCount = vp.getChildCount();
