@@ -64,11 +64,10 @@ public class LocatePopupFrag extends SimpleBaseFrag {
                 QuickPopupBuilder.with(getContext())
                         .contentView(R.layout.popup_menu_small)
                         .config(new QuickPopupConfig()
-                                .alignBackground(true)
-                                .backgroundColor(Color.parseColor("#8F617D8A"))
+                                .clipChildren(true)
+                                .backgroundColor(Color.parseColor("#8C617D8A"))
                                 .withShowAnimation(enterAnimation)
                                 .withDismissAnimation(dismissAnimation)
-                                .alignBackground(true)
                                 .gravity(gravity)
                                 .blurBackground(true, new BasePopupWindow.OnBlurOptionInitListener() {
                                     @Override

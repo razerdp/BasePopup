@@ -31,10 +31,10 @@ import razerdp.demo.utils.DimensUtils;
 public class SlideFromTopPopup2 extends BasePopupWindow {
 
     public SlideFromTopPopup2(Context context) {
-        super(context);
+        super(context, MATCH_PARENT, WRAP_CONTENT);
         setBackPressEnable(false);
-        setAllowDismissWhenTouchOutside(true);
         setAlignBackground(true);
+        setClipChildren(true);
         List<String> testList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             testList.add("position - " + i);

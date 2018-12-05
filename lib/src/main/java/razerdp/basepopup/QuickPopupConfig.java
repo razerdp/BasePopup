@@ -37,10 +37,11 @@ public final class QuickPopupConfig {
     int offsetY;
 
     boolean alignBackground;
-
+    Drawable background;
     boolean autoLocated;
 
-    Drawable background;
+    boolean clipChildren;
+
 
     HashMap<Integer, Pair<View.OnClickListener, Boolean>> mListenersHolderMap;
 
@@ -142,6 +143,11 @@ public final class QuickPopupConfig {
         this.gravity = gravity;
         return this;
     }
+
+    public QuickPopupConfig clipChildren(boolean clipChildren) {
+        this.clipChildren = clipChildren;
+        return this;
+    }
     //-----------------------------------------getter-----------------------------------------
 
     public Animation getShowAnimation() {
@@ -207,5 +213,10 @@ public final class QuickPopupConfig {
 
     public int getGravity() {
         return gravity;
+    }
+
+
+    public boolean isClipChildren() {
+        return clipChildren;
     }
 }

@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 
 import razerdp.util.log.LogTag;
 import razerdp.util.log.PopupLogUtil;
@@ -29,6 +30,11 @@ final class PopupDecorViewProxy extends ViewGroup {
     private BasePopupHelper mHelper;
     private View mTarget;
     private Rect mTouchRect = new Rect();
+
+    private int childLeftMargin;
+    private int childTopMargin;
+    private int childRightMargin;
+    private int childBottomMargin;
 
     private PopupDecorViewProxy(Context context) {
         this(context, null);
@@ -52,7 +58,6 @@ final class PopupDecorViewProxy extends ViewGroup {
     private void init(BasePopupHelper helper) {
         mHelper = helper;
         setClipChildren(mHelper.isClipChildren());
-        setPersistentDrawingCache(ViewGroup.PERSISTENT_NO_CACHE);
         if (mHelper.isInterceptTouchEvent()) {
             setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         } else {
@@ -109,14 +114,23 @@ final class PopupDecorViewProxy extends ViewGroup {
 
         if (mHelper.getContentViewLayoutId() != 0) {
             try {
-                View tempView = LayoutInflater.from(getContext()).inflate(mHelper.getContentViewLayoutId(), this, false);
+                FrameLayout tempLayout = new FrameLayout(getContext());
+                View tempView = LayoutInflater.from(getContext()).inflate(mHelper.getContentViewLayoutId(), tempLayout, false);
                 ViewGroup.LayoutParams childParams = tempView.getLayoutParams();
                 if (childParams != null) {
                     wp.width = childParams.width;
                     wp.height = childParams.height;
+                    if (childParams instanceof ViewGroup.MarginLayoutParams) {
+                        MarginLayoutParams marginChildParams = ((MarginLayoutParams) childParams);
+                        childLeftMargin = marginChildParams.leftMargin;
+                        childTopMargin = marginChildParams.topMargin;
+                        childRightMargin = marginChildParams.rightMargin;
+                        childBottomMargin = marginChildParams.bottomMargin;
+                    }
                     parseLayoutParamsFromXML = true;
                 }
                 tempView = null;
+                tempLayout = null;
             } catch (Exception e) {
                 PopupLogUtil.trace(e);
                 parseLayoutParamsFromXML = false;
@@ -198,7 +212,13 @@ final class PopupDecorViewProxy extends ViewGroup {
             if (child == mMaskLayout) {
                 measureChild(child, MeasureSpec.makeMeasureSpec(getScreenWidth(), MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(getScreenHeight(), MeasureSpec.EXACTLY));
             } else {
-                measureChild(child, widthMeasureSpec, heightMeasureSpec);
+                final LayoutParams lp = child.getLayoutParams();
+                final int childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec,
+                        childLeftMargin + childRightMargin, lp.width);
+                final int childHeightMeasureSpec = getChildMeasureSpec(heightMeasureSpec,
+                        childTopMargin + childBottomMargin, lp.height);
+
+                child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
             }
         }
         setMeasuredDimension(getScreenWidth(), getScreenHeight());
@@ -279,15 +299,15 @@ final class PopupDecorViewProxy extends ViewGroup {
                     case Gravity.LEFT:
                     case Gravity.START:
                         if (isRelativeToAnchor) {
-                            childLeft = mHelper.getAnchorX() - width;
+                            childLeft = mHelper.getAnchorX() - width + childLeftMargin;
                         }
                         break;
                     case Gravity.RIGHT:
                     case Gravity.END:
                         if (isRelativeToAnchor) {
-                            childLeft = mHelper.getAnchorX() + mHelper.getAnchorViewWidth();
+                            childLeft = mHelper.getAnchorX() + mHelper.getAnchorViewWidth() + childLeftMargin;
                         } else {
-                            childLeft = getMeasuredWidth() - width;
+                            childLeft = getMeasuredWidth() - width - childRightMargin;
                         }
                         break;
                     case Gravity.CENTER_HORIZONTAL:
@@ -295,12 +315,12 @@ final class PopupDecorViewProxy extends ViewGroup {
                             childLeft = mHelper.getAnchorX();
                             offsetX += anchorCenterX - (childLeft + (width >> 1));
                         } else {
-                            childLeft = (r - l - width) >> 1;
+                            childLeft = ((r - l - width) >> 1) + childLeftMargin - childRightMargin;
                         }
                         break;
                     default:
                         if (isRelativeToAnchor) {
-                            childLeft = mHelper.getAnchorX();
+                            childLeft = mHelper.getAnchorX() + childLeftMargin;
                         }
                         break;
                 }
@@ -308,14 +328,14 @@ final class PopupDecorViewProxy extends ViewGroup {
                 switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
                     case Gravity.TOP:
                         if (isRelativeToAnchor) {
-                            childTop = mHelper.getAnchorY() - height;
+                            childTop = mHelper.getAnchorY() - height + childTopMargin;
                         }
                         break;
                     case Gravity.BOTTOM:
                         if (isRelativeToAnchor) {
-                            childTop = mHelper.getAnchorY() + mHelper.getAnchorHeight();
+                            childTop = mHelper.getAnchorY() + mHelper.getAnchorHeight() + childTopMargin;
                         } else {
-                            childTop = b - t - height;
+                            childTop = b - t - height - childBottomMargin;
                         }
                         break;
                     case Gravity.CENTER_VERTICAL:
@@ -323,12 +343,12 @@ final class PopupDecorViewProxy extends ViewGroup {
                             childTop = mHelper.getAnchorY() + mHelper.getAnchorHeight();
                             offsetY += anchorCenterY - (childTop + (height >> 1));
                         } else {
-                            childTop = (b - t - height) >> 1;
+                            childTop = ((b - t - height) >> 1) + childTopMargin - childBottomMargin;
                         }
                         break;
                     default:
                         if (isRelativeToAnchor) {
-                            childTop = mHelper.getAnchorY() + mHelper.getAnchorHeight();
+                            childTop = mHelper.getAnchorY() + mHelper.getAnchorHeight() + childTopMargin;
                         }
                         break;
                 }
@@ -339,47 +359,68 @@ final class PopupDecorViewProxy extends ViewGroup {
                 int bottom = top + height;
 
 
+                //-1:onTop
+                //0:nothing
+                //1:onBottom
+                int adjustAutoLocatedResult = 0;
                 if (mHelper.isAutoLocatePopup()) {
                     final boolean onTop = bottom > getMeasuredHeight();
                     if (onTop) {
+                        adjustAutoLocatedResult = -1;
                         top += -(mHelper.getAnchorHeight() + height);
+                        bottom = top + height;
                         mHelper.onAnchorTop();
                     } else {
+                        adjustAutoLocatedResult = 1;
                         mHelper.onAnchorBottom();
                     }
                 }
 
                 if (mHelper.isClipToScreen()) {
-                    left = Math.max(0, left);
-                    top = Math.max(0, top);
-                    int tRight = left + width;
-                    if (tRight > getMeasuredWidth()) {
-                        int tOffset = tRight - getMeasuredWidth();
+                    //将popupContentView限制在屏幕内，跟autoLocate有冲突，因此分开解决。
+                    //如果bottom超出屏幕过多，则需要特殊处理
+                    int screenLeft = 0;
+                    int screenTop = isRelativeToAnchor ? childTop : 0;
+                    int screenRight = getMeasuredWidth();
+                    int screenBottom = getMeasuredHeight();
+                    if (adjustAutoLocatedResult != 0) {
+                        //adjust的情况下，isRelativeToAnchor必定为true
+                        switch (adjustAutoLocatedResult) {
+                            case -1:
+                                //自动定位到top，则bottom相当于上移
+                                screenTop = 0;
+                                screenBottom = childTop - mHelper.getAnchorHeight();
+                                break;
+                            case 1:
+                                screenTop = childTop;
+                                break;
+                        }
+                    }
+
+                    left = Math.max(screenLeft, left);
+                    top = Math.max(screenTop, top);
+
+                    int tOffset = 0;
+                    if (right > screenRight) {
+                        tOffset = right - screenRight;
                         if (tOffset <= left) {
                             //只需要移动left即可
                             left -= tOffset;
                             right = left + width;
                         } else {
-                            //否则的话，则需要移动left并裁剪right
-                            left = 0;
-                            right = getMeasuredWidth();
+                            right = screenRight;
                         }
-                    } else {
-                        right = tRight;
                     }
 
-                    int tBottom = top + height;
-                    if (tBottom > getMeasuredHeight()) {
-                        int tOffset = tBottom - getMeasuredHeight();
-                        if (tOffset <= top) {
+                    if (bottom > screenBottom) {
+                        tOffset = bottom - screenBottom;
+                        if (screenTop == 0) {
+                            //如果screenTop没有限制，则可以上移，否则只能移到限定的screenTop下
                             top -= tOffset;
                             bottom = top + height;
                         } else {
-                            top = 0;
-                            bottom = getMeasuredHeight();
+                            bottom = top + height;
                         }
-                    } else {
-                        bottom = tBottom;
                     }
                 }
 
