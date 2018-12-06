@@ -23,7 +23,7 @@ import razerdp.util.log.PopupLogUtil;
  * <p>
  * 旨在用来拦截keyevent、以及蒙层
  */
-final class PopupDecorViewProxy extends ViewGroup {
+final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateChangeListener {
     private static final String TAG = "HackPopupDecorView";
     //模糊层
     private PopupMaskLayout mMaskLayout;
@@ -59,6 +59,7 @@ final class PopupDecorViewProxy extends ViewGroup {
     @SuppressLint("ClickableViewAccessibility")
     private void init(BasePopupHelper helper) {
         mHelper = helper;
+        mHelper.registerKeyboardStateChangeListener(this);
         setClipChildren(mHelper.isClipChildren());
         if (mHelper.isInterceptTouchEvent()) {
             setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
@@ -557,5 +558,41 @@ final class PopupDecorViewProxy extends ViewGroup {
             result = context.getResources().getDimensionPixelSize(resourceId);
         }
         statusBarHeight = result;
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mHelper.registerKeyboardStateChangeListener(null);
+    }
+
+    //-----------------------------------------keyboard-----------------------------------------
+    private Rect viewRect = new Rect();
+    private int offset;
+
+    @Override
+    public void onKeyboardChange(int keyboardHeight, boolean isVisible) {
+        if (mHelper.getSoftInputMode() != WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN &&
+                mHelper.getSoftInputMode() != WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE) {
+            if (mHelper.getSoftInputMode() != (WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)) {
+                return;
+            }
+        }
+        View focusView = findFocus();
+        if (focusView == null) return;
+        focusView.getGlobalVisibleRect(viewRect);
+        if (isVisible) {
+            int keyboardTop = getScreenHeight() - keyboardHeight;
+            if (viewRect.bottom > keyboardTop) {
+                offset = viewRect.bottom - keyboardTop;
+            }
+        } else {
+            offset = 0;
+        }
+        mTarget.animate()
+                .translationY(-offset)
+                .setDuration(300)
+                .start();
+        PopupLogUtil.trace("onKeyboardChange : isVisible = " + isVisible + "  offset = " + offset);
     }
 }

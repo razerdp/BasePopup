@@ -1,5 +1,8 @@
 package razerdp.util;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -38,5 +41,23 @@ public class PopupUtil {
 
     public static boolean isListEmpty(List<?> datas) {
         return datas == null || datas.size() <= 0;
+    }
+
+
+    public static Activity scanForActivity(Context from, final int limit) {
+        Context result = from;
+        int tryCount = 0;
+        while (result instanceof ContextWrapper) {
+            if (result instanceof Activity) {
+                return (Activity) result;
+            }
+            if (tryCount > limit) {
+                //break endless loop
+                return null;
+            }
+            tryCount++;
+            result = ((ContextWrapper) result).getBaseContext();
+        }
+        return null;
     }
 }
