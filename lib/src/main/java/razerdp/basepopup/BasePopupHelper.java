@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     //是否自动弹出输入框(default:false)
     private boolean autoShowInputMethod = false;
+    private static int showCount;
 
     //anima
     private Animation mShowAnimation;
@@ -445,7 +447,27 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return mParaseFromXmlParams;
     }
 
+    public int getShowCount() {
+        return showCount;
+    }
+
     //-----------------------------------------controller-----------------------------------------
+    public void handleShow() {
+        //针对官方的坑（两个popup切换页面后重叠）
+        if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP ||
+                android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
+            showCount++;
+        }
+    }
+
+    public void handleDismiss() {
+        if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP ||
+                android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
+            showCount--;
+            showCount = Math.max(0, showCount);
+        }
+    }
+
     @Override
     public boolean onBeforeDismiss() {
         return mTouchControllerDelegate.onBeforeDismiss();

@@ -668,6 +668,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     //------------------------------------------Methods-----------------------------------------------
     private void tryToShowPopup(View v) {
         addGlobalListener();
+        mHelper.handleShow();
         if (mEventInterceptor != null && mEventInterceptor.onTryToShowPopup(this,
                 mPopupWindow,
                 v,
@@ -746,6 +747,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         if (mGlobalLayoutListenerWrapper != null) {
             mGlobalLayoutListenerWrapper.remove();
         }
+        mHelper.handleDismiss();
     }
 
     /**
