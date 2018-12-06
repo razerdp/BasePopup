@@ -76,7 +76,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     private PopupWindowActionListener mActionListener;
     private PopupWindowLocationListener mLocationListener;
 
-    private boolean mClipChildren = false;
+    private boolean mClipChildren = true;
     private boolean mClipToScreen = true;
 
     BasePopupHelper(PopupTouchController controller) {

@@ -32,11 +32,11 @@ public class AutoLocatedRecyclerViewPopup extends BasePopupWindow implements Vie
         mRecyclerView = findViewById(R.id.rv_content);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         List<String> data = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 10; i++) {
             data.add("test" + String.valueOf(i));
         }
         mRecyclerView.setAdapter(new InnerAdapter(getContext(), data));
-        setAutoLocatePopup(false);
+        setAutoLocatePopup(true);
         bindEvent();
     }
 

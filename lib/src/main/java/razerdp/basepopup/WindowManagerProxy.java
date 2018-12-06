@@ -87,6 +87,7 @@ final class WindowManagerProxy implements WindowManager {
             if (helper.isFullScreen()) {
                 PopupLogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  全屏");
                 p.flags |= LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+                p.flags |= LayoutParams.FLAG_LAYOUT_NO_LIMITS;
 
                 // FIXME: 2017/12/27 全屏跟SOFT_INPUT_ADJUST_RESIZE冲突，暂时没有好的解决方案
                 p.softInputMode = LayoutParams.SOFT_INPUT_STATE_UNCHANGED;

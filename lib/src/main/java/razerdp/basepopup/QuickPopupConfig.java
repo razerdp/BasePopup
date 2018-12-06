@@ -41,6 +41,7 @@ public final class QuickPopupConfig {
     boolean autoLocated;
 
     boolean clipChildren;
+    boolean allowInterceptTouchEvent = true;
 
 
     HashMap<Integer, Pair<View.OnClickListener, Boolean>> mListenersHolderMap;
@@ -148,6 +149,11 @@ public final class QuickPopupConfig {
         this.clipChildren = clipChildren;
         return this;
     }
+
+    public QuickPopupConfig allowInterceptTouchEvent(boolean allowInterceptTouchEvent) {
+        this.allowInterceptTouchEvent = allowInterceptTouchEvent;
+        return this;
+    }
     //-----------------------------------------getter-----------------------------------------
 
     public Animation getShowAnimation() {
@@ -215,6 +221,9 @@ public final class QuickPopupConfig {
         return gravity;
     }
 
+    public boolean isAllowInterceptTouchEvent() {
+        return allowInterceptTouchEvent;
+    }
 
     public boolean isClipChildren() {
         return clipChildren;

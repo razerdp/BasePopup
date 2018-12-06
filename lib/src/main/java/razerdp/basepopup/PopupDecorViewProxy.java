@@ -36,6 +36,8 @@ final class PopupDecorViewProxy extends ViewGroup {
     private int childRightMargin;
     private int childBottomMargin;
 
+    private static int statusBarHeight;
+
     private PopupDecorViewProxy(Context context) {
         this(context, null);
     }
@@ -354,17 +356,23 @@ final class PopupDecorViewProxy extends ViewGroup {
                 }
 
                 int left = childLeft + offsetX;
-                int top = childTop + offsetY;
+                int top = childTop + offsetY + (mHelper.isFullScreen() ? 0 : -getStatusBarHeight());
                 int right = left + width;
                 int bottom = top + height;
 
 
                 //-1:onTop
-                //0:nothing
+                //0:non
                 //1:onBottom
                 int adjustAutoLocatedResult = 0;
                 if (mHelper.isAutoLocatePopup()) {
-                    final boolean onTop = bottom > getMeasuredHeight();
+                    //针对高度超过屏幕的适配（一屏幕一半为准）
+                    boolean onTop = false;
+                    if (height >= getFixedMeasureHeight()) {
+                        onTop = anchorCenterY >= (getFixedMeasureHeight() >> 1);
+                    } else {
+                        onTop = bottom > getFixedMeasureHeight();
+                    }
                     if (onTop) {
                         adjustAutoLocatedResult = -1;
                         top += -(mHelper.getAnchorHeight() + height);
@@ -378,11 +386,10 @@ final class PopupDecorViewProxy extends ViewGroup {
 
                 if (mHelper.isClipToScreen()) {
                     //将popupContentView限制在屏幕内，跟autoLocate有冲突，因此分开解决。
-                    //如果bottom超出屏幕过多，则需要特殊处理
                     int screenLeft = 0;
-                    int screenTop = isRelativeToAnchor ? childTop : 0;
+                    int screenTop = 0;
                     int screenRight = getMeasuredWidth();
-                    int screenBottom = getMeasuredHeight();
+                    int screenBottom = getFixedMeasureHeight();
                     if (adjustAutoLocatedResult != 0) {
                         //adjust的情况下，isRelativeToAnchor必定为true
                         switch (adjustAutoLocatedResult) {
@@ -392,15 +399,24 @@ final class PopupDecorViewProxy extends ViewGroup {
                                 screenBottom = childTop - mHelper.getAnchorHeight();
                                 break;
                             case 1:
-                                screenTop = childTop;
+                                if (height >= getFixedMeasureHeight()) {
+                                    screenTop = childTop;
+                                }
                                 break;
                         }
                     }
 
-                    left = Math.max(screenLeft, left);
-                    top = Math.max(screenTop, top);
-
                     int tOffset = 0;
+                    if (left < screenLeft) {
+                        tOffset = screenLeft - left;
+                        if (tOffset <= screenRight - right) {
+                            left += tOffset;
+                            right = left + width;
+                        } else {
+                            left = screenLeft;
+                        }
+                    }
+
                     if (right > screenRight) {
                         tOffset = right - screenRight;
                         if (tOffset <= left) {
@@ -409,6 +425,16 @@ final class PopupDecorViewProxy extends ViewGroup {
                             right = left + width;
                         } else {
                             right = screenRight;
+                        }
+                    }
+
+                    if (top < screenTop) {
+                        tOffset = screenTop - top;
+                        if (tOffset <= screenBottom - bottom) {
+                            top += tOffset;
+                            bottom = top + height;
+                        } else {
+                            top = screenTop;
                         }
                     }
 
@@ -434,6 +460,9 @@ final class PopupDecorViewProxy extends ViewGroup {
         }
     }
 
+    private int getFixedMeasureHeight() {
+        return mHelper.isFullScreen() ? getMeasuredHeight() : getMeasuredHeight() - getStatusBarHeight();
+    }
 
     @Override
     protected void onAttachedToWindow() {
@@ -512,5 +541,21 @@ final class PopupDecorViewProxy extends ViewGroup {
 
     int getScreenHeight() {
         return Resources.getSystem().getDisplayMetrics().heightPixels;
+    }
+
+    private int getStatusBarHeight() {
+        checkStatusBarHeight(getContext());
+        return statusBarHeight;
+    }
+
+    private void checkStatusBarHeight(Context context) {
+        if (statusBarHeight != 0 || context == null) return;
+        int result = 0;
+        //获取状态栏高度的资源id
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId);
+        }
+        statusBarHeight = result;
     }
 }
