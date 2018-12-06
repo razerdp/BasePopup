@@ -572,27 +572,24 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
     @Override
     public void onKeyboardChange(int keyboardHeight, boolean isVisible) {
-        if (mHelper.getSoftInputMode() != WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN &&
-                mHelper.getSoftInputMode() != WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE) {
-            if (mHelper.getSoftInputMode() != (WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)) {
-                return;
+        if (mHelper.getSoftInputMode() == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN ||
+                mHelper.getSoftInputMode() == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE) {
+            View focusView = findFocus();
+            if (focusView == null) return;
+            focusView.getGlobalVisibleRect(viewRect);
+            if (isVisible) {
+                int keyboardTop = getScreenHeight() - keyboardHeight;
+                if (viewRect.bottom > keyboardTop) {
+                    offset = viewRect.bottom - keyboardTop;
+                }
+            } else {
+                offset = 0;
             }
+            mTarget.animate()
+                    .translationY(-offset)
+                    .setDuration(300)
+                    .start();
+            PopupLogUtil.trace("onKeyboardChange : isVisible = " + isVisible + "  offset = " + offset);
         }
-        View focusView = findFocus();
-        if (focusView == null) return;
-        focusView.getGlobalVisibleRect(viewRect);
-        if (isVisible) {
-            int keyboardTop = getScreenHeight() - keyboardHeight;
-            if (viewRect.bottom > keyboardTop) {
-                offset = viewRect.bottom - keyboardTop;
-            }
-        } else {
-            offset = 0;
-        }
-        mTarget.animate()
-                .translationY(-offset)
-                .setDuration(300)
-                .start();
-        PopupLogUtil.trace("onKeyboardChange : isVisible = " + isVisible + "  offset = " + offset);
     }
 }

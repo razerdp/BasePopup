@@ -898,8 +898,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public BasePopupWindow setAdjustInputMethod(boolean needAdjust, int flag) {
         if (needAdjust) {
             mPopupWindow.setSoftInputMode(flag);
+            setSoftInputMode(flag);
         } else {
             mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+            setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         }
         return this;
     }
@@ -912,6 +914,18 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public BasePopupWindow setAutoShowInputMethod(EditText editText, boolean autoShow) {
         mHelper.setAutoShowInputMethod(mPopupWindow, autoShow);
         mAutoShowInputEdittext = editText;
+        return this;
+    }
+
+    /**
+     * 设置是否适配输入法
+     *
+     * @param softInputMode The desired mode, see
+     *                      {@link android.view.WindowManager.LayoutParams#softInputMode}
+     *                      for the full list
+     */
+    public BasePopupWindow setSoftInputMode(int softInputMode) {
+        mHelper.setSoftInputMode(softInputMode);
         return this;
     }
 
