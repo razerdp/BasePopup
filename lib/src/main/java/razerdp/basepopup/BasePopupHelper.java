@@ -20,7 +20,7 @@ import razerdp.library.R;
  * <p>
  * popupoption
  */
-final class BasePopupHelper implements PopupTouchController, PopupWindowActionListener, PopupWindowLocationListener {
+final class BasePopupHelper implements PopupTouchController, PopupWindowActionListener, PopupWindowLocationListener, PopupKeyboardStateChangeListener {
 
     private int contentViewLayoutId;
 
@@ -75,9 +75,12 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     private PopupTouchController mTouchControllerDelegate;
     private PopupWindowActionListener mActionListener;
     private PopupWindowLocationListener mLocationListener;
+    private PopupKeyboardStateChangeListener mKeyboardStateChangeListener;
 
     private boolean mClipChildren = true;
     private boolean mClipToScreen = true;
+
+    private int mSoftInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
 
     BasePopupHelper(PopupTouchController controller) {
         mAnchorViewLocation = new int[2];
@@ -91,6 +94,11 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     BasePopupHelper registerLocationLisener(PopupWindowLocationListener locationListener) {
         this.mLocationListener = locationListener;
+        return this;
+    }
+
+    BasePopupHelper registerKeyboardStateChangeListener(PopupKeyboardStateChangeListener mKeyboardStateChangeListener) {
+        this.mKeyboardStateChangeListener = mKeyboardStateChangeListener;
         return this;
     }
 
@@ -248,6 +256,11 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         if (popupWindow == null) return this;
         this.autoShowInputMethod = autoShowInputMethod;
         popupWindow.setSoftInputMode(autoShowInputMethod ? WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE : WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED);
+        return this;
+    }
+
+    public BasePopupHelper setSoftInputMode(int inputMethodType) {
+        mSoftInputMode = inputMethodType;
         return this;
     }
 
@@ -474,6 +487,17 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     public void onAnchorBottom() {
         if (mLocationListener != null) {
             mLocationListener.onAnchorBottom();
+        }
+    }
+
+    public int getSoftInputMode() {
+        return mSoftInputMode;
+    }
+
+    @Override
+    public void onKeyboardChange(int keyboardHeight, boolean isVisible) {
+        if (mKeyboardStateChangeListener != null) {
+            mKeyboardStateChangeListener.onKeyboardChange(keyboardHeight, isVisible);
         }
     }
 }

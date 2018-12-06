@@ -223,6 +223,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
@@ -236,6 +237,7 @@ import java.util.List;
 import razerdp.blur.PopupBlurOption;
 import razerdp.interceptor.PopupWindowEventInterceptor;
 import razerdp.util.InputMethodUtils;
+import razerdp.util.PopupUtil;
 import razerdp.util.SimpleAnimationUtils;
 import razerdp.util.log.LogTag;
 import razerdp.util.log.PopupLogUtil;
@@ -351,6 +353,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     //重试次数
     private int retryCounter;
     private EditText mAutoShowInputEdittext;
+
+    private GlobalLayoutListenerWrapper mGlobalLayoutListenerWrapper;
 
     public BasePopupWindow(Context context) {
         this(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -660,6 +664,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     //------------------------------------------Methods-----------------------------------------------
     private void tryToShowPopup(View v) {
+        addGlobalListener();
         if (mEventInterceptor != null && mEventInterceptor.onTryToShowPopup(this,
                 mPopupWindow,
                 v,
@@ -713,6 +718,30 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             retryToShowPopup(v);
             PopupLogUtil.trace(LogTag.e, TAG, "show error\n" + e);
             e.printStackTrace();
+        }
+    }
+
+
+    private void addGlobalListener() {
+        if (mGlobalLayoutListenerWrapper != null && mGlobalLayoutListenerWrapper.isAttached()) {
+            return;
+        }
+        Activity activity = PopupUtil.scanForActivity(getContext(), 50);
+        if (activity == null) return;
+        View decorView = activity.getWindow() == null ? null : activity.getWindow().getDecorView();
+        if (decorView == null) return;
+        mGlobalLayoutListenerWrapper = new GlobalLayoutListenerWrapper(decorView, new OnKeyboardStateChangeListener() {
+            @Override
+            public void onKeyboardChange(int keyboardHeight, boolean isVisible) {
+                mHelper.onKeyboardChange(keyboardHeight, isVisible);
+            }
+        });
+        mGlobalLayoutListenerWrapper.addSelf();
+    }
+
+    private void removeGlobalListener() {
+        if (mGlobalLayoutListenerWrapper != null) {
+            mGlobalLayoutListenerWrapper.remove();
         }
     }
 
@@ -770,6 +799,22 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         mHelper.getAnchorLocation(anchorView);
 
         if (!intercepted && anchorView != null) {
+            onCalculateOffsetAdjust(anchorView, offset);
+        }
+
+        return offset;
+
+    }
+
+    /**
+     * 针对不同的情况进行调整偏移量
+     * <p>
+     * 针对RecyclerView等非提前测量到的值无效
+     *
+     * @see PopupDecorViewProxy#layoutWithIntercept(int, int, int, int)
+     */
+    private void onCalculateOffsetAdjust(View anchorView, Point offset) {
+        if (anchorView != null) {
             //由于showAsDropDown系统已经帮我们定位在view的下方，因此这里的offset我们仅需要做微量偏移
 
             switch (getPopupGravity() & Gravity.HORIZONTAL_GRAVITY_MASK) {
@@ -810,7 +855,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 "\noffsetX = " + offset.x +
                 "\noffsetY = " + offset.y);
 
-        if (mHelper.isAutoLocatePopup() && intercepted) {
+        if (mHelper.isAutoLocatePopup()) {
             final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offset.y) < getHeight());
             if (onTop) {
                 offset.y = -anchorView.getHeight() - getHeight() - offset.y;
@@ -819,8 +864,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 onAnchorBottom();
             }
         }
-        return offset;
-
     }
 
     /**
@@ -1447,6 +1490,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         } else {
             dismissWithOutAnimate();
         }
+        removeGlobalListener();
     }
 
     @Override
@@ -1495,6 +1539,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         mPopupWindow.callSuperDismiss();
         mHelper.onDismiss(false);
+        removeGlobalListener();
     }
 
 
@@ -1578,7 +1623,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return result;
     }
 
-    //------------------------------------------Anima-----------------------------------------------
+    //------------------------------------------Animate-----------------------------------------------
 
     private Animator.AnimatorListener mAnimatorListener = new AnimatorListenerAdapter() {
 
@@ -1831,4 +1876,67 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             return true;
         }
     }
+
+    interface OnKeyboardStateChangeListener {
+        void onKeyboardChange(int keyboardHeight, boolean isVisible);
+    }
+
+    //------------------------------------------InnerClass-----------------------------------------------
+    private class GlobalLayoutListenerWrapper implements ViewTreeObserver.OnGlobalLayoutListener {
+
+        private View target;
+        private OnKeyboardStateChangeListener mListener;
+        int preKeyboardHeight = -1;
+        Rect rect = new Rect();
+        boolean preVisible = false;
+        private volatile boolean isAttached;
+
+        public GlobalLayoutListenerWrapper(View target, OnKeyboardStateChangeListener listener) {
+            this.target = target;
+            mListener = listener;
+            isAttached = false;
+        }
+
+        public boolean isAttached() {
+            return isAttached;
+        }
+
+        public void addSelf() {
+            if (target != null) {
+                target.getViewTreeObserver().addOnGlobalLayoutListener(this);
+                isAttached = true;
+            }
+
+        }
+
+        public void remove() {
+            if (target != null) {
+                target.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                isAttached = false;
+            }
+        }
+
+        @Override
+        public void onGlobalLayout() {
+            if (target == null) return;
+            rect.setEmpty();
+            target.getWindowVisibleDisplayFrame(rect);
+            int displayHeight = rect.height();
+            int windowHeight = target.getHeight();
+            int keyboardHeight = windowHeight - displayHeight;
+            if (preKeyboardHeight != keyboardHeight) {
+                //判定可见区域与原来的window区域占比是否小于0.75,小于意味着键盘弹出来了。
+                boolean isVisible = (displayHeight * 1.0f / windowHeight * 1.0f) < 0.75f;
+                if (isVisible != preVisible) {
+                    if (mListener != null) {
+                        mListener.onKeyboardChange(keyboardHeight, isVisible);
+                    }
+                    preVisible = isVisible;
+                }
+                Log.d("keyboard", "onGlobalLayout: " + isVisible + "  height = " + keyboardHeight);
+            }
+            preKeyboardHeight = keyboardHeight;
+        }
+    }
+
 }

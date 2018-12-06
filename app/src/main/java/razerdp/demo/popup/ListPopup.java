@@ -40,6 +40,7 @@ public class ListPopup extends BasePopupWindow {
         mListView = (ListView) findViewById(R.id.popup_list);
         setAdapter(context, builder);
         setPopupGravity(Gravity.CENTER);
+        setClipChildren(false);
     }
 
     public static class Builder {
