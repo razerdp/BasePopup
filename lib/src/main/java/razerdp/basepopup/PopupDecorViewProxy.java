@@ -138,6 +138,8 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
             }
         } else {
+            wp.width = mHelper.getParaseFromXmlParams().width;
+            wp.height = mHelper.getParaseFromXmlParams().height;
             childLeftMargin = mHelper.getParaseFromXmlParams().leftMargin;
             childTopMargin = mHelper.getParaseFromXmlParams().topMargin;
             childRightMargin = mHelper.getParaseFromXmlParams().rightMargin;
@@ -228,9 +230,6 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        if (!changed) {
-            return;
-        }
         if (mHelper.isInterceptTouchEvent()) {
             layoutWithIntercept(l, t, r, b);
         } else {
@@ -546,6 +545,11 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mHelper.registerKeyboardStateChangeListener(null);
+    }
+
+    @Override
+    public boolean shouldDelayChildPressedState() {
+        return false;
     }
 
     //-----------------------------------------keyboard-----------------------------------------
