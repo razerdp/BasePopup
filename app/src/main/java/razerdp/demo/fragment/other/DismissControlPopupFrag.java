@@ -140,7 +140,6 @@ public class DismissControlPopupFrag extends SimpleBaseFrag {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(view.getContext(), adapter.getItem(position), Toast.LENGTH_SHORT).show();
-                mDismissControlPopup.dismiss();
             }
         });
 
