@@ -50,6 +50,7 @@ public class QuickPopup extends BasePopupWindow {
 
         setClipChildren(config.isClipChildren());
 
+        setAllowInterceptTouchEvent(config.isAllowInterceptTouchEvent());
         setPopupGravity(config.getGravity());
         setAlignBackground(config.isAlignBackground());
         setAutoLocatePopup(config.isAutoLocated());

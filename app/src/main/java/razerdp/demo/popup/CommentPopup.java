@@ -49,7 +49,6 @@ public class CommentPopup extends BasePopupWindow implements View.OnClickListene
 
         buildAnima();
         setBackground(0);
-        setClipChildren(true);
         setAllowDismissWhenTouchOutside(true);
         setPopupGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
         setBlurBackgroundEnable(true);

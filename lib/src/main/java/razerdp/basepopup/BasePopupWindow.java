@@ -479,7 +479,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * <li>{@link #getDefaultScaleAnimation()}：得到一个默认的放大缩小动画</li>
      * <li>{@link #getTranslateVerticalAnimation(float, float, int)} ()}：快速获取垂直方向的动画</li>
      * </ul>
-     * </p>
+     * <p>
+     * 如果需要用到属性动画，请覆写{@link #onCreateShowAnimator()}
      *
      * @return 返回显示PopupWindow的动画
      */
@@ -503,6 +504,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * <li>{@link #getTranslateVerticalAnimation(float, float, int)} ()}：快速获取垂直方向的动画</li>
      * </ul>
      * </p>
+     * <p>
+     * 如果需要用到属性动画，请覆写{@link #onCreateDismissAnimator()} ()}
      *
      * @return 返回PopupWindow消失前的动画
      */
@@ -1422,14 +1425,27 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 取消一个PopupWindow，如果有退出动画，PopupWindow的消失将会在动画结束后执行
      */
     public void dismiss() {
-        try {
-            if (mAutoShowInputEdittext != null && mHelper.isAutoShowInputMethod()) {
-                InputMethodUtils.close(mAutoShowInputEdittext);
+        dismiss(true);
+    }
+
+    /**
+     * 取消一个PopupWindow，如果有退出动画，PopupWindow的消失将会在动画结束后执行
+     *
+     * @param animateDismiss 传入为true，则执行退出动画后dismiss（如果有的话）
+     */
+    public void dismiss(boolean animateDismiss) {
+        if (animateDismiss) {
+            try {
+                if (mAutoShowInputEdittext != null && mHelper.isAutoShowInputMethod()) {
+                    InputMethodUtils.close(mAutoShowInputEdittext);
+                }
+                mPopupWindow.dismiss();
+            } catch (Exception e) {
+                PopupLogUtil.trace(LogTag.e, TAG, "dismiss error");
+                e.printStackTrace();
             }
-            mPopupWindow.dismiss();
-        } catch (Exception e) {
-            PopupLogUtil.trace(LogTag.e, TAG, "dismiss error");
-            e.printStackTrace();
+        } else {
+            dismissWithOutAnimate();
         }
     }
 
@@ -1440,27 +1456,27 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     @Override
     public boolean callDismissAtOnce() {
-        boolean hasAnima = false;
+        boolean hasAnimate = false;
         if (mHelper.getDismissAnimation() != null && mDisplayAnimateView != null) {
             if (!isExitAnimatePlaying) {
                 mHelper.getDismissAnimation().setAnimationListener(mAnimationListener);
                 mHelper.getDismissAnimation().cancel();
                 mDisplayAnimateView.startAnimation(mHelper.getDismissAnimation());
-                hasAnima = true;
+                hasAnimate = true;
             }
         } else if (mHelper.getDismissAnimator() != null) {
             if (!isExitAnimatePlaying) {
                 mHelper.getDismissAnimator().removeListener(mAnimatorListener);
                 mHelper.getDismissAnimator().addListener(mAnimatorListener);
                 mHelper.getDismissAnimator().start();
-                hasAnima = true;
+                hasAnimate = true;
             }
         }
-        if (!hasAnima) {
+        if (!hasAnimate) {
             mHelper.onDismiss(false);
         }
         //如果有动画，则不立刻执行dismiss
-        return !hasAnima;
+        return !hasAnimate;
     }
 
     /**
