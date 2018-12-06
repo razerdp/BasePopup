@@ -219,7 +219,6 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -379,6 +378,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         mDisplayAnimateView = onCreateAnimateView();
         if (mDisplayAnimateView == null) {
             mDisplayAnimateView = mContentView;
+        }
+        if (mHelper.getParaseFromXmlParams() != null) {
+            w = mHelper.getParaseFromXmlParams().width;
+            h = mHelper.getParaseFromXmlParams().height;
         }
 
         //默认占满全屏
@@ -949,12 +952,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @return root View of the layout
      */
     public View createPopupById(int layoutId) {
-        if (layoutId != 0) {
-            mHelper.setContentViewLayoutId(layoutId);
-            return LayoutInflater.from(getContext()).inflate(layoutId, null);
-        } else {
-            return null;
-        }
+        return mHelper.inflate(getContext(), layoutId);
     }
 
     /**

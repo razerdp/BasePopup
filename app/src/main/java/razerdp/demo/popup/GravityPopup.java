@@ -3,7 +3,6 @@ package razerdp.demo.popup;
 import android.app.Activity;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 
@@ -18,7 +17,7 @@ import razerdp.demo.utils.ToastUtils;
 public class GravityPopup extends BasePopupWindow implements View.OnClickListener {
 
     public GravityPopup(Activity context) {
-        super(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        super(context);
         setPopupFadeEnable(true);
         bindEvent();
     }

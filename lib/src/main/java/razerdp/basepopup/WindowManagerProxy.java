@@ -100,7 +100,6 @@ final class WindowManagerProxy implements WindowManager {
     private ViewGroup.LayoutParams fitLayoutParamsPosition(ViewGroup.LayoutParams params) {
         if (params instanceof WindowManager.LayoutParams) {
             WindowManager.LayoutParams p = (LayoutParams) params;
-            p.type = LayoutParams.TYPE_APPLICATION_SUB_PANEL;
             BasePopupHelper helper = getBasePopupHelper();
             if (helper != null && helper.isInterceptTouchEvent()) {
                 //偏移交给PopupDecorViewProxy处理，此处固定为0

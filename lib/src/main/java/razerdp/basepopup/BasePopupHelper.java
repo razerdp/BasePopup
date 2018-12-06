@@ -1,15 +1,19 @@
 package razerdp.basepopup;
 
 import android.animation.Animator;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 
 import razerdp.blur.PopupBlurOption;
@@ -21,8 +25,6 @@ import razerdp.library.R;
  * popupoption
  */
 final class BasePopupHelper implements PopupTouchController, PopupWindowActionListener, PopupWindowLocationListener, PopupKeyboardStateChangeListener {
-
-    private int contentViewLayoutId;
 
     //是否自动弹出输入框(default:false)
     private boolean autoShowInputMethod = false;
@@ -81,6 +83,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     private boolean mClipToScreen = true;
 
     private int mSoftInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
+    private ViewGroup.MarginLayoutParams mParaseFromXmlParams;
 
     BasePopupHelper(PopupTouchController controller) {
         mAnchorViewLocation = new int[2];
@@ -102,9 +105,25 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return this;
     }
 
-    public BasePopupHelper setContentViewLayoutId(int contentViewLayoutId) {
-        this.contentViewLayoutId = contentViewLayoutId;
-        return this;
+    public View inflate(Context context, int layoutId) {
+        try {
+            FrameLayout tempLayout = new FrameLayout(context);
+            View result = LayoutInflater.from(context).inflate(layoutId, tempLayout, false);
+            ViewGroup.LayoutParams childParams = result.getLayoutParams();
+            if (childParams != null) {
+                if (childParams instanceof ViewGroup.MarginLayoutParams) {
+                    mParaseFromXmlParams = new ViewGroup.MarginLayoutParams((ViewGroup.MarginLayoutParams) childParams);
+                    tempLayout = null;
+                    return result;
+                }
+                mParaseFromXmlParams = new ViewGroup.MarginLayoutParams(childParams);
+                tempLayout = null;
+                return result;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     Animation getShowAnimation() {
@@ -319,10 +338,6 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return this;
     }
 
-    public int getContentViewLayoutId() {
-        return contentViewLayoutId;
-    }
-
     BasePopupHelper getAnchorLocation(View v) {
         if (v == null) return this;
         v.getLocationOnScreen(mAnchorViewLocation);
@@ -424,6 +439,10 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     public boolean isClipChildren() {
         return mClipChildren;
+    }
+
+    public ViewGroup.MarginLayoutParams getParaseFromXmlParams() {
+        return mParaseFromXmlParams;
     }
 
     //-----------------------------------------controller-----------------------------------------

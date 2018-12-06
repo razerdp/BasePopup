@@ -8,12 +8,10 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 
 import razerdp.util.log.LogTag;
 import razerdp.util.log.PopupLogUtil;
@@ -113,34 +111,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         wp.x = 0;
         wp.y = 0;
 
-        boolean parseLayoutParamsFromXML = false;
-
-        if (mHelper.getContentViewLayoutId() != 0) {
-            try {
-                FrameLayout tempLayout = new FrameLayout(getContext());
-                View tempView = LayoutInflater.from(getContext()).inflate(mHelper.getContentViewLayoutId(), tempLayout, false);
-                ViewGroup.LayoutParams childParams = tempView.getLayoutParams();
-                if (childParams != null) {
-                    wp.width = childParams.width;
-                    wp.height = childParams.height;
-                    if (childParams instanceof ViewGroup.MarginLayoutParams) {
-                        MarginLayoutParams marginChildParams = ((MarginLayoutParams) childParams);
-                        childLeftMargin = marginChildParams.leftMargin;
-                        childTopMargin = marginChildParams.topMargin;
-                        childRightMargin = marginChildParams.rightMargin;
-                        childBottomMargin = marginChildParams.bottomMargin;
-                    }
-                    parseLayoutParamsFromXML = true;
-                }
-                tempView = null;
-                tempLayout = null;
-            } catch (Exception e) {
-                PopupLogUtil.trace(e);
-                parseLayoutParamsFromXML = false;
-            }
-        }
-
-        if (!parseLayoutParamsFromXML) {
+        if (mHelper.getParaseFromXmlParams() == null) {
             View contentView = findContentView(target);
             boolean hasSet = false;
 
@@ -166,6 +137,11 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 }
 
             }
+        } else {
+            childLeftMargin = mHelper.getParaseFromXmlParams().leftMargin;
+            childTopMargin = mHelper.getParaseFromXmlParams().topMargin;
+            childRightMargin = mHelper.getParaseFromXmlParams().rightMargin;
+            childBottomMargin = mHelper.getParaseFromXmlParams().bottomMargin;
         }
 
         addView(target, wp);
@@ -303,6 +279,8 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                     case Gravity.START:
                         if (isRelativeToAnchor) {
                             childLeft = mHelper.getAnchorX() - width + childLeftMargin;
+                        } else {
+                            childLeft += childLeftMargin;
                         }
                         break;
                     case Gravity.RIGHT:
@@ -332,6 +310,8 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                     case Gravity.TOP:
                         if (isRelativeToAnchor) {
                             childTop = mHelper.getAnchorY() - height + childTopMargin;
+                        } else {
+                            childTop += childTopMargin;
                         }
                         break;
                     case Gravity.BOTTOM:
@@ -352,6 +332,8 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                     default:
                         if (isRelativeToAnchor) {
                             childTop = mHelper.getAnchorY() + mHelper.getAnchorHeight() + childTopMargin;
+                        } else {
+                            childTop += childTopMargin;
                         }
                         break;
                 }
