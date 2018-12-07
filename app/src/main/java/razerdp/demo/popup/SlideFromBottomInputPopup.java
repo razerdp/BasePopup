@@ -1,6 +1,7 @@
 package razerdp.demo.popup;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.EditText;
@@ -16,7 +17,7 @@ public class SlideFromBottomInputPopup extends BasePopupWindow {
     EditText mEditText;
 
     public SlideFromBottomInputPopup(Context context) {
-        super(context);
+        super(context, MATCH_PARENT, WRAP_CONTENT);
         mEditText = findViewById(R.id.ed_input);
         findViewById(R.id.btn_send).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -26,16 +27,17 @@ public class SlideFromBottomInputPopup extends BasePopupWindow {
             }
         });
         setAutoShowInputMethod(mEditText, true);
+        setPopupGravity(Gravity.BOTTOM);
     }
 
     @Override
     protected Animation onCreateShowAnimation() {
-        return getTranslateVerticalAnimation(1f, 0, 500);
+        return getTranslateVerticalAnimation(1f, 0, 350);
     }
 
     @Override
     protected Animation onCreateDismissAnimation() {
-        return getTranslateVerticalAnimation(0, 1f, 500);
+        return getTranslateVerticalAnimation(0, 1f, 350);
     }
 
     @Override

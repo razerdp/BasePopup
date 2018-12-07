@@ -1,6 +1,7 @@
 package razerdp.demo.popup;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -17,7 +18,7 @@ import razerdp.basepopup.R;
  * dialogpopup :)
  * 客串一下dialog
  */
-public class DialogPopup extends BasePopupWindow implements View.OnClickListener{
+public class DialogPopup extends BasePopupWindow implements View.OnClickListener {
 
     private TextView ok;
     private TextView cancel;
@@ -25,16 +26,17 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
     public DialogPopup(Context context) {
         super(context);
 
-        ok= (TextView) findViewById(R.id.ok);
-        cancel= (TextView) findViewById(R.id.cancel);
+        ok = (TextView) findViewById(R.id.ok);
+        cancel = (TextView) findViewById(R.id.cancel);
 
-        setViewClickListener(this,ok,cancel);
+        setViewClickListener(this, ok, cancel);
+        setPopupGravity(Gravity.CENTER);
     }
 
     @Override
     protected Animation onCreateShowAnimation() {
-        AnimationSet set=new AnimationSet(false);
-        Animation shakeAnima=new RotateAnimation(0,15,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+        AnimationSet set = new AnimationSet(false);
+        Animation shakeAnima = new RotateAnimation(0, 15, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         shakeAnima.setInterpolator(new CycleInterpolator(5));
         shakeAnima.setDuration(400);
         set.addAnimation(getDefaultAlphaAnimation());
@@ -54,12 +56,12 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.ok:
-                Toast.makeText(getContext(),"click the ok button",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "click the ok button", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.cancel:
-                Toast.makeText(getContext(),"click the cancel button",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "click the cancel button", Toast.LENGTH_SHORT).show();
                 dismiss();
                 break;
             default:

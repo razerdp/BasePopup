@@ -4,8 +4,13 @@
       tools:context="razerdp.demo.DemoActivity">
     <item
         android:id="@+id/id_full_activity"
-        android:orderInCategory="99"
+        android:orderInCategory="98"
         android:title="全屏Activity"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_leakcanary_activity"
+        android:orderInCategory="99"
+        android:title="检查泄漏Activity"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_scale_popup"
@@ -51,11 +56,6 @@
         android:id="@+id/id_dialog_popup"
         android:orderInCategory="108"
         android:title="对话框Popup"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/id_custom_interpolator_popup"
-        android:orderInCategory="109"
-        android:title="动画插值器Popup"
         app:showAsAction="never"/>
     <item
         android:id="@+id/id_auto_located_popup"

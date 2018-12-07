@@ -1,26 +1,20 @@
-package razerdp.demo.fragment;
+package razerdp.demo.fragment.other;
 
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.demo.popup.ScalePopup;
+import razerdp.demo.popup.SlideFromBottomInputPopup;
 
 /**
- * Created by 大灯泡 on 2016/1/15.
+ * Created by 大灯泡 on 2018/10/8.
  */
-public class ScalePopupFrag extends SimpleBaseFrag {
-
-    private ScalePopup scalePopup;
-
-
+public class BottomInputFragment extends SimpleBaseFrag {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -30,19 +24,12 @@ public class ScalePopupFrag extends SimpleBaseFrag {
 
     @Override
     public void bindEvent() {
-        scalePopup=new ScalePopup(mContext);
-        scalePopup.setOnDismissListener(new BasePopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                Toast.makeText(mContext,"dismiss",Toast.LENGTH_SHORT).show();
-            }
-        });
 
     }
 
     @Override
     public BasePopupWindow getPopup() {
-        return scalePopup;
+        return new SlideFromBottomInputPopup(mContext);
     }
 
     @Override
@@ -52,6 +39,6 @@ public class ScalePopupFrag extends SimpleBaseFrag {
 
     @Override
     public View getFragment() {
-        return mInflater.inflate(R.layout.frag_scale_popup, container, false);
+        return mInflater.inflate(R.layout.frag_slide_from_bottom_popup, container, false);
     }
 }

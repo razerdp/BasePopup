@@ -217,24 +217,24 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
+import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 
-import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import razerdp.blur.PopupBlurOption;
-import razerdp.controller.PopupWindowEventInterceptor;
+import razerdp.interceptor.PopupWindowEventInterceptor;
 import razerdp.util.InputMethodUtils;
 import razerdp.util.PopupUtil;
 import razerdp.util.SimpleAnimationUtils;
@@ -308,6 +308,7 @@ import razerdp.widget.QuickPopup;
  * 重大版本修正记录：
  * <ul>
  * <li>2018/05/14 ： 2.0版本重构</li>
+ * <li>2018/11/29 ： 2.1版本二次重构</li>
  * </ul>
  * </p>
  * 頂頂頂頂頂頂頂　頂頂頂頂頂頂頂頂頂頂頂
@@ -328,9 +329,11 @@ import razerdp.widget.QuickPopup;
  * @version 2.0
  * @since 2016/1/14
  */
-public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismissListener, PopupTouchController {
+public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismissListener, PopupTouchController, PopupWindowLocationListener {
     private static final String TAG = "BasePopupWindow";
     private static final int MAX_RETRY_SHOW_TIME = 3;
+    public static final int MATCH_PARENT = ViewGroup.LayoutParams.MATCH_PARENT;
+    public static final int WRAP_CONTENT = ViewGroup.LayoutParams.WRAP_CONTENT;
 
     private BasePopupHelper mHelper;
     public static int SCREEN_WIDTH = 0;
@@ -343,17 +346,17 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     //popup视图
     private View mContentView;
     protected View mDisplayAnimateView;
-    private HashMap<Integer, Pair<SoftReference<View>, Rect>> mIgnoreDismissViewMaps;
 
     private volatile boolean isExitAnimatePlaying = false;
 
     //重试次数
     private int retryCounter;
-    private InnerPopupWindowStateListener mStateListener;
     private EditText mAutoShowInputEdittext;
 
+    private GlobalLayoutListenerWrapper mGlobalLayoutListenerWrapper;
+
     public BasePopupWindow(Context context) {
-        this(context, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        this(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     public BasePopupWindow(Context context, int w, int h) {
@@ -369,78 +372,90 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     private void initView(Context context, int w, int h) {
         mContext = new WeakReference<Context>(context);
-        mHelper = new BasePopupHelper();
+        mHelper = new BasePopupHelper(this);
+        registerListener(mHelper);
         mContentView = onCreateContentView();
         mDisplayAnimateView = onCreateAnimateView();
         if (mDisplayAnimateView == null) {
             mDisplayAnimateView = mContentView;
         }
+        if (mHelper.getParaseFromXmlParams() != null) {
+            w = mHelper.getParaseFromXmlParams().width;
+            h = mHelper.getParaseFromXmlParams().height;
+        }
 
         //默认占满全屏
-        mPopupWindow = new PopupWindowProxy(mContentView, w, h, this);
-        if (mContentView instanceof ViewGroup) {
-            //取第一层子控件，用于自动适配非内容区域
-            ViewGroup tContentView = ((ViewGroup) mContentView);
-            final int childCount = tContentView.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                View child = tContentView.getChildAt(i);
-                addIgnoreDismissView(child);
-            }
-        }
+        mPopupWindow = new PopupWindowProxy(mContentView, w, h, mHelper);
         mPopupWindow.setOnDismissListener(this);
         mPopupWindow.bindPopupHelper(mHelper);
         setAllowDismissWhenTouchOutside(true);
+        setPopupAnimationStyle(0);
 
         mHelper.setPopupViewWidth(w);
         mHelper.setPopupViewHeight(h);
 
+        hookContentViewDismissClick(w, h);
         preMeasurePopupView(w, h);
 
-        //针对match_parent的popup寻找外部
-        if (w == ViewGroup.LayoutParams.MATCH_PARENT && h == ViewGroup.LayoutParams.MATCH_PARENT) {
-            if (mContentView != null && !(mContentView instanceof AdapterView)) {
-                mContentView.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        switch (event.getAction()) {
-                            case MotionEvent.ACTION_DOWN:
-                                return isAllowDismissWhenTouchOutside();
-                            case MotionEvent.ACTION_UP:
-                                if (isAllowDismissWhenTouchOutside()) {
-                                    v.performClick();
-                                    int x = (int) event.getX();
-                                    int y = (int) event.getY();
-                                    int containsTouchCount = 0;
-                                    if (mIgnoreDismissViewMaps != null) {
-                                        Collection<Pair<SoftReference<View>, Rect>> values = mIgnoreDismissViewMaps.values();
-                                        for (Pair<SoftReference<View>, Rect> value : values) {
-                                            if (value.first == null || value.first.get() == null || value.second == null) {
-                                                continue;
-                                            }
-                                            View ignoreTarget = value.first.get();
-                                            Rect bounds = value.second;
-                                            ignoreTarget.getGlobalVisibleRect(bounds);
-                                            if (bounds.contains(x, y)) {
-                                                containsTouchCount++;
-                                            }
-                                        }
-                                        if (containsTouchCount <= 0) {
-                                            dismiss();
-                                        }
-                                    }
-                                }
-                                break;
-                        }
-                        return false;
-                    }
-                });
-            }
-        }
         //show or dismiss animate
         mHelper.setShowAnimation(onCreateShowAnimation())
                 .setShowAnimator(onCreateShowAnimator())
                 .setDismissAnimation(onCreateDismissAnimation())
                 .setDismissAnimator(onCreateDismissAnimator());
+    }
+
+    private void registerListener(BasePopupHelper helper) {
+        helper.registerLocationLisener(this);
+    }
+
+    //针对match_parent的popup寻找点击消失区域
+    private void hookContentViewDismissClick(int w, int h) {
+        if (w != MATCH_PARENT || h != MATCH_PARENT) return;
+        if (mContentView != null && !(mContentView instanceof AdapterView) && mContentView instanceof ViewGroup) {
+            ViewGroup vp = ((ViewGroup) mContentView);
+            final int childCount = vp.getChildCount();
+            final List<Pair<WeakReference<View>, Rect>> protectViews = new ArrayList<>(childCount);
+            for (int i = 0; i < childCount; i++) {
+                View child = vp.getChildAt(i);
+                if (child.getVisibility() != View.VISIBLE) continue;
+                protectViews.add(Pair.create(new WeakReference<View>(child), new Rect()));
+            }
+            mContentView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            return isAllowDismissWhenTouchOutside();
+                        case MotionEvent.ACTION_UP:
+                            if (isAllowDismissWhenTouchOutside()) {
+                                v.performClick();
+                                int x = (int) event.getX();
+                                int y = (int) event.getY();
+                                boolean interceptDismiss = false;
+                                for (Pair<WeakReference<View>, Rect> protectView : protectViews) {
+                                    if (protectView.first == null || protectView.first.get() == null || protectView.second == null) {
+                                        continue;
+                                    }
+                                    View ignoreTarget = protectView.first.get();
+                                    Rect bounds = protectView.second;
+                                    ignoreTarget.getGlobalVisibleRect(bounds);
+                                    if (bounds.contains(x, y)) {
+                                        interceptDismiss = true;
+                                        break;
+                                    }
+                                }
+                                if (!interceptDismiss) {
+                                    dismiss();
+                                }
+                            }
+                            break;
+                    }
+                    return false;
+                }
+            });
+
+        }
+
     }
 
     private void preMeasurePopupView(int w, int h) {
@@ -471,7 +486,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * <li>{@link #getDefaultScaleAnimation()}：得到一个默认的放大缩小动画</li>
      * <li>{@link #getTranslateVerticalAnimation(float, float, int)} ()}：快速获取垂直方向的动画</li>
      * </ul>
-     * </p>
+     * <p>
+     * 如果需要用到属性动画，请覆写{@link #onCreateShowAnimator()}
      *
      * @return 返回显示PopupWindow的动画
      */
@@ -495,6 +511,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * <li>{@link #getTranslateVerticalAnimation(float, float, int)} ()}：快速获取垂直方向的动画</li>
      * </ul>
      * </p>
+     * <p>
+     * 如果需要用到属性动画，请覆写{@link #onCreateDismissAnimator()} ()}
      *
      * @return 返回PopupWindow消失前的动画
      */
@@ -562,43 +580,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return this;
     }
 
-
-    /**
-     * 在Match_parent情况下，默认整个PopupWindow都是出于dismiss范围
-     * 代码已经默认处理了这种情况，如果您需要特殊指定忽略dismiss的view，则调用该方法指定
-     *
-     * @return
-     * @deprecated 请使用 {@link #addIgnoreDismissView(View...)}
-     */
-    public BasePopupWindow setIgnoreDismissView(View v) {
-        return addIgnoreDismissView(v);
-    }
-
-    /**
-     * 在Match_parent情况下，默认整个PopupWindow都是出于dismiss范围
-     * 代码已经默认处理了这种情况，如果您需要特殊指定忽略dismiss的view，则调用该方法指定
-     *
-     * @return
-     */
-    public BasePopupWindow addIgnoreDismissView(View... views) {
-        if (PopupUtil.isListEmpty(views)) return this;
-        if (mIgnoreDismissViewMaps == null) {
-            mIgnoreDismissViewMaps = new HashMap<>();
-        }
-        for (View view : views) {
-            if (view == null) continue;
-            int id = view.getId();
-            if (id == View.NO_ID) {
-                id = view.hashCode();
-            }
-            if (mIgnoreDismissViewMaps.containsKey(view.getId())) {
-                continue;
-            }
-            mIgnoreDismissViewMaps.put(id,
-                    Pair.create(new SoftReference<View>(view), new Rect()));
-        }
-        return this;
-    }
 
     /**
      * <p>
@@ -677,13 +658,17 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public void showPopupWindow(View anchorView) {
         if (checkPerformShow(anchorView)) {
-            mHelper.setShowAsDropDown(true);
+            if (anchorView != null) {
+                mHelper.setShowAsDropDown(true);
+            }
             tryToShowPopup(anchorView);
         }
     }
 
     //------------------------------------------Methods-----------------------------------------------
     private void tryToShowPopup(View v) {
+        addGlobalListener();
+        mHelper.handleShow();
         if (mEventInterceptor != null && mEventInterceptor.onTryToShowPopup(this,
                 mPopupWindow,
                 v,
@@ -694,17 +679,16 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         try {
             if (isShowing()) return;
-            Point offset;
+            Point offset = calculateOffset(v);
+            if (mEventInterceptor != null) {
+                mEventInterceptor.onCalculateOffsetResult(this, v, offset, mHelper.getOffsetX(), mHelper.getOffsetY());
+            }
             //传递了view
             if (v != null) {
-                offset = calculateOffset(v);
-                if (mEventInterceptor != null) {
-                    mEventInterceptor.onCalculateOffsetResult(this, v, offset, mHelper.getOffsetX(), mHelper.getOffsetY());
-                }
                 if (mHelper.isShowAsDropDown()) {
-                    mPopupWindow.showAsDropDownProxy(v, offset.x, offset.y);
+                    mPopupWindow.showAsDropDownProxy(v, offset.x, offset.y, getPopupGravity());
                 } else {
-                    mPopupWindow.showAtLocationProxy(v, mHelper.getPopupGravity(), offset.x, offset.y);
+                    mPopupWindow.showAtLocationProxy(v, getPopupGravity(), offset.x, offset.y);
                 }
             } else {
                 //什么都没传递，取顶级view的id
@@ -713,15 +697,13 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 if (context instanceof Activity) {
                     mPopupWindow.showAtLocationProxy(((Activity) context).findViewById(android.R.id.content),
                             mHelper.getPopupGravity(),
-                            mHelper.getOffsetX(),
-                            mHelper.getOffsetY());
+                            offset.x,
+                            offset.y);
                 } else {
                     Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
                 }
             }
-            if (mStateListener != null) {
-                mStateListener.onTryToShow(mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
-            }
+            mHelper.onShow(mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
             if (mDisplayAnimateView != null) {
                 if (mHelper.getShowAnimation() != null) {
                     mHelper.getShowAnimation().cancel();
@@ -741,6 +723,31 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             PopupLogUtil.trace(LogTag.e, TAG, "show error\n" + e);
             e.printStackTrace();
         }
+    }
+
+
+    private void addGlobalListener() {
+        if (mGlobalLayoutListenerWrapper != null && mGlobalLayoutListenerWrapper.isAttached()) {
+            return;
+        }
+        Activity activity = PopupUtil.scanForActivity(getContext(), 50);
+        if (activity == null) return;
+        View decorView = activity.getWindow() == null ? null : activity.getWindow().getDecorView();
+        if (decorView == null) return;
+        mGlobalLayoutListenerWrapper = new GlobalLayoutListenerWrapper(decorView, new OnKeyboardStateChangeListener() {
+            @Override
+            public void onKeyboardChange(int keyboardHeight, boolean isVisible) {
+                mHelper.onKeyboardChange(keyboardHeight, isVisible);
+            }
+        });
+        mGlobalLayoutListenerWrapper.addSelf();
+    }
+
+    private void removeGlobalListener() {
+        if (mGlobalLayoutListenerWrapper != null) {
+            mGlobalLayoutListenerWrapper.remove();
+        }
+        mHelper.handleDismiss();
     }
 
     /**
@@ -784,26 +791,84 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     private Point calculateOffset(View anchorView) {
         Point offset = null;
+        boolean intercepted = false;
         if (mEventInterceptor != null) {
             offset = mEventInterceptor.onCalculateOffset(this, anchorView, mHelper.getOffsetX(), mHelper.getOffsetY());
+            if (offset != null) {
+                intercepted = true;
+            }
         }
         if (offset == null) {
             offset = new Point(mHelper.getOffsetX(), mHelper.getOffsetY());
         }
         mHelper.getAnchorLocation(anchorView);
-        if (mHelper.isAutoLocatePopup()) {
-            final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offset.y) < getHeight());
-            PopupLogUtil.trace("screen > " + getScreenHeight() + "  anchorY > " + mHelper.getAnchorY() + "  offsetY > " + offset.y + "  height > " + getHeight());
-            if (onTop) {
-                offset.y = -anchorView.getHeight() - getHeight() - offset.y;
-                mHelper.setInternalOffsetY(offset.y);
-                onAnchorTop(mContentView, anchorView);
-            } else {
-                onAnchorBottom(mContentView, anchorView);
-            }
+
+        if (!intercepted && anchorView != null) {
+            onCalculateOffsetAdjust(anchorView, offset);
         }
+
         return offset;
 
+    }
+
+    /**
+     * 针对不同的情况进行调整偏移量
+     * <p>
+     * 针对RecyclerView等非提前测量到的值无效
+     *
+     * @see PopupDecorViewProxy#layoutWithIntercept(int, int, int, int)
+     */
+    private void onCalculateOffsetAdjust(View anchorView, Point offset) {
+        if (anchorView != null) {
+            //由于showAsDropDown系统已经帮我们定位在view的下方，因此这里的offset我们仅需要做微量偏移
+
+            switch (getPopupGravity() & Gravity.HORIZONTAL_GRAVITY_MASK) {
+                case Gravity.LEFT:
+                case Gravity.START:
+                    offset.x += -getWidth();
+                    break;
+                case Gravity.RIGHT:
+                case Gravity.END:
+                    offset.x += mHelper.getAnchorViewWidth();
+                    break;
+                case Gravity.CENTER_HORIZONTAL:
+                    offset.x += (mHelper.getAnchorViewWidth() - getWidth()) >> 1;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (getPopupGravity() & Gravity.VERTICAL_GRAVITY_MASK) {
+                case Gravity.TOP:
+                    offset.y += -(mHelper.getAnchorHeight() + getHeight());
+                    break;
+                case Gravity.BOTTOM:
+                    //系统默认就在下面.
+                    break;
+                case Gravity.CENTER_VERTICAL:
+                    offset.y += -((getHeight() + mHelper.getAnchorHeight()) >> 1);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        PopupLogUtil.trace("calculateOffset  :: " +
+                "\nscreenHeight = " + getScreenHeight() +
+                "\nanchorX = " + mHelper.getAnchorX() +
+                "\nanchorY = " + mHelper.getAnchorY() +
+                "\noffsetX = " + offset.x +
+                "\noffsetY = " + offset.y);
+
+        if (mHelper.isAutoLocatePopup()) {
+            final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offset.y) < getHeight());
+            if (onTop) {
+                offset.y = -anchorView.getHeight() - getHeight() - offset.y;
+                onAnchorTop();
+            } else {
+                onAnchorBottom();
+            }
+        }
     }
 
     /**
@@ -838,8 +903,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public BasePopupWindow setAdjustInputMethod(boolean needAdjust, int flag) {
         if (needAdjust) {
             mPopupWindow.setSoftInputMode(flag);
+            setSoftInputMode(flag);
         } else {
             mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+            setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         }
         return this;
     }
@@ -852,6 +919,18 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public BasePopupWindow setAutoShowInputMethod(EditText editText, boolean autoShow) {
         mHelper.setAutoShowInputMethod(mPopupWindow, autoShow);
         mAutoShowInputEdittext = editText;
+        return this;
+    }
+
+    /**
+     * 设置是否适配输入法
+     *
+     * @param softInputMode The desired mode, see
+     *                      {@link android.view.WindowManager.LayoutParams#softInputMode}
+     *                      for the full list
+     */
+    public BasePopupWindow setSoftInputMode(int softInputMode) {
+        mHelper.setSoftInputMode(softInputMode);
         return this;
     }
 
@@ -871,15 +950,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 这个方法封装了LayoutInflater.from(context).inflate，方便您设置PopupWindow所用的xml
      * </p>
      *
-     * @param resId reference of layout
+     * @param layoutId reference of layout
      * @return root View of the layout
      */
-    public View createPopupById(int resId) {
-        if (resId != 0) {
-            return LayoutInflater.from(getContext()).inflate(resId, null);
-        } else {
-            return null;
-        }
+    public View createPopupById(int layoutId) {
+        return mHelper.inflate(getContext(), layoutId);
     }
 
     /**
@@ -1223,7 +1298,13 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     /**
-     * 设置参考点，一般情况下，参考对象指的不是指定的view，而是它的windowToken，可以看作为整个screen
+     * <p>
+     * 设置参考点
+     * <br>
+     * <ul>
+     * <li> 不跟anchorView联系的情况下，gravity意味着在整个view中的方位{@link #showPopupWindow()}</li>
+     * <li> 如果跟anchorView联系，gravity意味着以anchorView为中心的方位{@link #showPopupWindow(View)}</li>
+     * </ul>
      *
      * @param popupGravity
      */
@@ -1256,7 +1337,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param autoLocatePopup 是否自适配
      */
     public BasePopupWindow setAutoLocatePopup(boolean autoLocatePopup) {
-        mHelper.setShowAsDropDown(true).setAutoLocatePopup(true);
+        mHelper.setAutoLocatePopup(autoLocatePopup);
         return this;
     }
 
@@ -1320,6 +1401,40 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return this;
     }
 
+    /**
+     * 当{@link #setAllowInterceptTouchEvent(boolean)}为true时，该参数决定popupWindow是否被限制在绘制边界
+     * <p>
+     * <br>
+     * <ul>
+     * <li>true：PopupWindow将会被限制边界，其动画不可突破其边界</li>
+     * <li>false：PopupWindow将不会被限制绘制边界，其动画可突破其边界</li>
+     * </ul>
+     *
+     * @param clipChildren 默认为true
+     */
+    public BasePopupWindow setClipChildren(boolean clipChildren) {
+        mHelper.setClipChildren(clipChildren);
+        return this;
+    }
+
+    /**
+     * 该方法用于指定PopupWindow是否可以突破屏幕
+     * <p>
+     * <br>
+     * <ul>
+     * <li>true：PopupWindow并不能突破屏幕，如果其高宽超出屏幕高宽，则会自动进行位移</li>
+     * <li>false：PopupWindow可以突破屏幕</li>
+     * </ul>
+     * <p>
+     * 如果contentView的宽高大于屏幕宽高，因自动调整，可能会导致{@link #setAutoLocatePopup(boolean)}失效
+     *
+     * @param clipToScreen 默认为true
+     */
+    public BasePopupWindow setClipToScreen(boolean clipToScreen) {
+        mHelper.setClipToScreen(clipToScreen);
+        return this;
+    }
+
     public boolean isAllowDismissWhenTouchOutside() {
         return mHelper.isDismissWhenTouchOutside();
     }
@@ -1362,28 +1477,34 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return this;
     }
 
-    /**
-     * 内部状态监听
-     *
-     * @param listener
-     */
-    void setOnInnerPopupWindowStateListener(InnerPopupWindowStateListener listener) {
-        this.mStateListener = listener;
-    }
 
     /**
      * 取消一个PopupWindow，如果有退出动画，PopupWindow的消失将会在动画结束后执行
      */
     public void dismiss() {
-        try {
-            if (mAutoShowInputEdittext != null && mHelper.isAutoShowInputMethod()) {
-                InputMethodUtils.close(mAutoShowInputEdittext);
+        dismiss(true);
+    }
+
+    /**
+     * 取消一个PopupWindow，如果有退出动画，PopupWindow的消失将会在动画结束后执行
+     *
+     * @param animateDismiss 传入为true，则执行退出动画后dismiss（如果有的话）
+     */
+    public void dismiss(boolean animateDismiss) {
+        if (animateDismiss) {
+            try {
+                if (mAutoShowInputEdittext != null && mHelper.isAutoShowInputMethod()) {
+                    InputMethodUtils.close(mAutoShowInputEdittext);
+                }
+                mPopupWindow.dismiss();
+            } catch (Exception e) {
+                PopupLogUtil.trace(LogTag.e, TAG, "dismiss error");
+                e.printStackTrace();
             }
-            mPopupWindow.dismiss();
-        } catch (Exception e) {
-            PopupLogUtil.trace(LogTag.e, TAG, "dismiss error");
-            e.printStackTrace();
+        } else {
+            dismissWithOutAnimate();
         }
+        removeGlobalListener();
     }
 
     @Override
@@ -1393,29 +1514,27 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     @Override
     public boolean callDismissAtOnce() {
-        boolean hasAnima = false;
+        boolean hasAnimate = false;
         if (mHelper.getDismissAnimation() != null && mDisplayAnimateView != null) {
             if (!isExitAnimatePlaying) {
                 mHelper.getDismissAnimation().setAnimationListener(mAnimationListener);
                 mHelper.getDismissAnimation().cancel();
                 mDisplayAnimateView.startAnimation(mHelper.getDismissAnimation());
-                hasAnima = true;
+                hasAnimate = true;
             }
         } else if (mHelper.getDismissAnimator() != null) {
             if (!isExitAnimatePlaying) {
                 mHelper.getDismissAnimator().removeListener(mAnimatorListener);
                 mHelper.getDismissAnimator().addListener(mAnimatorListener);
                 mHelper.getDismissAnimator().start();
-                hasAnima = true;
+                hasAnimate = true;
             }
         }
-        if (!hasAnima) {
-            if (mStateListener != null) {
-                mStateListener.onNoAnimateDismiss();
-            }
+        if (!hasAnimate) {
+            mHelper.onDismiss(false);
         }
         //如果有动画，则不立刻执行dismiss
-        return !hasAnima;
+        return !hasAnimate;
     }
 
     /**
@@ -1433,9 +1552,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             InputMethodUtils.close(mAutoShowInputEdittext);
         }
         mPopupWindow.callSuperDismiss();
-        if (mStateListener != null) {
-            mStateListener.onNoAnimateDismiss();
-        }
+        mHelper.onDismiss(false);
+        removeGlobalListener();
     }
 
 
@@ -1519,16 +1637,14 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return result;
     }
 
-    //------------------------------------------Anima-----------------------------------------------
+    //------------------------------------------Animate-----------------------------------------------
 
     private Animator.AnimatorListener mAnimatorListener = new AnimatorListenerAdapter() {
 
         @Override
         public void onAnimationStart(Animator animation) {
             isExitAnimatePlaying = true;
-            if (mStateListener != null) {
-                mStateListener.onAnimateDismissStart();
-            }
+            mHelper.onDismiss(true);
         }
 
         @Override
@@ -1554,9 +1670,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         @Override
         public void onAnimationStart(Animation animation) {
             isExitAnimatePlaying = true;
-            if (mStateListener != null) {
-                mStateListener.onAnimateDismissStart();
-            }
+            mHelper.onDismiss(true);
         }
 
         @Override
@@ -1675,11 +1789,30 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     /**
      * 在anchorView上方显示，autoLocatePopup为true时适用
+     */
+    @Override
+    public void onAnchorTop() {
+
+    }
+
+    /**
+     * 在anchorView下方显示，autoLocatePopup为true时适用
+     */
+    @Override
+    public void onAnchorBottom() {
+
+    }
+
+    /**
+     * 在anchorView上方显示，autoLocatePopup为true时适用
      *
      * @param mPopupView {@link #onCreateContentView()}返回的View
      * @param anchorView {@link #showPopupWindow(View)}传入的View
+     * @see #onAnchorTop()
+     * @deprecated 因为contentView和anchorView应由用户自行保存决定，此处不再返回
      */
-    protected void onAnchorTop(View mPopupView, View anchorView) {
+    @Deprecated
+    public void onAnchorTop(View mPopupView, View anchorView) {
 
     }
 
@@ -1688,8 +1821,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *
      * @param mPopupView {@link #onCreateContentView()}返回的View
      * @param anchorView {@link #showPopupWindow(View)}传入的View
+     * @see #onAnchorBottom()
+     * @deprecated 因为contentView和anchorView应由用户自行保存决定，此处不再返回
      */
-    protected void onAnchorBottom(View mPopupView, View anchorView) {
+    @Deprecated
+    public void onAnchorBottom(View mPopupView, View anchorView) {
 
     }
 
@@ -1754,4 +1890,67 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             return true;
         }
     }
+
+    interface OnKeyboardStateChangeListener {
+        void onKeyboardChange(int keyboardHeight, boolean isVisible);
+    }
+
+    //------------------------------------------InnerClass-----------------------------------------------
+    private class GlobalLayoutListenerWrapper implements ViewTreeObserver.OnGlobalLayoutListener {
+
+        private View target;
+        private OnKeyboardStateChangeListener mListener;
+        int preKeyboardHeight = -1;
+        Rect rect = new Rect();
+        boolean preVisible = false;
+        private volatile boolean isAttached;
+
+        public GlobalLayoutListenerWrapper(View target, OnKeyboardStateChangeListener listener) {
+            this.target = target;
+            mListener = listener;
+            isAttached = false;
+        }
+
+        public boolean isAttached() {
+            return isAttached;
+        }
+
+        public void addSelf() {
+            if (target != null) {
+                target.getViewTreeObserver().addOnGlobalLayoutListener(this);
+                isAttached = true;
+            }
+
+        }
+
+        public void remove() {
+            if (target != null) {
+                target.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                isAttached = false;
+            }
+        }
+
+        @Override
+        public void onGlobalLayout() {
+            if (target == null) return;
+            rect.setEmpty();
+            target.getWindowVisibleDisplayFrame(rect);
+            int displayHeight = rect.height();
+            int windowHeight = target.getHeight();
+            int keyboardHeight = windowHeight - displayHeight;
+            if (preKeyboardHeight != keyboardHeight) {
+                //判定可见区域与原来的window区域占比是否小于0.75,小于意味着键盘弹出来了。
+                boolean isVisible = (displayHeight * 1.0f / windowHeight * 1.0f) < 0.75f;
+                if (isVisible != preVisible) {
+                    if (mListener != null) {
+                        mListener.onKeyboardChange(keyboardHeight, isVisible);
+                    }
+                    preVisible = isVisible;
+                }
+                Log.d("keyboard", "onGlobalLayout: " + isVisible + "  height = " + keyboardHeight);
+            }
+            preKeyboardHeight = keyboardHeight;
+        }
+    }
+
 }

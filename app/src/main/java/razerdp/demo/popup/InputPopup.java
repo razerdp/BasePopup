@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.Button;
@@ -28,7 +29,9 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener 
         mCompeleteButton = (Button) findViewById(R.id.btn_Compelete);
         mInputEdittext = (EditText) findViewById(R.id.ed_input);
 
+        setClipChildren(false);
         setAutoShowInputMethod(mInputEdittext, true);
+        setPopupGravity(Gravity.CENTER);
         bindEvent();
     }
 

@@ -4,12 +4,25 @@
                 android:layout_height="match_parent"
     >
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="自动定位的popup\n与 setAutoLocatePopup(boolean)相关\n当popup显示的位置不足，则自动定位在view的上方"/>
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="自动定位的popup\n与 setAutoLocatePopup(boolean)相关\n当popup显示的位置不足，则自动定位在view的上方"/>
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/check_use_rcv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="使用RecyclerView的PopupWindow"/>
+    </LinearLayout>
 
     <Button
         android:id="@+id/popup_show"
@@ -45,5 +58,5 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
-        android:text="RIGHT|Top"/>
+        android:text="RIGHT|BOTTOM"/>
 </RelativeLayout>

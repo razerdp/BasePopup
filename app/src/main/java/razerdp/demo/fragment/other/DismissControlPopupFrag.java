@@ -1,4 +1,4 @@
-package razerdp.demo.fragment;
+package razerdp.demo.fragment.other;
 
 import android.app.Activity;
 import android.content.Context;
@@ -140,7 +140,6 @@ public class DismissControlPopupFrag extends SimpleBaseFrag {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(view.getContext(), adapter.getItem(position), Toast.LENGTH_SHORT).show();
-                mDismissControlPopup.dismiss();
             }
         });
 

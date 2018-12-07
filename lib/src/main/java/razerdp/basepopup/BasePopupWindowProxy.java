@@ -28,57 +28,57 @@ abstract class BasePopupWindowProxy extends PopupWindow {
 
     private static final int MAX_SCAN_ACTIVITY_COUNT = 50;
     private int tryScanActivityCount = 0;
-    private PopupTouchController mController;
-    private WindowManagerWrapper mWindowManagerWrapper;
+    private BasePopupHelper mHelper;
+    private WindowManagerProxy mWindowManagerProxy;
 
-    public BasePopupWindowProxy(Context context, PopupTouchController mController) {
+    public BasePopupWindowProxy(Context context, BasePopupHelper helper) {
         super(context);
-        this.mController = mController;
+        this.mHelper = helper;
         init(context);
     }
 
-    public BasePopupWindowProxy(Context context, AttributeSet attrs, PopupTouchController mController) {
+    public BasePopupWindowProxy(Context context, AttributeSet attrs, BasePopupHelper helper) {
         super(context, attrs);
-        this.mController = mController;
+        this.mHelper = helper;
         init(context);
     }
 
-    public BasePopupWindowProxy(Context context, AttributeSet attrs, int defStyleAttr, PopupTouchController mController) {
+    public BasePopupWindowProxy(Context context, AttributeSet attrs, int defStyleAttr, BasePopupHelper helper) {
         super(context, attrs, defStyleAttr);
-        this.mController = mController;
+        this.mHelper = helper;
         init(context);
     }
 
-    public BasePopupWindowProxy(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes, PopupTouchController mController) {
+    public BasePopupWindowProxy(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes, BasePopupHelper helper) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        this.mController = mController;
+        this.mHelper = helper;
         init(context);
     }
 
-    public BasePopupWindowProxy(View contentView, PopupTouchController mController) {
+    public BasePopupWindowProxy(View contentView, BasePopupHelper helper) {
         super(contentView);
-        this.mController = mController;
+        this.mHelper = helper;
         init(contentView.getContext());
     }
 
 
-    public BasePopupWindowProxy(View contentView, int width, int height, PopupTouchController mController) {
+    public BasePopupWindowProxy(View contentView, int width, int height, BasePopupHelper helper) {
         super(contentView, width, height);
-        this.mController = mController;
+        this.mHelper = helper;
         init(contentView.getContext());
     }
 
-    public BasePopupWindowProxy(View contentView, int width, int height, boolean focusable, PopupTouchController mController) {
+    public BasePopupWindowProxy(View contentView, int width, int height, boolean focusable, BasePopupHelper helper) {
         super(contentView, width, height, focusable);
-        this.mController = mController;
+        this.mHelper = helper;
         init(contentView.getContext());
     }
 
     void bindPopupHelper(BasePopupHelper mHelper) {
-        if (mWindowManagerWrapper == null) {
+        if (mWindowManagerProxy == null) {
             tryToProxyWindowManagerMethod(this);
         }
-        mWindowManagerWrapper.bindPopupHelper(mHelper);
+        mWindowManagerProxy.bindPopupHelper(mHelper);
     }
 
     private void init(Context context) {
@@ -158,11 +158,11 @@ abstract class BasePopupWindowProxy extends PopupWindow {
 
     @Override
     public void dismiss() {
-        if (mController == null) return;
+        if (mHelper == null) return;
 
-        boolean performDismiss = mController.onBeforeDismiss();
+        boolean performDismiss = mHelper.onBeforeDismiss();
         if (!performDismiss) return;
-        boolean dismissAtOnce = mController.callDismissAtOnce();
+        boolean dismissAtOnce = mHelper.callDismissAtOnce();
         if (dismissAtOnce) {
             callSuperDismiss();
         }
@@ -180,8 +180,8 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     }
 
     void clear() {
-        if (mWindowManagerWrapper != null) {
-            mWindowManagerWrapper.clear();
+        if (mWindowManagerProxy != null) {
+            mWindowManagerProxy.clear();
         }
         PopupUtil.clearViewFromParent(getContentView());
     }
@@ -193,7 +193,7 @@ abstract class BasePopupWindowProxy extends PopupWindow {
      * @param popupWindow
      */
     private void tryToProxyWindowManagerMethod(PopupWindow popupWindow) {
-        if (mController == null || mWindowManagerWrapper != null) return;
+        if (mHelper == null || mWindowManagerProxy != null) return;
         PopupLogUtil.trace("cur api >> " + Build.VERSION.SDK_INT);
         troToProxyWindowManagerMethodBeforeP(popupWindow);
     }
@@ -203,8 +203,8 @@ abstract class BasePopupWindowProxy extends PopupWindow {
         try {
             WindowManager windowManager = PopupReflectionHelper.getInstance().getPopupWindowManager(popupWindow);
             if (windowManager == null) return;
-            mWindowManagerWrapper = new WindowManagerWrapper(windowManager, mController);
-            PopupReflectionHelper.getInstance().setPopupWindowManager(popupWindow, mWindowManagerWrapper);
+            mWindowManagerProxy = new WindowManagerProxy(windowManager);
+            PopupReflectionHelper.getInstance().setPopupWindowManager(popupWindow, mWindowManagerProxy);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -217,8 +217,8 @@ abstract class BasePopupWindowProxy extends PopupWindow {
             fieldWindowManager.setAccessible(true);
             final WindowManager windowManager = (WindowManager) fieldWindowManager.get(popupWindow);
             if (windowManager == null) return;
-            mWindowManagerWrapper = new WindowManagerWrapper(windowManager, mController);
-            fieldWindowManager.set(popupWindow, mWindowManagerWrapper);
+            mWindowManagerProxy = new WindowManagerProxy(windowManager);
+            fieldWindowManager.set(popupWindow, mWindowManagerProxy);
             PopupLogUtil.trace(LogTag.i, TAG, "尝试代理WindowManager成功");
         } catch (NoSuchFieldException e) {
             if (Build.VERSION.SDK_INT >= 27) {

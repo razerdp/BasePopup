@@ -1,4 +1,4 @@
-package razerdp.demo.fragment;
+package razerdp.demo.fragment.other;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -6,14 +6,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
+
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.demo.popup.SlideFromBottomPopup;
+import razerdp.demo.popup.ScalePopup;
 
 /**
  * Created by 大灯泡 on 2016/1/15.
  */
-public class SlideFromBottomPopupFrag extends SimpleBaseFrag {
+public class ScalePopupFrag extends SimpleBaseFrag {
+
+    private ScalePopup scalePopup;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -23,12 +29,19 @@ public class SlideFromBottomPopupFrag extends SimpleBaseFrag {
 
     @Override
     public void bindEvent() {
+        scalePopup=new ScalePopup(mContext);
+        scalePopup.setOnDismissListener(new BasePopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                Toast.makeText(mContext,"dismiss",Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
     @Override
     public BasePopupWindow getPopup() {
-        return new SlideFromBottomPopup(mContext);
+        return scalePopup;
     }
 
     @Override
@@ -38,6 +51,6 @@ public class SlideFromBottomPopupFrag extends SimpleBaseFrag {
 
     @Override
     public View getFragment() {
-        return mInflater.inflate(R.layout.frag_slide_from_bottom_popup,container,false);
+        return mInflater.inflate(R.layout.frag_scale_popup, container, false);
     }
 }

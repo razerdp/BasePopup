@@ -1,13 +1,21 @@
 package razerdp.basepopup;
 
 import android.animation.Animator;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import razerdp.blur.PopupBlurOption;
@@ -18,9 +26,11 @@ import razerdp.library.R;
  * <p>
  * popupoption
  */
-final class BasePopupHelper {
+final class BasePopupHelper implements PopupTouchController, PopupWindowActionListener, PopupWindowLocationListener, PopupKeyboardStateChangeListener {
+
     //是否自动弹出输入框(default:false)
     private boolean autoShowInputMethod = false;
+    private static int showCount;
 
     //anima
     private Animation mShowAnimation;
@@ -36,8 +46,6 @@ final class BasePopupHelper {
     private int popupGravity = Gravity.NO_GRAVITY;
     private int offsetX;
     private int offsetY;
-    private int internalOffsetX;
-    private int internalOffsetY;
     private int preMeasureWidth;
     private int preMeasureHeight;
 
@@ -46,6 +54,8 @@ final class BasePopupHelper {
     //锚点view的location
     private int[] mAnchorViewLocation;
     private int mAnchorViewHeight;
+    private int mAnchorViewWidth;
+
     //是否自动适配popup的位置
     private boolean isAutoLocatePopup;
     //是否showAsDropDown
@@ -53,7 +63,7 @@ final class BasePopupHelper {
     //点击popup外部是否消失
     private boolean dismissWhenTouchOutside = true;
     //是否全屏
-    private boolean fullScreen = false;
+    private boolean fullScreen = true;
     //是否需要淡入window动画
     private volatile boolean isPopupFadeEnable = true;
     //是否禁止后退键dismiss
@@ -67,8 +77,66 @@ final class BasePopupHelper {
     //背景颜色
     private Drawable mBackgroundDrawable = new ColorDrawable(Color.parseColor("#8f000000"));
 
-    BasePopupHelper() {
+    private PopupTouchController mTouchControllerDelegate;
+    private PopupWindowActionListener mActionListener;
+    private PopupWindowLocationListener mLocationListener;
+    private PopupKeyboardStateChangeListener mKeyboardStateChangeListener;
+
+    private boolean mClipChildren = true;
+    private boolean mClipToScreen = true;
+
+    private int mSoftInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
+    private ViewGroup.MarginLayoutParams mParaseFromXmlParams;
+
+    BasePopupHelper(PopupTouchController controller) {
         mAnchorViewLocation = new int[2];
+        this.mTouchControllerDelegate = controller;
+    }
+
+    BasePopupHelper registerActionListener(PopupWindowActionListener actionListener) {
+        this.mActionListener = actionListener;
+        return this;
+    }
+
+    BasePopupHelper registerLocationLisener(PopupWindowLocationListener locationListener) {
+        this.mLocationListener = locationListener;
+        return this;
+    }
+
+    BasePopupHelper registerKeyboardStateChangeListener(PopupKeyboardStateChangeListener mKeyboardStateChangeListener) {
+        this.mKeyboardStateChangeListener = mKeyboardStateChangeListener;
+        return this;
+    }
+
+    public View inflate(Context context, int layoutId) {
+        try {
+            FrameLayout tempLayout = new FrameLayout(context);
+            View result = LayoutInflater.from(context).inflate(layoutId, tempLayout, false);
+            ViewGroup.LayoutParams childParams = result.getLayoutParams();
+            if (childParams != null) {
+                checkAndSetGravity(childParams);
+                if (childParams instanceof ViewGroup.MarginLayoutParams) {
+                    mParaseFromXmlParams = new ViewGroup.MarginLayoutParams((ViewGroup.MarginLayoutParams) childParams);
+                    tempLayout = null;
+                    return result;
+                }
+                mParaseFromXmlParams = new ViewGroup.MarginLayoutParams(childParams);
+                tempLayout = null;
+                return result;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void checkAndSetGravity(ViewGroup.LayoutParams p) {
+        if (p == null) return;
+        if (p instanceof LinearLayout.LayoutParams) {
+            setPopupGravity(((LinearLayout.LayoutParams) p).gravity);
+        } else if (p instanceof FrameLayout.LayoutParams) {
+            setPopupGravity(((FrameLayout.LayoutParams) p).gravity);
+        }
     }
 
     Animation getShowAnimation() {
@@ -184,7 +252,13 @@ final class BasePopupHelper {
     }
 
     BasePopupHelper setPopupGravity(int popupGravity) {
+        if (popupGravity == this.popupGravity) return this;
         this.popupGravity = popupGravity;
+        return this;
+    }
+
+    public BasePopupHelper setClipChildren(boolean clipChildren) {
+        mClipChildren = clipChildren;
         return this;
     }
 
@@ -217,12 +291,20 @@ final class BasePopupHelper {
         return this;
     }
 
+    public BasePopupHelper setSoftInputMode(int inputMethodType) {
+        mSoftInputMode = inputMethodType;
+        return this;
+    }
+
     boolean isAutoLocatePopup() {
         return isAutoLocatePopup;
     }
 
     BasePopupHelper setAutoLocatePopup(boolean autoLocatePopup) {
         isAutoLocatePopup = autoLocatePopup;
+        if (autoLocatePopup) {
+            isShowAsDropDown = true;
+        }
         return this;
     }
 
@@ -264,11 +346,21 @@ final class BasePopupHelper {
         return this;
     }
 
+    public BasePopupHelper setClipToScreen(boolean clipToScreen) {
+        mClipToScreen = clipToScreen;
+        return this;
+    }
+
     BasePopupHelper getAnchorLocation(View v) {
         if (v == null) return this;
         v.getLocationOnScreen(mAnchorViewLocation);
+        mAnchorViewWidth = v.getWidth();
         mAnchorViewHeight = v.getHeight();
         return this;
+    }
+
+    int getAnchorViewWidth() {
+        return mAnchorViewWidth;
     }
 
     int getAnchorHeight() {
@@ -283,26 +375,12 @@ final class BasePopupHelper {
         return mAnchorViewLocation[1];
     }
 
-    int getInternalOffsetX() {
-        return internalOffsetX + offsetX;
-    }
-
-    BasePopupHelper setInternalOffsetX(int internalOffsetX) {
-        this.internalOffsetX = internalOffsetX;
-        return this;
-    }
-
-    int getInternalOffsetY() {
-        return internalOffsetY + offsetY;
-    }
-
-    BasePopupHelper setInternalOffsetY(int internalOffsetY) {
-        this.internalOffsetY = internalOffsetY;
-        return this;
-    }
-
     public boolean isBackPressEnable() {
         return backPressEnable;
+    }
+
+    public boolean isClipToScreen() {
+        return mClipToScreen;
     }
 
     BasePopupHelper setBackPressEnable(PopupWindow popupWindow, boolean backPressEnable) {
@@ -336,7 +414,7 @@ final class BasePopupHelper {
         } else if (mShowAnimator != null) {
             duration = mShowAnimator.getDuration();
         }
-        return duration < 0 ? 300 : duration;
+        return duration < 0 ? 500 : duration;
     }
 
     long getExitAnimationDuration() {
@@ -346,7 +424,7 @@ final class BasePopupHelper {
         } else if (mDismissAnimator != null) {
             duration = mDismissAnimator.getDuration();
         }
-        return duration < 0 ? 300 : duration;
+        return duration < 0 ? 500 : duration;
     }
 
     public Drawable getPopupBackground() {
@@ -371,4 +449,107 @@ final class BasePopupHelper {
         return mBlurOption != null && mBlurOption.isAllowToBlur();
     }
 
+
+    public boolean isClipChildren() {
+        return mClipChildren;
+    }
+
+    public ViewGroup.MarginLayoutParams getParaseFromXmlParams() {
+        return mParaseFromXmlParams;
+    }
+
+    public int getShowCount() {
+        return showCount;
+    }
+
+    //-----------------------------------------controller-----------------------------------------
+    public void handleShow() {
+        //针对官方的坑（两个popup切换页面后重叠）
+        if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP ||
+                android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
+            showCount++;
+        }
+    }
+
+    public void handleDismiss() {
+        if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP ||
+                android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
+            showCount--;
+            showCount = Math.max(0, showCount);
+        }
+    }
+
+    @Override
+    public boolean onBeforeDismiss() {
+        return mTouchControllerDelegate.onBeforeDismiss();
+    }
+
+    @Override
+    public boolean callDismissAtOnce() {
+        return mTouchControllerDelegate.callDismissAtOnce();
+    }
+
+    @Override
+    public boolean onDispatchKeyEvent(KeyEvent event) {
+        return mTouchControllerDelegate.onDispatchKeyEvent(event);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        return mTouchControllerDelegate.onInterceptTouchEvent(event);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return mTouchControllerDelegate.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return mTouchControllerDelegate.onBackPressed();
+    }
+
+    @Override
+    public boolean onOutSideTouch() {
+        return mTouchControllerDelegate.onOutSideTouch();
+    }
+
+    @Override
+    public void onShow(boolean hasAnimate) {
+        if (mActionListener != null) {
+            mActionListener.onShow(hasAnimate);
+        }
+    }
+
+    @Override
+    public void onDismiss(boolean hasAnimate) {
+        if (mActionListener != null) {
+            mActionListener.onDismiss(hasAnimate);
+        }
+    }
+
+    @Override
+    public void onAnchorTop() {
+        if (mLocationListener != null) {
+            mLocationListener.onAnchorTop();
+        }
+    }
+
+    @Override
+    public void onAnchorBottom() {
+        if (mLocationListener != null) {
+            mLocationListener.onAnchorBottom();
+        }
+    }
+
+    public int getSoftInputMode() {
+        return mSoftInputMode;
+    }
+
+    @Override
+    public void onKeyboardChange(int keyboardHeight, boolean isVisible) {
+        if (mKeyboardStateChangeListener != null) {
+            mKeyboardStateChangeListener.onKeyboardChange(keyboardHeight, isVisible);
+        }
+    }
 }
