@@ -25,7 +25,6 @@ public class QuickPopup extends BasePopupWindow {
     public QuickPopup(Context context, QuickPopupConfig config, View contentView, int w, int h) {
         super(context, w, h);
         mConfig = config;
-        content = contentView;
         if (mConfig != null) {
             callInitInternal(context, w, h);
         } else {
@@ -45,14 +44,13 @@ public class QuickPopup extends BasePopupWindow {
 
         applyClick();
 
-        if (config.getOffsetX() != 0 || config.getOffsetRatioOfPopupWidth() != 0) {
-            setOffsetX((int) (config.getOffsetX() + getWidth() * config.getOffsetRatioOfPopupWidth()));
-        }
+        setOffsetX(config.getOffsetX());
+        setOffsetY(config.getOffsetY());
 
-        if (config.getOffsetY() != 0 || config.getOffsetRatioOfPopupHeight() != 0) {
-            setOffsetY((int) (config.getOffsetY() + getHeight() * config.getOffsetRatioOfPopupHeight()));
-        }
+        setClipChildren(config.isClipChildren());
 
+        setAllowInterceptTouchEvent(config.isAllowInterceptTouchEvent());
+        setPopupGravity(config.getGravity());
         setAlignBackground(config.isAlignBackground());
         setAutoLocatePopup(config.isAutoLocated());
         if (config.getBackground() != null) {
@@ -108,6 +106,6 @@ public class QuickPopup extends BasePopupWindow {
 
     @Override
     public View onCreateContentView() {
-        return content;
+        return createPopupById(mConfig.getContentViewLayoutid());
     }
 }

@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Pair;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 
@@ -17,6 +18,8 @@ import razerdp.util.SimpleAnimationUtils;
  * Created by 大灯泡 on 2018/8/23.
  */
 public final class QuickPopupConfig {
+    int contentViewLayoutid;
+
     Animation mShowAnimation;
     Animation mDismissAnimation;
 
@@ -30,18 +33,18 @@ public final class QuickPopupConfig {
     boolean blurBackground;
     WeakReference<BasePopupWindow.OnBlurOptionInitListener> mOnBlurOptionInitListener;
     PopupBlurOption mPopupBlurOption;
+    int gravity = Gravity.CENTER;
 
     int offsetX;
     int offsetY;
 
-    float offsetRatioOfPopupWidth;
-    float offsetRatioOfPopupHeight;
-
     boolean alignBackground;
-
+    Drawable background;
     boolean autoLocated;
 
-    Drawable background;
+    boolean clipChildren;
+    boolean allowInterceptTouchEvent = true;
+
 
     HashMap<Integer, Pair<View.OnClickListener, Boolean>> mListenersHolderMap;
 
@@ -111,22 +114,12 @@ public final class QuickPopupConfig {
     }
 
     public QuickPopupConfig offsetX(int offsetX) {
-        return offsetX(offsetX, 0);
-    }
-
-    public QuickPopupConfig offsetY(int offsetY) {
-        return offsetY(offsetY, 0);
-    }
-
-    public QuickPopupConfig offsetX(int offsetX, float ratioOfPopupWidth) {
         this.offsetX = offsetX;
-        this.offsetRatioOfPopupWidth = ratioOfPopupWidth;
         return this;
     }
 
-    public QuickPopupConfig offsetY(int offsetY, float ratioOfPopupHeight) {
+    public QuickPopupConfig offsetY(int offsetY) {
         this.offsetY = offsetY;
-        this.offsetRatioOfPopupHeight = ratioOfPopupHeight;
         return this;
     }
 
@@ -148,6 +141,27 @@ public final class QuickPopupConfig {
     public QuickPopupConfig backgroundColor(int color) {
         return background(new ColorDrawable(color));
     }
+
+    public QuickPopupConfig gravity(int gravity) {
+        this.gravity = gravity;
+        return this;
+    }
+
+    public QuickPopupConfig clipChildren(boolean clipChildren) {
+        this.clipChildren = clipChildren;
+        return this;
+    }
+
+    public QuickPopupConfig allowInterceptTouchEvent(boolean allowInterceptTouchEvent) {
+        this.allowInterceptTouchEvent = allowInterceptTouchEvent;
+        return this;
+    }
+
+    QuickPopupConfig contentViewLayoutid(int contentViewLayoutid) {
+        this.contentViewLayoutid = contentViewLayoutid;
+        return this;
+    }
+
     //-----------------------------------------getter-----------------------------------------
 
     public Animation getShowAnimation() {
@@ -186,14 +200,6 @@ public final class QuickPopupConfig {
         return offsetY;
     }
 
-    public float getOffsetRatioOfPopupWidth() {
-        return offsetRatioOfPopupWidth;
-    }
-
-    public float getOffsetRatioOfPopupHeight() {
-        return offsetRatioOfPopupHeight;
-    }
-
     public boolean isAlignBackground() {
         return alignBackground;
     }
@@ -217,5 +223,21 @@ public final class QuickPopupConfig {
 
     public Drawable getBackground() {
         return background;
+    }
+
+    public int getGravity() {
+        return gravity;
+    }
+
+    public boolean isAllowInterceptTouchEvent() {
+        return allowInterceptTouchEvent;
+    }
+
+    public boolean isClipChildren() {
+        return clipChildren;
+    }
+
+    public int getContentViewLayoutid() {
+        return contentViewLayoutid;
     }
 }

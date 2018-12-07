@@ -1,6 +1,7 @@
-package razerdp.demo.fragment;
+package razerdp.demo.fragment.other;
 
 import android.graphics.Color;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
@@ -24,13 +25,7 @@ public class LocatePopupFrag extends SimpleBaseFrag {
 
     Animation enterAnimation = null;
     Animation dismissAnimation = null;
-    int offsetX = 0;
-    int offsetY = 0;
-    //offsetWithPopupWidth和offsetWithPopupHeight
-    //意思是计算offset的时候把popup的宽和高也算进去
-    //意为popup宽高的百分比
-    float offsetRatioOfPopupWidth = 0;
-    float offsetRatioOfPopupHeight = 0;
+    int gravity;
 
     @Override
     public void bindEvent() {
@@ -39,38 +34,26 @@ public class LocatePopupFrag extends SimpleBaseFrag {
         rvGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                offsetX = 0;
-                offsetY = 0;
-                offsetRatioOfPopupWidth = 0;
-                offsetRatioOfPopupHeight = 0;
                 switch (checkedId) {
                     case R.id.left:
                         enterAnimation = createHorizontalAnimation(1f, 0);
                         dismissAnimation = createHorizontalAnimation(0, 1f);
-                        offsetY = -anchor.getHeight() / 2;
-                        offsetRatioOfPopupWidth = -1f;
-                        offsetRatioOfPopupHeight = -0.5f;
+                        gravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
                         break;
                     case R.id.top:
                         enterAnimation = createVerticalAnimation(1f, 0);
                         dismissAnimation = createVerticalAnimation(0, 1f);
-                        offsetY = -anchor.getHeight();
-                        offsetRatioOfPopupWidth = 0;
-                        offsetRatioOfPopupHeight = -1f;
+                        gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
                         break;
                     case R.id.right:
                         enterAnimation = createHorizontalAnimation(-1f, 0);
                         dismissAnimation = createHorizontalAnimation(0, -1f);
-                        offsetY = -anchor.getHeight() / 2;
-                        offsetX = anchor.getWidth();
-                        offsetRatioOfPopupWidth = 0;
-                        offsetRatioOfPopupHeight = -0.5f;
+                        gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
                         break;
                     case R.id.bottom:
                         enterAnimation = createVerticalAnimation(-1f, 0);
                         dismissAnimation = createVerticalAnimation(0, -1f);
-                        offsetRatioOfPopupWidth = 0;
-                        offsetRatioOfPopupHeight = 0;
+                        gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
                         break;
                 }
             }
@@ -80,13 +63,12 @@ public class LocatePopupFrag extends SimpleBaseFrag {
             public void onClick(View v) {
                 QuickPopupBuilder.with(getContext())
                         .contentView(R.layout.popup_menu_small)
-                        .wrapContentMode()
                         .config(new QuickPopupConfig()
-                                .backgroundColor(Color.parseColor("#8F617D8A"))
+                                .clipChildren(true)
+                                .backgroundColor(Color.parseColor("#8C617D8A"))
                                 .withShowAnimation(enterAnimation)
                                 .withDismissAnimation(dismissAnimation)
-                                .offsetX(offsetX, offsetRatioOfPopupWidth)
-                                .offsetY(offsetY, offsetRatioOfPopupHeight)
+                                .gravity(gravity)
                                 .blurBackground(true, new BasePopupWindow.OnBlurOptionInitListener() {
                                     @Override
                                     public void onCreateBlurOption(PopupBlurOption option) {
@@ -99,7 +81,7 @@ public class LocatePopupFrag extends SimpleBaseFrag {
                                     public void onClick(View v) {
                                         ToastUtils.ToastMessage(getContext(), "tx1");
                                     }
-                                },true))
+                                }, true))
                         .show(v);
             }
         });

@@ -1,13 +1,14 @@
 package razerdp.basepopup;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
-import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.KeyEvent;
 import android.widget.FrameLayout;
 
 import razerdp.blur.BlurImageView;
 import razerdp.util.PopupUtil;
+import razerdp.util.log.PopupLogUtil;
 
 /**
  * Created by 大灯泡 on 2018/5/9.
@@ -31,19 +32,25 @@ class PopupMaskLayout extends FrameLayout {
         super(context, attrs, defStyleAttr);
     }
 
-    public static PopupMaskLayout create(Context context, BasePopupHelper helper, ViewGroup.LayoutParams params) {
+    public static PopupMaskLayout create(Context context, BasePopupHelper helper) {
         PopupMaskLayout view = new PopupMaskLayout(context);
-        view.init(context, helper, params);
+        view.init(context, helper);
         return view;
     }
 
-    private void init(Context context, BasePopupHelper mHelper, ViewGroup.LayoutParams params) {
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        boolean dispatch = super.dispatchKeyEvent(event);
+        PopupLogUtil.trace("dispatch  >> " + dispatch);
+        return dispatch;
+    }
+
+    private void init(Context context, BasePopupHelper mHelper) {
+        setLayoutAnimation(null);
         if (mHelper == null) {
-            setVisibility(GONE);
+            setBackgroundColor(Color.TRANSPARENT);
             return;
         }
-        setLayoutAnimation(null);
-        setVisibility(VISIBLE);
         if (mHelper.isAllowToBlur()) {
             mBlurImageView = new BlurImageView(context);
             mBlurImageView.applyBlurOption(mHelper.getBlurOption());
@@ -51,11 +58,24 @@ class PopupMaskLayout extends FrameLayout {
         }
         if (!PopupUtil.isBackgroundInvalidated(mHelper.getPopupBackground())) {
             mBackgroundView = PopupBackgroundView.creaete(context, mHelper);
-            LayoutParams backgroundViewParams = generateDefaultLayoutParams();
-            if (mHelper.isAlignBackground() && params instanceof WindowManager.LayoutParams) {
-                backgroundViewParams.topMargin = ((WindowManager.LayoutParams) params).y;
+            addViewInLayout(mBackgroundView, -1, generateDefaultLayoutParams());
+        }
+        mHelper.registerActionListener(new PopupWindowActionListener() {
+            @Override
+            public void onShow(boolean hasAnimate) {
+
             }
-            addViewInLayout(mBackgroundView, -1, backgroundViewParams);
+
+            @Override
+            public void onDismiss(boolean hasAnimate) {
+                handleDismiss(hasAnimate ? -2 : 0);
+            }
+        });
+    }
+
+    public void handleAlignBackground(int contentLeft, int contentTop, int contentRight, int contentBottom) {
+        if (contentTop > 0) {
+            mBackgroundView.offsetTopAndBottom(contentTop);
         }
     }
 

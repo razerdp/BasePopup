@@ -58,6 +58,7 @@ public class DemoFullScreenActivity extends AppCompatActivity implements View.On
         QuickPopupBuilder.with(this)
                 .contentView(R.layout.popup_normal)
                 .config(new QuickPopupConfig()
+                        .allowInterceptTouchEvent(false)
                         .blurBackground(true)
                         .withShowAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(true))
                         .withDismissAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(false)))

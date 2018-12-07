@@ -13,8 +13,8 @@ import android.view.View;
 class PopupWindowProxy extends BasePopupWindowProxy {
     private static final String TAG = "PopupWindowProxy";
 
-    public PopupWindowProxy(View contentView, int width, int height, PopupTouchController mController) {
-        super(contentView, width, height, mController);
+    public PopupWindowProxy(View contentView, int width, int height, BasePopupHelper mHelper) {
+        super(contentView, width, height, mHelper);
     }
 
     /**

@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="razerdp.demo.DemoActivity">
+    <item
+        android:id="@+id/id_gravity"
+        android:orderInCategory="98"
+        android:title="Gravity设置"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_other_demo"
+        android:orderInCategory="500"
+        android:title="更多具体例子"
+        app:showAsAction="never"/>
+</menu>
