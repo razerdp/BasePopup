@@ -21,7 +21,7 @@
      - [1.编写您的xml文件](#1编写您的xml文件)
      - [2.创建您的Popup类并继承BasePopupWindow](#2创建您的Popup类并继承BasePopupWindow)
      - [3.补充对应方法](#3补充对应方法)
-     - [4.show！](#4show！)
+     - [4.show！](#4show)
    - [QuickPopupBuilder链式调用](#QuickPopupBuilder链式调用)
      - [示例代码](#示例代码) 
    - [Api（请看Wiki）](#api请看wiki)
