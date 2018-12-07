@@ -10,9 +10,9 @@
 ### 导航
  
  - [特性](#特性)
- - 注意事项
- - 快速入门
-   - 依赖
+ - [注意事项](#注意事项)
+ - [快速入门](#快速入门)
+   - [依赖](#依赖)
    - 普通使用
      - 编写您的xml文件
      - 创建您的Popup类并继承BasePopupWindow
@@ -58,8 +58,9 @@
 >Android P已经适配，感谢[@Guolei1130](https://github.com/Guolei1130)收集的方法。<br><br>文章地址：[android_p_no_sdkapi_support](https://github.com/Guolei1130/android_p_no_sdkapi_support)<br><br>本库一开始采用360的方法，但不得不走Native，为了个Popup不得不引入so感觉很不值得，在看到这篇文章后，才想起UnSafe类，因此本库采用方法5。<br><br>如果以后UnSafe类移除掉的话，再考虑Native方法。<br><br><b>最后再一次感谢大牛提供的方法~<b>
 
 
-依赖
+### 快速入门
 ---
+#### 依赖
 
 | **Release** | **Candy** |
 | ---- | ---- |
