@@ -354,6 +354,10 @@ A：设置setPopupWindowFullScreen(false)
 
 A：设置setBackPressEnable(false)
 
+#### Q：为什么设置setAllowInterceptTouchEvent(false)后，蒙层或者背景模糊都消失了
+
+A：在2.0.0到2.0.9之间，setAllowInterceptTouchEvent（）不影响蒙层或背景，但从2.1.0开始，不再开启这个黑科技，而是选择跟官方保持同步，原因在于如果背景模糊或者有蒙层，那么该PopupWindow理应拦截事件，而不应该穿透事件，否则不应该拥有背景蒙层。
+
 <br>
 
 ### License
