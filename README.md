@@ -7,29 +7,34 @@
 | ---- | ---- | ---- | ---- | ---- |
 | [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion) | [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion)| [![license](https://img.shields.io/badge/license-Apache--2.0-blue.svg )](https://github.com/razerdp/BasePopup/blob/master/LICENSE) | [![Api](https://img.shields.io/badge/Api-16%2B-green.svg)](https://img.shields.io/badge/Api-14%2B-green.svg) | [![Author](https://img.shields.io/badge/Author-razerdp-blue.svg)](https://github.com/razerdp) |
 
+---
+
 ### 导航
  
  - [特性](#特性)
  - [注意事项](#注意事项)
  - [快速入门](#快速入门)
+   - [配置](#配置)
+     - [模糊配置](#模糊配置)
    - [依赖](#依赖)
-   - 普通使用
-     - 编写您的xml文件
-     - 创建您的Popup类并继承BasePopupWindow
-     - 补充对应方法
-     - show！
-   - QuickPopupBuilder链式调用
-     - 示例代码
-     - Api
-   - Api（请看Wiki）
-   - 更新日志[历史更新](./UpdateLog.md)
-   - 例子预览
-   - 打赏
-   - 交流群
-   - 常见问题
-   - 贡献者们
-   - 感谢
-   - LICENSE
+   - [普通使用](#普通使用)
+     - [1.编写您的xml文件](#1编写您的xml文件)
+     - [2.创建您的Popup类并继承BasePopupWindow](#2创建您的Popup类并继承BasePopupWindow)
+     - [3.补充对应方法](#3补充对应方法)
+     - [4.show！](#4show！)
+   - [QuickPopupBuilder链式调用](#QuickPopupBuilder链式调用)
+     - [示例代码](#示例代码) 
+   - [Api（请看Wiki）](#api请看wiki)
+   - [更新日志](#更新日志-历史更新)
+     - [历史更新](./UpdateLog.md)
+   - [例子预览](#例子预览)
+   - [打赏](#打赏看在我那么努力维护的份上给个零食呗)
+   - [交流群](#交流群590777418)
+   - [常见问题](#常见问题)
+   - [LICENSE](#license)
+   
+<br>
+<br>
 
 ### 特性
 
@@ -43,6 +48,9 @@
  - 系统的坑？不，我们来把控，通过hook掉系统的windowmanager来由我们把握PopupWindow的各种事情，防止不同版本出现的各种适配问题
  - 支持链式调用，还在为简单的PopupWindow使用不得不继承库的抽象类而感到烦躁？不妨来试试QuickPopupBuilder，想必您会爱上它的
 
+<br>
+<br>
+
 ### 注意事项
 
 **WARN：**
@@ -55,173 +63,38 @@
   - **如果您是以前1.x版本的用户，现在想更新到2.x，请在更新前查阅：[1.x迁移到2.x帮助文档](https://github.com/razerdp/BasePopup/blob/master/1.x%E8%BF%81%E7%A7%BB2.x%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3.md)**
 
 
->Android P已经适配，感谢[@Guolei1130](https://github.com/Guolei1130)收集的方法。<br><br>文章地址：[android_p_no_sdkapi_support](https://github.com/Guolei1130/android_p_no_sdkapi_support)<br><br>本库一开始采用360的方法，但不得不走Native，为了个Popup不得不引入so感觉很不值得，在看到这篇文章后，才想起UnSafe类，因此本库采用方法5。<br><br>如果以后UnSafe类移除掉的话，再考虑Native方法。<br><br><b>最后再一次感谢大牛提供的方法~<b>
+>Android P已经适配，感谢[@Guolei1130](https://github.com/Guolei1130)收集的方法。<br><br>文章地址：[android_p_no_sdkapi_support](https://github.com/Guolei1130/android_p_no_sdkapi_support)<br><br>本库一开始采用360的方法，但不得不走Native，为了个Popup不得不引入so感觉很不值得，在看到这篇文章后，才想起UnSafe类，因此本库采用方法5。<br><br>如果以后UnSafe类移除掉的话，再考虑Native方法。<br><br><b>最后再一次感谢大牛提供的方法~</b>
 
+<br>
+<br>
 
 ### 快速入门
 ---
-#### 依赖
+
+### 依赖
 
 | **Release** | **Candy** |
 | ---- | ---- |
 | [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion) | [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion) |
 
 
-添加依赖（请把{latestVersion}替换成上面的Jcenter标签所示版本
-
-**【candy版本不一定稳定，包含有新功能或者新的修复，完善后将会发布其release版】**
+添加依赖到Gradle（请把<b>{$latestVersion}</b>替换成上面的Jcenter标签所示版本）
 
 ```xml
 	dependencies {
-	        implementation 'com.github.razerdp:BasePopup:{latestVersion}'
+	        implementation 'com.github.razerdp:BasePopup:{$latestVersion}'
 	        
-	        //candy版本，不稳定，但会带有新功能
-	        //implementation 'com.github.razerdp:BasePopup_Candy:{latestVersion}'
+	        //candy版本
+	        //implementation 'com.github.razerdp:BasePopup_Candy:{$latestVersion}'
 	}
 ```
+<br>
 
+### 配置
 
-使用方法
-----
+#### 模糊配置
 
-### 方法一
-----
-
-* **Step 1:**
-
-像您平时定制activity布局文件一样定制您的popup布局
-
-etc.
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-    
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_dialog"
-        android:layout_centerInParent="true"
-        android:layout_margin="25dp">
-        
-        
-        <... many views>
-        
-        
-
-    </RelativeLayout>
-</RelativeLayout>
-```
-![image](https://github.com/razerdp/BasePopup/blob/master/img/etc.png)
-
-
-* **Step 2:**
-
-新建一个类继承BasePopupWindow
-
-* **Step 3:**
-
-实现必要的几个方法：
-
-**该方法从2.0.6开始不再抽象强制实现，但建议实现入场和退场动画** `onCreateShowAnimation()`/`onCreateDismissAnimation()`:初始化一个显示/退出动画，该动画将会用到`onCreatePopupView()`所返回的view,可以为空。
-
-`onCreatePopupView()`:初始化您的popupwindow界面，建议直接使用`createPopupById()`
-
-
-例如
-
-```java
-public class DialogPopup extends BasePopupWindow implements View.OnClickListener{
-
-    private TextView ok;
-    private TextView cancel;
-
-    public DialogPopup(Activity context) {
-        super(context);
-
-        ok= (TextView) findViewById(R.id.ok);
-        cancel= (TextView) findViewById(R.id.cancel);
-
-        setViewClickListener(this,ok,cancel);
-    }
-
-    @Override
-    protected Animation onCreateShowAnimation() {
-        AnimationSet set=new AnimationSet(false);
-        Animation shakeAnima=new RotateAnimation(0,15,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
-        shakeAnima.setInterpolator(new CycleInterpolator(5));
-        shakeAnima.setDuration(400);
-        set.addAnimation(getDefaultAlphaAnimation());
-        set.addAnimation(shakeAnima);
-        return set;
-    }
-
-    @Override
-    protected Animation onCreateDismissAnimation() {
-        return null;
-    }
-
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_dialog);
-    }
-
-    @Override
-    public void onClick(View v) {
-        //... click event
-    }
-}
-```
-
-* **Step 4:**
-
-把您刚才实现的popup给new出来并调用show方法
-
-例如
-
-```java
-    DialogPopup popup = new DialogPopup(context);
-    popup.showPopupWindow();
-```
-
-----
-
-### 方法二
-----
-如果您并不需要很详细的定义一个PopupWindow，您也可以选择`QuickPopupBuilder`采取链式写法快速编写出一个Popup以使用。
-
-```java
-    QuickPopupBuilder.with(getContext())
-                     .contentView(R.layout.popup_menu_small)
-                     .wrapContentMode()
-                     .config(new QuickPopupConfig()
-                                .withShowAnimation(enterAnimation)
-                                .withDismissAnimation(dismissAnimation)
-                                .offsetX(offsetX, offsetRatioOfPopupWidth)
-                                .offsetY(offsetY, offsetRatioOfPopupHeight)
-                                .blurBackground(true, new BasePopupWindow.OnBlurOptionInitListener() {
-                                    @Override
-                                    public void onCreateBlurOption(PopupBlurOption option) {
-                                        option.setBlurRadius(6)
-                                                .setBlurPreScaleRatio(0.9f);
-                                    }
-                                })
-                                .withClick(R.id.tx_1, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        ToastUtils.ToastMessage(getContext(), "tx1");
-                                    }
-                                }))
-                     .show(v);
-````
-
-
-
-
-
-**ps:从1.9.0-alpha开始支持背景模糊（只需要一个方法：`setBlurBackgroundEnable()`）**
+**从1.9.0-alpha开始支持背景模糊（只需要一个方法：`setBlurBackgroundEnable(boolean)`）**
 
 **RenderScript最低支持api 17（更低的情况将会使用fastblur），您需要在gradle配置一下代码**
 
@@ -232,32 +105,166 @@ defaultConfig {
     }
 ```
 
-方法介绍：
----
+<br>
+
+### 普通使用
+
+#### 1.编写您的xml文件
+
+像您平时定制View布局文件一样定制您的PopupWindow布局
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@android:color/holo_blue_dark"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/tx_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="test1"
+        android:textColor="@color/color_black1"/>
+
+</LinearLayout>
+```
+<p align="left"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/%E7%BC%96%E5%86%99xml.png" height="360"/></p>
+
+
+
+#### 2.创建您的Popup类并继承BasePopupWindow
+
+```java
+public class DemoPopup extends BasePopupWindow {
+    public DemoPopup(Context context) {
+        super(context);
+    }
+
+    @Override
+    public View onCreateContentView() {
+        return null;
+    }
+}
+```
+
+
+#### 3.补充对应方法
+
+**强烈建议在`onCreateContentView()`里使用`createPopupById()`来进行inflate，这样本库才能正确的做出对应的解析和适配**
+
+```java
+public class DemoPopup extends BasePopupWindow {
+    public DemoPopup(Context context) {
+        super(context);
+    }
+
+    // 必须实现，这里返回您的contentView
+    // 为了让库更加准确的做出适配，强烈建议使用createPopupById()进行inflate
+    @Override
+    public View onCreateContentView() {
+        return createPopupById(R.layout.popup_normal);
+    }
+    
+    // 以下为可选代码（非必须实现）
+    // 返回作用于PopupWindow的show和dismiss动画，本库提供了默认的几款动画，这里可以自由实现
+    @Override
+    protected Animation onCreateShowAnimation() {
+        return getDefaultScaleAnimation(true);
+    }
+
+    @Override
+    protected Animation onCreateDismissAnimation() {
+        return getDefaultScaleAnimation(false);
+    }
+}
+```
+
+
+#### 4.show！
+
+展示PopupWindow的方法有两种，分别是`showPopupWindow()`和`showPopupWindow(View anchor)`：
+
+```java
+new DemoPopup(getContext()).showPopupWindow();
+//new DemoPopup(getContext()).showPopupWindow(v);
+```
+<br>
+
+这两个方法有不同的含义：
+
+ - `showPopupWindow()`：无参传入，此时PopupWindow参考对象为屏幕（或者说整个DecorView），Gravity的表现就像在FrameLayout里面的Gravity表现一样，表示其处于屏幕的哪个方位
+ - `showPopupWindow(View anchor)`：传入AnchorView，此时PopupWindow参考对象为传入的anchorView，Gravity的表现则意味着这个PopupWindow应该处于目标AnchorView的哪个方位
+ 
+>建议：如果PopupWindow需要重复展示或者保留状态，建议作为成员变量使用，而不要作为局部变量每次都创建
+
+>关于Gravity的更多api，请查看：[Wiki-Api-Gravity]()
+
+例子展示：
+
+ - `showPopupWindow()无参传入`
+
+| **gravity = CENTER<br>上述例子中xml写明了layout_gravity=center** | **gravity = RIGHT \| CENTER_VERTICAL** |
+| - | - |
+| <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_1.gif" height="360"/></p> | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_2.gif" height="360"/></p> |
+
+ - `showPopupWindow(View v)传入anchorView`
+
+| **gravity = CENTER<br>上述例子中xml写明了layout_gravity=center** | **gravity = RIGHT \| CENTER_VERTICAL** |
+| - | - |
+| <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_3.gif" height="360"/></p> | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_4.gif" height="360"/></p> |
+
+<br>
+
+### QuickPopupBuilder链式调用
+
+QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，该Builder旨在快速建立一个简单的不包含复杂逻辑的PopupWindow，如上述案例，避免过于简单的PopupWindow也要继承BasePopupWindow，导致存在过多的类。
+
+#### 示例代码
+
+
+----
+如果您并不需要很详细的定义一个PopupWindow，您也可以选择`QuickPopupBuilder`采取链式写法快速编写出一个Popup以使用。
+
+>注意：默认QuickPopupBuilder.QuickPopupConfig配置中PopupWindow动画为淡入淡出
+
+```java
+        QuickPopupBuilder.with(getContext())
+                .contentView(R.layout.popup_normal)
+                .config(new QuickPopupConfig()
+                        .gravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL)
+                        .withClick(R.id.tx_1, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(getContext(), "clicked", Toast.LENGTH_LONG).show();
+                            }
+                        }))
+                .show();
+		//.show(anchorView);
+````
+
+| **show()** | **show(anchorView)** |
+| - | - |
+| <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_5.gif" height="360"/></p> | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_6.gif" height="360"/></p> |
+
+<br>
+
+### Api（请看Wiki）
 
 请看wiki（陆续完善中）
 
 **Link👉**[WIKI](https://github.com/razerdp/BasePopup/wiki)
 
-交流群：590777418
----
-
-因为目前还有朋友圈项目，建立了一个交流群，出于懒得管理那么多，所以如果有想法或者优化建议或者其他问题，欢迎加入“朋友圈交流群”
-
-![](https://github.com/razerdp/FriendCircle/blob/master/qqgroup.png)
-
-打赏（看在我那么努力维护的份上。。。给个零食呗~）
----
-
-| 微信 |支付宝 | 
-| ---- | ---- | 
-| ![](https://github.com/razerdp/FriendCircle/blob/master/wechat.png)      | ![](https://github.com/razerdp/FriendCircle/blob/master/alipay.png) |
+<br>
 
 
-
-
-更新日志([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
-----------------------------------------
+### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
 * **【Release】2.0.8.1**(2018/10/29)
   * **建议更新到这个版本！**
@@ -286,9 +293,9 @@ defaultConfig {
   * 不再抽象强制实现入场和退场动画
   * 针对自动弹出输入法的Popup，在dismiss()中默认关闭输入法
 
+<br>
 
-一些例子
----
+### 例子预览
 
 | 对应popup | 预览 |
 | :---- | ---- |
@@ -301,8 +308,54 @@ defaultConfig {
 | [ListPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/ListPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/list_popup.gif) |
 | [MenuPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/MenuPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/menu_popup.gif) |
 
+<br>
 
-License
----
 
-Apache-2.0
+### 打赏（看在我那么努力维护的份上。。。给个零食呗~）
+
+| 微信 |支付宝 | 
+| ---- | ---- | 
+| ![](https://github.com/razerdp/FriendCircle/blob/master/wechat.png)      | ![](https://github.com/razerdp/FriendCircle/blob/master/alipay.png) |
+
+<br>
+
+### 交流群：590777418
+
+因为目前还有朋友圈项目，建立了一个交流群，出于懒得管理那么多，所以如果有想法或者优化建议或者其他问题，欢迎加入“朋友圈交流群”
+
+![](https://github.com/razerdp/FriendCircle/blob/master/qqgroup.png)
+
+
+<br>
+
+### 常见问题
+
+#### Q：如何取消默认的背景颜色
+
+A：调用setBackgroundColor(Color.TRANSPARENT)或者setBackground(0)
+
+#### Q：如何在dismiss()时不执行退出动画
+
+A：调用dismiss(false)或者dismissWithOutAnimate()
+
+#### Q：点击popupwindow背景部分不想让popupwindow隐藏怎么办
+
+A：设置setAllowDismissWhenTouchOutside(false)
+
+#### Q：Service里无法弹出
+
+A：PopupWindow需要windowToken，因此ApplicationContext或者Service里面是无法弹出的，建议通过发出事件通知栈顶Activity来弹出
+
+#### Q：如何不让PopupWindow的蒙层覆盖状态栏
+
+A：设置setPopupWindowFullScreen(false)
+
+#### Q：如何点击back键不关闭pop 
+
+A：设置setBackPressEnable(false)
+
+<br>
+
+### License
+
+[Apache-2.0](./LICENSE)
