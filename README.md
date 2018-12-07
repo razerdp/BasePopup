@@ -15,11 +15,11 @@
  - [注意事项](#注意事项)
  - [快速入门](#快速入门)
    - [依赖](#依赖)
-   - 普通使用
-     - 编写您的xml文件
-     - 创建您的Popup类并继承BasePopupWindow
-     - 补充对应方法
-     - show！
+   - [普通使用](#普通使用)
+     - [1.编写您的xml文件](#1.编写您的xml文件)
+     - [2.创建您的Popup类并继承BasePopupWindow](#2.创建您的Popup类并继承BasePopupWindow)
+     - [3.补充对应方法](#3.补充对应方法)
+     - [4.show！](#4.show！)
    - QuickPopupBuilder链式调用
      - 示例代码
      - Api
@@ -91,7 +91,7 @@
 
 ### 普通使用
 
-#### 编写您的xml文件
+#### 1.编写您的xml文件
 
 像您平时定制View布局文件一样定制您的PopupWindow布局
 
@@ -99,20 +99,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_marginLeft="50dp"
-    android:layout_marginRight="50dp"
     android:background="@android:color/holo_blue_dark"
     android:orientation="vertical"
     >
 
     <TextView
         android:id="@+id/tx_1"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center"
+        android:padding="16dp"
         android:text="test1"
         android:textColor="@color/color_black1"/>
 
@@ -120,9 +119,9 @@
 ```
 <p align="left"><img src="https://github.com/razerdp/Pics/blob/59a2d5047eeb617d9d7a9a042c0d436b3103f0bb/BasePopup/%E7%BC%96%E5%86%99xml.png" height="360"/></p>
 
-<br>
 
-#### 创建您的Popup类并继承BasePopupWindow
+
+#### 2.创建您的Popup类并继承BasePopupWindow
 
 ```java
 public class DemoPopup extends BasePopupWindow {
@@ -137,9 +136,8 @@ public class DemoPopup extends BasePopupWindow {
 }
 ```
 
-<br>
 
-#### 补充对应方法
+#### 3.补充对应方法
 
 **强烈建议在`onCreateContentView()`里使用`createPopupById()`来进行inflate，这样本库才能正确的做出对应的解析和适配**
 
@@ -170,9 +168,8 @@ public class DemoPopup extends BasePopupWindow {
 }
 ```
 
-<br>
 
-#### show！
+#### 4.show！
 
 展示PopupWindow的方法有两种，分别是`showPopupWindow()`和`showPopupWindow(View anchor)`：
 
@@ -181,7 +178,9 @@ new DemoPopup(getContext()).showPopupWindow();
 //new DemoPopup(getContext()).showPopupWindow(v);
 ```
 <br>
+
 这两个方法有不同的含义：
+
  - `showPopupWindow()`：无参传入，此时PopupWindow参考对象为屏幕（或者说整个DecorView），Gravity的表现就像在FrameLayout里面的Gravity表现一样，表示其处于屏幕的哪个方位
  - `showPopupWindow(View anchor)`：传入AnchorView，此时PopupWindow参考对象为传入的anchorView，Gravity的表现则意味着这个PopupWindow应该处于目标AnchorView的哪个方位
  
@@ -191,115 +190,16 @@ new DemoPopup(getContext()).showPopupWindow();
 
  - `showPopupWindow()无参传入`
 
-| gravity = CENTER<br>上述例子中xml写明了layout_gravity=center | gravity = BOTTOM | CENTER_HORIZONTAL | 
+| **gravity = CENTER<br>上述例子中xml写明了layout_gravity=center** | **gravity = RIGHT \| CENTER_VERTICAL** |
 | - | - |
-| ![](https://github.com/razerdp/Pics/blob/master/BasePopup/show_1.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/show_2.gif) |
+| <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_1.gif" height="360"/></p> | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_2.gif" height="360"/></p> |
 
-### 方法一
-----
+ - `showPopupWindow(View v)传入anchorView`
 
-* **Step 1:**
+| **gravity = CENTER<br>上述例子中xml写明了layout_gravity=center** | **gravity = RIGHT \| CENTER_VERTICAL** |
+| - | - |
+| <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_3.gif" height="360"/></p> | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_4.gif" height="360"/></p> |
 
-像您平时定制activity布局文件一样定制您的popup布局
-
-etc.
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_marginLeft="50dp"
-    android:layout_marginRight="50dp"
-    android:background="@android:color/holo_blue_dark"
-    android:orientation="vertical"
-    >
-
-    <TextView
-        android:id="@+id/tx_1"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:gravity="center"
-        android:text="test1"
-        android:textColor="@color/color_black1"/>
-
-</LinearLayout>
-```  
-![image](https://github.com/razerdp/BasePopup/blob/master/img/etc.png) 
-
-
-* **Step 2:**
-
-新建一个类继承BasePopupWindow
-
-* **Step 3:**
-
-实现必要的几个方法：
-
-**该方法从2.0.6开始不再抽象强制实现，但建议实现入场和退场动画** `onCreateShowAnimation()`/`onCreateDismissAnimation()`:初始化一个显示/退出动画，该动画将会用到`onCreatePopupView()`所返回的view,可以为空。
-
-`onCreatePopupView()`:初始化您的popupwindow界面，建议直接使用`createPopupById()`
-
-
-例如
-
-```java
-public class DialogPopup extends BasePopupWindow implements View.OnClickListener{
-
-    private TextView ok;
-    private TextView cancel;
-
-    public DialogPopup(Activity context) {
-        super(context);
-
-        ok= (TextView) findViewById(R.id.ok);
-        cancel= (TextView) findViewById(R.id.cancel);
-
-        setViewClickListener(this,ok,cancel);
-    }
-
-    @Override
-    protected Animation onCreateShowAnimation() {
-        AnimationSet set=new AnimationSet(false);
-        Animation shakeAnima=new RotateAnimation(0,15,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
-        shakeAnima.setInterpolator(new CycleInterpolator(5));
-        shakeAnima.setDuration(400);
-        set.addAnimation(getDefaultAlphaAnimation());
-        set.addAnimation(shakeAnima);
-        return set;
-    }
-
-    @Override
-    protected Animation onCreateDismissAnimation() {
-        return null;
-    }
-
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_dialog);
-    }
-
-    @Override
-    public void onClick(View v) {
-        //... click event
-    }
-}
-```
-
-* **Step 4:**
-
-把您刚才实现的popup给new出来并调用show方法
-
-例如
-
-```java
-    DialogPopup popup = new DialogPopup(context);
-    popup.showPopupWindow();
-```
-
-----
 
 ### 方法二
 ----
