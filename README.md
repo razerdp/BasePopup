@@ -2,8 +2,8 @@
 
 <p align="center"><img src="./img/logo.png" alt="Logo图片似乎加载不出来" height="360"/></p>
 <h2 align="center">BasePopup - Android下打造通用便捷的PopupWindow</h2>
-
-<table align="center">
+<div align="center">
+<table>
     <thead>
         <tr>
             <th>Release</th>
@@ -43,6 +43,7 @@
 		</tr>
     </tbody>
 </table>
+</div>
 
 ---
 
