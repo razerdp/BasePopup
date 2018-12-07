@@ -1,50 +1,66 @@
 [1.x版本](./README_OLD.md) | 2.x版本
 
-<p align="center"><img src="./img/logo.png" alt="logo" /></p>
+<p align="center"><img src="./img/logo.png" alt="Logo图片似乎加载不出来" height="360"/></p>
 <h2 align="center">BasePopup - Android下打造通用便捷的PopupWindow</h2>
-
-**这是一个快速实现PopupWindow的基类，本基类易于扩展，并且几乎没有使用限制，便于您快速实现各种各样的PopupWindow。**
-
 
 | **Release** | **Candy** | **License** | **Api** | **Author** |
 | ---- | ---- | ---- | ---- | ---- |
 | [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion) | [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion)| [![license](https://img.shields.io/badge/license-Apache--2.0-blue.svg )](https://github.com/razerdp/BasePopup/blob/master/LICENSE) | [![Api](https://img.shields.io/badge/Api-16%2B-green.svg)](https://img.shields.io/badge/Api-14%2B-green.svg) | [![Author](https://img.shields.io/badge/Author-razerdp-blue.svg)](https://github.com/razerdp) |
 
+### 导航
+ 
+ - [特性](#特性)
+ - [注意事项](#注意事项)
+ - [快速入门](#快速入门)
+   - [依赖](#依赖)
+   - 普通使用
+     - 编写您的xml文件
+     - 创建您的Popup类并继承BasePopupWindow
+     - 补充对应方法
+     - show！
+   - QuickPopupBuilder链式调用
+     - 示例代码
+     - Api
+   - Api（请看Wiki）
+   - 更新日志[历史更新](./UpdateLog.md)
+   - 例子预览
+   - 打赏
+   - 交流群
+   - 常见问题
+   - 贡献者们
+   - 感谢
+   - LICENSE
 
-注意事项
-----
+### 特性
 
-Android P已经适配，感谢[@Guolei1130](https://github.com/Guolei1130)收集的方法。
+ - 更简单更精准的控制显示位置，通过Gravity和offset来控制您的PopupWindow
+ - 本库为抽象类，对子类几乎没有约束，您完全可以像定制Activity一样来定制您的PopupWindow
+ - 支持Animation、Animator，随意控制您的PopupWindow的动画，再也不用去写蛋疼的xml了
+ - 背景变暗、背景换色甚至背景给个Drawable都是一句话的事情
+ - 背景模糊亦或是模糊背景某个具体的View也仅仅需要您一句话的配置
+ - 返回键、点击外部是否Dismiss，外部是否可以响应事情三者分离，再也不用担心我的PopupWindow各种按键响应问题
+   - 如果不满足默认的事件，没问题，我们还提供了事件传递，您的事件您来把握
+ - 系统的坑？不，我们来把控，通过hook掉系统的windowmanager来由我们把握PopupWindow的各种事情，防止不同版本出现的各种适配问题
+ - 支持链式调用，还在为简单的PopupWindow使用不得不继承库的抽象类而感到烦躁？不妨来试试QuickPopupBuilder，想必您会爱上它的
 
-文章地址：[android_p_no_sdkapi_support](https://github.com/Guolei1130/android_p_no_sdkapi_support)
+### 注意事项
 
-本库一开始采用360的方法，但不得不走Native，为了个Popup不得不引入so感觉很不值得，在看到这篇文章后，才想起UnSafe类
+**WARN：**
+ 
+  - **请务必仔细阅读本README,每个版本升级请务必查阅更新日志，这可以为您减少不必要弯路**
+  - **请注意引用版本的问题，Release版本是稳定版，Candy是预览版。**
+    - Release版本：一般在Candy版本反复验证修复后发布到Release，如果您对稳定性要求较高，请使用Release版本。
+    - Candy版本：一般新功能、issue修复都会发布到Candy版本，Candy版本发布比较频繁，但通常会拥有新的功能，如果您喜欢试验新功能同时对稳定性要求不高，请使用Candy版本。
+    - **Release和Candy两个版本互相切换可能会导致Build失败，这时候您Clean一下Project即可**
+  - **如果您是以前1.x版本的用户，现在想更新到2.x，请在更新前查阅：[1.x迁移到2.x帮助文档](https://github.com/razerdp/BasePopup/blob/master/1.x%E8%BF%81%E7%A7%BB2.x%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3.md)**
 
-本库采用方法5。
 
-如果以后UnSafe类移除掉的话，再考虑Native方法。
+>Android P已经适配，感谢[@Guolei1130](https://github.com/Guolei1130)收集的方法。<br><br>文章地址：[android_p_no_sdkapi_support](https://github.com/Guolei1130/android_p_no_sdkapi_support)<br><br>本库一开始采用360的方法，但不得不走Native，为了个Popup不得不引入so感觉很不值得，在看到这篇文章后，才想起UnSafe类，因此本库采用方法5。<br><br>如果以后UnSafe类移除掉的话，再考虑Native方法。<br><br><b>最后再一次感谢大牛提供的方法~<b>
 
-最后再一次感谢大牛提供的方法~
 
+### 快速入门
 ---
-
-**请务必查看更新日志和例子预览，里面会详细解释每个版本增加或修复的功能**
-
-**请注意引用版本的问题，Release版本是稳定版，可商用。**
-
-**Candy不稳定（且更新很频繁），但包含着新功能或者新的优化，不建议商用。**
-
-[**v1.x READ_ME**](https://github.com/razerdp/BasePopup/blob/master/README_OLD.md)
-
-[**1.x迁移到2.x帮助文档**](https://github.com/razerdp/BasePopup/blob/master/1.x%E8%BF%81%E7%A7%BB2.x%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3.md)
-
-[**更新日志**](https://github.com/razerdp/BasePopup#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97%E5%8E%86%E5%8F%B2%E6%9B%B4%E6%96%B0)
-
-[**例子预览**](https://github.com/razerdp/BasePopup#%E4%B8%80%E4%BA%9B%E4%BE%8B%E5%AD%90)
-
-
-依赖
----
+#### 依赖
 
 | **Release** | **Candy** |
 | ---- | ---- |
