@@ -304,6 +304,18 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Candy】2.1.0-betaX**(2018/12)
+  * **针对2.x的重构，撒花~**
+  * 本次更新内容：
+    * 去掉每次都add两次View的骚操作，合并成同一个PopupWindow，所以Layout Inspector不再让人迷惑为啥有两个PopupWindow了
+    * 增加Gravity的支持，再也不用蛋疼的去计算蛋疼的offset了，而且布局文件真的可以wrap_content了
+    * 接管layout过程，所以各个版本的PopupWindow都不一样？不存在滴。。。同时autoLocate支持RecyclerView啦~
+    * 增加对contentView的xml的解析（前提是使用createPopupById方法），再也不怕被强制设置宽高了
+    * fullScreen支持输入法布局适配！心塞了好久的问题终于解决
+    * 增加对5.1和5.1.1官方两个PopupWindow重叠后在切换时层次变化的bug的适配
+    * 优化代码，去除冗余代码
+    * README大翻新
+
 * **【Release】2.0.8.1**(2018/10/29)
   * **建议更新到这个版本！**
   * fixed [#94](https://github.com/razerdp/BasePopup/issues/94)
@@ -320,16 +332,6 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 * **【Candy】2.0.8-alpha2**(2018/10/19)
   * 修复QuickPopupBuilder的click事件无响应问题，增加background方法
   * 修复设置background(0)时无法找到资源而崩溃的问题
-
-* **【Release】2.0.7**(2018/10/15)
-  * 绕开Android P的非公开api方法反射
-    * 思路参考&&感谢[android_p_no_sdkapi_support](https://github.com/Guolei1130/android_p_no_sdkapi_support)
-  * 发布2.0.7 release
-    
-  
-* **【Release】2.0.6**(2018/10/09)
-  * 不再抽象强制实现入场和退场动画
-  * 针对自动弹出输入法的Popup，在dismiss()中默认关闭输入法
 
 <br>
 
