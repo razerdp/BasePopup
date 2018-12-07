@@ -33,11 +33,7 @@ public class QuickPopupBuilder {
     }
 
     public QuickPopupBuilder contentView(int resId) {
-        return contentView(View.inflate(getContext(), resId, null));
-    }
-
-    public QuickPopupBuilder contentView(View contentView) {
-        mContentView = contentView;
+        mConfig.contentViewLayoutid(resId);
         return this;
     }
 
@@ -58,6 +54,10 @@ public class QuickPopupBuilder {
     }
 
     public QuickPopupBuilder config(QuickPopupConfig quickPopupConfig) {
+        if (quickPopupConfig == null) return this;
+        if (quickPopupConfig != mConfig) {
+            quickPopupConfig.contentViewLayoutid(mConfig.contentViewLayoutid);
+        }
         this.mConfig = quickPopupConfig;
         return this;
     }
@@ -81,7 +81,6 @@ public class QuickPopupBuilder {
         quickPopup.showPopupWindow(anchorView);
         return quickPopup;
     }
-
 
 
     //-----------------------------------------tools-----------------------------------------

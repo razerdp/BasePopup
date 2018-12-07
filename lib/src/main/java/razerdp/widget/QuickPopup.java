@@ -25,7 +25,6 @@ public class QuickPopup extends BasePopupWindow {
     public QuickPopup(Context context, QuickPopupConfig config, View contentView, int w, int h) {
         super(context, w, h);
         mConfig = config;
-        content = contentView;
         if (mConfig != null) {
             callInitInternal(context, w, h);
         } else {
@@ -107,6 +106,6 @@ public class QuickPopup extends BasePopupWindow {
 
     @Override
     public View onCreateContentView() {
-        return content;
+        return createPopupById(mConfig.getContentViewLayoutid());
     }
 }
