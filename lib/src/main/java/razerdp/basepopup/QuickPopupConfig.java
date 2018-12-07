@@ -18,6 +18,8 @@ import razerdp.util.SimpleAnimationUtils;
  * Created by 大灯泡 on 2018/8/23.
  */
 public final class QuickPopupConfig {
+    int contentViewLayoutid;
+
     Animation mShowAnimation;
     Animation mDismissAnimation;
 
@@ -154,6 +156,12 @@ public final class QuickPopupConfig {
         this.allowInterceptTouchEvent = allowInterceptTouchEvent;
         return this;
     }
+
+    QuickPopupConfig contentViewLayoutid(int contentViewLayoutid) {
+        this.contentViewLayoutid = contentViewLayoutid;
+        return this;
+    }
+
     //-----------------------------------------getter-----------------------------------------
 
     public Animation getShowAnimation() {
@@ -227,5 +235,9 @@ public final class QuickPopupConfig {
 
     public boolean isClipChildren() {
         return clipChildren;
+    }
+
+    public int getContentViewLayoutid() {
+        return contentViewLayoutid;
     }
 }
