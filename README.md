@@ -14,23 +14,23 @@
  - [特性](#特性)
  - [注意事项](#注意事项)
  - [快速入门](#快速入门)
+   - [配置](#配置)
+     - [模糊配置](#模糊配置)
    - [依赖](#依赖)
    - [普通使用](#普通使用)
      - [1.编写您的xml文件](#1编写您的xml文件)
      - [2.创建您的Popup类并继承BasePopupWindow](#2创建您的Popup类并继承BasePopupWindow)
      - [3.补充对应方法](#3补充对应方法)
      - [4.show！](#4show！)
-   - QuickPopupBuilder链式调用
-     - 示例代码
-     - Api
-   - Api（请看Wiki）
-   - 更新日志[历史更新](./UpdateLog.md)
-   - 例子预览
-   - 打赏
-   - 交流群
-   - 常见问题
-   - 贡献者们
-   - 感谢
+   - [QuickPopupBuilder链式调用](#QuickPopupBuilder链式调用)
+     - [示例代码](#示例代码) 
+   - [Api（请看Wiki）](#Api（请看Wiki）)
+   - [更新日志](#更新日志)
+     - [历史更新](./UpdateLog.md)
+   - [例子预览](#例子预览)
+   - [打赏](#打赏)
+   - [交流群](#交流群)
+   - [常见问题](#常见问题)
    - LICENSE
    
 <br>
@@ -70,7 +70,8 @@
 
 ### 快速入门
 ---
-#### 依赖
+
+### 依赖
 
 | **Release** | **Candy** |
 | ---- | ---- |
@@ -87,6 +88,23 @@
 	        //implementation 'com.github.razerdp:BasePopup_Candy:{$latestVersion}'
 	}
 ```
+<br>
+
+### 配置
+
+#### 模糊配置
+
+**从1.9.0-alpha开始支持背景模糊（只需要一个方法：`setBlurBackgroundEnable(boolean)`）**
+
+**RenderScript最低支持api 17（更低的情况将会使用fastblur），您需要在gradle配置一下代码**
+
+```xml
+defaultConfig {
+        renderscriptTargetApi 25
+        renderscriptSupportModeEnabled true
+    }
+```
+
 <br>
 
 ### 普通使用
@@ -117,7 +135,7 @@
 
 </LinearLayout>
 ```
-<p align="left"><img src="https://github.com/razerdp/Pics/blob/59a2d5047eeb617d9d7a9a042c0d436b3103f0bb/BasePopup/%E7%BC%96%E5%86%99xml.png" height="360"/></p>
+<p align="left"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/%E7%BC%96%E5%86%99xml.png" height="360"/></p>
 
 
 
@@ -186,6 +204,8 @@ new DemoPopup(getContext()).showPopupWindow();
  
 >建议：如果PopupWindow需要重复展示或者保留状态，建议作为成员变量使用，而不要作为局部变量每次都创建
 
+>关于Gravity的更多api，请查看：[Wiki-Api-Gravity]()
+
 例子展示：
 
  - `showPopupWindow()无参传入`
@@ -200,77 +220,51 @@ new DemoPopup(getContext()).showPopupWindow();
 | - | - |
 | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_3.gif" height="360"/></p> | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_4.gif" height="360"/></p> |
 
+<br>
 
-### 方法二
+### QuickPopupBuilder链式调用
+
+QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，该Builder旨在快速建立一个简单的不包含复杂逻辑的PopupWindow，如上述案例，避免过于简单的PopupWindow也要继承BasePopupWindow，导致存在过多的类。
+
+#### 示例代码
+
+
 ----
 如果您并不需要很详细的定义一个PopupWindow，您也可以选择`QuickPopupBuilder`采取链式写法快速编写出一个Popup以使用。
 
+>注意：默认QuickPopupBuilder.QuickPopupConfig配置中PopupWindow动画为淡入淡出
+
 ```java
-    QuickPopupBuilder.with(getContext())
-                     .contentView(R.layout.popup_menu_small)
-                     .wrapContentMode()
-                     .config(new QuickPopupConfig()
-                                .withShowAnimation(enterAnimation)
-                                .withDismissAnimation(dismissAnimation)
-                                .offsetX(offsetX, offsetRatioOfPopupWidth)
-                                .offsetY(offsetY, offsetRatioOfPopupHeight)
-                                .blurBackground(true, new BasePopupWindow.OnBlurOptionInitListener() {
-                                    @Override
-                                    public void onCreateBlurOption(PopupBlurOption option) {
-                                        option.setBlurRadius(6)
-                                                .setBlurPreScaleRatio(0.9f);
-                                    }
-                                })
-                                .withClick(R.id.tx_1, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        ToastUtils.ToastMessage(getContext(), "tx1");
-                                    }
-                                }))
-                     .show(v);
+        QuickPopupBuilder.with(getContext())
+                .contentView(R.layout.popup_normal)
+                .config(new QuickPopupConfig()
+                        .gravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL)
+                        .withClick(R.id.tx_1, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(getContext(), "clicked", Toast.LENGTH_LONG).show();
+                            }
+                        }))
+                .show();
+		//.show(anchorView);
 ````
 
+| **show()** | **show(anchorView)** |
+| - | - |
+| <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_5.gif" height="360"/></p> | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_6.gif" height="360"/></p> |
 
+<br>
 
-
-
-**ps:从1.9.0-alpha开始支持背景模糊（只需要一个方法：`setBlurBackgroundEnable()`）**
-
-**RenderScript最低支持api 17（更低的情况将会使用fastblur），您需要在gradle配置一下代码**
-
-```xml
-defaultConfig {
-        renderscriptTargetApi 25
-        renderscriptSupportModeEnabled true
-    }
-```
-
-方法介绍：
----
+### Api（请看Wiki）
 
 请看wiki（陆续完善中）
 
 **Link👉**[WIKI](https://github.com/razerdp/BasePopup/wiki)
 
-交流群：590777418
----
-
-因为目前还有朋友圈项目，建立了一个交流群，出于懒得管理那么多，所以如果有想法或者优化建议或者其他问题，欢迎加入“朋友圈交流群”
-
-![](https://github.com/razerdp/FriendCircle/blob/master/qqgroup.png)
-
-打赏（看在我那么努力维护的份上。。。给个零食呗~）
----
-
-| 微信 |支付宝 | 
-| ---- | ---- | 
-| ![](https://github.com/razerdp/FriendCircle/blob/master/wechat.png)      | ![](https://github.com/razerdp/FriendCircle/blob/master/alipay.png) |
+<br>
 
 
-
-
-更新日志([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
-----------------------------------------
+### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
 * **【Release】2.0.8.1**(2018/10/29)
   * **建议更新到这个版本！**
@@ -299,9 +293,9 @@ defaultConfig {
   * 不再抽象强制实现入场和退场动画
   * 针对自动弹出输入法的Popup，在dismiss()中默认关闭输入法
 
+<br>
 
-一些例子
----
+### 例子预览
 
 | 对应popup | 预览 |
 | :---- | ---- |
@@ -314,8 +308,54 @@ defaultConfig {
 | [ListPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/ListPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/list_popup.gif) |
 | [MenuPopup.java](https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/MenuPopup.java)     | ![image](https://github.com/razerdp/BasePopup/blob/master/img/menu_popup.gif) |
 
+<br>
 
-License
----
 
-Apache-2.0
+### 打赏（看在我那么努力维护的份上。。。给个零食呗~）
+
+| 微信 |支付宝 | 
+| ---- | ---- | 
+| ![](https://github.com/razerdp/FriendCircle/blob/master/wechat.png)      | ![](https://github.com/razerdp/FriendCircle/blob/master/alipay.png) |
+
+<br>
+
+### 交流群：590777418
+
+因为目前还有朋友圈项目，建立了一个交流群，出于懒得管理那么多，所以如果有想法或者优化建议或者其他问题，欢迎加入“朋友圈交流群”
+
+![](https://github.com/razerdp/FriendCircle/blob/master/qqgroup.png)
+
+
+<br>
+
+### 常见问题
+
+#### Q：如何取消默认的背景颜色
+
+A：调用setBackgroundColor(Color.TRANSPARENT)或者setBackground(0)
+
+#### Q：如何在dismiss()时不执行退出动画
+
+A：调用dismiss(false)或者dismissWithOutAnimate()
+
+#### Q：点击popupwindow背景部分不想让popupwindow隐藏怎么办
+
+A：设置setAllowDismissWhenTouchOutside(false)
+
+#### Q：Service里无法弹出
+
+A：PopupWindow需要windowToken，因此ApplicationContext或者Service里面是无法弹出的，建议通过发出事件通知栈顶Activity来弹出
+
+#### Q：如何不让PopupWindow的蒙层覆盖状态栏
+
+A：设置setPopupWindowFullScreen(false)
+
+#### Q：如何点击back键不关闭pop 
+
+A：设置setBackPressEnable(false)
+
+<br>
+
+### License
+
+[Apache-2.0](./LICENSE)
