@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import razerdp.blur.PopupBlurOption;
@@ -113,6 +114,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
             View result = LayoutInflater.from(context).inflate(layoutId, tempLayout, false);
             ViewGroup.LayoutParams childParams = result.getLayoutParams();
             if (childParams != null) {
+                checkAndSetGravity(childParams);
                 if (childParams instanceof ViewGroup.MarginLayoutParams) {
                     mParaseFromXmlParams = new ViewGroup.MarginLayoutParams((ViewGroup.MarginLayoutParams) childParams);
                     tempLayout = null;
@@ -126,6 +128,15 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void checkAndSetGravity(ViewGroup.LayoutParams p) {
+        if (p == null) return;
+        if (p instanceof LinearLayout.LayoutParams) {
+            setPopupGravity(((LinearLayout.LayoutParams) p).gravity);
+        } else if (p instanceof FrameLayout.LayoutParams) {
+            setPopupGravity(((FrameLayout.LayoutParams) p).gravity);
+        }
     }
 
     Animation getShowAnimation() {

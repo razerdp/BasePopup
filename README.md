@@ -1,5 +1,8 @@
-BasePopup（v2）
--------------
+[1.x版本](./README_OLD.md) | 2.x版本
+
+<p align="center"><img src="./img/logo.png" alt="logo" /></p>
+<h2 align="center">BasePopup - Android下打造通用便捷的PopupWindow</h2>
+
 **这是一个快速实现PopupWindow的基类，本基类易于扩展，并且几乎没有使用限制，便于您快速实现各种各样的PopupWindow。**
 
 
