@@ -6,7 +6,7 @@
 
 | **Release** | **Candy** | **License** | **Api** | **Author** |
 | ---- | ---- | ---- | ---- | ---- |
-| [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion) | [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion)| [![license](https://img.shields.io/badge/license-Apache--2.0-blue.svg )](https://github.com/razerdp/BasePopup/blob/master/LICENSE) | [![Api](https://img.shields.io/badge/Api-14%2B-green.svg)](https://img.shields.io/badge/Api-14%2B-green.svg) | [![Author](https://img.shields.io/badge/Author-razerdp-blue.svg)](https://github.com/razerdp) |
+|[ ![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg?version=1.9.4) ](https://bintray.com/razerdp/maven/BasePopup/1.9.4/link) | [ ![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg?version=2.0.8-alpha3) ](https://bintray.com/razerdp/maven/BasePopup_Candy/2.0.8-alpha3/link) | [![license](https://img.shields.io/badge/license-Apache--2.0-blue.svg )](https://github.com/razerdp/BasePopup/blob/master/LICENSE) | [![Api](https://img.shields.io/badge/Api-14%2B-green.svg)](https://img.shields.io/badge/Api-14%2B-green.svg) | [![Author](https://img.shields.io/badge/Author-razerdp-blue.svg)](https://github.com/razerdp) |
 
 
 注意事项
@@ -39,7 +39,7 @@
 
 | **Release** | **Candy** |
 | ---- | ---- |
-| [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup/_latestVersion) | [![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg) ](https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion) |
+|[ ![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg?version=1.9.4) ](https://bintray.com/razerdp/maven/BasePopup/1.9.4/link) | [ ![Download](https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg?version=2.0.8-alpha3) ](https://bintray.com/razerdp/maven/BasePopup_Candy/2.0.8-alpha3/link) |
 
 
 添加依赖（请把{latestVersion}替换成上面的Jcenter标签所示版本
