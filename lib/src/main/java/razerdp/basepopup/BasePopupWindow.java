@@ -375,6 +375,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         mHelper = new BasePopupHelper(this);
         registerListener(mHelper);
         mContentView = onCreateContentView();
+        if (mHelper.getParaseFromXmlParams() == null) {
+            Log.w(TAG, "为了更准确的适配您的布局，BasePopupWindow建议您使用createPopupById()进行inflate");
+        }
         mDisplayAnimateView = onCreateAnimateView();
         if (mDisplayAnimateView == null) {
             mDisplayAnimateView = mContentView;
@@ -1253,6 +1256,17 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public View getContentView() {
         return mContentView;
+    }
+
+    /**
+     * <p>
+     * 获取PopupWindow执行动画的View
+     * </p>
+     * <br>
+     * 如果{@link #onCreateAnimateView()}返回为空，则返回contentView（{@link #onCreateContentView()}）
+     */
+    public View getDisplayAnimateView() {
+        return mDisplayAnimateView;
     }
 
     /**
