@@ -37,6 +37,9 @@ public class PopupBlurOption {
 
     public PopupBlurOption setBlurView(View blurView) {
         mBlurView = new WeakReference<View>(blurView);
+        if (blurView != null && blurView.getId() != android.R.id.content) {
+            setFullScreen(false);
+        }
         return this;
     }
 
