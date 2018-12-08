@@ -163,11 +163,12 @@ final class PopupCompatManager {
         private void hideSystemUI(Activity act, View popupContentView) {
             if (popupContentView == null) return;
             try {
-                int uiOptions = popupContentView.getSystemUiVisibility();
+
+                int uiOptions = act.getWindow().getDecorView().getSystemUiVisibility();
                 int newUiOptions = uiOptions;
 
                 if (Build.VERSION.SDK_INT >= 14) {
-                    newUiOptions |= View.SYSTEM_UI_FLAG_LOW_PROFILE;
+                    newUiOptions |= View.SYSTEM_UI_FLAG_FULLSCREEN;
                 }
 
                 if (Build.VERSION.SDK_INT >= 16) {
@@ -178,7 +179,7 @@ final class PopupCompatManager {
                     newUiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
                 }
 
-                popupContentView.setSystemUiVisibility(newUiOptions);
+                act.getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
                 PopupLogUtil.trace("hideSystemBar");
             } catch (Exception e) {
                 e.printStackTrace();
