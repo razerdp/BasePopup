@@ -244,7 +244,7 @@ new DemoPopup(getContext()).showPopupWindow();
  
 >建议：如果PopupWindow需要重复展示或者保留状态，建议作为成员变量使用，而不要作为局部变量每次都创建
 
->关于Gravity的更多api，请查看：[Wiki-Api-Gravity]()
+>关于Gravity的更多api，请查看：[Wiki-Api：Gravity](https://github.com/razerdp/BasePopup/wiki/API#setpopupgravityint-popupgravity)
 
 例子展示：
 
