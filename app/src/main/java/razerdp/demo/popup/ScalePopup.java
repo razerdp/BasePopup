@@ -1,6 +1,6 @@
 package razerdp.demo.popup;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.animation.Animation;
 
@@ -14,7 +14,7 @@ import razerdp.demo.utils.ToastUtils;
  */
 public class ScalePopup extends BasePopupWindow implements View.OnClickListener {
 
-    public ScalePopup(Activity context) {
+    public ScalePopup(Context context) {
         super(context);
         bindEvent();
     }
@@ -32,7 +32,7 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener 
 
     @Override
     public View onCreateContentView() {
-        return createPopupById(R.layout.popup_normal);
+        return createPopupById(R.layout.popup_scale);
     }
 
     private void bindEvent() {

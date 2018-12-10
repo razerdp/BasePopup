@@ -23,7 +23,7 @@ public class DialogPopupFrag extends SimpleBaseFrag {
     }
 
     @Override
-    public void bindEvent() {
+    public void onInitView(View rootView) {
 
     }
 

@@ -27,7 +27,7 @@ public class CommentPopupFrag extends SimpleBaseFrag {
     private RecyclerView mRecyclerView;
 
     @Override
-    public void bindEvent() {
+    public void onInitView(View rootView) {
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_content);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         List<String> data = new ArrayList<>();

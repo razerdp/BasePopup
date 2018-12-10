@@ -36,7 +36,7 @@ public class DismissControlPopupFrag extends SimpleBaseFrag {
     private ListView mListView;
 
     @Override
-    public void bindEvent() {
+    public void onInitView(View rootView) {
         mButton = (Button) mFragment.findViewById(R.id.popup_show);
         switchDismissWhenTouchOutside = (SwitchCompat) mFragment.findViewById(R.id.switch_dismiss_when_touch_outside);
         switchBackpressEnable = (SwitchCompat) mFragment.findViewById(R.id.switch_backpress_enable);

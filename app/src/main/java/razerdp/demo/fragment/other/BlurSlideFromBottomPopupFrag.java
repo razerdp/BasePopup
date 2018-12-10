@@ -40,7 +40,7 @@ public class BlurSlideFromBottomPopupFrag extends SimpleBaseFrag {
     }
 
     @Override
-    public void bindEvent() {
+    public void onInitView(View rootView) {
         mPreviewImageView = (ImageView) findViewById(R.id.iv_preview);
         mTipsTextView = (TextView) findViewById(R.id.tv_tips);
         mImageViews = new ArrayList<>();

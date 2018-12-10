@@ -28,7 +28,7 @@ public class ScalePopupFrag extends SimpleBaseFrag {
     }
 
     @Override
-    public void bindEvent() {
+    public void onInitView(View rootView) {
         scalePopup=new ScalePopup(mContext);
         scalePopup.setOnDismissListener(new BasePopupWindow.OnDismissListener() {
             @Override

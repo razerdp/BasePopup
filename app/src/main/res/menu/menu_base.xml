@@ -3,13 +3,23 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="razerdp.demo.DemoActivity">
     <item
-        android:id="@+id/id_gravity"
+        android:id="@+id/id_other_demo"
         android:orderInCategory="98"
+        android:title="更多具体例子"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_gravity"
+        android:orderInCategory="99"
         android:title="Gravity设置"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/id_other_demo"
-        android:orderInCategory="500"
-        android:title="更多具体例子"
+        android:id="@+id/id_showpopup"
+        android:orderInCategory="100"
+        android:title="ShowPopupWindow"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_animate"
+        android:orderInCategory="100"
+        android:title="动画"
         app:showAsAction="never"/>
 </menu>

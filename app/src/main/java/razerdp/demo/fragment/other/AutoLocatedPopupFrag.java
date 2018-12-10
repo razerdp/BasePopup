@@ -36,7 +36,7 @@ public class AutoLocatedPopupFrag extends SimpleBaseFrag implements View.OnClick
     }
 
     @Override
-    public void bindEvent() {
+    public void onInitView(View rootView) {
         popup_show = (Button) findViewById(R.id.popup_show);
         popup_show1 = (Button) findViewById(R.id.popup_show1);
         popup_show2 = (Button) findViewById(R.id.popup_show2);

@@ -22,7 +22,7 @@ public class SlideFromBottomPopupFrag extends SimpleBaseFrag {
     }
 
     @Override
-    public void bindEvent() {
+    public void onInitView(View rootView) {
 
     }
 
