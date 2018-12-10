@@ -70,7 +70,7 @@ public class SlideFromTopPopupFrag2 extends SimpleBaseFrag {
 
 
     @Override
-    public void bindEvent() {
+    public void onInitView(View rootView) {
         titleParent = (RelativeLayout) findViewById(R.id.rl_title);
         mSlideFromTopPopup = new SlideFromTopPopup2(mContext);
         mSlideFromTopPopup.setOnDismissListener(onDismissListener);

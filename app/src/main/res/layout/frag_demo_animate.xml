@@ -33,58 +33,18 @@
             android:orientation="horizontal">
 
             <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/check_gravity_left"
+                android:id="@+id/check_show_animation"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Gravity.LEFT"/>
+                android:text="showAnimation"/>
 
             <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/check_gravity_top"
+                android:id="@+id/check_show_animator"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Gravity.TOP"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/check_gravity_right"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Gravity.RIGHT"/>
-
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/check_gravity_bottom"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Gravity.BOTTOM"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/check_gravity_center_vertical"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Gravity.CENTER_VERTICAL"/>
-
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/check_gravity_center_horizontal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Gravity.CENTER_HORIZONTAL"/>
+                android:text="showAnimator"/>
 
         </LinearLayout>
 
@@ -94,19 +54,19 @@
             android:orientation="horizontal">
 
             <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/check_gravity_center"
+                android:id="@+id/check_dismiss_animation"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Gravity.CENTER"/>
+                android:text="dismissAnimation"/>
 
             <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/check_combine_anchor"
+                android:id="@+id/check_dismissanimator"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:text="是否跟AnchorView关联"/>
+                android:text="dismissAnimator"/>
+
         </LinearLayout>
     </LinearLayout>
 

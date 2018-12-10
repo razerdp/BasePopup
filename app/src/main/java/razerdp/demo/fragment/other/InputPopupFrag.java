@@ -13,7 +13,7 @@ import razerdp.demo.popup.InputPopup;
 public class InputPopupFrag extends SimpleBaseFrag {
 
     @Override
-    public void bindEvent() {
+    public void onInitView(View rootView) {
 
     }
 

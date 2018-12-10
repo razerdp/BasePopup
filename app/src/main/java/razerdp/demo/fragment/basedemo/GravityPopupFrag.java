@@ -1,5 +1,6 @@
 package razerdp.demo.fragment.basedemo;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -8,11 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.fragment.other.SimpleBaseFrag;
 import razerdp.demo.popup.GravityPopup;
+import razerdp.demo.utils.MultiSpanUtil;
 
 /**
  * Created by 大灯泡 on 2018/11/28.
@@ -29,6 +32,8 @@ public class GravityPopupFrag extends SimpleBaseFrag implements View.OnClickList
     private AppCompatCheckBox checkGravityCenter;
     private Button popupShow;
     private AppCompatCheckBox checkCombineAnchor;
+    private static final String DESC = " · 不跟anchorView关联的情况下，gravity意味着在整个decorView中的方位，默认Gravity为NO_GRAVITY，即屏幕左上角\n\n" +
+            " · 如果跟anchorView关联，gravity意味着以anchorView为中心的方位，默认处于anchorView正下方，并且尽可能左对齐。";
 
 
     @Nullable
@@ -39,7 +44,7 @@ public class GravityPopupFrag extends SimpleBaseFrag implements View.OnClickList
     }
 
     @Override
-    public void bindEvent() {
+    public void onInitView(View rootView) {
         initView();
         mPopupWindow = new GravityPopup(mContext);
 
@@ -90,6 +95,16 @@ public class GravityPopupFrag extends SimpleBaseFrag implements View.OnClickList
         this.checkGravityCenter = (AppCompatCheckBox) findViewById(R.id.check_gravity_center);
         this.checkCombineAnchor = (AppCompatCheckBox) findViewById(R.id.check_combine_anchor);
         this.popupShow = (Button) findViewById(R.id.popup_show);
+        initDesc();
+    }
+
+
+    private void initDesc() {
+        TextView desc = (TextView) findViewById(R.id.tv_desc);
+        MultiSpanUtil.create(DESC)
+                .append("默认Gravity为NO_GRAVITY，即屏幕左上角").setTextColor(Color.RED)
+                .append("默认处于anchorView正下方，并且尽可能左对齐。").setTextColor(Color.RED)
+                .into(desc);
     }
 
     @Override

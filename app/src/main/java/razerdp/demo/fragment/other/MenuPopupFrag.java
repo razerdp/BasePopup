@@ -14,7 +14,7 @@ public class MenuPopupFrag extends SimpleBaseFrag{
     private Button mButton;
     private MenuPopup mMenuPopup;
     @Override
-    public void bindEvent() {
+    public void onInitView(View rootView) {
         mButton= (Button) mFragment.findViewById(R.id.popup_show);
         mMenuPopup=new MenuPopup(mContext);
         mButton.setOnClickListener(new View.OnClickListener() {

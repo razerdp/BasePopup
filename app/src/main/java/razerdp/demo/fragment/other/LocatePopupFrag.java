@@ -28,7 +28,7 @@ public class LocatePopupFrag extends SimpleBaseFrag {
     int gravity;
 
     @Override
-    public void bindEvent() {
+    public void onInitView(View rootView) {
         this.rvGroup = (RadioGroup) findViewById(R.id.rv_group);
         this.anchor = (Button) findViewById(R.id.anchor);
         rvGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

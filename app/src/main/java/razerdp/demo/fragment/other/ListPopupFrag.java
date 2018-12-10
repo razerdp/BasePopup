@@ -17,7 +17,7 @@ public class ListPopupFrag extends SimpleBaseFrag {
     public static final int TAG_MODIFY=0x03;
     private ListPopup mListPopup;
     @Override
-    public void bindEvent() {
+    public void onInitView(View rootView) {
         ListPopup.Builder builder=new ListPopup.Builder(mContext);
         builder.addItem(TAG_CREATE,"Create-01");
         builder.addItem(TAG_MODIFY,"Modify-01");
