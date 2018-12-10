@@ -192,9 +192,9 @@ public class ListPopup extends BasePopupWindow {
     @Override
     public Animator onCreateShowAnimator() {
         AnimatorSet set = new AnimatorSet();
-        set.playTogether(ObjectAnimator.ofFloat(mDisplayAnimateView, "rotationX", 90f, 0f).setDuration(400),
-                ObjectAnimator.ofFloat(mDisplayAnimateView, "translationY", 250f, 0f).setDuration(400),
-                ObjectAnimator.ofFloat(mDisplayAnimateView, "alpha", 0f, 1f).setDuration(400 * 3 / 2));
+        set.playTogether(ObjectAnimator.ofFloat(getDisplayAnimateView(), "rotationX", 90f, 0f).setDuration(400),
+                ObjectAnimator.ofFloat(getDisplayAnimateView(), "translationY", 250f, 0f).setDuration(400),
+                ObjectAnimator.ofFloat(getDisplayAnimateView(), "alpha", 0f, 1f).setDuration(400 * 3 / 2));
         return set;
     }
 
@@ -207,9 +207,9 @@ public class ListPopup extends BasePopupWindow {
     @Override
     public Animator onCreateDismissAnimator() {
         AnimatorSet set = new AnimatorSet();
-        set.playTogether(ObjectAnimator.ofFloat(mDisplayAnimateView, "rotationX", 0f, 90f).setDuration(400),
-                ObjectAnimator.ofFloat(mDisplayAnimateView, "translationY", 0f, 250f).setDuration(400),
-                ObjectAnimator.ofFloat(mDisplayAnimateView, "alpha", 1f, 0f).setDuration(400 * 3 / 2));
+        set.playTogether(ObjectAnimator.ofFloat(getDisplayAnimateView(), "rotationX", 0f, 90f).setDuration(400),
+                ObjectAnimator.ofFloat(getDisplayAnimateView(), "translationY", 0f, 250f).setDuration(400),
+                ObjectAnimator.ofFloat(getDisplayAnimateView(), "alpha", 1f, 0f).setDuration(400 * 3 / 2));
         return set;
     }
 

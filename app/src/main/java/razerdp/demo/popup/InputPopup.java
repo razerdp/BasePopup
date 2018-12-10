@@ -68,10 +68,10 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener 
         AnimatorSet set = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
             set = new AnimatorSet();
-            if (mDisplayAnimateView != null) {
+            if (getDisplayAnimateView() != null) {
                 set.playTogether(
-                        ObjectAnimator.ofFloat(mDisplayAnimateView, "translationY", 0, 250).setDuration(400),
-                        ObjectAnimator.ofFloat(mDisplayAnimateView, "alpha", 1, 0.4f).setDuration(250 * 3 / 2));
+                        ObjectAnimator.ofFloat(getDisplayAnimateView(), "translationY", 0, 250).setDuration(400),
+                        ObjectAnimator.ofFloat(getDisplayAnimateView(), "alpha", 1, 0.4f).setDuration(250 * 3 / 2));
             }
         }
         return set;

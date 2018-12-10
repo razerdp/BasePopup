@@ -1,15 +1,12 @@
 package razerdp.basepopup;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 
-import razerdp.util.log.LogTag;
 import razerdp.util.log.PopupLogUtil;
 
 /**
@@ -56,8 +53,6 @@ final class PopupCompatManager {
 
     //base impl
     static abstract class BaseImpl implements PopupWindowImpl {
-        private int tryScanActivityCount = 0;
-        private static final int MAX_SCAN_ACTIVITY_COUNT = 50;
 
         abstract void showAsDropDownImpl(Activity activity, BasePopupWindowProxy popupWindow, View anchor, int xoff, int yoff, int gravity);
 
@@ -72,8 +67,6 @@ final class PopupCompatManager {
                 return;
             }
             onBeforeShowExec(popupWindow, activity);
-            //复位重试次数#issue 45(https://github.com/razerdp/BasePopup/issues/45)
-            popupWindow.resetTryScanActivityCount();
             showAsDropDownImpl(activity, popupWindow, anchor, xoff, yoff, gravity);
             onAfterShowExec(popupWindow, activity);
         }
@@ -87,7 +80,6 @@ final class PopupCompatManager {
                 return;
             }
             onBeforeShowExec(popupWindow, activity);
-            popupWindow.resetTryScanActivityCount();
             showAtLocationImpl(activity, popupWindow, parent, gravity, x, y);
             onAfterShowExec(popupWindow, activity);
         }
@@ -98,46 +90,11 @@ final class PopupCompatManager {
         }
 
         protected void onAfterShowExec(BasePopupWindowProxy popupWindowProxy, Activity act) {
-            fitSystemBar(act, popupWindowProxy.getContentView());
+//            fitSystemBar(act, popupWindowProxy.getContentView());
         }
 
         boolean isPopupShowing(BasePopupWindowProxy popupWindow) {
             return popupWindow != null && popupWindow.callSuperIsShowing();
-        }
-
-        void resetTryScanActivityCount() {
-            tryScanActivityCount = 0;
-        }
-
-
-        /**
-         * fix context cast exception
-         * <p>
-         * android.view.ContextThemeWrapper
-         * <p>
-         * https://github.com/razerdp/BasePopup/pull/26
-         *
-         * @param from
-         * @return
-         * @author: hshare
-         * @author: razerdp optimize on 2018/4/25
-         */
-        Activity scanForActivity(Context from) {
-            Context result = from;
-            while (result instanceof ContextWrapper) {
-                if (result instanceof Activity) {
-                    resetTryScanActivityCount();
-                    return (Activity) result;
-                }
-                if (tryScanActivityCount > MAX_SCAN_ACTIVITY_COUNT) {
-                    //break endless loop
-                    return null;
-                }
-                tryScanActivityCount++;
-                PopupLogUtil.trace(LogTag.i, TAG, "scanForActivity: " + tryScanActivityCount);
-                result = ((ContextWrapper) result).getBaseContext();
-            }
-            return null;
         }
 
         /**
@@ -243,9 +200,6 @@ final class PopupCompatManager {
         @Override
         void showAsDropDownImpl(Activity activity, BasePopupWindowProxy popupWindow, View anchor, int xoff, int yoff, int gravity) {
             popupWindow.callSuperShowAsDropDown(anchor, xoff, yoff, gravity);
-            PopupLogUtil.trace("showAsDropDownImpl  :: " +
-                    "\noffsetX = " + xoff +
-                    "\noffsetY = " + yoff);
         }
 
         @Override
