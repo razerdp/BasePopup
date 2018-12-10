@@ -345,7 +345,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private PopupWindowProxy mPopupWindow;
     //popup视图
     private View mContentView;
-    protected View mDisplayAnimateView;
+    private View mDisplayAnimateView;
 
     private volatile boolean isExitAnimatePlaying = false;
 
@@ -359,18 +359,18 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         this(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
-    public BasePopupWindow(Context context, int w, int h) {
+    public BasePopupWindow(Context context, int width, int height) {
         if (!(this instanceof QuickPopup)) {
-            initView(context, w, h);
+            initView(context, width, height);
         }
     }
 
-    protected void callInitInternal(Context context, int w, int h) {
+    protected void callInitInternal(Context context, int width, int height) {
         if (!(this instanceof QuickPopup)) return;
-        initView(context, w, h);
+        initView(context, width, height);
     }
 
-    private void initView(Context context, int w, int h) {
+    private void initView(Context context, int width, int height) {
         mContext = new WeakReference<Context>(context);
         mHelper = new BasePopupHelper(this);
         registerListener(mHelper);
@@ -383,22 +383,22 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             mDisplayAnimateView = mContentView;
         }
         if (mHelper.getParaseFromXmlParams() != null) {
-            w = mHelper.getParaseFromXmlParams().width;
-            h = mHelper.getParaseFromXmlParams().height;
+            width = mHelper.getParaseFromXmlParams().width;
+            height = mHelper.getParaseFromXmlParams().height;
         }
 
         //默认占满全屏
-        mPopupWindow = new PopupWindowProxy(mContentView, w, h, mHelper);
+        mPopupWindow = new PopupWindowProxy(mContentView, width, height, mHelper);
         mPopupWindow.setOnDismissListener(this);
         mPopupWindow.bindPopupHelper(mHelper);
         setAllowDismissWhenTouchOutside(true);
         setPopupAnimationStyle(0);
 
-        mHelper.setPopupViewWidth(w);
-        mHelper.setPopupViewHeight(h);
+        mHelper.setPopupViewWidth(width);
+        mHelper.setPopupViewHeight(height);
 
-        hookContentViewDismissClick(w, h);
-        preMeasurePopupView(w, h);
+        hookContentViewDismissClick(width, height);
+        preMeasurePopupView(width, height);
 
         //show or dismiss animate
         mHelper.setShowAnimation(onCreateShowAnimation())
@@ -576,10 +576,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </ul>
      * </p>
      *
-     * @param needPopupFadeAnimate true for apply anim style
+     * @param isPopupFadeAnimate true for apply anim style
      */
-    public BasePopupWindow setPopupFadeEnable(boolean needPopupFadeAnimate) {
-        mHelper.setPopupFadeEnable(mPopupWindow, needPopupFadeAnimate);
+    public BasePopupWindow setPopupFadeEnable(boolean isPopupFadeAnimate) {
+        mHelper.setPopupFadeEnable(mPopupWindow, isPopupFadeAnimate);
         return this;
     }
 
@@ -943,7 +943,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </p>
      * <p>
      */
-    public BasePopupWindow setBackPressEnable(final boolean backPressEnable) {
+    public BasePopupWindow setBackPressEnable(boolean backPressEnable) {
         mHelper.setBackPressEnable(mPopupWindow, backPressEnable);
         return this;
     }
@@ -978,14 +978,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     /**
      * <p>
      * 允许PopupWindow覆盖屏幕（包含状态栏）
-     * <br>
-     * <br>
-     * <h3>【本方法将会导致输入法屏幕适配失效{@link #setAdjustInputMethod(boolean, int)}，具体表现为无法根据输入法自动腾出位置，
-     * 因为Window.Flag=Full_Screen时，layout管理交由Window而非Activity，两者冲突暂时无解决方案。】</h3>
-     * </p>
      */
-    public BasePopupWindow setPopupWindowFullScreen(boolean needFullScreen) {
-        mHelper.setFullScreen(needFullScreen);
+    public BasePopupWindow setPopupWindowFullScreen(boolean isFullScreen) {
+        mHelper.setFullScreen(isFullScreen);
         return this;
     }
 
@@ -1053,10 +1048,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * <strong>本方法默认模糊当前Activity的DecorView</strong>
      * </p>
      *
-     * @param blur true for blur decorView
+     * @param blurBackgroundEnable true for blur decorView
      */
-    public BasePopupWindow setBlurBackgroundEnable(boolean blur) {
-        return setBlurBackgroundEnable(blur, null);
+    public BasePopupWindow setBlurBackgroundEnable(boolean blurBackgroundEnable) {
+        return setBlurBackgroundEnable(blurBackgroundEnable, null);
     }
 
     /**
@@ -1070,16 +1065,16 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 本方法允许您传入一个初始化监听，您可以在{@link OnBlurOptionInitListener#onCreateBlurOption(PopupBlurOption)}中进行展示前的最后一次修改
      * </p>
      *
-     * @param blur               true for blur decorView
-     * @param optionInitListener 初始化回调
+     * @param blurBackgroundEnable true for blur decorView
+     * @param optionInitListener   初始化回调
      */
-    public BasePopupWindow setBlurBackgroundEnable(boolean blur, OnBlurOptionInitListener optionInitListener) {
+    public BasePopupWindow setBlurBackgroundEnable(boolean blurBackgroundEnable, OnBlurOptionInitListener optionInitListener) {
         if (!(getContext() instanceof Activity)) {
             PopupLogUtil.trace(LogTag.e, TAG, "无法配置默认模糊脚本，因为context不是activity");
             return this;
         }
         PopupBlurOption option = null;
-        if (blur) {
+        if (blurBackgroundEnable) {
             option = new PopupBlurOption();
             option.setFullScreen(true)
                     .setBlurInDuration(mHelper.getShowAnimationDuration())
@@ -1348,10 +1343,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * <strong>如果您配置了{@link #setOffsetY(int)}，则对应的偏移量也是在其适配后的位置生效</strong>
      * </p>
      *
-     * @param autoLocatePopup 是否自适配
+     * @param isAutoLocatePopup 是否自适配
      */
-    public BasePopupWindow setAutoLocatePopup(boolean autoLocatePopup) {
-        mHelper.setAutoLocatePopup(autoLocatePopup);
+    public BasePopupWindow setAutoLocatePopup(boolean isAutoLocatePopup) {
+        mHelper.setAutoLocatePopup(isAutoLocatePopup);
         return this;
     }
 
@@ -1471,10 +1466,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 但在某些情况下您可能在PopupWindow之上不需要展示背景，这时候您可以调用这个方法来强制Background对齐到PopupWindow的顶部。
      * </p>
      *
-     * @param mAlignBackground 是否对齐背景
+     * @param isAlignBackground 是否对齐背景
      */
-    public BasePopupWindow setAlignBackground(boolean mAlignBackground) {
-        mHelper.setAlignBackgound(mAlignBackground);
+    public BasePopupWindow setAlignBackground(boolean isAlignBackground) {
+        mHelper.setAlignBackgound(isAlignBackground);
         return this;
     }
 

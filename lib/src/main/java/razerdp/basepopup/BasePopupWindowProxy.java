@@ -2,7 +2,6 @@ package razerdp.basepopup;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -27,7 +26,6 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     private static final String TAG = "BasePopupWindowProxy";
 
     private static final int MAX_SCAN_ACTIVITY_COUNT = 50;
-    private int tryScanActivityCount = 0;
     private BasePopupHelper mHelper;
     private WindowManagerProxy mWindowManagerProxy;
 
@@ -120,11 +118,6 @@ abstract class BasePopupWindowProxy extends PopupWindow {
         return super.isShowing();
     }
 
-    void resetTryScanActivityCount() {
-        //复位重试次数#issue 45(https://github.com/razerdp/BasePopup/issues/45)
-        tryScanActivityCount = 0;
-    }
-
 
     /**
      * fix context cast exception
@@ -139,20 +132,7 @@ abstract class BasePopupWindowProxy extends PopupWindow {
      * @author: razerdp optimize on 2018/4/25
      */
     Activity scanForActivity(Context from) {
-        Context result = from;
-        while (result instanceof ContextWrapper) {
-            if (result instanceof Activity) {
-                return (Activity) result;
-            }
-            if (tryScanActivityCount > MAX_SCAN_ACTIVITY_COUNT) {
-                //break endless loop
-                return null;
-            }
-            tryScanActivityCount++;
-            PopupLogUtil.trace(LogTag.i, TAG, "scanForActivity: " + tryScanActivityCount);
-            result = ((ContextWrapper) result).getBaseContext();
-        }
-        return null;
+        return PopupUtil.scanForActivity(from, MAX_SCAN_ACTIVITY_COUNT);
     }
 
 

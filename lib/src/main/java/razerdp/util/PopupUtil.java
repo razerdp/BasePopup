@@ -46,6 +46,9 @@ public class PopupUtil {
 
     public static Activity scanForActivity(Context from, final int limit) {
         Context result = from;
+        if (result instanceof Activity) {
+            return (Activity) result;
+        }
         int tryCount = 0;
         while (result instanceof ContextWrapper) {
             if (result instanceof Activity) {
@@ -55,8 +58,8 @@ public class PopupUtil {
                 //break endless loop
                 return null;
             }
-            tryCount++;
             result = ((ContextWrapper) result).getBaseContext();
+            tryCount++;
         }
         return null;
     }
