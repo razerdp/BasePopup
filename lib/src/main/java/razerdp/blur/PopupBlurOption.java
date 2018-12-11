@@ -1,6 +1,8 @@
 package razerdp.blur;
 
+import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewParent;
 
 import java.lang.ref.WeakReference;
 
@@ -37,9 +39,20 @@ public class PopupBlurOption {
 
     public PopupBlurOption setBlurView(View blurView) {
         mBlurView = new WeakReference<View>(blurView);
-        if (blurView != null && blurView.getId() != android.R.id.content) {
-            setFullScreen(false);
+        boolean isDecorView = false;
+        if (blurView != null) {
+            ViewParent parent = blurView.getParent();
+            if (parent != null) {
+                isDecorView = TextUtils.equals(parent.getClass().getName(), "com.android.internal.policy.DecorView");
+            }
+            if (!isDecorView) {
+                isDecorView = blurView.getId() == android.R.id.content;
+            }
+            if (!isDecorView) {
+                isDecorView = TextUtils.equals(blurView.getClass().getName(), "com.android.internal.policy.DecorView");
+            }
         }
+        setFullScreen(isDecorView);
         return this;
     }
 
