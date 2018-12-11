@@ -22,4 +22,10 @@
         android:orderInCategory="100"
         android:title="动画"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/id_blur"
+        android:orderInCategory="101"
+        android:title="模糊"
+        app:showAsAction="never"/>
 </menu>
