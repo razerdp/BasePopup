@@ -35,6 +35,10 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener 
         bindEvent();
     }
 
+    public EditText getInputEdittext() {
+        return mInputEdittext;
+    }
+
     @Override
     protected Animation onCreateShowAnimation() {
         return null;

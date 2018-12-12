@@ -33,4 +33,9 @@
         android:orderInCategory="102"
         android:title="背景"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_input"
+        android:orderInCategory="102"
+        android:title="输入"
+        app:showAsAction="never"/>
 </menu>
