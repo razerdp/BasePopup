@@ -376,7 +376,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         registerListener(mHelper);
         mContentView = onCreateContentView();
         if (mHelper.getParaseFromXmlParams() == null) {
-            Log.w(TAG, "为了更准确的适配您的布局，BasePopupWindow建议您使用createPopupById()进行inflate");
+            Log.e(TAG, "为了更准确的适配您的布局，BasePopupWindow建议您使用createPopupById()进行inflate");
         }
         mDisplayAnimateView = onCreateAnimateView();
         if (mDisplayAnimateView == null) {
