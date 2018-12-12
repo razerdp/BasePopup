@@ -28,4 +28,9 @@
         android:orderInCategory="101"
         android:title="模糊"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_background"
+        android:orderInCategory="102"
+        android:title="背景"
+        app:showAsAction="never"/>
 </menu>
