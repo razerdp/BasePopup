@@ -43,4 +43,9 @@
         android:orderInCategory="103"
         android:title="背景对齐"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_outside_dismiss"
+        android:orderInCategory="104"
+        android:title="外部dismiss"
+        app:showAsAction="never"/>
 </menu>
