@@ -1,6 +1,6 @@
 * BasePopup更新日志
 
-* **【Release】2.1.1**2018/12/13)
+* **【Release】2.1.1**(2018/12/13)
   * 针对setAlignBackground()失效的问题修复
 
 * **【Release】2.1.0**(2018/12/12)
