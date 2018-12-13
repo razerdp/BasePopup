@@ -20,6 +20,7 @@ import razerdp.demo.fragment.basedemo.BackgroundPopupFrag;
 import razerdp.demo.fragment.basedemo.BlurPopupFrag;
 import razerdp.demo.fragment.basedemo.GravityPopupFrag;
 import razerdp.demo.fragment.basedemo.InputPopupFrag;
+import razerdp.demo.fragment.basedemo.OutsideDismissPopupFrag;
 import razerdp.demo.fragment.basedemo.ShowPopupFrag;
 import razerdp.demo.fragment.other.SimpleBaseFrag;
 
@@ -44,6 +45,7 @@ public class DemoActivity extends AppCompatActivity {
         fragMap.put(R.id.id_background, new BackgroundPopupFrag());
         fragMap.put(R.id.id_input, new InputPopupFrag());
         fragMap.put(R.id.id_align, new AlignPopupFrag());
+        fragMap.put(R.id.id_outside_dismiss, new OutsideDismissPopupFrag());
 
     }
 
