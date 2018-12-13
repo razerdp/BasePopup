@@ -14,6 +14,7 @@ import java.util.Map;
 
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
+import razerdp.demo.fragment.basedemo.AlignPopupFrag;
 import razerdp.demo.fragment.basedemo.AnimatePopupFrag;
 import razerdp.demo.fragment.basedemo.BackgroundPopupFrag;
 import razerdp.demo.fragment.basedemo.BlurPopupFrag;
@@ -42,6 +43,7 @@ public class DemoActivity extends AppCompatActivity {
         fragMap.put(R.id.id_blur, new BlurPopupFrag());
         fragMap.put(R.id.id_background, new BackgroundPopupFrag());
         fragMap.put(R.id.id_input, new InputPopupFrag());
+        fragMap.put(R.id.id_align, new AlignPopupFrag());
 
     }
 
