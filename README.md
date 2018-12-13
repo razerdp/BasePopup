@@ -306,6 +306,9 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Release】2.1.1**2018/12/13)
+  * 针对setAlignBackground()失效的问题修复
+
 * **【Release】2.1.0**(2018/12/12)
   * **双12大礼包~**
   * wiki大更新，留了大半年的坑终于快补完了，有问题请看[**wiki**](https://github.com/razerdp/BasePopup/wiki)

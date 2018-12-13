@@ -38,4 +38,9 @@
         android:orderInCategory="102"
         android:title="输入"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_align"
+        android:orderInCategory="103"
+        android:title="背景对齐"
+        app:showAsAction="never"/>
 </menu>

@@ -73,8 +73,11 @@ class PopupMaskLayout extends FrameLayout {
         });
     }
 
+    private int lastContentTop;
+
     public void handleAlignBackground(int contentLeft, int contentTop, int contentRight, int contentBottom) {
-        if (contentTop > 0) {
+        if (contentTop > 0 && lastContentTop != contentTop) {
+            lastContentTop = contentTop;
             mBackgroundView.offsetTopAndBottom(contentTop);
         }
     }
