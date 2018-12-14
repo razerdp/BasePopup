@@ -572,12 +572,18 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             if (focusView == null) return;
             focusView.getGlobalVisibleRect(viewRect);
             if (isVisible) {
-                int keyboardTop = getScreenHeight() - keyboardHeight;
+                int keyboardTop = getScreenHeight() + getStatusBarHeight() - keyboardHeight;
                 if (viewRect.bottom > keyboardTop) {
                     offset = viewRect.bottom - keyboardTop;
                 }
             } else {
                 offset = 0;
+            }
+            if (mHelper.getEventInterceptor() != null) {
+                int customOffset = mHelper.getEventInterceptor().onKeyboardChangeResult(keyboardHeight, isVisible, offset);
+                if (customOffset != 0) {
+                    offset = customOffset;
+                }
             }
             mTarget.animate()
                     .translationY(-offset)

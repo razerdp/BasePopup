@@ -29,4 +29,9 @@ public abstract class SimplePopupWindowEventInterceptor<P extends BasePopupWindo
     public void onCalculateOffsetResult(P basePopupWindow, View anchorView, Point calculatedOffset, int offsetX, int offsetY) {
 
     }
+
+    @Override
+    public int onKeyboardChangeResult(int keyboardHeight, boolean isKeyBoardVisible, int calculatedOffset) {
+        return 0;
+    }
 }

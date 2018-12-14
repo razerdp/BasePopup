@@ -64,4 +64,17 @@ public interface PopupWindowEventInterceptor<P extends BasePopupWindow> {
      * @see BasePopupWindow#tryToShowPopup(View)
      */
     void onCalculateOffsetResult(P basePopupWindow, View anchorView, Point calculatedOffset, int offsetX, int offsetY);
+
+
+    /**
+     * 允许用户修改键盘变化时的偏移量
+     *
+     * @param keyboardHeight    键盘高度
+     * @param isKeyBoardVisible 键盘是否已经弹出
+     * @param calculatedOffset  默认计算的偏移量
+     *
+     * @return 返回新的偏移量，返回0则不进行修正。
+     */
+    int onKeyboardChangeResult(int keyboardHeight, boolean isKeyBoardVisible, int calculatedOffset);
+
 }
