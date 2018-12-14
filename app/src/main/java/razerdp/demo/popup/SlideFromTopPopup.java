@@ -35,6 +35,7 @@ public class SlideFromTopPopup extends BasePopupWindow {
         super(context);
         setBackPressEnable(true);
         setAlignBackground(true);
+        setClipToScreen(false);
         testList = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
             testList.add("position - " + i);

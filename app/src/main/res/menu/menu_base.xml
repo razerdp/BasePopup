@@ -48,4 +48,24 @@
         android:orderInCategory="104"
         android:title="外部dismiss"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_touch_intercept"
+        android:orderInCategory="105"
+        android:title="popup事件拦截"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_backpress_enable"
+        android:orderInCategory="106"
+        android:title="返回键dismiss"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_auto_located_popup"
+        android:orderInCategory="107"
+        android:title="自动定位Popup"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_auto_clip_children"
+        android:orderInCategory="108"
+        android:title="ClipChildren"
+        app:showAsAction="never"/>
 </menu>

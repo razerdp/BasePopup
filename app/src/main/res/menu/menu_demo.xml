@@ -58,11 +58,6 @@
         android:title="对话框Popup"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/id_auto_located_popup"
-        android:orderInCategory="110"
-        android:title="自动定位Popup"
-        app:showAsAction="never"/>
-    <item
         android:id="@+id/id_slide_from_top_popup"
         android:orderInCategory="111"
         android:title="从顶部往下展开Popup（填充全屏）"

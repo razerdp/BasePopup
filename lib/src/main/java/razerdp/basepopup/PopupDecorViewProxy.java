@@ -247,6 +247,8 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         }
     }
 
+    private boolean hasCallLocation;
+
     private void layoutWithIntercept(int l, int t, int r, int b) {
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -359,10 +361,16 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                         adjustAutoLocatedResult = -1;
                         top += -(mHelper.getAnchorHeight() + height);
                         bottom = top + height;
-                        mHelper.onAnchorTop();
+                        if (!hasCallLocation) {
+                            hasCallLocation = true;
+                            mHelper.onAnchorTop();
+                        }
                     } else {
                         adjustAutoLocatedResult = 1;
-                        mHelper.onAnchorBottom();
+                        if (!hasCallLocation) {
+                            hasCallLocation = true;
+                            mHelper.onAnchorBottom();
+                        }
                     }
                 }
 

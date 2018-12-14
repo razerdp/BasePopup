@@ -13,7 +13,7 @@ import java.util.Map;
 
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.demo.fragment.other.AutoLocatedPopupFrag;
+import razerdp.demo.fragment.basedemo.AutoLocatedPopupFrag;
 import razerdp.demo.fragment.other.BlurSlideFromBottomPopupFrag;
 import razerdp.demo.fragment.other.BottomInputFragment;
 import razerdp.demo.fragment.other.CommentPopupFrag;
@@ -50,7 +50,6 @@ public class OtherDemoActivity extends AppCompatActivity {
         fragMap.put(R.id.id_list_popup, new ListPopupFrag());
         fragMap.put(R.id.id_menu_popup, new MenuPopupFrag());
         fragMap.put(R.id.id_dialog_popup, new DialogPopupFrag());
-        fragMap.put(R.id.id_auto_located_popup, new AutoLocatedPopupFrag());
         fragMap.put(R.id.id_slide_from_top_popup, new SlideFromTopPopupFrag());
         fragMap.put(R.id.id_slide_from_top_popup2, new SlideFromTopPopupFrag2());
         fragMap.put(R.id.id_dismiss_control_popup, new DismissControlPopupFrag());
