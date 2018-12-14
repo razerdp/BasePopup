@@ -16,12 +16,16 @@ import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.fragment.basedemo.AlignPopupFrag;
 import razerdp.demo.fragment.basedemo.AnimatePopupFrag;
+import razerdp.demo.fragment.basedemo.AutoLocatedPopupFrag;
+import razerdp.demo.fragment.basedemo.BackPressEnablePopupFrag;
 import razerdp.demo.fragment.basedemo.BackgroundPopupFrag;
 import razerdp.demo.fragment.basedemo.BlurPopupFrag;
+import razerdp.demo.fragment.basedemo.ClipChildrenPopupFrag;
 import razerdp.demo.fragment.basedemo.GravityPopupFrag;
 import razerdp.demo.fragment.basedemo.InputPopupFrag;
 import razerdp.demo.fragment.basedemo.OutsideDismissPopupFrag;
 import razerdp.demo.fragment.basedemo.ShowPopupFrag;
+import razerdp.demo.fragment.basedemo.TouchInterceptPopupFrag;
 import razerdp.demo.fragment.other.SimpleBaseFrag;
 
 public class DemoActivity extends AppCompatActivity {
@@ -46,6 +50,10 @@ public class DemoActivity extends AppCompatActivity {
         fragMap.put(R.id.id_input, new InputPopupFrag());
         fragMap.put(R.id.id_align, new AlignPopupFrag());
         fragMap.put(R.id.id_outside_dismiss, new OutsideDismissPopupFrag());
+        fragMap.put(R.id.id_touch_intercept, new TouchInterceptPopupFrag());
+        fragMap.put(R.id.id_backpress_enable, new BackPressEnablePopupFrag());
+        fragMap.put(R.id.id_auto_located_popup, new AutoLocatedPopupFrag());
+        fragMap.put(R.id.id_auto_clip_children, new ClipChildrenPopupFrag());
 
     }
 
