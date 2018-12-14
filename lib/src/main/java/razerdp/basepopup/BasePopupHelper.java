@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import razerdp.blur.PopupBlurOption;
+import razerdp.interceptor.PopupWindowEventInterceptor;
 import razerdp.library.R;
 
 /**
@@ -81,6 +82,8 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     private PopupWindowActionListener mActionListener;
     private PopupWindowLocationListener mLocationListener;
     private PopupKeyboardStateChangeListener mKeyboardStateChangeListener;
+    private PopupWindowEventInterceptor mEventInterceptor;
+
 
     private boolean mClipChildren = true;
     private boolean mClipToScreen = true;
@@ -291,7 +294,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return this;
     }
 
-    public BasePopupHelper setSoftInputMode(int inputMethodType) {
+    BasePopupHelper setSoftInputMode(int inputMethodType) {
         mSoftInputMode = inputMethodType;
         return this;
     }
@@ -346,8 +349,13 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return this;
     }
 
-    public BasePopupHelper setClipToScreen(boolean clipToScreen) {
+    BasePopupHelper setClipToScreen(boolean clipToScreen) {
         mClipToScreen = clipToScreen;
+        return this;
+    }
+
+    BasePopupHelper setEventInterceptor(PopupWindowEventInterceptor mInterceptor) {
+        this.mEventInterceptor = mInterceptor;
         return this;
     }
 
@@ -460,6 +468,10 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     public int getShowCount() {
         return showCount;
+    }
+
+    public PopupWindowEventInterceptor getEventInterceptor() {
+        return mEventInterceptor;
     }
 
     //-----------------------------------------controller-----------------------------------------

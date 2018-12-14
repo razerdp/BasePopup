@@ -737,6 +737,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         if (activity == null) return;
         View decorView = activity.getWindow() == null ? null : activity.getWindow().getDecorView();
         if (decorView == null) return;
+        if (decorView instanceof ViewGroup) {
+            decorView = (((ViewGroup) decorView).getChildAt(0));
+        }
         mGlobalLayoutListenerWrapper = new GlobalLayoutListenerWrapper(decorView, new OnKeyboardStateChangeListener() {
             @Override
             public void onKeyboardChange(int keyboardHeight, boolean isVisible) {
@@ -1483,6 +1486,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public <P extends BasePopupWindow> BasePopupWindow setEventInterceptor(PopupWindowEventInterceptor<P> eventInterceptor) {
         mEventInterceptor = eventInterceptor;
+        mHelper.setEventInterceptor(eventInterceptor);
         return this;
     }
 
@@ -1925,7 +1929,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
 
         public void addSelf() {
-            if (target != null) {
+            if (target != null && !isAttached) {
                 target.getViewTreeObserver().addOnGlobalLayoutListener(this);
                 isAttached = true;
             }
@@ -1933,7 +1937,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
 
         public void remove() {
-            if (target != null) {
+            if (target != null && isAttached) {
                 target.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 isAttached = false;
             }
