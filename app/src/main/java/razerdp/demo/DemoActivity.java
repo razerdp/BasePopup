@@ -21,8 +21,10 @@ import razerdp.demo.fragment.basedemo.BackPressEnablePopupFrag;
 import razerdp.demo.fragment.basedemo.BackgroundPopupFrag;
 import razerdp.demo.fragment.basedemo.BlurPopupFrag;
 import razerdp.demo.fragment.basedemo.ClipChildrenPopupFrag;
+import razerdp.demo.fragment.basedemo.ClipToScreenPopupFrag;
 import razerdp.demo.fragment.basedemo.GravityPopupFrag;
 import razerdp.demo.fragment.basedemo.InputPopupFrag;
+import razerdp.demo.fragment.basedemo.OffsetPopupFrag;
 import razerdp.demo.fragment.basedemo.OutsideDismissPopupFrag;
 import razerdp.demo.fragment.basedemo.ShowPopupFrag;
 import razerdp.demo.fragment.basedemo.TouchInterceptPopupFrag;
@@ -53,7 +55,9 @@ public class DemoActivity extends AppCompatActivity {
         fragMap.put(R.id.id_touch_intercept, new TouchInterceptPopupFrag());
         fragMap.put(R.id.id_backpress_enable, new BackPressEnablePopupFrag());
         fragMap.put(R.id.id_auto_located_popup, new AutoLocatedPopupFrag());
-        fragMap.put(R.id.id_auto_clip_children, new ClipChildrenPopupFrag());
+        fragMap.put(R.id.id_clip_children, new ClipChildrenPopupFrag());
+        fragMap.put(R.id.id_clip_screen, new ClipToScreenPopupFrag());
+        fragMap.put(R.id.id_offset, new OffsetPopupFrag());
 
     }
 

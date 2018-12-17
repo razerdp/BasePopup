@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -268,6 +267,8 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
             boolean delayLayoutMask = mHelper.isAlignBackground();
 
+            boolean keepClipScreenTop = false;
+
             if (child == mMaskLayout) {
                 child.layout(childLeft, childTop, childLeft + width, childTop + height);
             } else {
@@ -318,6 +319,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                         break;
                     case Gravity.BOTTOM:
                         if (isRelativeToAnchor) {
+                            keepClipScreenTop = true;
                             childTop = mHelper.getAnchorY() + mHelper.getAnchorHeight() + childTopMargin;
                         } else {
                             childTop = b - t - height - childBottomMargin;
@@ -333,6 +335,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                         break;
                     default:
                         if (isRelativeToAnchor) {
+                            keepClipScreenTop = true;
                             childTop = mHelper.getAnchorY() + mHelper.getAnchorHeight() + childTopMargin;
                         } else {
                             childTop += childTopMargin;
@@ -345,14 +348,6 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 int right = left + width;
                 int bottom = top + height;
 
-                int overScreenMode = 0;
-                if (height >= getFixedMeasureHeight()) {
-                    overScreenMode = 1;
-                } else if (width >= getMeasuredWidth()) {
-                    overScreenMode = -1;
-                }
-
-                Log.i(TAG, "layoutWithIntercept: l = " + left + ", t = " + top + ", r = " + right + ", b = " + bottom);
                 //-1:onTop
                 //0:non
                 //1:onBottom
@@ -360,11 +355,11 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 if (mHelper.isAutoLocatePopup()) {
                     //针对高度超过屏幕的适配（一屏幕一半为准）
                     boolean onTop = false;
-                    if (overScreenMode == 1) {
+                    if (height >= getFixedMeasureHeight()) {
                         onTop = anchorCenterY >= (getFixedMeasureHeight() >> 1);
                     } else {
-                        int bottomContentHeight = Math.abs(getFixedMeasureHeight() - top);
-                        onTop = bottom > getFixedMeasureHeight() && bottomContentHeight < top && bottomContentHeight < height;
+                        int showContentHeight = Math.abs(getFixedMeasureHeight() - top);
+                        onTop = bottom > getFixedMeasureHeight() && showContentHeight < top && showContentHeight < height;
                     }
                     if (onTop) {
                         adjustAutoLocatedResult = -1;
@@ -383,12 +378,14 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                     }
                 }
 
-                if (mHelper.isClipToScreen()) {
+                boolean isOverFlowScreen = left < 0 || top < 0 || right > getMeasuredWidth() || bottom > getFixedMeasureHeight();
+                if (mHelper.isClipToScreen() && isOverFlowScreen) {
                     //将popupContentView限制在屏幕内，跟autoLocate有冲突，因此分开解决。
                     int screenLeft = 0;
-                    int screenTop = isRelativeToAnchor ? childTop : 0;
+                    int screenTop = keepClipScreenTop ? childTop : 0;
                     int screenRight = getMeasuredWidth();
                     int screenBottom = getFixedMeasureHeight();
+
                     if (adjustAutoLocatedResult != 0) {
                         //adjust的情况下，isRelativeToAnchor必定为true
                         switch (adjustAutoLocatedResult) {
