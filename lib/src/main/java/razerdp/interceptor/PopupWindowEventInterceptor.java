@@ -14,7 +14,7 @@ import razerdp.basepopup.BasePopupWindow;
 public interface PopupWindowEventInterceptor<P extends BasePopupWindow> {
 
     /**
-     * 预测量PopupWindow回调，当执行预先测量时，将会回调到该方法，允许使用者拦截，否则按照默认程序进行
+     * 预测量PopupWindow回调，当执行预先测量时，将会回调到该方法，允许用户拦截BasePopup预测量过程，否则按照默认程序进行
      *
      * @param basePopupWindow basepopup对象
      * @param contentView     contentView
@@ -27,7 +27,7 @@ public interface PopupWindowEventInterceptor<P extends BasePopupWindow> {
 
 
     /**
-     * 当调用{@link BasePopupWindow#showPopupWindow()}、{@link BasePopupWindow#showPopupWindow(View)}、{@link BasePopupWindow#showPopupWindow(int)}时，会回调该方法,允许使用者拦截，否则按照默认程序进行
+     * 当调用{@link BasePopupWindow#showPopupWindow()}、{@link BasePopupWindow#showPopupWindow(View)}、{@link BasePopupWindow#showPopupWindow(int)}时，会回调该方法,允许用户拦截BasePopup的show过程，否则按照默认程序进行
      *
      * @param basePopupWindow basePopupWindow对象
      * @param popupWindow     popupwindow对象
@@ -42,7 +42,7 @@ public interface PopupWindowEventInterceptor<P extends BasePopupWindow> {
 
 
     /**
-     * 允许用户拦截默认计算偏移的方法
+     * 允许用户拦截BasePopup默认的偏移计算过程
      *
      * @param basePopupWindow basePopupWindow对象
      * @param anchorView      锚点View
@@ -54,27 +54,26 @@ public interface PopupWindowEventInterceptor<P extends BasePopupWindow> {
     Point onCalculateOffset(P basePopupWindow, View anchorView, int offsetX, int offsetY);
 
     /**
-     * 允许用户修改默认计算偏移后的值
+     * 提供BasePopup偏移量计算结果回调，允许用户在回调中做弹出前最后一次修正
      *
      * @param basePopupWindow  basePopupWindow对象
      * @param anchorView       锚点View
      * @param offsetX          水平偏移
-     * @param calculatedOffset 已经经过默认计算的偏移量
+     * @param offsetResult 已经经过默认计算的偏移量
      * @param offsetY          垂直偏移
      * @see BasePopupWindow#tryToShowPopup(View)
      */
-    void onCalculateOffsetResult(P basePopupWindow, View anchorView, Point calculatedOffset, int offsetX, int offsetY);
+    void onCalculateOffsetResult(P basePopupWindow, View anchorView, Point offsetResult, int offsetX, int offsetY);
 
 
     /**
-     * 允许用户修改键盘变化时的偏移量
+     * 提供BasePopup针对键盘适配的偏移计算结果回调，允许用户在该回调中做偏移修正
      *
      * @param keyboardHeight    键盘高度
      * @param isKeyBoardVisible 键盘是否已经弹出
-     * @param calculatedOffset  默认计算的偏移量
-     *
+     * @param offsetResult  默认计算的偏移量
      * @return 返回新的偏移量，返回0则不进行修正。
      */
-    int onKeyboardChangeResult(int keyboardHeight, boolean isKeyBoardVisible, int calculatedOffset);
+    int onKeyboardChangeResult(int keyboardHeight, boolean isKeyBoardVisible, int offsetResult);
 
 }
