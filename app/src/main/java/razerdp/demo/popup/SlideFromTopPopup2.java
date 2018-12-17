@@ -31,7 +31,7 @@ import razerdp.demo.utils.DimensUtils;
 public class SlideFromTopPopup2 extends BasePopupWindow {
 
     public SlideFromTopPopup2(Context context) {
-        super(context, MATCH_PARENT, WRAP_CONTENT);
+        super(context);
         setBackPressEnable(false);
         setAlignBackground(true);
         List<String> testList = new ArrayList<>();
