@@ -1311,7 +1311,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     /**
      * <p>
-     * 设置参考点
+     * 设置参考点 {@link Gravity}
      * <br>
      * <ul>
      * <li> 不跟anchorView联系的情况下，gravity意味着在整个view中的方位{@link #showPopupWindow()}</li>

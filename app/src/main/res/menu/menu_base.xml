@@ -64,8 +64,18 @@
         android:title="自动定位Popup"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/id_auto_clip_children"
+        android:id="@+id/id_clip_children"
         android:orderInCategory="108"
         android:title="ClipChildren"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_clip_screen"
+        android:orderInCategory="109"
+        android:title="ClipScreen"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_offset"
+        android:orderInCategory="110"
+        android:title="offset"
         app:showAsAction="never"/>
 </menu>
