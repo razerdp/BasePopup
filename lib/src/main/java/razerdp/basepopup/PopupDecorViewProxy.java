@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -344,7 +345,14 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 int right = left + width;
                 int bottom = top + height;
 
+                int overScreenMode = 0;
+                if (height >= getFixedMeasureHeight()) {
+                    overScreenMode = 1;
+                } else if (width >= getMeasuredWidth()) {
+                    overScreenMode = -1;
+                }
 
+                Log.i(TAG, "layoutWithIntercept: l = " + left + ", t = " + top + ", r = " + right + ", b = " + bottom);
                 //-1:onTop
                 //0:non
                 //1:onBottom
@@ -352,10 +360,11 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 if (mHelper.isAutoLocatePopup()) {
                     //针对高度超过屏幕的适配（一屏幕一半为准）
                     boolean onTop = false;
-                    if (height >= getFixedMeasureHeight()) {
+                    if (overScreenMode == 1) {
                         onTop = anchorCenterY >= (getFixedMeasureHeight() >> 1);
                     } else {
-                        onTop = bottom > getFixedMeasureHeight();
+                        int bottomContentHeight = Math.abs(getFixedMeasureHeight() - top);
+                        onTop = bottom > getFixedMeasureHeight() && bottomContentHeight < top && bottomContentHeight < height;
                     }
                     if (onTop) {
                         adjustAutoLocatedResult = -1;
@@ -377,7 +386,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 if (mHelper.isClipToScreen()) {
                     //将popupContentView限制在屏幕内，跟autoLocate有冲突，因此分开解决。
                     int screenLeft = 0;
-                    int screenTop = 0;
+                    int screenTop = isRelativeToAnchor ? childTop : 0;
                     int screenRight = getMeasuredWidth();
                     int screenBottom = getFixedMeasureHeight();
                     if (adjustAutoLocatedResult != 0) {
@@ -439,12 +448,10 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                         }
                     }
                 }
-
+                child.layout(left, top, right, bottom);
                 if (delayLayoutMask) {
                     mMaskLayout.handleAlignBackground(left, top, right, bottom);
                 }
-
-                child.layout(left, top, right, bottom);
             }
 
         }
@@ -573,8 +580,14 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             focusView.getGlobalVisibleRect(viewRect);
             if (isVisible) {
                 int keyboardTop = getScreenHeight() + getStatusBarHeight() - keyboardHeight;
-                if (viewRect.bottom > keyboardTop) {
-                    offset = viewRect.bottom - keyboardTop;
+                int targetBottomOffset = mTarget.getBottom() - keyboardTop;
+                boolean alignToDecorView = targetBottomOffset > 0 && viewRect.top >= targetBottomOffset;
+                if (alignToDecorView) {
+                    offset = targetBottomOffset;
+                } else {
+                    if (viewRect.bottom > keyboardTop) {
+                        offset = viewRect.bottom - keyboardTop;
+                    }
                 }
             } else {
                 offset = 0;

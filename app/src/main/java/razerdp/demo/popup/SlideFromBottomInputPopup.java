@@ -17,7 +17,7 @@ public class SlideFromBottomInputPopup extends BasePopupWindow {
     EditText mEditText;
 
     public SlideFromBottomInputPopup(Context context) {
-        super(context, MATCH_PARENT, WRAP_CONTENT);
+        super(context);
         mEditText = findViewById(R.id.ed_input);
         findViewById(R.id.btn_send).setOnClickListener(new View.OnClickListener() {
             @Override
