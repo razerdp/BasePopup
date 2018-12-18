@@ -13,16 +13,22 @@
         <Button
             android:id="@+id/finish"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="back to main"/>
 
         <Button
             android:id="@+id/show"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="show popup"/>
+            android:text="basepopup"/>
+        <Button
+            android:id="@+id/show2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="system popup"/>
     </LinearLayout>
 
     <TextView
