@@ -1,7 +1,6 @@
 package razerdp.basepopup;
 
 import android.content.Context;
-import android.graphics.PixelFormat;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.Display;
@@ -90,9 +89,6 @@ final class WindowManagerProxy implements WindowManager {
                 if (helper.isInterceptTouchEvent()) {
                     p.flags |= LayoutParams.FLAG_LAYOUT_NO_LIMITS;
                 }
-
-                // FIXME: 2017/12/27 全屏跟SOFT_INPUT_ADJUST_RESIZE冲突，暂时没有好的解决方案
-                p.softInputMode = LayoutParams.SOFT_INPUT_STATE_UNCHANGED;
             }
         }
     }
@@ -149,36 +145,6 @@ final class WindowManagerProxy implements WindowManager {
         } catch (Exception e) {
             //no print
         }
-    }
-
-
-    /**
-     * 生成blurimageview的params
-     *
-     * @param params
-     * @return
-     */
-    private ViewGroup.LayoutParams createBlurBackgroundWindowParams(ViewGroup.LayoutParams params) {
-        ViewGroup.LayoutParams result = new ViewGroup.LayoutParams(params);
-
-        if (params instanceof WindowManager.LayoutParams) {
-            WindowManager.LayoutParams mResults = new WindowManager.LayoutParams();
-            mResults.copyFrom((LayoutParams) params);
-
-            mResults.flags |= LayoutParams.FLAG_NOT_FOCUSABLE;
-            mResults.flags |= LayoutParams.FLAG_NOT_TOUCHABLE;
-            mResults.flags |= LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-            mResults.windowAnimations = 0;
-            mResults.type = LayoutParams.TYPE_APPLICATION_PANEL;
-            mResults.x = 0;
-            mResults.y = 0;
-            mResults.format = PixelFormat.RGBA_8888;
-
-            result = mResults;
-        }
-        result.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        result.height = ViewGroup.LayoutParams.MATCH_PARENT;
-        return result;
     }
 
     private boolean isPopupInnerDecorView(View v) {
