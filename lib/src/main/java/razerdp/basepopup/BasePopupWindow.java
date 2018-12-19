@@ -354,6 +354,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private EditText mAutoShowInputEdittext;
 
     private GlobalLayoutListenerWrapper mGlobalLayoutListenerWrapper;
+    private LinkedViewLayoutChangeListenerWrapper mLinkedViewLayoutChangeListenerWrapper;
+    private WeakReference<View> mLinkedViewRef;
 
     public BasePopupWindow(Context context) {
         this(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -698,9 +700,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         tryToUpdate(null, true);
     }
 
+
     //------------------------------------------Methods-----------------------------------------------
     private void tryToShowPopup(View v, boolean positionMode) {
-        addGlobalListener();
+        addListener();
         mHelper.handleShow();
         if (mEventInterceptor != null && mEventInterceptor.onTryToShowPopup(this,
                 mPopupWindow,
@@ -767,6 +770,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
 
+    private void addListener() {
+        addGlobalListener();
+        addLinkedLayoutListener();
+    }
+
     private void addGlobalListener() {
         if (mGlobalLayoutListenerWrapper != null && mGlobalLayoutListenerWrapper.isAttached()) {
             return;
@@ -787,11 +795,24 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         mGlobalLayoutListenerWrapper.addSelf();
     }
 
+    private void addLinkedLayoutListener() {
+        if (mLinkedViewLayoutChangeListenerWrapper != null && mLinkedViewLayoutChangeListenerWrapper.isAdded)
+            return;
+        mLinkedViewLayoutChangeListenerWrapper = new LinkedViewLayoutChangeListenerWrapper();
+        mLinkedViewLayoutChangeListenerWrapper.addSelf();
+    }
+
     private void removeGlobalListener() {
         if (mGlobalLayoutListenerWrapper != null) {
             mGlobalLayoutListenerWrapper.remove();
         }
         mHelper.handleDismiss();
+    }
+
+    private void removeLinkedLayoutListener() {
+        if (mLinkedViewLayoutChangeListenerWrapper != null) {
+            mLinkedViewLayoutChangeListenerWrapper.removeListener();
+        }
     }
 
     /**
@@ -1407,6 +1428,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @see #preMeasurePopupView(int, int)
      */
     public int getHeight() {
+        if (mContentView == null) return mHelper.getPreMeasureHeight();
         return mContentView.getHeight() <= 0 ? mHelper.getPreMeasureHeight() : mContentView.getHeight();
     }
 
@@ -1421,6 +1443,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @see #preMeasurePopupView(int, int)
      */
     public int getWidth() {
+        if (mContentView == null) return mHelper.getPreMeasureWidth();
         return mContentView.getWidth() <= 0 ? mHelper.getPreMeasureWidth() : mContentView.getWidth();
     }
 
@@ -1519,6 +1542,19 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return this;
     }
 
+    public BasePopupWindow linkTo(View view) {
+        if (view == null) {
+            if (mLinkedViewRef != null) {
+                mLinkedViewRef.clear();
+                return this;
+            }
+        }
+
+        mLinkedViewRef = new WeakReference<>(view);
+        return this;
+    }
+
+
     //------------------------------------------状态控制-----------------------------------------------
 
 
@@ -1560,7 +1596,12 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         } else {
             dismissWithOutAnimate();
         }
+        removeListener();
+    }
+
+    private void removeListener() {
         removeGlobalListener();
+        removeLinkedLayoutListener();
     }
 
     @Override
@@ -1609,7 +1650,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         mPopupWindow.callSuperDismiss();
         mHelper.onDismiss(false);
-        removeGlobalListener();
+        removeListener();
     }
 
 
@@ -1952,9 +1993,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     //------------------------------------------InnerClass-----------------------------------------------
-    private class GlobalLayoutListenerWrapper implements ViewTreeObserver.OnGlobalLayoutListener {
+    private static class GlobalLayoutListenerWrapper implements ViewTreeObserver.OnGlobalLayoutListener {
 
-        private View target;
+        private WeakReference<View> target;
         private OnKeyboardStateChangeListener mListener;
         int preKeyboardHeight = -1;
         Rect rect = new Rect();
@@ -1962,7 +2003,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         private volatile boolean isAttached;
 
         public GlobalLayoutListenerWrapper(View target, OnKeyboardStateChangeListener listener) {
-            this.target = target;
+            this.target = new WeakReference<>(target);
             mListener = listener;
             isAttached = false;
         }
@@ -1972,27 +2013,31 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
 
         public void addSelf() {
-            if (target != null && !isAttached) {
-                target.getViewTreeObserver().addOnGlobalLayoutListener(this);
+            if (getTarget() != null && !isAttached) {
+                getTarget().getViewTreeObserver().addOnGlobalLayoutListener(this);
                 isAttached = true;
             }
-
         }
 
         public void remove() {
-            if (target != null && isAttached) {
-                target.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            if (getTarget() != null && isAttached) {
+                getTarget().getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 isAttached = false;
             }
         }
 
+        View getTarget() {
+            return target == null ? null : target.get();
+        }
+
         @Override
         public void onGlobalLayout() {
-            if (target == null) return;
+            View mTarget = getTarget();
+            if (mTarget == null) return;
             rect.setEmpty();
-            target.getWindowVisibleDisplayFrame(rect);
+            mTarget.getWindowVisibleDisplayFrame(rect);
             int displayHeight = rect.height();
-            int windowHeight = target.getHeight();
+            int windowHeight = mTarget.getHeight();
             int keyboardHeight = windowHeight - displayHeight;
             if (preKeyboardHeight != keyboardHeight) {
                 //判定可见区域与原来的window区域占比是否小于0.75,小于意味着键盘弹出来了。
@@ -2006,6 +2051,29 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 Log.d("keyboard", "onGlobalLayout: " + isVisible + "  height = " + keyboardHeight);
             }
             preKeyboardHeight = keyboardHeight;
+        }
+    }
+
+    private class LinkedViewLayoutChangeListenerWrapper implements ViewTreeObserver.OnGlobalLayoutListener {
+
+        private boolean isAdded;
+
+        void addSelf() {
+            if (mLinkedViewRef == null || mLinkedViewRef.get() == null || isAdded) return;
+            mLinkedViewRef.get().getViewTreeObserver().addOnGlobalLayoutListener(this);
+            isAdded = true;
+        }
+
+        void removeListener() {
+            if (mLinkedViewRef == null || mLinkedViewRef.get() == null || !isAdded) return;
+            mLinkedViewRef.get().getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            isAdded = false;
+        }
+
+        @Override
+        public void onGlobalLayout() {
+            if (mLinkedViewRef == null || mLinkedViewRef.get() == null) return;
+            update(mLinkedViewRef.get());
         }
     }
 

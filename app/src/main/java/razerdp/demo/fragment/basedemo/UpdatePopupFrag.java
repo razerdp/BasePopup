@@ -51,6 +51,7 @@ public class UpdatePopupFrag extends SimpleBaseFrag {
         mDemoPopup.setPopupGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL)
                 .setAllowInterceptTouchEvent(false)
                 .setAllowDismissWhenTouchOutside(false)
+//                .linkTo(vh.popupShow)
                 .setShowAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(true))
                 .setDismissAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(false));
 
@@ -136,7 +137,7 @@ public class UpdatePopupFrag extends SimpleBaseFrag {
     private void updatePopup(View v) {
         v.getLocationInWindow(location);
         mDemoPopup.setContent("x = " + location[0] + "\ny = " + location[1]);
-        mDemoPopup.update(v);
+//        mDemoPopup.update(v);
     }
 
     @Override
