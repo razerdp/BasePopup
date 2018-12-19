@@ -306,6 +306,16 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Release】2.1.2**(2018/12/19)
+  * 正式发布2.1.2release
+  * 增加指定位置弹出的方法[**showPopupWindow(int x, int y)**](https://github.com/razerdp/BasePopup/blob/master/lib/src/main/java/razerdp/basepopup/BasePopupWindow.java#L681)
+  * 修复内容宽高超过屏幕后`ClipToScreen()`修正不正确的问题
+  * 输入法适配修复 fixed [#107](https://github.com/razerdp/BasePopup/issues/107)
+  * preview:
+
+<img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/anypos/anypos.gif" height="360"/>
+
+
 * **【Candy】2.1.2-alpha2**(2018/12/17)
   * 修复内容宽高超过屏幕后`ClipToScreen()`修正不正确的问题
   * 输入法适配修复 fixed [#107](https://github.com/razerdp/BasePopup/issues/107)

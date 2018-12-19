@@ -623,7 +623,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public void showPopupWindow() {
         if (checkPerformShow(null)) {
             mHelper.setShowAsDropDown(false);
-            tryToShowPopup(null);
+            tryToShowPopup(null, false);
         }
     }
 
@@ -664,12 +664,30 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             if (anchorView != null) {
                 mHelper.setShowAsDropDown(true);
             }
-            tryToShowPopup(anchorView);
+            tryToShowPopup(anchorView, false);
+        }
+    }
+
+    /**
+     * <p>
+     * 调用这个方法时，将会在指定位置弹出PopupWindow。
+     * <br>
+     * 其他方法详情参考{@link #showPopupWindow()}
+     * <p>
+     *
+     * @param x 坐标轴x
+     * @param y 坐标轴y
+     */
+    public void showPopupWindow(int x, int y) {
+        if (checkPerformShow(null)) {
+            mHelper.setShowLocation(x, y);
+            mHelper.setShowAsDropDown(true);
+            tryToShowPopup(null, true);
         }
     }
 
     //------------------------------------------Methods-----------------------------------------------
-    private void tryToShowPopup(View v) {
+    private void tryToShowPopup(View v, boolean positionMode) {
         addGlobalListener();
         mHelper.handleShow();
         if (mEventInterceptor != null && mEventInterceptor.onTryToShowPopup(this,
@@ -682,7 +700,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         try {
             if (isShowing()) return;
-            Point offset = calculateOffset(v);
+            Point offset = calculateOffset(v, positionMode);
             if (mEventInterceptor != null) {
                 mEventInterceptor.onCalculateOffsetResult(this, v, offset, mHelper.getOffsetX(), mHelper.getOffsetY());
             }
@@ -697,13 +715,15 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 //什么都没传递，取顶级view的id
                 Context context = getContext();
                 assert context != null : "context is null ! please make sure your activity is not be destroyed";
-                if (context instanceof Activity) {
-                    mPopupWindow.showAtLocationProxy(((Activity) context).findViewById(android.R.id.content),
-                            mHelper.getPopupGravity(),
+                Activity activity = PopupUtil.scanForActivity(context, 50);
+                if (activity == null) {
+                    Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
+                } else {
+                    //传入位置的时候，已经内部计算好offset了，因此不需要系统帮我们计算gravity
+                    mPopupWindow.showAtLocationProxy(activity.findViewById(android.R.id.content),
+                            positionMode ? Gravity.NO_GRAVITY : mHelper.getPopupGravity(),
                             offset.x,
                             offset.y);
-                } else {
-                    Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
                 }
             }
             mHelper.onShow(mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
@@ -722,7 +742,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             }
             retryCounter = 0;
         } catch (Exception e) {
-            retryToShowPopup(v);
+            retryToShowPopup(v, positionMode);
             PopupLogUtil.trace(LogTag.e, TAG, "show error\n" + e);
             e.printStackTrace();
         }
@@ -759,7 +779,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     /**
      * 用于修复popup无法在onCreate里面show的问题
      */
-    private void retryToShowPopup(final View v) {
+    private void retryToShowPopup(final View v, final boolean positionMode) {
         if (retryCounter > MAX_RETRY_SHOW_TIME) return;
         PopupLogUtil.trace(LogTag.e, TAG, "catch an exception on showing popupwindow ...now retrying to show ... retry count  >>  " + retryCounter);
         if (mPopupWindow.callSuperIsShowing()) {
@@ -780,7 +800,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 @Override
                 public void run() {
                     retryCounter++;
-                    tryToShowPopup(v);
+                    tryToShowPopup(v, positionMode);
                     PopupLogUtil.trace(LogTag.e, TAG, "retry to show >> " + retryCounter);
                 }
             }, 350);
@@ -795,7 +815,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param anchorView
      * @see #showPopupWindow(View)
      */
-    private Point calculateOffset(View anchorView) {
+    private Point calculateOffset(View anchorView, boolean positionMode) {
         Point offset = null;
         boolean intercepted = false;
         if (mEventInterceptor != null) {
@@ -809,8 +829,14 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         mHelper.getAnchorLocation(anchorView);
 
-        if (!intercepted && anchorView != null) {
-            onCalculateOffsetAdjust(anchorView, offset);
+        if (anchorView == null) {
+            //此时传入的是位置信息，默认以NO_GRAVITY测量
+            /**@see BasePopupHelper#setShowLocation(int, int) */
+            offset.offset(mHelper.getAnchorX(), mHelper.getAnchorY());
+        }
+
+        if (!intercepted) {
+            onCalculateOffsetAdjust(offset, positionMode);
         }
 
         return offset;
@@ -824,39 +850,36 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *
      * @see PopupDecorViewProxy#layoutWithIntercept(int, int, int, int)
      */
-    private void onCalculateOffsetAdjust(View anchorView, Point offset) {
-        if (anchorView != null) {
-            //由于showAsDropDown系统已经帮我们定位在view的下方，因此这里的offset我们仅需要做微量偏移
+    private void onCalculateOffsetAdjust(Point offset, boolean positionMode) {
+        //由于showAsDropDown系统已经帮我们定位在view的下方，因此这里的offset我们仅需要做微量偏移
+        switch (getPopupGravity() & Gravity.HORIZONTAL_GRAVITY_MASK) {
+            case Gravity.LEFT:
+            case Gravity.START:
+                offset.x += -getWidth();
+                break;
+            case Gravity.RIGHT:
+            case Gravity.END:
+                offset.x += mHelper.getAnchorViewWidth();
+                break;
+            case Gravity.CENTER_HORIZONTAL:
+                offset.x += (mHelper.getAnchorViewWidth() - getWidth()) >> 1;
+                break;
+            default:
+                break;
+        }
 
-            switch (getPopupGravity() & Gravity.HORIZONTAL_GRAVITY_MASK) {
-                case Gravity.LEFT:
-                case Gravity.START:
-                    offset.x += -getWidth();
-                    break;
-                case Gravity.RIGHT:
-                case Gravity.END:
-                    offset.x += mHelper.getAnchorViewWidth();
-                    break;
-                case Gravity.CENTER_HORIZONTAL:
-                    offset.x += (mHelper.getAnchorViewWidth() - getWidth()) >> 1;
-                    break;
-                default:
-                    break;
-            }
-
-            switch (getPopupGravity() & Gravity.VERTICAL_GRAVITY_MASK) {
-                case Gravity.TOP:
-                    offset.y += -(mHelper.getAnchorHeight() + getHeight());
-                    break;
-                case Gravity.BOTTOM:
-                    //系统默认就在下面.
-                    break;
-                case Gravity.CENTER_VERTICAL:
-                    offset.y += -((getHeight() + mHelper.getAnchorHeight()) >> 1);
-                    break;
-                default:
-                    break;
-            }
+        switch (getPopupGravity() & Gravity.VERTICAL_GRAVITY_MASK) {
+            case Gravity.TOP:
+                offset.y += -(mHelper.getAnchorHeight() + getHeight());
+                break;
+            case Gravity.BOTTOM:
+                //系统默认就在下面.
+                break;
+            case Gravity.CENTER_VERTICAL:
+                offset.y += -((getHeight() + mHelper.getAnchorHeight()) >> 1);
+                break;
+            default:
+                break;
         }
 
         PopupLogUtil.trace("calculateOffset  :: " +
@@ -867,9 +890,15 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 "\noffsetY = " + offset.y);
 
         if (mHelper.isAutoLocatePopup()) {
-            final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offset.y) < getHeight());
+            final int offsetY = positionMode ? 0 : offset.y;
+            final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offsetY) < getHeight());
             if (onTop) {
-                offset.y = -anchorView.getHeight() - getHeight() - offset.y;
+                if (positionMode) {
+                    offset.y += ((getPopupGravity() & Gravity.VERTICAL_GRAVITY_MASK) == Gravity.CENTER_VERTICAL) ?
+                            -getHeight() >> 1 : -getHeight();
+                } else {
+                    offset.y = -mHelper.getAnchorHeight() - getHeight() - offsetY;
+                }
                 onAnchorTop();
             } else {
                 onAnchorBottom();
