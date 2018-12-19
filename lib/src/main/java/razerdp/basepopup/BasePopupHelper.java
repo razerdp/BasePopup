@@ -92,6 +92,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     private int mSoftInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
     private ViewGroup.MarginLayoutParams mParaseFromXmlParams;
     private Point mOffsetCached = new Point();
+    private Point mTempOffset = new Point();
 
 
     BasePopupHelper(PopupTouchController controller) {
@@ -386,6 +387,15 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     public Point getCachedOffset() {
         return mOffsetCached;
+    }
+
+    public Point getTempOffset() {
+        return mTempOffset;
+    }
+
+    public Point getTempOffset(int x, int y) {
+        mTempOffset.set(x, y);
+        return mTempOffset;
     }
 
     int getAnchorViewWidth() {

@@ -84,6 +84,9 @@ final class WindowManagerProxy implements WindowManager {
                 PopupLogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  不拦截事件");
                 p.flags |= LayoutParams.FLAG_NOT_TOUCH_MODAL;
                 p.flags |= LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+                if (!helper.isClipToScreen()) {
+                    p.flags |= LayoutParams.FLAG_LAYOUT_NO_LIMITS;
+                }
             }
             if (helper.isFullScreen()) {
                 PopupLogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  全屏");
@@ -111,7 +114,7 @@ final class WindowManagerProxy implements WindowManager {
                     Point offset = helper.getCachedOffset();
                     p.x += offset.x;
                     p.y += offset.y;
-                    Log.d(TAG, "dddup: x = " + p.x + "  y = " + p.y + "  offsetX = " + offset.x + "  offsetY = " + offset.y);
+                    Log.d(TAG, "fitLayoutParamsPosition: x = " + p.x + "  y = " + p.y + "  offsetX = " + offset.x + "  offsetY = " + offset.y);
                 }
             }
             applyHelper(p, helper);

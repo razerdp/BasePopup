@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical"
     >
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tv_desc"
@@ -24,15 +25,20 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:orientation="vertical">
 
-        <Button
+        <TextView
             android:id="@+id/popup_show"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="show"/>
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@color/color_black3"
+            android:gravity="center"
+            android:lineSpacingExtra="1.2dp"
+            android:lineSpacingMultiplier="1.2"
+            android:text="click | move"
+            android:textColor="@color/white"/>
 
         <Button
             android:id="@+id/start_animate"
@@ -41,4 +47,4 @@
             android:layout_marginTop="32dp"
             android:text="start animate"/>
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

@@ -16,7 +16,6 @@ public class BubblePopup extends BasePopupWindow {
     public BubblePopup(Context context) {
         super(context);
         this.tvContent = findViewById(R.id.tv_content);
-
     }
 
     @Override

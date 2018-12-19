@@ -229,19 +229,21 @@ public class DemoPopup extends BasePopupWindow {
 
 #### 4.show！
 
-展示PopupWindow的方法有两种，分别是`showPopupWindow()`和`showPopupWindow(View anchor)`：
+展示PopupWindow的方法有三种种，分别是`showPopupWindow()`、`showPopupWindow(View anchor)`和`showPopupWindow(int x, int y)`：
 
 ```java
 new DemoPopup(getContext()).showPopupWindow();
 //new DemoPopup(getContext()).showPopupWindow(v);
+//new DemoPopup(getContext()).showPopupWindow(x,y);
 ```
 <br>
 
-这两个方法有不同的含义：
+这三个方法有不同的含义：
 
  - `showPopupWindow()`：无参传入，此时PopupWindow参考对象为屏幕（或者说整个DecorView），Gravity的表现就像在FrameLayout里面的Gravity表现一样，表示其处于屏幕的哪个方位
  - `showPopupWindow(View anchor)`：传入AnchorView，此时PopupWindow参考对象为传入的anchorView，Gravity的表现则意味着这个PopupWindow应该处于目标AnchorView的哪个方位
- 
+ - `showPopupWindow(int x, int y)`：传入位置信息，此时PopupWindow将会在指定位置弹出。
+
 >建议：如果PopupWindow需要重复展示或者保留状态，建议作为成员变量使用，而不要作为局部变量每次都创建
 
 >关于Gravity的更多api，请查看：[Wiki-Api：Gravity](https://github.com/razerdp/BasePopup/wiki/API#setpopupgravityint-popupgravity)
@@ -306,6 +308,13 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Candy】2.1.3-alpha**(2018/12/19)
+  * 支持update方法来跟随view或者指定位置更新
+  * 调用`updatePopup()`方法即可~
+  * 全面覆盖系统原有的popupwindow定位方法，全版本统一。
+
+<img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/update/update.gif" height="360"/>
+
 * **【Release】2.1.2**(2018/12/19)
   * 正式发布2.1.2release
   * 增加指定位置弹出的方法[**showPopupWindow(int x, int y)**](https://github.com/razerdp/BasePopup/blob/master/lib/src/main/java/razerdp/basepopup/BasePopupWindow.java#L681)
@@ -366,6 +375,8 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 | [**GravityPopupFrag**](./app/src/main/java/razerdp/demo/fragment/basedemo/GravityPopupFrag.java)  | [**LocatePopupFrag**](./app/src/main/java/razerdp/demo/fragment/other/LocatePopupFrag.java) |
 | - | - |
 | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_gravity.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_locatepopup.gif) |
+| [**AnyPosPopupFrag**](./app/src/main/java/razerdp/demo/fragment/basedemo/AnyPosPopupFrag.java)  | [**UpdatePopupFrag**](./app/src/main/java/razerdp/demo/fragment/basedemo/UpdatePopupFrag.java) |
+| ![](https://github.com/razerdp/Pics/tree/master/BasePopup/wiki/anypos/anypos.gif) | ![](https://github.com/razerdp/Pics/tree/master/BasePopup/wiki/update/update.gif) |
 | [**BlurSlideFromBottomPopupFrag**](./app/src/main/java/razerdp/demo/popup/BlurSlideFromBottomPopup.java)  | [**CommentPopup**](./app/src/main/java/razerdp/demo/popup/CommentPopup.java) |
 | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_blur_from_bottom.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_comment.gif) |
 | [**SlideFromBottomPopup**](./app/src/main/java/razerdp/demo/popup/SlideFromBottomPopup.java)  | [**InputPopup**](./app/src/main/java/razerdp/demo/popup/InputPopup.java) |

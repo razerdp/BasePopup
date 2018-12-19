@@ -29,6 +29,7 @@ import razerdp.demo.fragment.basedemo.OffsetPopupFrag;
 import razerdp.demo.fragment.basedemo.OutsideDismissPopupFrag;
 import razerdp.demo.fragment.basedemo.ShowPopupFrag;
 import razerdp.demo.fragment.basedemo.TouchInterceptPopupFrag;
+import razerdp.demo.fragment.basedemo.UpdatePopupFrag;
 import razerdp.demo.fragment.other.SimpleBaseFrag;
 
 public class DemoActivity extends AppCompatActivity {
@@ -60,9 +61,7 @@ public class DemoActivity extends AppCompatActivity {
         fragMap.put(R.id.id_clip_screen, new ClipToScreenPopupFrag());
         fragMap.put(R.id.id_offset, new OffsetPopupFrag());
         fragMap.put(R.id.id_any_position, new AnyPosPopupFrag());
-//        fragMap.put(R.id.id_update, new UpdatePopupFrag());
-
-//        mFragmentManager.beginTransaction().replace(R.id.popup_fragment, fragMap.get(R.id.id_update)).commit();
+        fragMap.put(R.id.id_update, new UpdatePopupFrag());
     }
 
     @Override
