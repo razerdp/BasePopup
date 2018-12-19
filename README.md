@@ -262,6 +262,13 @@ new DemoPopup(getContext()).showPopupWindow();
 | - | - |
 | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_3.gif" height="360"/></p> | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_4.gif" height="360"/></p> |
 
+
+ - `showPopupWindow(int x, int y)传入位置x,y坐标`
+
+ | **gravity = CENTER<br>上述例子中xml写明了layout_gravity=center** |
+ | - |
+ | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/anypos/anypos.gif" height="360"/></p> |
+
 <br>
 
 ### QuickPopupBuilder链式调用
