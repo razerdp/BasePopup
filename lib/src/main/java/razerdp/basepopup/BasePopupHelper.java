@@ -250,6 +250,14 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return this;
     }
 
+    BasePopupHelper setShowLocation(int x, int y) {
+        mAnchorViewLocation[0] = x;
+        mAnchorViewLocation[1] = y;
+        mAnchorViewWidth = 1;
+        mAnchorViewHeight = 1;
+        return this;
+    }
+
     int getPopupGravity() {
         return popupGravity;
     }

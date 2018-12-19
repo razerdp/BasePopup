@@ -78,4 +78,9 @@
         android:orderInCategory="110"
         android:title="offset"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_any_position"
+        android:orderInCategory="111"
+        android:title="任意位置"
+        app:showAsAction="never"/>
 </menu>
