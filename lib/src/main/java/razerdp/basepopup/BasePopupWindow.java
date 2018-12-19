@@ -842,7 +842,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 return offset;
             }
         }
-        offset = new Point(mHelper.getOffsetX(), mHelper.getOffsetY());
+        offset = mHelper.getTempOffset(mHelper.getOffsetX(), mHelper.getOffsetY());
         mHelper.getAnchorLocation(anchorView);
 
         if (anchorView == null) {
@@ -1407,7 +1407,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @see #preMeasurePopupView(int, int)
      */
     public int getHeight() {
-        return mPopupWindow.getHeight() <= 0 ? mHelper.getPreMeasureHeight() : mPopupWindow.getHeight();
+        return mContentView.getHeight() <= 0 ? mHelper.getPreMeasureHeight() : mContentView.getHeight();
     }
 
     /**
@@ -1421,7 +1421,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @see #preMeasurePopupView(int, int)
      */
     public int getWidth() {
-        return mPopupWindow.getWidth() <= 0 ? mHelper.getPreMeasureWidth() : mPopupWindow.getWidth();
+        return mContentView.getWidth() <= 0 ? mHelper.getPreMeasureWidth() : mContentView.getWidth();
     }
 
     /**

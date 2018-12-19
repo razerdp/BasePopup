@@ -1,5 +1,12 @@
 * BasePopup更新日志
 
+* **【Candy】2.1.3-alpha**(2018/12/19)
+  * 支持update方法来跟随view或者指定位置更新
+  * 调用`updatePopup()`方法即可~
+  * 全面覆盖系统原有的popupwindow定位方法，全版本统一。
+
+<img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/update/update.gif" height="360"/>
+
 * **【Release】2.1.2**(2018/12/19)
   * 正式发布2.1.2release
   * 增加指定位置弹出的方法[**showPopupWindow(int x, int y)**](https://github.com/razerdp/BasePopup/blob/master/lib/src/main/java/razerdp/basepopup/BasePopupWindow.java#L681)

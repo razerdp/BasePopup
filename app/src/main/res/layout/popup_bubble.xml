@@ -9,10 +9,12 @@
         android:id="@+id/tv_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:padding="6dp"
+        android:text="content"
         android:textColor="@color/white"
-        android:textSize="14sp"
-        android:text="content"/>
+        android:textSize="14sp"/>
 
 
 </FrameLayout>

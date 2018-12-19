@@ -41,14 +41,7 @@ final class PopupCompatManager {
     }
 
     static {
-        int buildVersion = Build.VERSION.SDK_INT;
-        if (buildVersion == 24) {
-            IMPL = new Impl24();
-        } else if (buildVersion > 24) {
-            IMPL = new ImplOver24();
-        } else {
-            IMPL = new ImplBefore24();
-        }
+        IMPL = new Impl();
     }
 
     //base impl
@@ -153,48 +146,18 @@ final class PopupCompatManager {
     }
 
 
-    //api before 24
-    static class ImplBefore24 extends BaseImpl {
-
-
-        @Override
-        void showAsDropDownImpl(Activity activity, BasePopupWindowProxy popupWindow, View anchor, int xoff, int yoff, int gravity) {
-            popupWindow.callSuperShowAsDropDown(anchor, xoff, yoff, gravity);
-        }
-
-        @Override
-        void showAtLocationImpl(Activity activity, BasePopupWindowProxy popupWindow, View parent, int gravity, int x, int y) {
-            popupWindow.callSuperShowAtLocation(parent, gravity, x, y);
-        }
-    }
-
-    //api 24
-    static class Impl24 extends BaseImpl {
+    static class Impl extends BaseImpl {
+        int[] anchorLocation = new int[2];
 
         @Override
         void showAsDropDownImpl(Activity activity, BasePopupWindowProxy popupWindow, View anchor, int xoff, int yoff, int gravity) {
-            int[] anchorLocation = new int[2];
-            anchor.getLocationInWindow(anchorLocation);
-
-            xoff = anchorLocation[0] + xoff;
-            yoff = anchorLocation[1] + anchor.getHeight() + yoff;
-
+            if (anchor != null) {
+                anchor.getLocationInWindow(anchorLocation);
+                xoff = anchorLocation[0];
+                yoff = anchorLocation[1] + anchor.getHeight();
+            }
+            //offset在basepopupwindow已经计算好，在windowmanagerproxy里面进行适配
             popupWindow.callSuperShowAtLocation(activity.getWindow().getDecorView(), Gravity.NO_GRAVITY, xoff, yoff);
-        }
-
-        @Override
-        void showAtLocationImpl(Activity activity, BasePopupWindowProxy popupWindow, View parent, int gravity, int x, int y) {
-            popupWindow.callSuperShowAtLocation(parent, gravity, x, y);
-
-        }
-    }
-
-    //api over 24
-    static class ImplOver24 extends BaseImpl {
-
-        @Override
-        void showAsDropDownImpl(Activity activity, BasePopupWindowProxy popupWindow, View anchor, int xoff, int yoff, int gravity) {
-            popupWindow.callSuperShowAsDropDown(anchor, xoff, yoff, gravity);
         }
 
         @Override
