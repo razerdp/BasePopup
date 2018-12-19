@@ -59,9 +59,10 @@ public class DemoActivity extends AppCompatActivity {
         fragMap.put(R.id.id_clip_children, new ClipChildrenPopupFrag());
         fragMap.put(R.id.id_clip_screen, new ClipToScreenPopupFrag());
         fragMap.put(R.id.id_offset, new OffsetPopupFrag());
-        fragMap.put(R.id.id_any_position,new AnyPosPopupFrag());
+        fragMap.put(R.id.id_any_position, new AnyPosPopupFrag());
+//        fragMap.put(R.id.id_update, new UpdatePopupFrag());
 
-
+//        mFragmentManager.beginTransaction().replace(R.id.popup_fragment, fragMap.get(R.id.id_update)).commit();
     }
 
     @Override

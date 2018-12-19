@@ -211,4 +211,28 @@ abstract class BasePopupWindowProxy extends PopupWindow {
         }
     }
 
+
+    @Override
+    public void update() {
+        try {
+            if (mHelper != null) {
+                if (mHelper.isInterceptTouchEvent()) {
+                    if (mWindowManagerProxy != null) {
+                        mWindowManagerProxy.update();
+                    }
+                } else {
+                    if (mHelper.getParaseFromXmlParams() != null) {
+                        super.update(mHelper.getAnchorX(), mHelper.getAnchorY()+mHelper.getAnchorHeight(), mHelper.getParaseFromXmlParams().width, mHelper.getParaseFromXmlParams().height, true);
+                    } else {
+                        super.update(mHelper.getAnchorX(), mHelper.getAnchorY()+mHelper.getAnchorHeight(), mHelper.getPopupViewWidth(), mHelper.getPopupViewHeight(), true);
+                    }
+                }
+            } else {
+                super.update();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
