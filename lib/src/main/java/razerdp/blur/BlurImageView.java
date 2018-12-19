@@ -64,6 +64,10 @@ public class BlurImageView extends ImageView {
     }
 
     public void applyBlurOption(PopupBlurOption option) {
+        applyBlurOption(option, false);
+    }
+
+    private void applyBlurOption(PopupBlurOption option, boolean isOnUpdate) {
         if (option == null) return;
         mBlurOption = new WeakReference<PopupBlurOption>(option);
         View anchorView = option.getBlurView();
@@ -71,7 +75,8 @@ public class BlurImageView extends ImageView {
             PopupLogUtil.trace(LogTag.e, TAG, "模糊锚点View为空，放弃模糊操作...");
             return;
         }
-        if (option.isBlurAsync()) {
+        //因为考虑到实时更新位置（包括模糊也要实时）的原因，因此强制更新时模糊操作在主线程完成。
+        if (option.isBlurAsync() && !isOnUpdate) {
             PopupLogUtil.trace(LogTag.i, TAG, "子线程blur");
             startBlurTask(anchorView);
         } else {
@@ -80,7 +85,7 @@ public class BlurImageView extends ImageView {
                 if (!BlurHelper.renderScriptSupported()) {
                     PopupLogUtil.trace(LogTag.e, TAG, "不支持脚本模糊。。。最低支持api 17(Android 4.2.2)，将采用fastblur");
                 }
-                setImageBitmapOnUiThread(BlurHelper.blur(getContext(), anchorView, option.getBlurPreScaleRatio(), option.getBlurRadius(), option.isFullScreen()));
+                setImageBitmapOnUiThread(BlurHelper.blur(getContext(), anchorView, option.getBlurPreScaleRatio(), option.getBlurRadius(), option.isFullScreen()), isOnUpdate);
             } catch (Exception e) {
                 PopupLogUtil.trace(LogTag.e, TAG, "模糊异常");
                 e.printStackTrace();
@@ -97,6 +102,12 @@ public class BlurImageView extends ImageView {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         abortBlur = true;
+    }
+
+    public void update() {
+        if (getOption() != null) {
+            applyBlurOption(getOption(), true);
+        }
     }
 
     /**
@@ -148,7 +159,6 @@ public class BlurImageView extends ImageView {
 
     /**
      * alpha退场动画
-     *
      */
     public void dismiss(long duration) {
         isAnimating = false;
@@ -184,14 +194,14 @@ public class BlurImageView extends ImageView {
      *
      * @param blurBitmap
      */
-    private void setImageBitmapOnUiThread(final Bitmap blurBitmap) {
+    private void setImageBitmapOnUiThread(final Bitmap blurBitmap, final boolean isOnUpdate) {
         if (isUiThread()) {
-            handleSetImageBitmap(blurBitmap);
+            handleSetImageBitmap(blurBitmap, isOnUpdate);
         } else {
             post(new Runnable() {
                 @Override
                 public void run() {
-                    handleSetImageBitmap(blurBitmap);
+                    handleSetImageBitmap(blurBitmap, isOnUpdate);
                 }
             });
         }
@@ -202,11 +212,11 @@ public class BlurImageView extends ImageView {
      *
      * @param bitmap
      */
-    private void handleSetImageBitmap(Bitmap bitmap) {
+    private void handleSetImageBitmap(Bitmap bitmap, boolean isOnUpdate) {
         if (bitmap != null) {
             PopupLogUtil.trace(LogTag.i, "bitmap: 【" + bitmap.getWidth() + "," + bitmap.getHeight() + "】");
         }
-        setAlpha(0f);
+        setAlpha(isOnUpdate ? 1f : 0f);
         setImageBitmap(bitmap);
         if (getOption() != null) {
             PopupBlurOption option = getOption();
@@ -264,7 +274,7 @@ public class BlurImageView extends ImageView {
                 PopupLogUtil.trace(LogTag.e, TAG, "放弃模糊，可能是已经移除了布局");
                 return;
             }
-            setImageBitmapOnUiThread(BlurHelper.blur(getContext(), bitmap, getOption().getBlurPreScaleRatio(), getOption().getBlurRadius()));
+            setImageBitmapOnUiThread(BlurHelper.blur(getContext(), bitmap, getOption().getBlurPreScaleRatio(), getOption().getBlurRadius()), false);
         }
     }
 }

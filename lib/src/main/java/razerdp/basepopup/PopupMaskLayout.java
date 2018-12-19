@@ -87,6 +87,12 @@ class PopupMaskLayout extends FrameLayout {
         return new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     }
 
+    public void update() {
+        if (mBlurImageView != null) {
+            mBlurImageView.update();
+        }
+    }
+
     public void handleStart(long duration) {
         if (mBlurImageView != null) {
             mBlurImageView.start(duration);

@@ -686,6 +686,18 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
     }
 
+    public void update(View anchorView) {
+        if (!isShowing() || getContentView() == null) return;
+        tryToUpdate(anchorView, false);
+    }
+
+    public void update(int x, int y) {
+        if (!isShowing() || getContentView() == null) return;
+        mHelper.setShowLocation(x, y);
+        mHelper.setShowAsDropDown(true);
+        tryToUpdate(null, true);
+    }
+
     //------------------------------------------Methods-----------------------------------------------
     private void tryToShowPopup(View v, boolean positionMode) {
         addGlobalListener();
@@ -746,6 +758,12 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             PopupLogUtil.trace(LogTag.e, TAG, "show error\n" + e);
             e.printStackTrace();
         }
+    }
+
+    private void tryToUpdate(View v, boolean positionMode) {
+        if (!isShowing() || getContentView() == null) return;
+        mHelper.cacheOffset(calculateOffset(v, positionMode));
+        mPopupWindow.update();
     }
 
 
@@ -816,17 +834,15 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @see #showPopupWindow(View)
      */
     private Point calculateOffset(View anchorView, boolean positionMode) {
-        Point offset = null;
-        boolean intercepted = false;
+        Point offset;
         if (mEventInterceptor != null) {
             offset = mEventInterceptor.onCalculateOffset(this, anchorView, mHelper.getOffsetX(), mHelper.getOffsetY());
             if (offset != null) {
-                intercepted = true;
+                mHelper.cacheOffset(offset);
+                return offset;
             }
         }
-        if (offset == null) {
-            offset = new Point(mHelper.getOffsetX(), mHelper.getOffsetY());
-        }
+        offset = new Point(mHelper.getOffsetX(), mHelper.getOffsetY());
         mHelper.getAnchorLocation(anchorView);
 
         if (anchorView == null) {
@@ -835,10 +851,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             offset.offset(mHelper.getAnchorX(), mHelper.getAnchorY());
         }
 
-        if (!intercepted) {
-            onCalculateOffsetAdjust(offset, positionMode);
-        }
-
+        onCalculateOffsetAdjust(offset, positionMode);
+        mHelper.cacheOffset(offset);
         return offset;
 
     }

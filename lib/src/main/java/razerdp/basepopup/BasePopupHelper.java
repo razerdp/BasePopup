@@ -3,6 +3,7 @@ package razerdp.basepopup;
 import android.animation.Animator;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -90,6 +91,8 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     private int mSoftInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
     private ViewGroup.MarginLayoutParams mParaseFromXmlParams;
+    private Point mOffsetCached = new Point();
+
 
     BasePopupHelper(PopupTouchController controller) {
         mAnchorViewLocation = new int[2];
@@ -373,6 +376,16 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         mAnchorViewWidth = v.getWidth();
         mAnchorViewHeight = v.getHeight();
         return this;
+    }
+
+    BasePopupHelper cacheOffset(Point offset) {
+        if (offset == null) return this;
+        this.mOffsetCached.set(offset.x, offset.y);
+        return this;
+    }
+
+    public Point getCachedOffset() {
+        return mOffsetCached;
     }
 
     int getAnchorViewWidth() {

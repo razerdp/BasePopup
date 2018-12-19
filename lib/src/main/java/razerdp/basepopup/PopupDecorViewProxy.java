@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -22,7 +23,7 @@ import razerdp.util.log.PopupLogUtil;
  * 旨在用来拦截keyevent、以及蒙层
  */
 final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateChangeListener {
-    private static final String TAG = "HackPopupDecorView";
+    private static final String TAG = "PopupDecorViewProxy";
     //模糊层
     private PopupMaskLayout mMaskLayout;
     private BasePopupHelper mHelper;
@@ -183,6 +184,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         } else {
             measureWithOutIntercept(widthMeasureSpec, heightMeasureSpec);
         }
+        Log.d(TAG, "onMeasure: ");
     }
 
     private void measureWithIntercept(int widthMeasureSpec, int heightMeasureSpec) {
@@ -562,6 +564,14 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     @Override
     public boolean shouldDelayChildPressedState() {
         return false;
+    }
+
+
+    public void updateLayout() {
+        mMaskLayout.update();
+        if (isLayoutRequested()) {
+            requestLayout();
+        }
     }
 
     //-----------------------------------------keyboard-----------------------------------------

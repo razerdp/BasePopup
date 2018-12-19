@@ -1,8 +1,10 @@
 package razerdp.basepopup;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,13 +99,20 @@ final class WindowManagerProxy implements WindowManager {
         if (params instanceof WindowManager.LayoutParams) {
             WindowManager.LayoutParams p = (LayoutParams) params;
             BasePopupHelper helper = getBasePopupHelper();
-            if (helper != null && helper.getShowCount() > 1) {
-                p.type = LayoutParams.TYPE_APPLICATION_SUB_PANEL;
-            }
-            if (helper != null && helper.isInterceptTouchEvent()) {
-                //偏移交给PopupDecorViewProxy处理，此处固定为0
-                p.y = 0;
-                p.x = 0;
+            if (helper != null) {
+                if (helper.getShowCount() > 1) {
+                    p.type = LayoutParams.TYPE_APPLICATION_SUB_PANEL;
+                }
+                if (helper.isInterceptTouchEvent()) {
+                    //偏移交给PopupDecorViewProxy处理，此处固定为0
+                    p.y = 0;
+                    p.x = 0;
+                } else {
+                    Point offset = helper.getCachedOffset();
+                    p.x += offset.x;
+                    p.y += offset.y;
+                    Log.d(TAG, "dddup: x = " + p.x + "  y = " + p.y + "  offsetX = " + offset.x + "  offsetY = " + offset.y);
+                }
             }
             applyHelper(p, helper);
         }
@@ -120,6 +129,13 @@ final class WindowManagerProxy implements WindowManager {
             mWindowManager.updateViewLayout(popupDecorViewProxy, fitLayoutParamsPosition(params));
         } else {
             mWindowManager.updateViewLayout(view, params);
+        }
+    }
+
+    public void update() {
+        if (mWindowManager == null) return;
+        if (getPopupDecorViewProxy() != null) {
+            getPopupDecorViewProxy().updateLayout();
         }
     }
 
