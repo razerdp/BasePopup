@@ -625,7 +625,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public void showPopupWindow() {
         if (checkPerformShow(null)) {
             mHelper.setShowAsDropDown(false);
-            tryToShowPopup(null, false);
+            tryToShowPopup(null, false, false);
         }
     }
 
@@ -666,7 +666,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             if (anchorView != null) {
                 mHelper.setShowAsDropDown(true);
             }
-            tryToShowPopup(anchorView, false);
+            tryToShowPopup(anchorView, false, false);
         }
     }
 
@@ -684,7 +684,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         if (checkPerformShow(null)) {
             mHelper.setShowLocation(x, y);
             mHelper.setShowAsDropDown(true);
-            tryToShowPopup(null, true);
+            tryToShowPopup(null, true, false);
         }
     }
 
@@ -702,7 +702,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
 
     //------------------------------------------Methods-----------------------------------------------
-    private void tryToShowPopup(View v, boolean positionMode) {
+    private void tryToShowPopup(View v, boolean positionMode, boolean abortAnimate) {
         addListener();
         mHelper.handleShow();
         if (mEventInterceptor != null && mEventInterceptor.onTryToShowPopup(this,
@@ -742,7 +742,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 }
             }
             mHelper.onShow(mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
-            if (mDisplayAnimateView != null) {
+            if (mDisplayAnimateView != null && !abortAnimate) {
                 if (mHelper.getShowAnimation() != null) {
                     mHelper.getShowAnimation().cancel();
                     mDisplayAnimateView.startAnimation(mHelper.getShowAnimation());
@@ -757,7 +757,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             }
             retryCounter = 0;
         } catch (Exception e) {
-            retryToShowPopup(v, positionMode);
+            retryToShowPopup(v, positionMode, abortAnimate);
             PopupLogUtil.trace(LogTag.e, TAG, "show error\n" + e);
             e.printStackTrace();
         }
@@ -818,7 +818,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     /**
      * 用于修复popup无法在onCreate里面show的问题
      */
-    private void retryToShowPopup(final View v, final boolean positionMode) {
+    private void retryToShowPopup(final View v, final boolean positionMode, final boolean abortAnimate) {
         if (retryCounter > MAX_RETRY_SHOW_TIME) return;
         PopupLogUtil.trace(LogTag.e, TAG, "catch an exception on showing popupwindow ...now retrying to show ... retry count  >>  " + retryCounter);
         if (mPopupWindow.callSuperIsShowing()) {
@@ -839,7 +839,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 @Override
                 public void run() {
                     retryCounter++;
-                    tryToShowPopup(v, positionMode);
+                    tryToShowPopup(v, positionMode, abortAnimate);
                     PopupLogUtil.trace(LogTag.e, TAG, "retry to show >> " + retryCounter);
                 }
             }, 350);
@@ -1542,10 +1542,19 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return this;
     }
 
+    /**
+     * <p>
+     * 允许PopupWindow跟某个anchorView关联，其位置，可视性将会跟anchorView同步</>
+     */
     public BasePopupWindow linkTo(View view) {
         if (view == null) {
+            if (mLinkedViewLayoutChangeListenerWrapper != null) {
+                mLinkedViewLayoutChangeListenerWrapper.removeListener();
+                mLinkedViewLayoutChangeListenerWrapper = null;
+            }
             if (mLinkedViewRef != null) {
                 mLinkedViewRef.clear();
+                mLinkedViewRef = null;
                 return this;
             }
         }
@@ -2054,26 +2063,92 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
     }
 
-    private class LinkedViewLayoutChangeListenerWrapper implements ViewTreeObserver.OnGlobalLayoutListener {
+    private class LinkedViewLayoutChangeListenerWrapper implements ViewTreeObserver.OnPreDrawListener {
 
         private boolean isAdded;
+        private float lastX, lastY;
+        private int lastWidth, lastHeight, lastVisible;
+        private boolean lastShowState, hasChange;
+        Rect lastLocationRect = new Rect();
+        Rect newLocationRect = new Rect();
+
 
         void addSelf() {
             if (mLinkedViewRef == null || mLinkedViewRef.get() == null || isAdded) return;
-            mLinkedViewRef.get().getViewTreeObserver().addOnGlobalLayoutListener(this);
+            View target = mLinkedViewRef.get();
+            target.getGlobalVisibleRect(lastLocationRect);
+            refreshViewParams();
+            target.getViewTreeObserver().addOnPreDrawListener(this);
             isAdded = true;
         }
 
         void removeListener() {
             if (mLinkedViewRef == null || mLinkedViewRef.get() == null || !isAdded) return;
-            mLinkedViewRef.get().getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            mLinkedViewRef.get().getViewTreeObserver().removeOnPreDrawListener(this);
             isAdded = false;
         }
 
-        @Override
-        public void onGlobalLayout() {
+        void refreshViewParams() {
             if (mLinkedViewRef == null || mLinkedViewRef.get() == null) return;
-            update(mLinkedViewRef.get());
+            View target = mLinkedViewRef.get();
+
+            //之所以不直接用getGlobalVisibleRect，是因为getGlobalVisibleRect需要不断的找到parent然后获取位置，因此先比较自身属性，然后进行二次验证
+            float curX = target.getX();
+            float curY = target.getY();
+            int curWidth = target.getWidth();
+            int curHeight = target.getHeight();
+            int curVisible = target.getVisibility();
+            boolean isShow = target.isShown();
+
+            hasChange = (curX != lastX ||
+                    curY != lastY ||
+                    curWidth != lastWidth ||
+                    curHeight != lastHeight ||
+                    curVisible != lastVisible) && isAdded;
+            if (!hasChange) {
+                //不排除是recyclerview中那样子的情况，因此这里进行二次验证，获取view在屏幕中的位置
+                target.getGlobalVisibleRect(newLocationRect);
+                if (!newLocationRect.equals(lastLocationRect)) {
+                    lastLocationRect.set(newLocationRect);
+                    //处理可能的在recyclerview回收的事情
+                    if (!handleShowChange(target, lastShowState, isShow)) {
+                        hasChange = true;
+                    }
+                }
+            }
+
+            lastX = curX;
+            lastY = curY;
+            lastWidth = curWidth;
+            lastHeight = curHeight;
+            lastVisible = curVisible;
+            lastShowState = isShow;
+        }
+
+        private boolean handleShowChange(View target, boolean lastShowState, boolean isShow) {
+            if (lastShowState && !isShow) {
+                if (isShowing()) {
+                    dismiss(false);
+                    return true;
+                }
+            } else if (!lastShowState && isShow) {
+                if (!isShowing()) {
+                    tryToShowPopup(target, false, true);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        @Override
+        public boolean onPreDraw() {
+            if (mLinkedViewRef == null || mLinkedViewRef.get() == null) return true;
+            refreshViewParams();
+            if (hasChange) {
+                update(mLinkedViewRef.get());
+            }
+            return true;
         }
     }
 

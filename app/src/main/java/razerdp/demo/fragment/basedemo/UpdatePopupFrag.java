@@ -29,7 +29,7 @@ public class UpdatePopupFrag extends SimpleBaseFrag {
     private ViewHolder vh;
     private static final String DESC = "· 更新BasePopup位置，允许指定跟随某个view或者传入某个位置。\n" +
             "· 一般应用于setAllowInterceptTouchEvent(false)情况，这样才可以响应外部事件嘛\n" +
-            "· 如果允许拦截事件setAllowInterceptTouchEvent(true)，那么模糊也是允许的，但因为动态模糊，对同步性要求较高，因此强制性主线程模糊，请尽量避免持续性update的情况下允许模糊\n";
+            "· 如果允许拦截事件setAllowInterceptTouchEvent(true)，那么模糊也是允许的，但因为动态模糊，对同步性要求较高，因此强制性主线程模糊，请尽量避免持续性update的情况下使用模糊\n";
     private BubblePopup mDemoPopup;
     int[] location = new int[2];
 
@@ -51,7 +51,8 @@ public class UpdatePopupFrag extends SimpleBaseFrag {
         mDemoPopup.setPopupGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL)
                 .setAllowInterceptTouchEvent(false)
                 .setAllowDismissWhenTouchOutside(false)
-//                .linkTo(vh.popupShow)
+                //linkto方法添加，因此不用自己去update
+                .linkTo(vh.popupShow)
                 .setShowAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(true))
                 .setDismissAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(false));
 
@@ -79,7 +80,7 @@ public class UpdatePopupFrag extends SimpleBaseFrag {
                         v.offsetTopAndBottom((int) (curY - lastY));
                         lastX = curX;
                         lastY = curY;
-                        updatePopup(vh.popupShow);
+                        updateLocationText(vh.popupShow);
                         break;
                 }
                 return false;
@@ -100,7 +101,7 @@ public class UpdatePopupFrag extends SimpleBaseFrag {
                             .setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                 @Override
                                 public void onAnimationUpdate(ValueAnimator animation) {
-                                    updatePopup(vh.popupShow);
+                                    updateLocationText(vh.popupShow);
                                 }
                             })
                             .setListener(new AnimatorListenerAdapter() {
@@ -118,7 +119,7 @@ public class UpdatePopupFrag extends SimpleBaseFrag {
                             .setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                 @Override
                                 public void onAnimationUpdate(ValueAnimator animation) {
-                                    updatePopup(vh.popupShow);
+                                    updateLocationText(vh.popupShow);
                                 }
                             })
                             .setListener(new AnimatorListenerAdapter() {
@@ -134,10 +135,9 @@ public class UpdatePopupFrag extends SimpleBaseFrag {
         });
     }
 
-    private void updatePopup(View v) {
+    private void updateLocationText(View v) {
         v.getLocationInWindow(location);
         mDemoPopup.setContent("x = " + location[0] + "\ny = " + location[1]);
-//        mDemoPopup.update(v);
     }
 
     @Override
