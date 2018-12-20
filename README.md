@@ -315,7 +315,7 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
-* 2018/12/20
+* **【Candy】2.1.3-alpha2**(2018/12/20)
   * 增加`linkTo(View)`方法，跟随anchorView状态？一个方法就足够了~
   * 2.x的坑基本补完~如无意外，这个功能将会是18年最后一个功能性更新了
 
