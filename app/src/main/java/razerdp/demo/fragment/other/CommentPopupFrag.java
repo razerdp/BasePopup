@@ -2,6 +2,7 @@ package razerdp.demo.fragment.other;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -25,10 +26,12 @@ import razerdp.demo.utils.ToastUtils;
  */
 public class CommentPopupFrag extends SimpleBaseFrag {
     private RecyclerView mRecyclerView;
+    private AppCompatCheckBox mLinkViewCheck;
 
     @Override
     public void onInitView(View rootView) {
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_content);
+        mLinkViewCheck = (AppCompatCheckBox) findViewById(R.id.check_link_to_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         List<String> data = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
@@ -111,6 +114,9 @@ public class CommentPopupFrag extends SimpleBaseFrag {
                 show.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        mCommentPopup.setAllowInterceptTouchEvent(!mLinkViewCheck.isChecked())
+                                .setAllowDismissWhenTouchOutside(!mLinkViewCheck.isChecked())
+                                .linkTo(mLinkViewCheck.isChecked()?v:null);
                         mCommentPopup.showPopupWindow(v);
                     }
                 });

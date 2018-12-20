@@ -9,8 +9,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="评论popup\n主要依靠offset，其中popup的高度是评论view的三倍，这样比较美观，因此offsetY是取的popup高度除以1.5"
+        android:text="朋友圈评论popup\nGravity设置为left|centerVertical"
         />
+
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/check_link_to_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="是否绑定anchorView"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_content"
