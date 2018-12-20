@@ -688,11 +688,32 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
     }
 
+    /**
+     * <p>
+     * 参考anchorView更新PopupWindow位置或大小等信息。
+     * <br>
+     * <b>该方法跟anchorView关联，即您的gravity，offset等会跟随anchorView变化而变化</b>
+     *
+     * <br>
+     * <b>WARN：非常不建议在连续update的情况下使用背景模糊，这会导致较大的性能消耗。<b/>
+     *
+     * @param anchorView 被参考的anchorView
+     */
     public void update(View anchorView) {
         if (!isShowing() || getContentView() == null) return;
         tryToUpdate(anchorView, false);
     }
 
+    /**
+     * <p>
+     * 在指定位置更新PopupWindow位置或大小等信息。
+     *
+     * <br>
+     * <b>WARN：非常不建议在连续update的情况下使用背景模糊，这会导致较大的性能消耗。<b/>
+     *
+     * @param x 目标位置x坐标
+     * @param y 目标位置y坐标
+     */
     public void update(int x, int y) {
         if (!isShowing() || getContentView() == null) return;
         mHelper.setShowLocation(x, y);
@@ -1545,9 +1566,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     /**
      * <p>
      * 允许PopupWindow跟某个anchorView关联，其位置，可视性将会跟anchorView同步</>
+     * <br>
+     * <b>WARN：非常不建议在anchorView频繁变化的情况下使用背景模糊，这会导致较大的性能消耗。</b>
      */
-    public BasePopupWindow linkTo(View view) {
-        if (view == null) {
+    public BasePopupWindow linkTo(View anchorView) {
+        if (anchorView == null) {
             if (mLinkedViewLayoutChangeListenerWrapper != null) {
                 mLinkedViewLayoutChangeListenerWrapper.removeListener();
                 mLinkedViewLayoutChangeListenerWrapper = null;
@@ -1559,7 +1582,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             }
         }
 
-        mLinkedViewRef = new WeakReference<>(view);
+        mLinkedViewRef = new WeakReference<>(anchorView);
         return this;
     }
 
