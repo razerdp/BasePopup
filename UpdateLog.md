@@ -1,5 +1,13 @@
 ## BasePopup更新日志
 
+* **【Release】2.1.3**(2018/12/21)
+  * 正式发布2.1.3release
+  * 增加[**linkTo(View)**](https://github.com/razerdp/BasePopup/wiki/API#linktoview-anchorview)方法
+  * 支持update方法来跟随view或者指定位置更新
+  * 全面优化系统原有的popupwindow定位方法，全版本统一。
+  * 2.x的坑基本补完
+  * 19年，我们再见-V-
+
 * **【Candy】2.1.3-alpha2**(2018/12/20)
   * 增加`linkTo(View)`方法，跟随anchorView状态？一个方法就足够了~
   * 2.x的坑基本补完~如无意外，这个功能将会是18年最后一个功能性更新了
