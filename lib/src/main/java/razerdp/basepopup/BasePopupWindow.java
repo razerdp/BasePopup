@@ -755,9 +755,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 if (activity == null) {
                     Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
                 } else {
-                    //传入位置的时候，已经内部计算好offset了，因此不需要系统帮我们计算gravity
                     mPopupWindow.showAtLocationProxy(activity.findViewById(android.R.id.content),
-                            positionMode ? Gravity.NO_GRAVITY : mHelper.getPopupGravity(),
+                            Gravity.NO_GRAVITY,
                             offset.x,
                             offset.y);
                 }
@@ -887,13 +886,13 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         offset = mHelper.getTempOffset(mHelper.getOffsetX(), mHelper.getOffsetY());
         mHelper.getAnchorLocation(anchorView);
 
-        if (anchorView == null) {
+        if (positionMode) {
             //此时传入的是位置信息，默认以NO_GRAVITY测量
             /**@see BasePopupHelper#setShowLocation(int, int) */
             offset.offset(mHelper.getAnchorX(), mHelper.getAnchorY());
         }
 
-        onCalculateOffsetAdjust(offset, positionMode);
+        onCalculateOffsetAdjust(offset, positionMode, anchorView != null);
         mHelper.cacheOffset(offset);
         return offset;
 
@@ -906,35 +905,74 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *
      * @see PopupDecorViewProxy#layoutWithIntercept(int, int, int, int)
      */
-    private void onCalculateOffsetAdjust(Point offset, boolean positionMode) {
+    private void onCalculateOffsetAdjust(Point offset, boolean positionMode, boolean relativeToAnchor) {
+        int leftMargin = 0;
+        int topMargin = 0;
+        int rightMargin = 0;
+        int bottomMargin = 0;
+        if (mHelper.getParaseFromXmlParams() != null) {
+            leftMargin = mHelper.getParaseFromXmlParams().leftMargin;
+            topMargin = mHelper.getParaseFromXmlParams().topMargin;
+            rightMargin = mHelper.getParaseFromXmlParams().rightMargin;
+            bottomMargin = mHelper.getParaseFromXmlParams().bottomMargin;
+        }
         //由于showAsDropDown系统已经帮我们定位在view的下方，因此这里的offset我们仅需要做微量偏移
         switch (getPopupGravity() & Gravity.HORIZONTAL_GRAVITY_MASK) {
             case Gravity.LEFT:
             case Gravity.START:
-                offset.x += -getWidth();
+                if (relativeToAnchor) {
+                    offset.x += -getWidth() + leftMargin;
+                } else {
+                    offset.x += leftMargin;
+                }
                 break;
             case Gravity.RIGHT:
             case Gravity.END:
-                offset.x += mHelper.getAnchorViewWidth();
+                if (relativeToAnchor) {
+                    offset.x += mHelper.getAnchorViewWidth() + leftMargin;
+                } else {
+                    offset.x += getScreenWidth() - getWidth() - rightMargin;
+                }
                 break;
             case Gravity.CENTER_HORIZONTAL:
-                offset.x += (mHelper.getAnchorViewWidth() - getWidth()) >> 1;
+                if (relativeToAnchor) {
+                    offset.x += (mHelper.getAnchorViewWidth() - getWidth()) >> 1;
+                } else {
+                    offset.x += ((getScreenWidth() - getWidth()) >> 1) + leftMargin - rightMargin;
+                }
                 break;
             default:
+                if (!relativeToAnchor) {
+                    offset.x += leftMargin;
+                }
                 break;
         }
 
         switch (getPopupGravity() & Gravity.VERTICAL_GRAVITY_MASK) {
             case Gravity.TOP:
-                offset.y += -(mHelper.getAnchorHeight() + getHeight());
+                if (relativeToAnchor) {
+                    offset.y += -(mHelper.getAnchorHeight() + getHeight()) + topMargin;
+                } else {
+                    offset.y += topMargin;
+                }
                 break;
             case Gravity.BOTTOM:
                 //系统默认就在下面.
+                if (!relativeToAnchor) {
+                    offset.y += getScreenHeight() - getHeight() - bottomMargin;
+                }
                 break;
             case Gravity.CENTER_VERTICAL:
-                offset.y += -((getHeight() + mHelper.getAnchorHeight()) >> 1);
+                if (relativeToAnchor) {
+                    offset.y += -((getHeight() + mHelper.getAnchorHeight()) >> 1);
+                } else {
+                    offset.y += ((getScreenHeight() - getHeight()) >> 1) + topMargin - bottomMargin;
+                }
                 break;
             default:
+                if (!relativeToAnchor) {
+                    offset.y += topMargin;
+                }
                 break;
         }
 

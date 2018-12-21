@@ -111,10 +111,12 @@ final class WindowManagerProxy implements WindowManager {
                     p.y = 0;
                     p.x = 0;
                 } else {
-                    Point offset = helper.getCachedOffset();
-                    p.x += offset.x;
-                    p.y += offset.y;
-                    Log.d(TAG, "fitLayoutParamsPosition: x = " + p.x + "  y = " + p.y + "  offsetX = " + offset.x + "  offsetY = " + offset.y);
+                    if (helper.isShowAsDropDown()) {
+                        Point offset = helper.getCachedOffset();
+                        p.x += offset.x;
+                        p.y += offset.y;
+                        Log.d(TAG, "fitLayoutParamsPosition: x = " + p.x + "  y = " + p.y + "  offsetX = " + offset.x + "  offsetY = " + offset.y);
+                    }
                 }
             }
             applyHelper(p, helper);
