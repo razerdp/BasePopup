@@ -316,6 +316,15 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Release】2.1.3**(2018/12/21)
+  * **建议更新到这个版本！**
+  * 正式发布2.1.3release
+  * 增加[**linkTo(View)**](https://github.com/razerdp/BasePopup/wiki/API#linktoview-anchorview)方法
+  * 支持update方法来跟随view或者指定位置更新
+  * 全面优化系统原有的popupwindow定位方法，全版本统一。
+  * 2.x的坑基本补完
+  * 19年，我们再见-V-
+
 * **【Candy】2.1.3-alpha2**(2018/12/20)
   * 增加[**linkTo(View)**](https://github.com/razerdp/BasePopup/wiki/API#linktoview-anchorview)方法，跟随anchorView状态？一个方法就足够了~
   * 2.x的坑基本补完~如无意外，这个功能将会是18年最后一个功能性更新了
@@ -366,22 +375,6 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
     * 优化代码，去除冗余代码
     * README大翻新
 
-* **【Release】2.0.8.1**(2018/10/29)
-  * **建议更新到这个版本！**
-  * fixed [#94](https://github.com/razerdp/BasePopup/issues/94)
-  * 紧急修复一个严重的bug[#95](https://github.com/razerdp/BasePopup/issues/95)，感谢[@tpnet](https://github.com/tpnet)
-  * 优化代码
-
-* **【Release】2.0.8**(2018/10/29)
-  * fixed [#93](https://github.com/razerdp/BasePopup/issues/93)
-  * 修复部分崩溃问题，发布release
-
-* **【Candy】2.0.8-alpha3**(2018/10/25)
-  * fixed [#87](https://github.com/razerdp/BasePopup/issues/87)、[#89](https://github.com/razerdp/BasePopup/issues/89)、[#90](https://github.com/razerdp/BasePopup/issues/90)
-
-* **【Candy】2.0.8-alpha2**(2018/10/19)
-  * 修复QuickPopupBuilder的click事件无响应问题，增加background方法
-  * 修复设置background(0)时无法找到资源而崩溃的问题
 
 <br>
 
