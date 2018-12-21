@@ -1,5 +1,9 @@
 ## BasePopup更新日志
 
+* **【Release】2.1.4**(2018/12/21)
+  * 非常抱歉~因为一时疏忽忘记合并一些东西，导致2.1.3版本在不拦截事件的情况下，无anchorView弹窗会导致位置问题，在2.1.4重新合并了代码，对此造成的影响，深表歉意。
+    * 以后的版本一定会经过3个或以上的candy迭代仔细检查后再发！
+
 * **【Release】2.1.3**(2018/12/21)
   * 正式发布2.1.3release
   * 增加[**linkTo(View)**](https://github.com/razerdp/BasePopup/wiki/API#linktoview-anchorview)方法
