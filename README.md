@@ -417,7 +417,7 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 #### Q：如何取消默认的背景颜色
 
-A：调用setBackgroundColor(Color.TRANSPARENT)或者setBackground(0)
+A：调用[**setBackgroundColor**](https://github.com/razerdp/BasePopup/wiki/API#setbackgroundcolorint-color)(Color.TRANSPARENT)或者[**setBackground**](https://github.com/razerdp/BasePopup/wiki/API#setbackgroundint-drawableids)(0)
 
 #### Q：如何在dismiss()时不执行退出动画
 
@@ -425,7 +425,7 @@ A：调用dismiss(false)或者dismissWithOutAnimate()
 
 #### Q：点击popupwindow背景部分不想让popupwindow隐藏怎么办
 
-A：设置setAllowDismissWhenTouchOutside(false)
+A：设置[**setAllowDismissWhenTouchOutside**](https://github.com/razerdp/BasePopup/wiki/API#setallowdismisswhentouchoutsideboolean-dismisswhentouchoutside)(false)
 
 #### Q：Service里无法弹出
 
@@ -433,11 +433,11 @@ A：PopupWindow需要windowToken，因此ApplicationContext或者Service里面�
 
 #### Q：如何不让PopupWindow的蒙层覆盖状态栏
 
-A：设置setPopupWindowFullScreen(false)
+A：设置[**setPopupWindowFullScreen**](https://github.com/razerdp/BasePopup/wiki/API#setpopupwindowfullscreenboolean-isfullscreen)(false)
 
-#### Q：如何点击back键不关闭pop 
+#### Q：如何点击back键不关闭pop
 
-A：设置setBackPressEnable(false)
+A：设置[**setBackPressEnable**](https://github.com/razerdp/BasePopup/wiki/API#setBackPressEnableboolean-backPressEnable)(false)
 
 #### Q：为什么设置setAllowInterceptTouchEvent(false)后，蒙层或者背景模糊都消失了
 
