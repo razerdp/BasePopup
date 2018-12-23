@@ -47,6 +47,7 @@ public class GravityPopupFrag extends SimpleBaseFrag implements View.OnClickList
     public void onInitView(View rootView) {
         initView();
         mPopupWindow = new GravityPopup(mContext);
+        mPopupWindow.setAllowInterceptTouchEvent(false);
 
         popupShow.setOnClickListener(new View.OnClickListener() {
             @Override

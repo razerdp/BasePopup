@@ -2,10 +2,10 @@ package razerdp.basepopup;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import razerdp.util.PopupUiUtils;
 import razerdp.util.log.LogTag;
 import razerdp.util.log.PopupLogUtil;
 
@@ -36,6 +37,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     private int childBottomMargin;
 
     private static int statusBarHeight;
+    private DisplayMetrics mMetrics = new DisplayMetrics();
 
     private PopupDecorViewProxy(Context context) {
         this(context, null);
@@ -532,11 +534,11 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     }
 
     int getScreenWidth() {
-        return Resources.getSystem().getDisplayMetrics().widthPixels;
+        return PopupUiUtils.getScreenWidthCompat(getContext());
     }
 
     int getScreenHeight() {
-        return Resources.getSystem().getDisplayMetrics().heightPixels;
+        return PopupUiUtils.getScreenHeightCompat(getContext());
     }
 
     private int getStatusBarHeight() {

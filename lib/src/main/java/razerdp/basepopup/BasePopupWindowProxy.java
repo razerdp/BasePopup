@@ -12,7 +12,7 @@ import android.widget.PopupWindow;
 
 import java.lang.reflect.Field;
 
-import razerdp.util.PopupUtil;
+import razerdp.util.PopupUtils;
 import razerdp.util.log.LogTag;
 import razerdp.util.log.PopupLogUtil;
 
@@ -132,7 +132,7 @@ abstract class BasePopupWindowProxy extends PopupWindow {
      * @author: razerdp optimize on 2018/4/25
      */
     Activity scanForActivity(Context from) {
-        return PopupUtil.scanForActivity(from, MAX_SCAN_ACTIVITY_COUNT);
+        return PopupUtils.scanForActivity(from, MAX_SCAN_ACTIVITY_COUNT);
     }
 
 
@@ -163,7 +163,7 @@ abstract class BasePopupWindowProxy extends PopupWindow {
         if (mWindowManagerProxy != null) {
             mWindowManagerProxy.clear();
         }
-        PopupUtil.clearViewFromParent(getContentView());
+        PopupUtils.clearViewFromParent(getContentView());
     }
 
 

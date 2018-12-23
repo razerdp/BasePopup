@@ -7,7 +7,7 @@ import android.view.KeyEvent;
 import android.widget.FrameLayout;
 
 import razerdp.blur.BlurImageView;
-import razerdp.util.PopupUtil;
+import razerdp.util.PopupUtils;
 import razerdp.util.log.PopupLogUtil;
 
 /**
@@ -56,7 +56,7 @@ class PopupMaskLayout extends FrameLayout {
             mBlurImageView.applyBlurOption(mHelper.getBlurOption());
             addViewInLayout(mBlurImageView, -1, generateDefaultLayoutParams());
         }
-        if (!PopupUtil.isBackgroundInvalidated(mHelper.getPopupBackground())) {
+        if (!PopupUtils.isBackgroundInvalidated(mHelper.getPopupBackground())) {
             mBackgroundView = PopupBackgroundView.creaete(context, mHelper);
             addViewInLayout(mBackgroundView, -1, generateDefaultLayoutParams());
         }
