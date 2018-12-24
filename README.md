@@ -456,7 +456,9 @@ A：设置[**setBackPressEnable**](https://github.com/razerdp/BasePopup/wiki/API
 
 #### Q：为什么设置setAllowInterceptTouchEvent(false)后，蒙层或者背景模糊都消失了
 
-A：在2.0.0到2.0.9之间，setAllowInterceptTouchEvent（）不影响蒙层或背景，但从2.1.0开始，不再开启这个黑科技，而是选择跟官方保持同步，原因在于如果背景模糊或者有蒙层，那么该PopupWindow理应拦截事件，而不应该穿透事件，否则不应该拥有背景蒙层。
+A：在2.0.0到2.0.9之间，setAllowInterceptTouchEvent（）不影响蒙层或背景，但从2.1.0开始，不再开启这个黑科技，而是选择跟官方保持同步，原因在于如果背景模糊或者有蒙层，那么该PopupWindow理应拦截事件，而不应该穿透事件，否则不应该拥有背景蒙层。<br><br>
+同时，因为系统PopupWindow默认是clipToScreen，也就是限制PopupWindow在屏幕内显示，当view边缘超过屏幕的时候，PopupWindow会反向移动以完整展示内容，因此如果您的PopupWindow需要突破屏幕显示（比如高度是全屏，但展示在某个view下面，此时bottom大于屏幕底部），请设置`setClipToScreen(false)`。
+
 
 <br>
 
