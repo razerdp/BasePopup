@@ -355,24 +355,55 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private GlobalLayoutListenerWrapper mGlobalLayoutListenerWrapper;
     private LinkedViewLayoutChangeListenerWrapper mLinkedViewLayoutChangeListenerWrapper;
     private WeakReference<View> mLinkedViewRef;
+    private DelayInitCached mDelayInitCached;
 
     public BasePopupWindow(Context context) {
-        this(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        this(context, false);
+    }
+
+    /**
+     * 支持延迟加载的PopupWindow
+     *
+     * @param context
+     * @param delayInit 如果是true，请务必在您初始化后调用{@link #delayInit()}
+     */
+    public BasePopupWindow(Context context, boolean delayInit) {
+        this(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, delayInit);
     }
 
     public BasePopupWindow(Context context, int width, int height) {
-        if (!(this instanceof QuickPopup)) {
-            initView(context, width, height);
+        this(context, width, height, false);
+    }
+
+    /**
+     * 支持延迟加载的PopupWindow
+     *
+     * @param context
+     * @param width
+     * @param height
+     * @param delayInit 如果是true，请务必在您初始化后调用{@link #delayInit()}
+     */
+    public BasePopupWindow(Context context, int width, int height, boolean delayInit) {
+        mContext = new WeakReference<Context>(context);
+        if (!(this instanceof QuickPopup) && !delayInit) {
+            initView(width, height);
+        } else {
+            mDelayInitCached = new DelayInitCached();
+            mDelayInitCached.width = width;
+            mDelayInitCached.height = height;
         }
     }
 
-    protected void callInitInternal(Context context, int width, int height) {
-        if (!(this instanceof QuickPopup)) return;
-        initView(context, width, height);
+    /**
+     * 延迟初始化
+     */
+    public void delayInit() {
+        if (mDelayInitCached == null) return;
+        initView(mDelayInitCached.width, mDelayInitCached.height);
+        mDelayInitCached = null;
     }
 
-    private void initView(Context context, int width, int height) {
-        mContext = new WeakReference<Context>(context);
+    private void initView(int width, int height) {
         mHelper = new BasePopupHelper(this);
         registerListener(mHelper);
         mContentView = onCreateContentView();
@@ -2204,6 +2235,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             }
             return true;
         }
+    }
+
+    private class DelayInitCached {
+        int width;
+        int height;
     }
 
 }

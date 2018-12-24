@@ -36,7 +36,7 @@ public interface PopupWindowEventInterceptor<P extends BasePopupWindow> {
      * @param offsetX         水平偏移
      * @param offsetY         垂直偏移
      * @return 如果返回true，则意味着用户处理了该方法，则不默认执行BasePopupWindow的默认方法
-     * @see BasePopupWindow#tryToShowPopup(View, boolean)
+     * @see BasePopupWindow#tryToShowPopup(View, boolean, boolean)
      */
     boolean onTryToShowPopup(P basePopupWindow, PopupWindow popupWindow, View anchorView, int gravity, int offsetX, int offsetY);
 
@@ -61,7 +61,7 @@ public interface PopupWindowEventInterceptor<P extends BasePopupWindow> {
      * @param offsetX          水平偏移
      * @param offsetResult 已经经过默认计算的偏移量
      * @param offsetY          垂直偏移
-     * @see BasePopupWindow#tryToShowPopup(View, boolean)
+     * @see BasePopupWindow#tryToShowPopup(View, boolean, boolean)
      */
     void onCalculateOffsetResult(P basePopupWindow, View anchorView, Point offsetResult, int offsetX, int offsetY);
 
