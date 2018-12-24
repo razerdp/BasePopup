@@ -318,6 +318,10 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Candy】2.1.5-alpha2**(2018/12/23)
+  * 构造器增加延迟加载参数，如果您的Popup需要提前传参后，请在构造其中传入true以确认延迟加载
+    * 如果使用延迟加载，初始化时机由您来制定，您需要调用`delayInit()`方法来进行BasePopup的初始化
+
 * **【Candy】2.1.5-alpha**(2018/12/23)
   * 适配刘海屏全面平（双显示屏暂不适配）
   * 感谢[#114](https://github.com/razerdp/BasePopup/issues/114)的提供~
