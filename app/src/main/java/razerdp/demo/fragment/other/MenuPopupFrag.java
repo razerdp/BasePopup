@@ -22,9 +22,7 @@ public class MenuPopupFrag extends SimpleBaseFrag {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMenuPopup.setWidth(v.getWidth())
-                        .setHeight(v.getHeight())
-                        .showPopupWindow(v);
+                mMenuPopup.showPopupWindow(v);
             }
         });
     }

@@ -259,7 +259,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             int offsetX = mHelper.getOffsetX();
             int offsetY = mHelper.getOffsetY();
 
-            boolean delayLayoutMask = mHelper.isAlignBackground() || mHelper.getAlignBackgroundGravity() != Gravity.NO_GRAVITY;
+            boolean delayLayoutMask = mHelper.isAlignBackground() && mHelper.getAlignBackgroundGravity() != Gravity.NO_GRAVITY;
 
             boolean keepClipScreenTop = false;
 
