@@ -116,33 +116,23 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
         if (mHelper.getParaseFromXmlParams() == null) {
             View contentView = findContentView(target);
-            boolean hasSet = false;
 
             if (contentView != null) {
-                if (mHelper.getPopupViewWidth() == LayoutParams.WRAP_CONTENT &&
-                        mHelper.getPopupViewHeight() == LayoutParams.WRAP_CONTENT) {
+                if (!mHelper.isCustomMeasure()) {
                     if (wp.width <= 0) {
-                        wp.width = contentView.getMeasuredWidth() == 0 ? mHelper.getPopupViewWidth() : contentView.getMeasuredWidth();
-                        hasSet = true;
+                        wp.width = contentView.getMeasuredWidth() <= 0 ? mHelper.getPopupViewWidth() : contentView.getMeasuredWidth();
                     }
                     if (wp.height <= 0) {
-                        wp.height = contentView.getMeasuredHeight() == 0 ? mHelper.getPopupViewHeight() : contentView.getMeasuredHeight();
-                        hasSet = true;
+                        wp.height = contentView.getMeasuredHeight() <= 0 ? mHelper.getPopupViewHeight() : contentView.getMeasuredHeight();
                     }
-                }
-            }
-            if (!hasSet) {
-                if (wp.width <= 0) {
+                } else {
                     wp.width = mHelper.getPopupViewWidth();
-                }
-                if (wp.height <= 0) {
                     wp.height = mHelper.getPopupViewHeight();
                 }
-
             }
         } else {
-            wp.width = mHelper.getParaseFromXmlParams().width;
-            wp.height = mHelper.getParaseFromXmlParams().height;
+            wp.width = mHelper.getPopupViewWidth();
+            wp.height = mHelper.getPopupViewHeight();
             childLeftMargin = mHelper.getParaseFromXmlParams().leftMargin;
             childTopMargin = mHelper.getParaseFromXmlParams().topMargin;
             childRightMargin = mHelper.getParaseFromXmlParams().rightMargin;
@@ -269,7 +259,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             int offsetX = mHelper.getOffsetX();
             int offsetY = mHelper.getOffsetY();
 
-            boolean delayLayoutMask = mHelper.isAlignBackground();
+            boolean delayLayoutMask = mHelper.isAlignBackground() || mHelper.getAlignBackgroundGravity() != Gravity.NO_GRAVITY;
 
             boolean keepClipScreenTop = false;
 
@@ -451,7 +441,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 }
                 child.layout(left, top, right, bottom);
                 if (delayLayoutMask) {
-                    mMaskLayout.handleAlignBackground(left, top, right, bottom);
+                    mMaskLayout.handleAlignBackground(mHelper.getAlignBackgroundGravity(), left, top, right, bottom);
                 }
             }
 

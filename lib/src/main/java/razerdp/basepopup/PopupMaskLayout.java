@@ -3,6 +3,7 @@ package razerdp.basepopup;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
 
@@ -73,13 +74,37 @@ class PopupMaskLayout extends FrameLayout {
         });
     }
 
-    private int lastContentTop;
 
-    public void handleAlignBackground(int contentLeft, int contentTop, int contentRight, int contentBottom) {
-        if (contentTop > 0 && lastContentTop != contentTop) {
-            lastContentTop = contentTop;
-            mBackgroundView.offsetTopAndBottom(contentTop);
+    public void handleAlignBackground(int gravity, int contentLeft, int contentTop, int contentRight, int contentBottom) {
+        int left = getLeft();
+        int top = getTop();
+        int right = getRight();
+        int bottom = getBottom();
+
+        switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
+            case Gravity.LEFT:
+            case Gravity.START:
+                left = contentLeft;
+                break;
+            case Gravity.RIGHT:
+            case Gravity.END:
+                right = contentRight;
+                break;
+            default:
+                break;
         }
+
+        switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
+            case Gravity.TOP:
+                top = contentTop;
+                break;
+            case Gravity.BOTTOM:
+                bottom = contentBottom;
+                break;
+            default:
+                break;
+        }
+        mBackgroundView.layout(left, top, right, bottom);
     }
 
     @Override

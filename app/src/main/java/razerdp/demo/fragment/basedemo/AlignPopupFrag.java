@@ -38,6 +38,22 @@ public class AlignPopupFrag extends SimpleBaseFrag {
             @Override
             public void onClick(View v) {
                 mDemoPopup.setAlignBackground(vh.checkAlignBackground.isChecked());
+                int gravity = Gravity.NO_GRAVITY;
+                if (vh.checkGravityLeft.isChecked()) {
+                    gravity |= Gravity.LEFT;
+                }
+                if (vh.checkGravityTop.isChecked()) {
+                    gravity |= Gravity.TOP;
+                }
+                if (vh.checkGravityRight.isChecked()) {
+                    gravity |= Gravity.RIGHT;
+                }
+                if (vh.checkGravityBottom.isChecked()) {
+                    gravity |= Gravity.BOTTOM;
+                }
+                if (vh.checkAlignBackground.isChecked()){
+                    mDemoPopup.setAlignBackgroundGravity(gravity);
+                }
                 mDemoPopup.showPopupWindow(v);
             }
         });
@@ -64,12 +80,20 @@ public class AlignPopupFrag extends SimpleBaseFrag {
         public TextView tvDesc;
         public Button popupShow;
         public AppCompatCheckBox checkAlignBackground;
+        private AppCompatCheckBox checkGravityLeft;
+        private AppCompatCheckBox checkGravityTop;
+        private AppCompatCheckBox checkGravityRight;
+        private AppCompatCheckBox checkGravityBottom;
 
         public ViewHolder(View rootView) {
             this.rootView = rootView;
             this.tvDesc = (TextView) rootView.findViewById(R.id.tv_desc);
             this.popupShow = (Button) rootView.findViewById(R.id.popup_show);
             this.checkAlignBackground = (AppCompatCheckBox) rootView.findViewById(R.id.check_align_background);
+            this.checkGravityLeft = (AppCompatCheckBox) rootView.findViewById(R.id.check_gravity_left);
+            this.checkGravityTop = (AppCompatCheckBox) rootView.findViewById(R.id.check_gravity_top);
+            this.checkGravityRight = (AppCompatCheckBox) rootView.findViewById(R.id.check_gravity_right);
+            this.checkGravityBottom = (AppCompatCheckBox) rootView.findViewById(R.id.check_gravity_bottom);
         }
 
     }

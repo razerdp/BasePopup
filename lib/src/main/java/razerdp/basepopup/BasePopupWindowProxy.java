@@ -221,11 +221,7 @@ abstract class BasePopupWindowProxy extends PopupWindow {
                         mWindowManagerProxy.update();
                     }
                 } else {
-                    if (mHelper.getParaseFromXmlParams() != null) {
-                        super.update(mHelper.getAnchorX(), mHelper.getAnchorY()+mHelper.getAnchorHeight(), mHelper.getParaseFromXmlParams().width, mHelper.getParaseFromXmlParams().height, true);
-                    } else {
-                        super.update(mHelper.getAnchorX(), mHelper.getAnchorY()+mHelper.getAnchorHeight(), mHelper.getPopupViewWidth(), mHelper.getPopupViewHeight(), true);
-                    }
+                    super.update(mHelper.getAnchorX(), mHelper.getAnchorY() + mHelper.getAnchorHeight(), mHelper.getPopupViewWidth(), mHelper.getPopupViewHeight(), true);
                 }
             } else {
                 super.update();

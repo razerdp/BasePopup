@@ -368,7 +368,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param delayInit 如果是true，请务必在您初始化后调用{@link #delayInit()}
      */
     public BasePopupWindow(Context context, boolean delayInit) {
-        this(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, delayInit);
+        this(context, BasePopupHelper.DEFAULT_WIDTH, BasePopupHelper.DEFAULT_HEIGHT, delayInit);
     }
 
     public BasePopupWindow(Context context, int width, int height) {
@@ -720,6 +720,16 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     /**
      * <p>
+     * 啥都不干，单纯的update，简单的说，就是更新你所设置的所有东西~
+     * <br>
+     * <b>WARN：非常不建议在连续update的情况下使用背景模糊，这会导致较大的性能消耗。<b/>
+     */
+    public void update() {
+        tryToUpdate(null, false);
+    }
+
+    /**
+     * <p>
      * 参考anchorView更新PopupWindow位置或大小等信息。
      * <br>
      * <b>该方法跟anchorView关联，即您的gravity，offset等会跟随anchorView变化而变化</b>
@@ -749,6 +759,45 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         mHelper.setShowLocation(x, y);
         mHelper.setShowAsDropDown(true);
         tryToUpdate(null, true);
+    }
+
+    /**
+     * <p>
+     * 更新PopupWindow的宽高
+     * <br>
+     * <b>WARN：非常不建议在连续update的情况下使用背景模糊，这会导致较大的性能消耗。<b/>
+     * <br>
+     * <b>WARN：非常不建议在连续update的情况下使用背景模糊，这会导致较大的性能消耗。<b/>
+     * <br>
+     *
+     * @param width  宽度
+     * @param height 高度
+     */
+    public void update(float width, float height) {
+        if (!isShowing() || getContentView() == null) return;
+        setWidth((int) width)
+                .setHeight((int) height)
+                .update();
+
+    }
+
+    /**
+     * <p>
+     * 在指定位置更新PopupWindow位置或大小等信息。
+     * <br>
+     *
+     * @param x      目标位置x坐标
+     * @param y      目标位置y坐标
+     * @param width  宽度
+     * @param height 高度
+     */
+    public void update(int x, int y, float width, float height) {
+        if (!isShowing() || getContentView() == null) return;
+        mHelper.setShowLocation(x, y);
+        mHelper.setShowAsDropDown(true);
+        setWidth((int) width)
+                .setHeight((int) height)
+                .tryToUpdate(null, true);
     }
 
 
@@ -1633,6 +1682,18 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     /**
      * <p>
+     * 设置PopupWindow的背景对齐PopupWindow的方式，请传入{@link Gravity}中的值
+     * <br>
+     *
+     * @param gravity 请传入{@link Gravity}中的值，传入{@link Gravity#NO_GRAVITY}则意味着不对齐
+     */
+    public BasePopupWindow setAlignBackgroundGravity(int gravity) {
+        mHelper.setAlignBackgroundGravity(gravity);
+        return this;
+    }
+
+    /**
+     * <p>
      * 允许PopupWindow跟某个anchorView关联，其位置，可视性将会跟anchorView同步</>
      * <br>
      * <b>WARN：非常不建议在anchorView频繁变化的情况下使用背景模糊，这会导致较大的性能消耗。</b>
@@ -1654,6 +1715,15 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return this;
     }
 
+    public BasePopupWindow setWidth(int width) {
+        mHelper.setPopupViewWidth(width);
+        return this;
+    }
+
+    public BasePopupWindow setHeight(int height) {
+        mHelper.setPopupViewHeight(height);
+        return this;
+    }
 
     //------------------------------------------状态控制-----------------------------------------------
 
