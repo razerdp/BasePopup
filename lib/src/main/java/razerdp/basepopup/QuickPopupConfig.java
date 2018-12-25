@@ -43,6 +43,7 @@ public final class QuickPopupConfig {
     boolean autoLocated;
 
     boolean clipChildren;
+    boolean clipToScreen = true;
     boolean allowInterceptTouchEvent = true;
 
 
@@ -152,6 +153,11 @@ public final class QuickPopupConfig {
         return this;
     }
 
+    public QuickPopupConfig clipToScreen(boolean clipToScreen) {
+        this.clipToScreen = clipToScreen;
+        return this;
+    }
+
     public QuickPopupConfig allowInterceptTouchEvent(boolean allowInterceptTouchEvent) {
         this.allowInterceptTouchEvent = allowInterceptTouchEvent;
         return this;
@@ -239,5 +245,9 @@ public final class QuickPopupConfig {
 
     public int getContentViewLayoutid() {
         return contentViewLayoutid;
+    }
+
+    public boolean isClipToScreen() {
+        return clipToScreen;
     }
 }
