@@ -1,5 +1,8 @@
 ## BasePopup更新日志
 
+* **【Candy】2.1.5-beta2**(2018/12/25)
+  * 修复2.1.5-beta默认backgroundgravity的问题
+
 * **【Candy】2.1.5-beta**(2018/12/25)
   * 增加`setAlignBackgroundGravity()`方法，背景对齐的位置由您来制定~
   * 增加`update(int width ,int height)`方法

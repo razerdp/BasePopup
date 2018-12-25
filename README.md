@@ -318,6 +318,9 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Candy】2.1.5-beta2**(2018/12/25)
+  * 修复2.1.5-beta默认backgroundgravity的问题
+
 * **【Candy】2.1.5-beta**(2018/12/25)
   * 增加`setAlignBackgroundGravity()`方法，背景对齐的位置由您来制定~
   * 增加`update(int width ,int height)`方法
@@ -353,31 +356,6 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
   * 2.x的坑基本补完~如无意外，这个功能将会是18年最后一个功能性更新了
 
 <img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/linkto/linkto.gif" height="360"/>
-
-
-* **【Candy】2.1.3-alpha**(2018/12/19)
-  * 支持update方法来跟随view或者指定位置更新
-  * 调用`updatePopup()`方法即可~
-  * 全面覆盖系统原有的popupwindow定位方法，全版本统一。
-
-<img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/update/update.gif" height="360"/>
-
-* **【Release】2.1.2**(2018/12/19)
-  * 正式发布2.1.2release
-  * 增加指定位置弹出的方法[**showPopupWindow(int x, int y)**](https://github.com/razerdp/BasePopup/blob/master/lib/src/main/java/razerdp/basepopup/BasePopupWindow.java#L681)
-  * 修复内容宽高超过屏幕后`ClipToScreen()`修正不正确的问题
-  * 输入法适配修复 fixed [#107](https://github.com/razerdp/BasePopup/issues/107)
-  * preview:
-
-<img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/anypos/anypos.gif" height="360"/>
-
-
-* **【Candy】2.1.2-alpha2**(2018/12/17)
-  * 修复内容宽高超过屏幕后`ClipToScreen()`修正不正确的问题
-  * 输入法适配修复 fixed [#107](https://github.com/razerdp/BasePopup/issues/107)
-
-* **【Release】2.1.1**(2018/12/13)
-  * 针对setAlignBackground()失效的问题修复
 
 <br>
 
