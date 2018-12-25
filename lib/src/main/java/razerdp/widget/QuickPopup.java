@@ -23,7 +23,7 @@ public class QuickPopup extends BasePopupWindow {
     private View content;
 
     public QuickPopup(Context context, QuickPopupConfig config, View contentView, int w, int h) {
-        super(context, w, h,true);
+        super(context, w, h, true);
         mConfig = config;
         if (mConfig != null) {
             delayInit();
@@ -48,6 +48,7 @@ public class QuickPopup extends BasePopupWindow {
         setOffsetY(config.getOffsetY());
 
         setClipChildren(config.isClipChildren());
+        setClipToScreen(config.isClipToScreen());
 
         setAllowInterceptTouchEvent(config.isAllowInterceptTouchEvent());
         setPopupGravity(config.getGravity());

@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.KeyCharacterMap;
@@ -22,6 +23,8 @@ public class PopupUiUtils {
     private volatile static Point[] mRealSizes = new Point[2];
     private static final DisplayMetrics mCheckNavDisplayMetricsForReal = new DisplayMetrics();
     private static final DisplayMetrics mCheckNavDisplayMetricsForDisplay = new DisplayMetrics();
+    private static final String XIAOMI_FULLSCREEN_GESTURE = "force_fsg_nav_bar";
+
 
     public static int getNavigationBarHeight(Context context) {
         if (!checkHasNavigationBar(context)) return 0;
@@ -34,7 +37,7 @@ public class PopupUiUtils {
 
     @SuppressLint("NewApi")
     public static boolean checkHasNavigationBar(Context context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
             boolean hasMenuKey = ViewConfiguration.get(context)
                     .hasPermanentMenuKey();
             boolean hasBackKey = KeyCharacterMap
@@ -43,7 +46,7 @@ public class PopupUiUtils {
             return !hasMenuKey && !hasBackKey;
         }
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        if (windowManager==null){
+        if (windowManager == null) {
             return false;
         }
         Display d = windowManager.getDefaultDisplay();
@@ -63,7 +66,14 @@ public class PopupUiUtils {
         int displayWidth = mCheckNavDisplayMetricsForDisplay.widthPixels;
 
 
-        return (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
+        boolean result = (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
+
+        if (RomUtil.isMiui()) {
+            //判断小米手势全面屏。
+            return result && Settings.Global.getInt(context.getContentResolver(), "force_fsg_nav_bar", 0) == 0;
+        } else {
+            return result;
+        }
     }
 
     public static int getScreenHeightCompat(Context context) {
