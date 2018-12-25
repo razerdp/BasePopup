@@ -83,7 +83,7 @@ final class PopupCompatManager {
         }
 
         protected void onAfterShowExec(BasePopupWindowProxy popupWindowProxy, Activity act) {
-            fitSystemBar(act);
+//            fitSystemBar(act);
         }
 
         boolean isPopupShowing(BasePopupWindowProxy popupWindow) {
