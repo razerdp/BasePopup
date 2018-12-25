@@ -323,7 +323,7 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
   * 增加`update(int width ,int height)`方法
   * 修复构造器传入width/height失效的问题，增加setWidth/setHeight方法
 
-<img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/align/align_plus.gif" height="360"/>
+<img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/align/alignbg_plus.gif" height="360"/>
 
 
 * **【Candy】2.1.5-alpha2**(2018/12/23)
