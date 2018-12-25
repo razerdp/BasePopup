@@ -318,6 +318,10 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Candy】2.1.5-beta3**(2018/12/25)
+  * 针对小米手势全面屏高度获取不准确的修复
+  * **说实话，那么多魔改ROM，全面屏高度获取不准这东西也能改API，我表示无力吐槽了**
+
 * **【Candy】2.1.5-beta2**(2018/12/25)
   * 修复2.1.5-beta默认backgroundgravity的问题
 
