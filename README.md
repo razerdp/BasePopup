@@ -318,6 +318,14 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Candy】2.1.5-beta**(2018/12/25)
+  * 增加`setAlignBackgroundGravity()`方法，背景对齐的位置由您来制定~
+  * 增加`update(int width ,int height)`方法
+  * 修复构造器传入width/height失效的问题，增加setWidth/setHeight方法
+
+<img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/align/align_plus.gif" height="360"/>
+
+
 * **【Candy】2.1.5-alpha2**(2018/12/23)
   * 构造器增加延迟加载参数，如果您的Popup需要提前传参后，请在构造其中传入true以确认延迟加载
     * 如果使用延迟加载，初始化时机由您来制定，您需要调用`delayInit()`方法来进行BasePopup的初始化
@@ -370,26 +378,6 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 * **【Release】2.1.1**(2018/12/13)
   * 针对setAlignBackground()失效的问题修复
-
-* **【Release】2.1.0**(2018/12/12)
-  * **双12大礼包~**
-  * wiki大更新，留了大半年的坑终于快补完了，有问题请看[**wiki**](https://github.com/razerdp/BasePopup/wiki)
-  * 正式发布2.1.0release
-  * 2.1.0是对2.0的半彻底优化~为啥是一半呢？总得保留提升空间嘛嘿嘿
-  * 更新的功能请看下方Candy的描述
-
-* **【Candy】2.1.0-betaX**(2018/12)
-  * **针对2.x的重构，撒花~**
-  * 本次更新内容：
-    * 去掉每次都add两次View的骚操作，合并成同一个PopupWindow，所以Layout Inspector不再让人迷惑为啥有两个PopupWindow了
-    * 增加Gravity的支持，再也不用蛋疼的去计算蛋疼的offset了，而且布局文件真的可以wrap_content了
-    * 接管layout过程，所以各个版本的PopupWindow都不一样？不存在滴。。。同时autoLocate支持RecyclerView啦~
-    * 增加对contentView的xml的解析（前提是使用createPopupById方法），再也不怕被强制设置宽高了
-    * fullScreen支持输入法布局适配！心塞了好久的问题终于解决
-    * 增加对5.1和5.1.1官方两个PopupWindow重叠后在切换时层次变化的bug的适配
-    * 优化代码，去除冗余代码
-    * README大翻新
-
 
 <br>
 

@@ -30,6 +30,9 @@ import razerdp.library.R;
  */
 final class BasePopupHelper implements PopupTouchController, PopupWindowActionListener, PopupWindowLocationListener, PopupKeyboardStateChangeListener {
 
+    static final int DEFAULT_WIDTH = ViewGroup.LayoutParams.WRAP_CONTENT;
+    static final int DEFAULT_HEIGHT = ViewGroup.LayoutParams.WRAP_CONTENT;
+
     //是否自动弹出输入框(default:false)
     private boolean autoShowInputMethod = false;
     private static int showCount;
@@ -78,6 +81,8 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     private boolean mAlignBackground = false;
     //背景颜色
     private Drawable mBackgroundDrawable = new ColorDrawable(Color.parseColor("#8f000000"));
+    //背景对齐方向
+    private int alignBackgroundGravity = Gravity.TOP;
 
     private PopupTouchController mTouchControllerDelegate;
     private PopupWindowActionListener mActionListener;
@@ -93,6 +98,8 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     private ViewGroup.MarginLayoutParams mParaseFromXmlParams;
     private Point mOffsetCached = new Point();
     private Point mTempOffset = new Point();
+
+    private boolean isCustomMeasure;
 
 
     BasePopupHelper(PopupTouchController controller) {
@@ -124,10 +131,18 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
                 checkAndSetGravity(childParams);
                 if (childParams instanceof ViewGroup.MarginLayoutParams) {
                     mParaseFromXmlParams = new ViewGroup.MarginLayoutParams((ViewGroup.MarginLayoutParams) childParams);
+                    if (isCustomMeasure) {
+                        mParaseFromXmlParams.width = popupViewWidth;
+                        mParaseFromXmlParams.height = popupViewHeight;
+                    }
                     tempLayout = null;
                     return result;
                 }
                 mParaseFromXmlParams = new ViewGroup.MarginLayoutParams(childParams);
+                if (isCustomMeasure) {
+                    mParaseFromXmlParams.width = popupViewWidth;
+                    mParaseFromXmlParams.height = popupViewHeight;
+                }
                 tempLayout = null;
                 return result;
             }
@@ -155,6 +170,9 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         if (mShowAnimation != null) {
             mShowAnimation.cancel();
         }
+        if (showAnimation != null && mBlurOption != null && mBlurOption.getBlurInDuration() <= 0) {
+            mBlurOption.setBlurInDuration(showAnimation.getDuration());
+        }
         mShowAnimation = showAnimation;
         return this;
     }
@@ -167,6 +185,9 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         if (mShowAnimator == showAnimator) return this;
         if (mShowAnimator != null) {
             mShowAnimator.cancel();
+        }
+        if (showAnimator != null && mBlurOption != null && mBlurOption.getBlurInDuration() <= 0) {
+            mBlurOption.setBlurInDuration(showAnimator.getDuration());
         }
         mShowAnimator = showAnimator;
         return this;
@@ -181,6 +202,9 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         if (mDismissAnimation != null) {
             mDismissAnimation.cancel();
         }
+        if (dismissAnimation != null && mBlurOption != null && mBlurOption.getBlurOutDuration() <= 0) {
+            mBlurOption.setBlurOutDuration(dismissAnimation.getDuration());
+        }
         mDismissAnimation = dismissAnimation;
         return this;
     }
@@ -194,25 +218,62 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         if (mDismissAnimator != null) {
             mDismissAnimator.cancel();
         }
+        if (dismissAnimator != null && mBlurOption != null && mBlurOption.getBlurOutDuration() <= 0) {
+            mBlurOption.setBlurOutDuration(dismissAnimator.getDuration());
+        }
         mDismissAnimator = dismissAnimator;
         return this;
     }
 
+    public boolean isCustomMeasure() {
+        return isCustomMeasure;
+    }
+
     int getPopupViewWidth() {
+        if (isCustomMeasure) {
+            return popupViewWidth;
+        } else {
+            if (mParaseFromXmlParams != null) {
+                return mParaseFromXmlParams.width;
+            }
+        }
         return popupViewWidth;
     }
 
     BasePopupHelper setPopupViewWidth(int popupViewWidth) {
         this.popupViewWidth = popupViewWidth;
+        if (popupViewWidth != DEFAULT_WIDTH) {
+            isCustomMeasure = true;
+            if (mParaseFromXmlParams != null) {
+                mParaseFromXmlParams.width = popupViewWidth;
+            }
+        } else {
+            isCustomMeasure = false;
+        }
         return this;
     }
 
     int getPopupViewHeight() {
+        if (isCustomMeasure) {
+            return popupViewHeight;
+        } else {
+            if (mParaseFromXmlParams != null) {
+                return mParaseFromXmlParams.height;
+            }
+        }
         return popupViewHeight;
     }
 
     BasePopupHelper setPopupViewHeight(int popupViewHeight) {
         this.popupViewHeight = popupViewHeight;
+        if (popupViewHeight != DEFAULT_HEIGHT) {
+            isCustomMeasure = true;
+            if (mParaseFromXmlParams != null) {
+                mParaseFromXmlParams.height = popupViewHeight;
+            }
+        } else {
+            isCustomMeasure = false;
+        }
         return this;
     }
 
@@ -481,6 +542,23 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     public BasePopupHelper setAlignBackgound(boolean mAlignBackground) {
         this.mAlignBackground = mAlignBackground;
+        if (mAlignBackground) {
+            setAlignBackgroundGravity(Gravity.TOP);
+        } else {
+            setAlignBackgroundGravity(Gravity.NO_GRAVITY);
+        }
+        return this;
+    }
+
+    public int getAlignBackgroundGravity() {
+        if (mAlignBackground && alignBackgroundGravity == Gravity.NO_GRAVITY) {
+            alignBackgroundGravity = Gravity.TOP;
+        }
+        return alignBackgroundGravity;
+    }
+
+    public BasePopupHelper setAlignBackgroundGravity(int gravity) {
+        this.alignBackgroundGravity = gravity;
         return this;
     }
 
