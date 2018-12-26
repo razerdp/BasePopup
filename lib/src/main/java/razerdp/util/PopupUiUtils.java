@@ -24,6 +24,7 @@ public class PopupUiUtils {
     private static final DisplayMetrics mCheckNavDisplayMetricsForReal = new DisplayMetrics();
     private static final DisplayMetrics mCheckNavDisplayMetricsForDisplay = new DisplayMetrics();
     private static final String XIAOMI_FULLSCREEN_GESTURE = "force_fsg_nav_bar";
+    private static final Point point = new Point();
 
 
     public static int getNavigationBarHeight(Context context) {
@@ -87,7 +88,6 @@ public class PopupUiUtils {
                     return context.getResources().getDisplayMetrics().heightPixels;
                 }
                 Display display = windowManager.getDefaultDisplay();
-                Point point = new Point();
                 display.getRealSize(point);
                 mRealSizes[orientation] = point;
             }

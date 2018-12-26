@@ -190,7 +190,16 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 final LayoutParams lp = child.getLayoutParams();
                 final int childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec,
                         childLeftMargin + childRightMargin, lp.width);
-                final int childHeightMeasureSpec = getChildMeasureSpec(heightMeasureSpec,
+                int fixedHeightMeasureSpec = heightMeasureSpec;
+                if (mHelper.isClipToScreen() && mHelper.isShowAsDropDown()) {
+                    int mode = MeasureSpec.getMode(heightMeasureSpec);
+                    int restContentHeight = getScreenHeight() - (mHelper.getAnchorY() + mHelper.getAnchorHeight()) - childTopMargin - childBottomMargin;
+                    if (restContentHeight == 0) {
+                        restContentHeight = MeasureSpec.getSize(heightMeasureSpec);
+                    }
+                    fixedHeightMeasureSpec = MeasureSpec.makeMeasureSpec(restContentHeight, mode);
+                }
+                final int childHeightMeasureSpec = getChildMeasureSpec(fixedHeightMeasureSpec,
                         childTopMargin + childBottomMargin, lp.height);
 
                 child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
