@@ -319,12 +319,12 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
 * **【Candy】2.1.5**
-  * **2.1.5-prerelease**(2018/12/26)
+  * **2.1.5-prerelease**(2018/12/29)
     * 优化了获取是否展示虚拟按键的方法
-  * **2.1.5-beta5**(2018/12/26)
+  * **2.1.5-beta5**(2018/12/29)
     * 用了另外一个骚方法来判断全面屏是否有虚拟按键
       * >方法来源：[**掘金**](https://juejin.im/post/5bb5c4e75188255c72285b54)
-  * **2.1.5-beta4**(2018/12/26)
+  * **2.1.5-beta4**(2018/12/27)
     * 针对`showPopupWindow(anchorview)`同时`clipToScreen(true)`时，无法完整展示满屏的view的问题
       * 该方法目前可能不稳定（某些极限情况没想到~）
   * **2.1.5-beta3**(2018/12/25)
