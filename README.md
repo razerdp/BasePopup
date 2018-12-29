@@ -318,37 +318,32 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
-* **【Candy】2.1.5-beta5**(2018/12/26)
-  * 用了另外一个骚方法来判断全面屏是否有虚拟按键
-    * >方法来源：[**掘金**](https://juejin.im/post/5bb5c4e75188255c72285b54)
-
-* **【Candy】2.1.5-beta4**(2018/12/26)
-  * 针对`showPopupWindow(anchorview)`同时`clipToScreen(true)`时，无法完整展示满屏的view的问题
-    * 该方法目前可能不稳定（某些极限情况没想到~）
-
-* **【Candy】2.1.5-beta3**(2018/12/25)
-  * 针对小米手势全面屏高度获取不准确的修复
-  * **说实话，那么多魔改ROM，全面屏高度获取不准这东西也能改API，我表示无力吐槽了**
-
-* **【Candy】2.1.5-beta2**(2018/12/25)
-  * 修复2.1.5-beta默认backgroundgravity的问题
-
-* **【Candy】2.1.5-beta**(2018/12/25)
-  * 增加`setAlignBackgroundGravity()`方法，背景对齐的位置由您来制定~
-  * 增加`update(int width ,int height)`方法
-  * 修复构造器传入width/height失效的问题，增加setWidth/setHeight方法
-
-<img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/align/alignbg_plus.gif" height="360"/>
-
-
-* **【Candy】2.1.5-alpha2**(2018/12/23)
-  * 构造器增加延迟加载参数，如果您的Popup需要提前传参后，请在构造其中传入true以确认延迟加载
-    * 如果使用延迟加载，初始化时机由您来制定，您需要调用`delayInit()`方法来进行BasePopup的初始化
-
-* **【Candy】2.1.5-alpha**(2018/12/23)
-  * 适配刘海屏全面平（双显示屏暂不适配）
-  * 感谢[#114](https://github.com/razerdp/BasePopup/issues/114)的提供~
-  * **Release年后发布，如果您有需要，请更新到此candy版。**
+* **【Candy】2.1.5**
+  * **2.1.5-prerelease**(2018/12/26)
+    * 优化了获取是否展示虚拟按键的方法
+  * **2.1.5-beta5**(2018/12/26)
+    * 用了另外一个骚方法来判断全面屏是否有虚拟按键
+      * >方法来源：[**掘金**](https://juejin.im/post/5bb5c4e75188255c72285b54)
+  * **2.1.5-beta4**(2018/12/26)
+    * 针对`showPopupWindow(anchorview)`同时`clipToScreen(true)`时，无法完整展示满屏的view的问题
+      * 该方法目前可能不稳定（某些极限情况没想到~）
+  * **2.1.5-beta3**(2018/12/25)
+    * 针对小米手势全面屏高度获取不准确的修复
+    * **说实话，那么多魔改ROM，全面屏高度获取不准这东西也能改API，我表示无力吐槽了**
+  * **2.1.5-beta2**(2018/12/25)
+    * 修复2.1.5-beta默认backgroundgravity的问题
+  * **2.1.5-beta**(2018/12/25)
+    * 增加`setAlignBackgroundGravity()`方法，背景对齐的位置由您来制定~
+    * 增加`update(int width ,int height)`方法
+    * 修复构造器传入width/height失效的问题，增加setWidth/setHeight方法
+    * <img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/align/alignbg_plus.gif" height="360"/>
+  * **2.1.5-alpha2**(2018/12/23)
+    * 构造器增加延迟加载参数，如果您的Popup需要提前传参后，请在构造其中传入true以确认延迟加载
+      * 如果使用延迟加载，初始化时机由您来制定，您需要调用`delayInit()`方法来进行BasePopup的初始化
+  * **2.1.5-alpha**(2018/12/23)
+    * 适配刘海屏全面屏（双显示屏暂不适配）
+    * 感谢[#114](https://github.com/razerdp/BasePopup/issues/114)的提供~
+    * **Release年后发布，如果您有需要，请更新到此candy版。**
 
 * **【Release】2.1.4**(2018/12/21)
   * **建议更新到这个版本！**
