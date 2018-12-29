@@ -1,30 +1,39 @@
 package razerdp.util;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Build;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by 大灯泡 on 2018/12/23.
  */
 public class PopupUiUtils {
+
+    private static final int CHECK_SHIFT = 4;
+    private static final int CHECK_MASK = 0x3 << CHECK_SHIFT;
     private static final int PORTRAIT = 0;
     private static final int LANDSCAPE = 1;
     private volatile static Point[] mRealSizes = new Point[2];
     private static final DisplayMetrics mCheckNavDisplayMetricsForReal = new DisplayMetrics();
     private static final DisplayMetrics mCheckNavDisplayMetricsForDisplay = new DisplayMetrics();
-    private static final String XIAOMI_FULLSCREEN_GESTURE = "force_fsg_nav_bar";
     private static final Point point = new Point();
+    private static AtomicInteger mFullDisplayCheckFlag = new AtomicInteger(0x0000);
 
 
     public static int getNavigationBarHeight(Context context) {
@@ -32,43 +41,72 @@ public class PopupUiUtils {
         Resources resources = context.getResources();
         int resourceId = resources.getIdentifier("navigation_bar_height",
                 "dimen", "android");
-        //获取NavigationBar的高度
-        return resources.getDimensionPixelSize(resourceId);
+        if (resourceId > 0) {
+            //获取NavigationBar的高度
+            return resources.getDimensionPixelSize(resourceId);
+        }
+        return 0;
+    }
+
+    /**
+     * 方法参考
+     * https://juejin.im/post/5bb5c4e75188255c72285b54
+     */
+    @SuppressLint("NewApi")
+    public static boolean checkHasNavigationBar(Context context) {
+        if (isFullDisplay(context)) {
+            Activity act = PopupUtils.scanForActivity(context, 50);
+            if (act == null) return false;
+            ViewGroup decorView = (ViewGroup) act.getWindow().getDecorView();
+            if (decorView != null) {
+                final int childCount = decorView.getChildCount();
+                for (int i = 0; i < childCount; i++) {
+                    View child = decorView.getChildAt(i);
+                    if (child != null
+                            && child.getId() != View.NO_ID
+                            && TextUtils.equals("navigationBarBackground", act.getResources().getResourceEntryName(child.getId()))) {
+                        return true;
+                    }
+                }
+            }
+        } else {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                boolean hasMenuKey = ViewConfiguration.get(context)
+                        .hasPermanentMenuKey();
+                boolean hasBackKey = KeyCharacterMap
+                        .deviceHasKey(KeyEvent.KEYCODE_BACK);
+
+                return !hasMenuKey && !hasBackKey;
+            } else {
+                WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                if (windowManager == null) {
+                    return false;
+                }
+                Display d = windowManager.getDefaultDisplay();
+
+
+                d.getRealMetrics(mCheckNavDisplayMetricsForReal);
+
+
+                int realHeight = mCheckNavDisplayMetricsForReal.heightPixels;
+                int realWidth = mCheckNavDisplayMetricsForReal.widthPixels;
+
+
+                d.getMetrics(mCheckNavDisplayMetricsForDisplay);
+
+
+                int displayHeight = mCheckNavDisplayMetricsForDisplay.heightPixels;
+                int displayWidth = mCheckNavDisplayMetricsForDisplay.widthPixels;
+
+
+                return (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
+            }
+        }
+        return false;
     }
 
     @SuppressLint("NewApi")
-    public static boolean checkHasNavigationBar(Context context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            boolean hasMenuKey = ViewConfiguration.get(context)
-                    .hasPermanentMenuKey();
-            boolean hasBackKey = KeyCharacterMap
-                    .deviceHasKey(KeyEvent.KEYCODE_BACK);
-
-            return !hasMenuKey && !hasBackKey;
-        }
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        if (windowManager == null) {
-            return false;
-        }
-        Display d = windowManager.getDefaultDisplay();
-
-
-        d.getRealMetrics(mCheckNavDisplayMetricsForReal);
-
-
-        int realHeight = mCheckNavDisplayMetricsForReal.heightPixels;
-        int realWidth = mCheckNavDisplayMetricsForReal.widthPixels;
-
-
-        d.getMetrics(mCheckNavDisplayMetricsForDisplay);
-
-
-        int displayHeight = mCheckNavDisplayMetricsForDisplay.heightPixels;
-        int displayWidth = mCheckNavDisplayMetricsForDisplay.widthPixels;
-
-
-        boolean result = (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
-
+    private static boolean adapterFullDisplay(Context context, boolean result) {
         if (RomUtil.isMiui()) {
             //判断小米手势全面屏。
             return result && Settings.Global.getInt(context.getContentResolver(), "force_fsg_nav_bar", 0) == 0;
@@ -112,5 +150,37 @@ public class PopupUiUtils {
             }
             return mRealSizes[orientation].x;
         }
+    }
+
+
+    public static boolean isFullDisplay(Context context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            return false;
+        }
+        if ((mFullDisplayCheckFlag.get() & CHECK_MASK) != 0) {
+            int flag = mFullDisplayCheckFlag.get() & ~CHECK_MASK;
+            return flag == 1;
+        }
+        boolean isFullDisplay = false;
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        if (windowManager != null) {
+            Display display = windowManager.getDefaultDisplay();
+            display.getRealSize(point);
+            float width, height;
+            if (point.x < point.y) {
+                width = point.x;
+                height = point.y;
+            } else {
+                width = point.y;
+                height = point.x;
+            }
+            if (height * 1.0f / width * 1.0f >= 1.97f) {
+                isFullDisplay = true;
+                mFullDisplayCheckFlag.set(CHECK_MASK + 1);
+            } else {
+                mFullDisplayCheckFlag.set(CHECK_MASK + 2);
+            }
+        }
+        return isFullDisplay;
     }
 }
