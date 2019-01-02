@@ -318,6 +318,20 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Release】2.1.5**(2019/01/02)
+  * **新年新气象~祝大家新年快乐，zhu事顺意-V-**
+  * 2.1.5 如期新年发布，改动如下：
+    * 优化了获取是否展示虚拟按键的方法
+    * 利用了另外一个骚方法来判断全面屏是否含有虚拟按键
+      * >方法来源：[**掘金**](https://juejin.im/post/5bb5c4e75188255c72285b54)
+    * 针对`showPopupWindow(anchorview)`同时`clipToScreen(true)`时，无法完整展示满屏的View的问题
+    * 增加`setAlignBackgroundGravity()`方法，背景对齐的位置由您来制定~
+      * <img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/align/alignbg_plus.gif" height="360"/>
+    * 增加`update(int width ,int height)`方法
+    * 修复构造器传入width/height失效的问题，增加setWidth/setHeight方法
+    * 构造器增加延迟加载参数，如果您的Popup需要提前传参后，请在构造其中传入true以确认延迟加载
+      * 如果使用延迟加载，初始化时机由您来制定，您需要调用`delayInit()`方法来进行BasePopup的初始化
+
 * **【Candy】2.1.5**
   * **2.1.5-prerelease**(2018/12/29)
     * 优化了获取是否展示虚拟按键的方法
