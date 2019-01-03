@@ -82,6 +82,12 @@ public class QuickPopupBuilder {
         return quickPopup;
     }
 
+    public QuickPopup show(int x, int y) {
+        QuickPopup quickPopup = build();
+        quickPopup.showPopupWindow(x, y);
+        return quickPopup;
+    }
+
 
     //-----------------------------------------tools-----------------------------------------
     private Context getContext() {
