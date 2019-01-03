@@ -5,8 +5,6 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -37,7 +35,6 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     private int childBottomMargin;
 
     private static int statusBarHeight;
-    private DisplayMetrics mMetrics = new DisplayMetrics();
 
     private PopupDecorViewProxy(Context context) {
         this(context, null);
@@ -176,7 +173,6 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         } else {
             measureWithOutIntercept(widthMeasureSpec, heightMeasureSpec);
         }
-        Log.d(TAG, "onMeasure: ");
     }
 
     private void measureWithIntercept(int widthMeasureSpec, int heightMeasureSpec) {
@@ -191,7 +187,8 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 final int childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec,
                         childLeftMargin + childRightMargin, lp.width);
                 int fixedHeightMeasureSpec = heightMeasureSpec;
-                if (mHelper.isClipToScreen() && mHelper.isShowAsDropDown()) {
+                //针对match_parent
+                if (mHelper.isClipToScreen() && mHelper.isShowAsDropDown() && lp.height == LayoutParams.MATCH_PARENT) {
                     int mode = MeasureSpec.getMode(heightMeasureSpec);
                     int restContentHeight = getScreenHeight() - (mHelper.getAnchorY() + mHelper.getAnchorHeight()) - childTopMargin - childBottomMargin;
                     if (restContentHeight == 0) {

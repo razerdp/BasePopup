@@ -103,7 +103,6 @@ public class InputMethodUtils {
                         listener.onKeyboardChange(keyboardHeight, isVisible);
                         preVisible = isVisible;
                     }
-                    Log.d("keyboard", "onGlobalLayout: " + isVisible + "  height = " + keyboardHeight);
                 }
                 preKeyboardHeight = keyboardHeight;
 
