@@ -2212,7 +2212,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                     }
                     preVisible = isVisible;
                 }
-                Log.d("keyboard", "onGlobalLayout: " + isVisible + "  height = " + keyboardHeight);
             }
             preKeyboardHeight = keyboardHeight;
         }
