@@ -1,5 +1,9 @@
 ## BasePopup更新日志
 
+* **【Candy】2.1.6-alpha2**（2019/01/03）
+  * 修复`preMeasure`方法错误的问题
+    * 感谢&fixed[**#125**](https://github.com/razerdp/BasePopup/issues/125)
+
 * **【Candy】2.1.6-alpha**（2019/01/03）
   * 修复wrap_content下，在某个view显示同时底部空间不足以完整显示内容时无法完整显示内容的问题
 
