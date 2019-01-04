@@ -78,4 +78,9 @@
         android:orderInCategory="114"
         android:title="根据AnchorView往各个方向偏移的Popup"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_other_1"
+        android:orderInCategory="115"
+        android:title="其他1"
+        app:showAsAction="never"/>
 </menu>
