@@ -33,8 +33,9 @@ public class OtherPopupFrag1 extends SimpleBaseFrag {
             public void onClick(View v) {
                 QuickPopupBuilder.with(getContext())
                         .contentView(R.layout.popup_test_other_1)
-                        .config(new QuickPopupConfig().gravity(Gravity.BOTTOM | Gravity.LEFT).backgroundColor(0)
-//                                .allowInterceptTouchEvent(true)
+                        .config(new QuickPopupConfig().gravity(Gravity.BOTTOM | Gravity.LEFT)
+                                .offsetX((int) (v.getWidth() * 0.8f))
+                                .backgroundColor(0)
                                 .allowInterceptTouchEvent(false)
                                 .withClick(R.id.post, this, true)
                                 .withClick(R.id.audio, this, true)

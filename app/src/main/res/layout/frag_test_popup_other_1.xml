@@ -23,9 +23,8 @@
             android:id="@+id/create"
             android:layout_width="44dp"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true"
+            android:layout_alignParentRight="true"
             android:scaleType="center"
-            android:background="@android:color/holo_red_dark"
             android:src="@drawable/icon_add" />
     </RelativeLayout>
 
