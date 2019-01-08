@@ -318,6 +318,11 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Release】2.1.6**（2019/01/08）
+  * 发布2.1.6-Release
+  * 修复`preMeasure`方法错误的问题
+  * 修复wrap_content下，在某个view显示同时底部空间不足以完整显示内容时无法完整显示内容的问题
+
 * **【Candy】2.1.6-alpha2**（2019/01/03）
   * 修复`preMeasure`方法错误的问题
     * 感谢&fixed[**#125**](https://github.com/razerdp/BasePopup/issues/125)
@@ -378,12 +383,6 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
   * 全面优化系统原有的popupwindow定位方法，全版本统一。
   * 2.x的坑基本补完
   * 19年，我们再见-V-
-
-* **【Candy】2.1.3-alpha2**(2018/12/20)
-  * 增加[**linkTo(View)**](https://github.com/razerdp/BasePopup/wiki/API#linktoview-anchorview)方法，跟随anchorView状态？一个方法就足够了~
-  * 2.x的坑基本补完~如无意外，这个功能将会是18年最后一个功能性更新了
-
-<img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/linkto/linkto.gif" height="360"/>
 
 <br>
 
