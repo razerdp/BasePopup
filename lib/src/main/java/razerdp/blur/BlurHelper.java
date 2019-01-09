@@ -29,6 +29,8 @@ public class BlurHelper {
     private static final String TAG = "BlurHelper";
     private static int statusBarHeight = 0;
 
+    private static long startTime;
+
     public static boolean renderScriptSupported() {
         return Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1;
     }
@@ -42,6 +44,7 @@ public class BlurHelper {
     }
 
     public static Bitmap blur(Context context, Bitmap origin, float scaledRatio, float radius) {
+        startTime = System.currentTimeMillis();
         if (renderScriptSupported()) {
             PopupLogUtil.trace(LogTag.i, TAG, "脚本模糊");
             return renderScriptblur(context, origin, scaledRatio, radius);
@@ -60,7 +63,7 @@ public class BlurHelper {
 
         final int originWidth = origin.getWidth();
         final int originHeight = origin.getHeight();
-        PopupLogUtil.trace(LogTag.i, "originWidth  >>  " + originWidth + "   originHeight  >>  " + originHeight);
+        PopupLogUtil.trace(LogTag.i, "模糊原始图像分辨率 [" + originWidth + " x " + originHeight+"]");
 
         int scaledWidth = originWidth;
         int scaledHeight = originHeight;
@@ -70,7 +73,7 @@ public class BlurHelper {
             scaledHeight = (int) (scaledHeight * scaledRatio);
         }
 
-        PopupLogUtil.trace(LogTag.i, "scaledWidth  >>  " + scaledWidth + "   scaledHeight  >>  " + scaledHeight);
+        PopupLogUtil.trace(LogTag.i, "模糊缩放图像分辨率 [" + scaledWidth + " x " + scaledHeight+"]");
 
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(origin, scaledWidth, scaledHeight, false);
         Bitmap result = Bitmap.createBitmap(scaledBitmap);
@@ -107,7 +110,7 @@ public class BlurHelper {
         origin.recycle();
 
         result = Bitmap.createScaledBitmap(result, originWidth, originHeight, false);
-        PopupLogUtil.trace(LogTag.i, "resultWidth  >>  " + result.getWidth() + "   resultHeight  >>  " + result.getHeight());
+        PopupLogUtil.trace(LogTag.i, TAG, "模糊用时：【" + (System.currentTimeMillis() - startTime) + "ms】");
         return result;
     }
 
@@ -118,7 +121,7 @@ public class BlurHelper {
 
         final int originWidth = origin.getWidth();
         final int originHeight = origin.getHeight();
-        PopupLogUtil.trace(LogTag.i, "originWidth  >>  " + originWidth + "   originHeight  >>  " + originHeight);
+        PopupLogUtil.trace(LogTag.i, "模糊原始图像分辨率 [" + originWidth + " x " + originHeight+"]");
 
         int scaledWidth = originWidth;
         int scaledHeight = originHeight;
@@ -128,7 +131,7 @@ public class BlurHelper {
             scaledHeight = (int) (scaledHeight * scaledRatio);
         }
 
-        PopupLogUtil.trace(LogTag.i, "scaledWidth  >>  " + scaledWidth + "   scaledHeight  >>  " + scaledHeight);
+        PopupLogUtil.trace(LogTag.i, "模糊缩放图像分辨率 [" + scaledWidth + " x " + scaledHeight+"]");
 
         Bitmap result = Bitmap.createScaledBitmap(origin, scaledWidth, scaledHeight, false);
 
@@ -140,7 +143,7 @@ public class BlurHelper {
         origin.recycle();
 
         result = Bitmap.createScaledBitmap(result, originWidth, originHeight, false);
-        PopupLogUtil.trace(LogTag.i, "resultWidth  >>  " + result.getWidth() + "   resultHeight  >>  " + result.getHeight());
+        PopupLogUtil.trace(LogTag.i, TAG, "模糊用时：【" + (System.currentTimeMillis() - startTime) + "ms】");
         return result;
     }
 
