@@ -318,6 +318,9 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Candy】2.1.7-alpha**(2019/01/10)
+  * 优化键盘高度计算逻辑
+
 * **【Release】2.1.6**（2019/01/08）
   * 发布2.1.6-Release
   * 修复`preMeasure`方法错误的问题
