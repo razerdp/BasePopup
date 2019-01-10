@@ -2202,7 +2202,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             mTarget.getWindowVisibleDisplayFrame(rect);
             int displayHeight = rect.height();
             int windowHeight = mTarget.getHeight();
-            int keyboardHeight = windowHeight - displayHeight;
+            int keyboardHeight = mTarget.getBottom() - rect.bottom;
             if (preKeyboardHeight != keyboardHeight) {
                 //判定可见区域与原来的window区域占比是否小于0.75,小于意味着键盘弹出来了。
                 boolean isVisible = (displayHeight * 1.0f / windowHeight * 1.0f) < 0.75f;
