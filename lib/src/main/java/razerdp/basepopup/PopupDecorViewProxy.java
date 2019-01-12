@@ -61,40 +61,33 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         setClipChildren(mHelper.isClipChildren());
         if (mHelper.isInterceptTouchEvent()) {
             setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+            mMaskLayout = PopupMaskLayout.create(getContext(), mHelper);
+            addViewInLayout(mMaskLayout, -1, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+            mMaskLayout.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            return mHelper.isDismissWhenTouchOutside();
+                        case MotionEvent.ACTION_UP:
+                            if (mHelper.isDismissWhenTouchOutside()) {
+                                int x = (int) event.getX();
+                                int y = (int) event.getY();
+                                if (mTarget != null) {
+                                    mTarget.getGlobalVisibleRect(mTouchRect);
+                                }
+                                if (!mTouchRect.contains(x, y)) {
+                                    mHelper.onOutSideTouch();
+                                }
+                            }
+                            break;
+                    }
+                    return false;
+                }
+            });
         } else {
             setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         }
-        mMaskLayout = PopupMaskLayout.create(getContext(), mHelper);
-        addViewInLayout(mMaskLayout, -1, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-
-        if (!mHelper.isInterceptTouchEvent()) {
-            mMaskLayout.setVisibility(GONE);
-        } else {
-            mMaskLayout.setVisibility(VISIBLE);
-        }
-
-        mMaskLayout.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        return mHelper.isDismissWhenTouchOutside();
-                    case MotionEvent.ACTION_UP:
-                        if (mHelper.isDismissWhenTouchOutside()) {
-                            int x = (int) event.getX();
-                            int y = (int) event.getY();
-                            if (mTarget != null) {
-                                mTarget.getGlobalVisibleRect(mTouchRect);
-                            }
-                            if (!mTouchRect.contains(x, y)) {
-                                mHelper.onOutSideTouch();
-                            }
-                        }
-                        break;
-                }
-                return false;
-            }
-        });
     }
 
 
@@ -213,17 +206,30 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
-            if (child.getVisibility() != GONE && child != mMaskLayout) {
-                measureChild(child, widthMeasureSpec, heightMeasureSpec);
+            if (child.getVisibility() != GONE ) {
+                if (child==mTarget) {
+                    final LayoutParams lp = child.getLayoutParams();
+                    int fixedHeightMeasureSpec = heightMeasureSpec;
+                    if (mHelper.isClipToScreen() && mHelper.isShowAsDropDown() && lp.height == LayoutParams.MATCH_PARENT) {
+                        int mode = MeasureSpec.getMode(heightMeasureSpec);
+                        int restContentHeight = getScreenHeight() - (mHelper.getAnchorY() + mHelper.getAnchorHeight()) - childTopMargin - childBottomMargin;
+                        if (restContentHeight == 0) {
+                            restContentHeight = MeasureSpec.getSize(heightMeasureSpec);
+                        }
+                        fixedHeightMeasureSpec = MeasureSpec.makeMeasureSpec(restContentHeight, mode);
+                    }
+                    final int childHeightMeasureSpec = getChildMeasureSpec(fixedHeightMeasureSpec,
+                            childTopMargin + childBottomMargin, lp.height);
+
+                    child.measure(widthMeasureSpec, childHeightMeasureSpec);
+                }else {
+                    measureChild(child, widthMeasureSpec, heightMeasureSpec);
+                }
                 maxWidth = Math.max(maxWidth, child.getMeasuredWidth());
                 maxHeight = Math.max(maxHeight, child.getMeasuredHeight());
                 childState = combineMeasuredStates(childState, child.getMeasuredState());
             }
         }
-
-        //因为masklayout是match_parent的，因此测量完target后再决定自己的大小
-        //背景由用户自己决定。
-//        measureChild(mMaskLayout, MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.EXACTLY));
         setMeasuredDimension(resolveSizeAndState(maxWidth, widthMeasureSpec, childState), resolveSizeAndState(maxHeight, heightMeasureSpec,
                 childState << MEASURED_HEIGHT_STATE_SHIFT));
     }
@@ -566,7 +572,9 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
 
     public void updateLayout() {
-        mMaskLayout.update();
+        if (mMaskLayout!=null) {
+            mMaskLayout.update();
+        }
         if (isLayoutRequested()) {
             requestLayout();
         }

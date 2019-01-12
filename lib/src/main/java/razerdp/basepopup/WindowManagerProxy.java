@@ -23,7 +23,7 @@ import razerdp.util.log.PopupLogUtil;
 final class WindowManagerProxy implements WindowManager {
     private static final String TAG = "WindowManagerProxy";
     private WindowManager mWindowManager;
-    private WeakReference<PopupDecorViewProxy> mHackPopupDecorView;
+    private WeakReference<PopupDecorViewProxy> mPopupDecorViewProxy;
     private WeakReference<BasePopupHelper> mPopupHelper;
     private static int statusBarHeight;
 
@@ -47,8 +47,8 @@ final class WindowManagerProxy implements WindowManager {
                 if (!popupDecorViewProxy.isAttachedToWindow()) return;
             }
             mWindowManager.removeViewImmediate(popupDecorViewProxy);
-            mHackPopupDecorView.clear();
-            mHackPopupDecorView = null;
+            mPopupDecorViewProxy.clear();
+            mPopupDecorViewProxy = null;
         } else {
             mWindowManager.removeViewImmediate(view);
         }
@@ -70,7 +70,7 @@ final class WindowManagerProxy implements WindowManager {
             //添加popup主体
             final PopupDecorViewProxy popupDecorViewProxy = PopupDecorViewProxy.create(view.getContext(), helper);
             popupDecorViewProxy.addPopupDecorView(view, (LayoutParams) params);
-            mHackPopupDecorView = new WeakReference<PopupDecorViewProxy>(popupDecorViewProxy);
+            mPopupDecorViewProxy = new WeakReference<PopupDecorViewProxy>(popupDecorViewProxy);
             mWindowManager.addView(popupDecorViewProxy, fitLayoutParamsPosition(params));
         } else {
             mWindowManager.addView(view, params);
@@ -116,6 +116,8 @@ final class WindowManagerProxy implements WindowManager {
                         p.x += offset.x;
                         p.y += offset.y;
                         Log.d(TAG, "fitLayoutParamsPosition: x = " + p.x + "  y = " + p.y + "  offsetX = " + offset.x + "  offsetY = " + offset.y);
+                        //实际内容页在decorViewProxy已经测量
+                        p.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                     }
                 }
             }
@@ -152,8 +154,8 @@ final class WindowManagerProxy implements WindowManager {
         if (isPopupInnerDecorView(view) && getPopupDecorViewProxy() != null) {
             PopupDecorViewProxy popupDecorViewProxy = getPopupDecorViewProxy();
             mWindowManager.removeView(popupDecorViewProxy);
-            mHackPopupDecorView.clear();
-            mHackPopupDecorView = null;
+            mPopupDecorViewProxy.clear();
+            mPopupDecorViewProxy = null;
         } else {
             mWindowManager.removeView(view);
         }
@@ -161,8 +163,8 @@ final class WindowManagerProxy implements WindowManager {
 
     public void clear() {
         try {
-            removeViewImmediate(mHackPopupDecorView.get());
-            mHackPopupDecorView.clear();
+            removeViewImmediate(mPopupDecorViewProxy.get());
+            mPopupDecorViewProxy.clear();
         } catch (Exception e) {
             //no print
         }
@@ -175,8 +177,8 @@ final class WindowManagerProxy implements WindowManager {
     }
 
     private PopupDecorViewProxy getPopupDecorViewProxy() {
-        if (mHackPopupDecorView == null) return null;
-        return mHackPopupDecorView.get();
+        if (mPopupDecorViewProxy == null) return null;
+        return mPopupDecorViewProxy.get();
     }
 
 
