@@ -1,5 +1,8 @@
 ## BasePopup更新日志
 
+* **【Candy】2.1.7-beta**(2019/01/10)
+  * 修复`setAllowInterceptTouchEvent(false)`时，因受默认限制而导致的无法定位到anchorView的问题
+
 * **【Candy】2.1.7-alpha2**(2019/01/10)
   * 优化弹起软键盘默认偏移量计算逻辑
 
