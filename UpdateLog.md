@@ -1,12 +1,16 @@
 ## BasePopup更新日志
 
-* **【Candy】2.1.7-beta**(2019/01/10)
+* **【Release】2.1.7**(2019/01/16)
+  * 修复在`setAutoLocatePopup(true)`时，`onAnchorTop()`或`onAnchorBottom()`多次被调用的问题
   * 修复`setAllowInterceptTouchEvent(false)`时，因受默认限制而导致的无法定位到anchorView的问题
-
-* **【Candy】2.1.7-alpha2**(2019/01/10)
   * 优化弹起软键盘默认偏移量计算逻辑
+  * 优化键盘高度计算逻辑
+  * 感谢[**@ParfoisMeng**](https://github.com/ParfoisMeng)发现软键盘偏移问题并提交了PR[**PR#130**](https://github.com/razerdp/BasePopup/pull/130)
+  * 发布2.1.7 release
 
-* **【Candy】2.1.7-alpha**(2019/01/10)
+* **【Candy】2.1.7-beta**(2019/01/10~2019/01/13)
+  * 修复`setAllowInterceptTouchEvent(false)`时，因受默认限制而导致的无法定位到anchorView的问题
+  * 优化弹起软键盘默认偏移量计算逻辑
   * 优化键盘高度计算逻辑
 
 * **【Release】2.1.6**（2019/01/08）

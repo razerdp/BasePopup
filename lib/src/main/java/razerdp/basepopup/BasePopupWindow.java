@@ -1062,7 +1062,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 "\noffsetX = " + offset.x +
                 "\noffsetY = " + offset.y);
 
-        if (mHelper.isAutoLocatePopup()) {
+        if (mHelper.isAutoLocatePopup()&&!mHelper.isInterceptTouchEvent()) {
             final int offsetY = positionMode ? 0 : offset.y;
             final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offsetY) < getHeight());
             if (onTop) {

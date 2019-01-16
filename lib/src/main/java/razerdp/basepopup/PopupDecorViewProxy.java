@@ -35,6 +35,8 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     private int childBottomMargin;
 
     private static int statusBarHeight;
+    private boolean isOnAchorTop;
+    private CheckAndCallAutoAnchorLocate mCheckAndCallAutoAnchorLocate;
 
     private PopupDecorViewProxy(Context context) {
         this(context, null);
@@ -206,8 +208,8 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
-            if (child.getVisibility() != GONE ) {
-                if (child==mTarget) {
+            if (child.getVisibility() != GONE) {
+                if (child == mTarget) {
                     final LayoutParams lp = child.getLayoutParams();
                     int fixedHeightMeasureSpec = heightMeasureSpec;
                     if (mHelper.isClipToScreen() && mHelper.isShowAsDropDown() && lp.height == LayoutParams.MATCH_PARENT) {
@@ -222,7 +224,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                             childTopMargin + childBottomMargin, lp.height);
 
                     child.measure(widthMeasureSpec, childHeightMeasureSpec);
-                }else {
+                } else {
                     measureChild(child, widthMeasureSpec, heightMeasureSpec);
                 }
                 maxWidth = Math.max(maxWidth, child.getMeasuredWidth());
@@ -252,8 +254,6 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             }
         }
     }
-
-    private boolean hasCallLocation;
 
     private void layoutWithIntercept(int l, int t, int r, int b) {
         final int childCount = getChildCount();
@@ -367,20 +367,15 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                         int showContentHeight = Math.abs(getFixedMeasureHeight() - top);
                         onTop = bottom > getFixedMeasureHeight() && showContentHeight < top && showContentHeight < height;
                     }
+                    removeAnchorLocationChecker();
                     if (onTop) {
                         adjustAutoLocatedResult = -1;
                         top += -(mHelper.getAnchorHeight() + height);
                         bottom = top + height;
-                        if (!hasCallLocation) {
-                            hasCallLocation = true;
-                            mHelper.onAnchorTop();
-                        }
+                        postAnchorLocation(true);
                     } else {
                         adjustAutoLocatedResult = 1;
-                        if (!hasCallLocation) {
-                            hasCallLocation = true;
-                            mHelper.onAnchorBottom();
-                        }
+                        postAnchorLocation(false);
                     }
                 }
 
@@ -563,6 +558,10 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mHelper.registerKeyboardStateChangeListener(null);
+        if (mCheckAndCallAutoAnchorLocate != null) {
+            removeCallbacks(mCheckAndCallAutoAnchorLocate);
+            mCheckAndCallAutoAnchorLocate = null;
+        }
     }
 
     @Override
@@ -572,11 +571,44 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
 
     public void updateLayout() {
-        if (mMaskLayout!=null) {
+        if (mMaskLayout != null) {
             mMaskLayout.update();
         }
         if (isLayoutRequested()) {
             requestLayout();
+        }
+    }
+
+    private void removeAnchorLocationChecker() {
+        if (mCheckAndCallAutoAnchorLocate != null) {
+            removeCallbacks(mCheckAndCallAutoAnchorLocate);
+        }
+    }
+
+    private void postAnchorLocation(boolean onTop) {
+        if (mCheckAndCallAutoAnchorLocate == null) {
+            mCheckAndCallAutoAnchorLocate = new CheckAndCallAutoAnchorLocate(onTop);
+        }
+        postDelayed(mCheckAndCallAutoAnchorLocate, 16);
+    }
+
+    private final class CheckAndCallAutoAnchorLocate implements Runnable {
+        private boolean onTop;
+        private boolean hasCalled;
+
+        public CheckAndCallAutoAnchorLocate(boolean onTop) {
+            this.onTop = onTop;
+        }
+
+        @Override
+        public void run() {
+            if (mHelper == null || hasCalled) return;
+            if (onTop) {
+                mHelper.onAnchorTop();
+            } else {
+                mHelper.onAnchorBottom();
+            }
+            hasCalled = true;
         }
     }
 
