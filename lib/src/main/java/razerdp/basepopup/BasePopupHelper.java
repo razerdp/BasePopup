@@ -542,9 +542,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     public BasePopupHelper setAlignBackgound(boolean mAlignBackground) {
         this.mAlignBackground = mAlignBackground;
-        if (mAlignBackground) {
-            setAlignBackgroundGravity(Gravity.TOP);
-        } else {
+        if (!mAlignBackground) {
             setAlignBackgroundGravity(Gravity.NO_GRAVITY);
         }
         return this;
