@@ -318,6 +318,10 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Candy】2.1.8-alpha**(2019/01/17)
+  * 针对[**#138**](https://github.com/razerdp/BasePopup/issues/138)出现的问题进行优化
+  * 修复`setAlignBackgroundGravity()`与`setAlignBackground()`互相覆盖导致的顺序硬性要求问题
+
 * **【Release】2.1.7**(2019/01/16)
   * 修复在`setAutoLocatePopup(true)`时，`onAnchorTop()`或`onAnchorBottom()`多次被调用的问题
   * 修复`setAllowInterceptTouchEvent(false)`时，因受默认限制而导致的无法定位到anchorView的问题
@@ -356,46 +360,6 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
     * 修复构造器传入width/height失效的问题，增加setWidth/setHeight方法
     * 构造器增加延迟加载参数，如果您的Popup需要提前传参后，请在构造其中传入true以确认延迟加载
       * 如果使用延迟加载，初始化时机由您来制定，您需要调用`delayInit()`方法来进行BasePopup的初始化
-
-* **【Candy】2.1.5**
-  * **2.1.5-prerelease**(2018/12/29)
-    * 优化了获取是否展示虚拟按键的方法
-  * **2.1.5-beta5**(2018/12/29)
-    * 用了另外一个骚方法来判断全面屏是否有虚拟按键
-      * >方法来源：[**掘金**](https://juejin.im/post/5bb5c4e75188255c72285b54)
-  * **2.1.5-beta4**(2018/12/27)
-    * 针对`showPopupWindow(anchorview)`同时`clipToScreen(true)`时，无法完整展示满屏的view的问题
-      * 该方法目前可能不稳定（某些极限情况没想到~）
-  * **2.1.5-beta3**(2018/12/25)
-    * 针对小米手势全面屏高度获取不准确的修复
-    * **说实话，那么多魔改ROM，全面屏高度获取不准这东西也能改API，我表示无力吐槽了**
-  * **2.1.5-beta2**(2018/12/25)
-    * 修复2.1.5-beta默认backgroundgravity的问题
-  * **2.1.5-beta**(2018/12/25)
-    * 增加`setAlignBackgroundGravity()`方法，背景对齐的位置由您来制定~
-    * 增加`update(int width ,int height)`方法
-    * 修复构造器传入width/height失效的问题，增加setWidth/setHeight方法
-    * <img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/align/alignbg_plus.gif" height="360"/>
-  * **2.1.5-alpha2**(2018/12/23)
-    * 构造器增加延迟加载参数，如果您的Popup需要提前传参后，请在构造其中传入true以确认延迟加载
-      * 如果使用延迟加载，初始化时机由您来制定，您需要调用`delayInit()`方法来进行BasePopup的初始化
-  * **2.1.5-alpha**(2018/12/23)
-    * 适配刘海屏全面屏（双显示屏暂不适配）
-    * 感谢[#114](https://github.com/razerdp/BasePopup/issues/114)的提供~
-    * **Release年后发布，如果您有需要，请更新到此candy版。**
-
-* **【Release】2.1.4**(2018/12/21)
-  * **建议更新到这个版本！**
-  * 非常抱歉~因为一时疏忽忘记合并一些东西，导致2.1.3版本在不拦截事件的情况下，无anchorView弹窗会导致位置问题，在2.1.4重新合并了代码，对此造成的影响，深表歉意。
-    * 以后的版本一定会经过3个或以上的candy迭代仔细检查后再发！
-
-* **【Release】2.1.3**(2018/12/21)
-  * 正式发布2.1.3release
-  * 增加[**linkTo(View)**](https://github.com/razerdp/BasePopup/wiki/API#linktoview-anchorview)方法
-  * 支持update方法来跟随view或者指定位置更新
-  * 全面优化系统原有的popupwindow定位方法，全版本统一。
-  * 2.x的坑基本补完
-  * 19年，我们再见-V-
 
 <br>
 
