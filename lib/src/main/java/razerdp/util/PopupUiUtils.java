@@ -63,12 +63,19 @@ public class PopupUiUtils {
             ViewGroup decorView = (ViewGroup) act.getWindow().getDecorView();
             if (decorView != null) {
                 final int childCount = decorView.getChildCount();
+                String resourceEntryName = null;
                 for (int i = 0; i < childCount; i++) {
                     View child = decorView.getChildAt(i);
+                    resourceEntryName = null;
+                    try {
+                        resourceEntryName = act.getResources().getResourceEntryName(child.getId());
+                    } catch (Exception e) {
+
+                    }
                     if (child != null
                             && child.getId() != View.NO_ID
                             && child.isShown()
-                            && TextUtils.equals("navigationBarBackground", act.getResources().getResourceEntryName(child.getId()))) {
+                            && TextUtils.equals("navigationBarBackground", resourceEntryName)) {
                         return true;
                     }
                 }

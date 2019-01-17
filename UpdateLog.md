@@ -1,5 +1,9 @@
 ## BasePopup更新日志
 
+* **【Candy】2.1.8-alpha**(2019/01/17)
+  * 针对[**#138**](https://github.com/razerdp/BasePopup/issues/138)出现的问题进行优化
+  * 修复`setAlignBackgroundGravity()`与`setAlignBackground()`互相覆盖导致的顺序硬性要求问题
+
 * **【Release】2.1.7**(2019/01/16)
   * 修复在`setAutoLocatePopup(true)`时，`onAnchorTop()`或`onAnchorBottom()`多次被调用的问题
   * 修复`setAllowInterceptTouchEvent(false)`时，因受默认限制而导致的无法定位到anchorView的问题
