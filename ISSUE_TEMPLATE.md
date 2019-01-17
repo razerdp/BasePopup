@@ -1,4 +1,6 @@
+### 提issue前请去[**WIKI#常见问题**](https://github.com/razerdp/BasePopup/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)找找相关问题，避免重复提问
 ### 提issue前请务必参考以下格式填写，否则该问题优先级将会降低
+
  - 系统版本：
  - 库版本：
  - 问题描述/重现步骤：
