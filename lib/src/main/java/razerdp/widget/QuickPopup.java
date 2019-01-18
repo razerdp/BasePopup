@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import razerdp.basepopup.BasePopupWindow;
+import razerdp.basepopup.QuickPopupBuilder.OnConfigApplyListener;
 import razerdp.basepopup.QuickPopupConfig;
 
 /**
@@ -20,11 +21,28 @@ import razerdp.basepopup.QuickPopupConfig;
 public class QuickPopup extends BasePopupWindow {
 
     private QuickPopupConfig mConfig;
-    private View content;
+    private OnConfigApplyListener mOnConfigApplyListener;
 
-    public QuickPopup(Context context, QuickPopupConfig config, View contentView, int w, int h) {
+    private QuickPopup(Context context) {
+        super(context);
+    }
+
+    private QuickPopup(Context context, boolean delayInit) {
+        super(context, delayInit);
+    }
+
+    private QuickPopup(Context context, int width, int height) {
+        super(context, width, height);
+    }
+
+    private QuickPopup(Context context, int width, int height, boolean delayInit) {
+        super(context, width, height, delayInit);
+    }
+
+    public QuickPopup(Context context, QuickPopupConfig config, OnConfigApplyListener onConfigApplyListener, int w, int h) {
         super(context, w, h, true);
         mConfig = config;
+        mOnConfigApplyListener = onConfigApplyListener;
         if (mConfig != null) {
             delayInit();
         } else {
@@ -33,7 +51,7 @@ public class QuickPopup extends BasePopupWindow {
         applyConfigSetting(mConfig);
     }
 
-    protected void applyConfigSetting(QuickPopupConfig config) {
+    protected <C extends QuickPopupConfig> void applyConfigSetting(C config) {
         if (config.getPopupBlurOption() != null) {
             setBlurOption(config.getPopupBlurOption());
         } else {
@@ -57,6 +75,10 @@ public class QuickPopup extends BasePopupWindow {
         if (config.getBackground() != null) {
             setBackground(config.getBackground());
         }
+        linkTo(config.getLinkedView());
+        if (mOnConfigApplyListener != null) {
+            mOnConfigApplyListener.onConfigApply(this, config);
+        }
     }
 
     private void applyClick() {
@@ -72,6 +94,9 @@ public class QuickPopup extends BasePopupWindow {
                         @Override
                         public void onClick(View v) {
                             if (event.first != null) {
+                                if (event.first instanceof OnQuickPopupClickListenerWrapper) {
+                                    ((OnQuickPopupClickListenerWrapper) event.first).mQuickPopup = QuickPopup.this;
+                                }
                                 event.first.onClick(v);
                             }
                             dismiss();
@@ -84,6 +109,9 @@ public class QuickPopup extends BasePopupWindow {
         }
     }
 
+    public QuickPopupConfig getConfig() {
+        return mConfig;
+    }
 
     @Override
     protected Animation onCreateShowAnimation() {
