@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 41
-        versionName "2.1.8-alpha"
+        versionCode 42
+        versionName "2.1.8-alpha2"
     }
     buildTypes {
         release {
@@ -34,7 +34,7 @@ def moduleName = 'BasePopup_Candy'
 
 
 group = "com.github.razerdp"
-version = "2.1.8-alpha"
+version = "2.1.8-alpha2"
 
 install {
     repositories.mavenInstaller {

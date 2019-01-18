@@ -16,8 +16,8 @@ import razerdp.widget.QuickPopup;
 public class QuickPopupBuilder {
 
     private WeakReference<Context> mContextWeakReference;
-    QuickPopupConfig mConfig;
-    View mContentView;
+    private QuickPopupConfig mConfig;
+    private OnConfigApplyListener mOnConfigApplyListener;
 
     int width = ViewGroup.LayoutParams.WRAP_CONTENT;
     int height = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -53,7 +53,20 @@ public class QuickPopupBuilder {
                 .height(ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
-    public QuickPopupBuilder config(QuickPopupConfig quickPopupConfig) {
+    public QuickPopupBuilder setOnConfigApplyListener(OnConfigApplyListener onConfigApplyListener) {
+        mOnConfigApplyListener = onConfigApplyListener;
+        return this;
+    }
+
+    public final <C extends QuickPopupConfig> C getConfig() {
+        return (C) mConfig;
+    }
+
+    public OnConfigApplyListener getOnConfigApplyListener() {
+        return mOnConfigApplyListener;
+    }
+
+    public <C extends QuickPopupConfig> QuickPopupBuilder config(C quickPopupConfig) {
         if (quickPopupConfig == null) return this;
         if (quickPopupConfig != mConfig) {
             quickPopupConfig.contentViewLayoutid(mConfig.contentViewLayoutid);
@@ -63,7 +76,7 @@ public class QuickPopupBuilder {
     }
 
     public QuickPopup build() {
-        return new QuickPopup(getContext(), mConfig, mContentView, width, height);
+        return new QuickPopup(getContext(), mConfig, mOnConfigApplyListener, width, height);
     }
 
     public QuickPopup show() {
@@ -88,6 +101,10 @@ public class QuickPopupBuilder {
         return quickPopup;
     }
 
+
+    public interface OnConfigApplyListener {
+        void onConfigApply(QuickPopup basePopup, QuickPopupConfig config);
+    }
 
     //-----------------------------------------tools-----------------------------------------
     private Context getContext() {

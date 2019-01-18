@@ -17,7 +17,7 @@ import razerdp.util.SimpleAnimationUtils;
 /**
  * Created by 大灯泡 on 2018/8/23.
  */
-public final class QuickPopupConfig {
+public class QuickPopupConfig {
     int contentViewLayoutid;
 
     Animation mShowAnimation;
@@ -46,13 +46,15 @@ public final class QuickPopupConfig {
     boolean clipToScreen = true;
     boolean allowInterceptTouchEvent = true;
 
+    View mLinkedView;
+
 
     HashMap<Integer, Pair<View.OnClickListener, Boolean>> mListenersHolderMap;
 
 
     public static QuickPopupConfig generateDefault() {
         return new QuickPopupConfig()
-                .withShowAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(true))
+                .withShowAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(true))
                 .withDismissAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(false))
                 .fadeInAndOut(true);
     }
@@ -163,6 +165,11 @@ public final class QuickPopupConfig {
         return this;
     }
 
+    public QuickPopupConfig linkTo(View linkedView) {
+        mLinkedView = linkedView;
+        return this;
+    }
+
     QuickPopupConfig contentViewLayoutid(int contentViewLayoutid) {
         this.contentViewLayoutid = contentViewLayoutid;
         return this;
@@ -249,5 +256,9 @@ public final class QuickPopupConfig {
 
     public boolean isClipToScreen() {
         return clipToScreen;
+    }
+
+    public View getLinkedView() {
+        return mLinkedView;
     }
 }
