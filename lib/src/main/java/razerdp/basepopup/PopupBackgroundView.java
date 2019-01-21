@@ -82,4 +82,14 @@ class PopupBackgroundView extends View {
             }
         }
     }
+
+    public void update(){
+        if (mHelper!=null){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                setBackground(mHelper.getPopupBackground());
+            } else {
+                setBackgroundDrawable(mHelper.getPopupBackground());
+            }
+        }
+    }
 }
