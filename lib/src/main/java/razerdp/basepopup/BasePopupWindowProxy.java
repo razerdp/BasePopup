@@ -164,6 +164,7 @@ abstract class BasePopupWindowProxy extends PopupWindow {
             mWindowManagerProxy.clear();
         }
         PopupUtils.clearViewFromParent(getContentView());
+        PopupCompatManager.clear(this);
     }
 
 

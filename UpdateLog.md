@@ -1,5 +1,9 @@
 ## BasePopup更新日志
 
+* **【Candy】2.1.8-beta1**(2019/01/21)
+  * 修复popup弹出的时候，金刚键（虚拟按键）一同弹出的问题 **该功能目前测试中，如果有问题请务必反馈到candy**
+    * fixed  [**#120**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/59)
+
 * **【Candy】2.1.8-alpha2**(2019/01/18)
   * 优化QuickPopupBuilder，增加[**Wiki**](https://github.com/razerdp/BasePopup/wiki/QuickPopupBuilder)
 
