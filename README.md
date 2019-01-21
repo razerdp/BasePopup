@@ -284,7 +284,7 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 ----
 如果您并不需要很详细的定义一个PopupWindow，您也可以选择`QuickPopupBuilder`采取链式写法快速编写出一个Popup以使用。
 
->注意：默认QuickPopupBuilder.QuickPopupConfig配置中PopupWindow动画为淡入淡出
+>注意：默认QuickPopupBuilder.QuickPopupConfig配置中PopupWindow动画为缩放弹出和消失
 
 ```java
         QuickPopupBuilder.with(getContext())
@@ -317,6 +317,10 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
+
+* **【Candy】2.1.8-beta1**(2019/01/21)
+  * 修复popup弹出的时候，金刚键（虚拟按键）一同弹出的问题 **该功能目前测试中，如果有问题请务必反馈到candy**
+    * fixed  [**#120**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/59)
 
 * **【Candy】2.1.8-alpha2**(2019/01/18)
   * 优化QuickPopupBuilder，增加[**Wiki**](https://github.com/razerdp/BasePopup/wiki/QuickPopupBuilder)

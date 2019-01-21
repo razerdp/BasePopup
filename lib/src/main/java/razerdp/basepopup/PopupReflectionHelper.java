@@ -1,5 +1,7 @@
 package razerdp.basepopup;
 
+import android.annotation.SuppressLint;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
 
@@ -56,6 +58,19 @@ final class PopupReflectionHelper {
         Field fieldWindowManager = PopupWindow.class.getDeclaredField("mWindowManager");
         fieldWindowManager.setAccessible(true);
         fieldWindowManager.set(popupWindow, windowManager);
+    }
+
+    @SuppressLint("PrivateApi")
+    public View.OnSystemUiVisibilityChangeListener getSystemUiVisibilityChangeListener(View targetView) throws Exception {
+        Field mListenerInfo = View.class.getDeclaredField("mListenerInfo");
+        mListenerInfo.setAccessible(true);
+        Object viewListenerInfo = mListenerInfo.get(targetView);
+        if (viewListenerInfo != null) {
+            Field listenerField = viewListenerInfo.getClass().getDeclaredField("mOnSystemUiVisibilityChangeListener");
+            listenerField.setAccessible(true);
+            return (View.OnSystemUiVisibilityChangeListener) listenerField.get(viewListenerInfo);
+        }
+        return null;
     }
 
     //构造出一个类似Class的类，目的是为了可以反射classLoader的field，因为在系统的Class类里面是不允许反射该类的
