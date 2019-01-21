@@ -116,6 +116,9 @@ class PopupMaskLayout extends FrameLayout {
         if (mBlurImageView != null) {
             mBlurImageView.update();
         }
+        if (mBackgroundView!=null){
+            mBackgroundView.update();
+        }
     }
 
     public void handleStart(long duration) {
