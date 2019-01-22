@@ -28,6 +28,7 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     private static final int MAX_SCAN_ACTIVITY_COUNT = 50;
     private BasePopupHelper mHelper;
     private WindowManagerProxy mWindowManagerProxy;
+    private boolean oldFocusable = true;
 
     public BasePopupWindowProxy(Context context, BasePopupHelper helper) {
         super(context);
@@ -232,4 +233,18 @@ abstract class BasePopupWindowProxy extends PopupWindow {
         }
     }
 
+    void handleFullScreenFocusable(){
+        oldFocusable = isFocusable();
+        setFocusable(false);
+    }
+
+    void restoreFocusable() {
+        if (mWindowManagerProxy != null) {
+            mWindowManagerProxy.updateFocus(oldFocusable);
+        }
+    }
+
+    WindowManagerProxy getWindowManagerProxy() {
+        return mWindowManagerProxy;
+    }
 }

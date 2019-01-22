@@ -99,8 +99,8 @@ final class WindowManagerProxy implements WindowManager {
     }
 
     private ViewGroup.LayoutParams fitLayoutParamsPosition(ViewGroup.LayoutParams params) {
-        if (params instanceof WindowManager.LayoutParams) {
-            WindowManager.LayoutParams p = (LayoutParams) params;
+        if (params instanceof LayoutParams) {
+            LayoutParams p = (LayoutParams) params;
             BasePopupHelper helper = getBasePopupHelper();
             if (helper != null) {
                 if (helper.getShowCount() > 1) {
@@ -136,6 +136,21 @@ final class WindowManagerProxy implements WindowManager {
             mWindowManager.updateViewLayout(popupDecorViewProxy, fitLayoutParamsPosition(params));
         } else {
             mWindowManager.updateViewLayout(view, params);
+        }
+    }
+
+    public void updateFocus(boolean focus) {
+        if (mWindowManager != null && getPopupDecorViewProxy() != null) {
+            PopupDecorViewProxy popupDecorViewProxy = getPopupDecorViewProxy();
+            ViewGroup.LayoutParams params = popupDecorViewProxy.getLayoutParams();
+            if (params instanceof LayoutParams) {
+                if (focus) {
+                    ((LayoutParams) params).flags &= ~WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                } else {
+                    ((LayoutParams) params).flags |= WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                }
+            }
+            mWindowManager.updateViewLayout(popupDecorViewProxy, params);
         }
     }
 
