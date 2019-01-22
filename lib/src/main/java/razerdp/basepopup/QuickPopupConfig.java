@@ -45,6 +45,7 @@ public class QuickPopupConfig {
     boolean clipChildren;
     boolean clipToScreen = true;
     boolean allowInterceptTouchEvent = true;
+    boolean dismissOutSide = true;
 
     View mLinkedView;
 
@@ -175,6 +176,10 @@ public class QuickPopupConfig {
         return this;
     }
 
+    public QuickPopupConfig dismissOnOutSideTouch(boolean dismissOutSide) {
+        this.dismissOutSide = dismissOutSide;
+        return this;
+    }
     //-----------------------------------------getter-----------------------------------------
 
     public Animation getShowAnimation() {
@@ -260,5 +265,9 @@ public class QuickPopupConfig {
 
     public View getLinkedView() {
         return mLinkedView;
+    }
+
+    public boolean isDismissOutSide() {
+        return dismissOutSide;
     }
 }
