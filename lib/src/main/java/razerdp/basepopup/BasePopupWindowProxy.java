@@ -29,6 +29,7 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     private BasePopupHelper mHelper;
     private WindowManagerProxy mWindowManagerProxy;
     private boolean oldFocusable = true;
+    private boolean isHandledFullScreen;
 
     public BasePopupWindowProxy(Context context, BasePopupHelper helper) {
         super(context);
@@ -233,15 +234,21 @@ abstract class BasePopupWindowProxy extends PopupWindow {
         }
     }
 
-    void handleFullScreenFocusable(){
+    boolean isHandledFullScreen() {
+        return isHandledFullScreen;
+    }
+
+    void handleFullScreenFocusable() {
         oldFocusable = isFocusable();
         setFocusable(false);
+        isHandledFullScreen = true;
     }
 
     void restoreFocusable() {
         if (mWindowManagerProxy != null) {
             mWindowManagerProxy.updateFocus(oldFocusable);
         }
+        isHandledFullScreen = false;
     }
 
     WindowManagerProxy getWindowManagerProxy() {
