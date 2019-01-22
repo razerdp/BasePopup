@@ -284,7 +284,10 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             for (int i = 0; i < childCount; i++) {
                 View child = getChildAt(i);
                 child.layout(l, t, r, b);
-                if (child == mTarget && mMaskLayout != null) {
+                if (child == mTarget
+                        && mMaskLayout != null
+                        && mHelper.isAlignBackground()
+                        && mHelper.getAlignBackgroundGravity() != Gravity.NO_GRAVITY) {
                     if (getLayoutParams() instanceof WindowManager.LayoutParams) {
                         WindowManager.LayoutParams p = ((WindowManager.LayoutParams) getLayoutParams());
                         l += p.x;
