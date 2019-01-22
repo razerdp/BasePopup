@@ -14,7 +14,12 @@ import android.view.WindowManager;
 
 final class PopupCompatManager {
     private static final String TAG = "PopupCompatManager";
-
+    private static final int FULL_SCREEN_FLAG = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            | View.SYSTEM_UI_FLAG_FULLSCREEN;
     private static final PopupWindowImpl IMPL;
 
     public static void showAsDropDown(BasePopupWindowProxy popupWindow, View anchor, int xoff, int yoff, int gravity) {
@@ -95,7 +100,10 @@ final class PopupCompatManager {
         }
 
         protected void onAfterShowExec(BasePopupWindowProxy popupWindowProxy, Activity act) {
-            popupWindowProxy.restoreFocusable();
+            if (popupWindowProxy.isHandledFullScreen()) {
+                popupWindowProxy.getContentView().setSystemUiVisibility(FULL_SCREEN_FLAG);
+                popupWindowProxy.restoreFocusable();
+            }
         }
 
         boolean isPopupShowing(BasePopupWindowProxy popupWindow) {
