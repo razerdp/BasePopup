@@ -424,31 +424,88 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 A：调用[**setBackgroundColor**](https://github.com/razerdp/BasePopup/wiki/API#setbackgroundcolorint-color)(Color.TRANSPARENT)或者[**setBackground**](https://github.com/razerdp/BasePopup/wiki/API#setbackgroundint-drawableids)(0)
 
+<br>
+
+***
+
+<br>
+
 #### Q：如何在dismiss()时不执行退出动画
 
 A：调用dismiss(false)或者dismissWithOutAnimate()
+
+<br>
+
+***
+
+<br>
 
 #### Q：点击popupwindow背景部分不想让popupwindow隐藏怎么办
 
 A：设置[**setAllowDismissWhenTouchOutside**](https://github.com/razerdp/BasePopup/wiki/API#setallowdismisswhentouchoutsideboolean-dismisswhentouchoutside)(false)
 
+<br>
+
+***
+
+<br>
+
 #### Q：Service里无法弹出
 
 A：PopupWindow需要windowToken，因此ApplicationContext或者Service里面是无法弹出的，建议通过发出事件通知栈顶Activity来弹出
+
+<br>
+
+***
+
+<br>
+
+#### Q：为什么PopupWindow里面的EditText无法粘贴
+
+>ISSUE REF：[**#140**](https://github.com/razerdp/BasePopup/issues/140)
+
+>Google Issue Tracker：[**#36984016**](https://issuetracker.google.com/issues/36984016)
+
+A：PopupWindow内的View是无法获取WindowToken的，而粘贴功能也是一个PopupWindow，它的显示必定需要WindowToken，因此无法粘贴。
+
+<br>
+
+***
+
+<br>
 
 #### Q：如何不让PopupWindow的蒙层覆盖状态栏
 
 A：设置[**setPopupWindowFullScreen**](https://github.com/razerdp/BasePopup/wiki/API#setpopupwindowfullscreenboolean-isfullscreen)(false)
 
+<br>
+
+***
+
+<br>
+
 #### Q：如何点击back键不关闭pop
 
 A：设置[**setBackPressEnable**](https://github.com/razerdp/BasePopup/wiki/API#setBackPressEnableboolean-backPressEnable)(false)
+
+<br>
+
+***
+
+<br>
 
 #### Q：为什么设置setAllowInterceptTouchEvent(false)后，蒙层或者背景模糊都消失了
 
 A：~~在2.0.0到2.0.9之间，setAllowInterceptTouchEvent（）不影响蒙层或背景，但从2.1.0开始，不再开启这个黑科技，而是选择跟官方保持同步，原因在于如果背景模糊或者有蒙层，那么该PopupWindow理应拦截事件，而不应该穿透事件，否则不应该拥有背景蒙层。<br><br>~~
 **但是！从2.1.8-beta6之后，该黑科技又支持啦~换了个比较友好的方式**<br><br>
 同时，因为系统PopupWindow默认是clipToScreen，也就是限制PopupWindow在屏幕内显示，当view边缘超过屏幕的时候，PopupWindow会反向移动以完整展示内容，因此如果您的PopupWindow需要突破屏幕显示（比如高度是全屏，但展示在某个view下面，此时bottom大于屏幕底部），请设置`setClipToScreen(false)`。
+
+
+<br>
+
+***
+
+<br>
 
 #### Q：根布局高度`match_parent`和`wrap_content`的区别
 
@@ -481,8 +538,11 @@ A：当根布局是match_parent的时候，basepopup会做一定的差异处理�
 | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/qa/qa_match_parent.png" height="360"/></p> | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/qa/qa_wrap_content.png" height="360"/></p> |
 
 <br>
-
 **留意两张图的listview底部区别，其中wrap_content底部已经突破屏幕底部，无法完整显示。**
+
+<br>
+
+***
 
 <br>
 
