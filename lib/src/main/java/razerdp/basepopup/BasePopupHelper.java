@@ -99,7 +99,8 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     private Point mOffsetCached = new Point();
     private Point mTempOffset = new Point();
 
-    private boolean isCustomMeasure;
+    private boolean isCustomMeasureWidth;
+    private boolean isCustomMeasureHeight;
 
 
     BasePopupHelper(PopupTouchController controller) {
@@ -131,16 +132,20 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
                 checkAndSetGravity(childParams);
                 if (childParams instanceof ViewGroup.MarginLayoutParams) {
                     mParaseFromXmlParams = new ViewGroup.MarginLayoutParams((ViewGroup.MarginLayoutParams) childParams);
-                    if (isCustomMeasure) {
+                    if (isCustomMeasureWidth) {
                         mParaseFromXmlParams.width = popupViewWidth;
+                    }
+                    if (isCustomMeasureHeight) {
                         mParaseFromXmlParams.height = popupViewHeight;
                     }
                     tempLayout = null;
                     return result;
                 }
                 mParaseFromXmlParams = new ViewGroup.MarginLayoutParams(childParams);
-                if (isCustomMeasure) {
+                if (isCustomMeasureWidth) {
                     mParaseFromXmlParams.width = popupViewWidth;
+                }
+                if (isCustomMeasureHeight) {
                     mParaseFromXmlParams.height = popupViewHeight;
                 }
                 tempLayout = null;
@@ -226,11 +231,11 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     }
 
     public boolean isCustomMeasure() {
-        return isCustomMeasure;
+        return isCustomMeasureWidth || isCustomMeasureHeight;
     }
 
     int getPopupViewWidth() {
-        if (isCustomMeasure) {
+        if (isCustomMeasureWidth) {
             return popupViewWidth;
         } else {
             if (mParaseFromXmlParams != null) {
@@ -243,18 +248,18 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     BasePopupHelper setPopupViewWidth(int popupViewWidth) {
         this.popupViewWidth = popupViewWidth;
         if (popupViewWidth != DEFAULT_WIDTH) {
-            isCustomMeasure = true;
+            isCustomMeasureWidth = true;
             if (mParaseFromXmlParams != null) {
                 mParaseFromXmlParams.width = popupViewWidth;
             }
         } else {
-            isCustomMeasure = false;
+            isCustomMeasureWidth = false;
         }
         return this;
     }
 
     int getPopupViewHeight() {
-        if (isCustomMeasure) {
+        if (isCustomMeasureHeight) {
             return popupViewHeight;
         } else {
             if (mParaseFromXmlParams != null) {
@@ -267,12 +272,12 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     BasePopupHelper setPopupViewHeight(int popupViewHeight) {
         this.popupViewHeight = popupViewHeight;
         if (popupViewHeight != DEFAULT_HEIGHT) {
-            isCustomMeasure = true;
+            isCustomMeasureHeight = true;
             if (mParaseFromXmlParams != null) {
                 mParaseFromXmlParams.height = popupViewHeight;
             }
         } else {
-            isCustomMeasure = false;
+            isCustomMeasureHeight = false;
         }
         return this;
     }

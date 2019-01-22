@@ -414,6 +414,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         if (mDisplayAnimateView == null) {
             mDisplayAnimateView = mContentView;
         }
+        setWidth(width);
+        setHeight(height);
+
         if (mHelper.getParaseFromXmlParams() != null) {
             width = mHelper.getParaseFromXmlParams().width;
             height = mHelper.getParaseFromXmlParams().height;
@@ -1062,7 +1065,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 "\noffsetX = " + offset.x +
                 "\noffsetY = " + offset.y);
 
-        if (mHelper.isAutoLocatePopup()&&!mHelper.isInterceptTouchEvent()) {
+        if (mHelper.isAutoLocatePopup() && !mHelper.isInterceptTouchEvent()) {
             final int offsetY = positionMode ? 0 : offset.y;
             final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offsetY) < getHeight());
             if (onTop) {
