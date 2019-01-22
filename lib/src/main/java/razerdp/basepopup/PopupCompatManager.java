@@ -122,6 +122,7 @@ final class PopupCompatManager {
 
         protected void onBeforeShowExec(BasePopupWindowProxy popupWindowProxy, Activity act) {
             if (OnSystemUiVisibilityChangeListenerWrapper.needListenUiVisibilityChange(act)) {
+                popupWindowProxy.setFocusable(false);
                 Window window = act.getWindow();
                 View decorView = window == null ? null : window.getDecorView();
                 String decorStr = decorView == null ? null : String.valueOf(decorView.hashCode());
@@ -139,7 +140,7 @@ final class PopupCompatManager {
         }
 
         protected void onAfterShowExec(BasePopupWindowProxy popupWindowProxy, Activity act) {
-
+            popupWindowProxy.setFocusable(true);
         }
 
         boolean isPopupShowing(BasePopupWindowProxy popupWindow) {
