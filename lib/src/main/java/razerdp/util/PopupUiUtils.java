@@ -6,14 +6,13 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.Display;
-import android.view.KeyCharacterMap;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,9 +30,12 @@ public class PopupUiUtils {
     private static final Point point = new Point();
     private static AtomicInteger mFullDisplayCheckFlag = new AtomicInteger(0x0000);
 
-
     public static int getNavigationBarHeight(Context context) {
         if (!checkHasNavigationBar(context)) return 0;
+        return getNavigationBarHeightInternal(context);
+    }
+
+    private static int getNavigationBarHeightInternal(Context context) {
         Resources resources = context.getResources();
         int resourceId = resources.getIdentifier("navigation_bar_height",
                 "dimen", "android");
@@ -50,16 +52,25 @@ public class PopupUiUtils {
      */
     @SuppressLint("NewApi")
     public static boolean checkHasNavigationBar(Context context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            boolean hasMenuKey = ViewConfiguration.get(context)
-                    .hasPermanentMenuKey();
-            boolean hasBackKey = KeyCharacterMap
-                    .deviceHasKey(KeyEvent.KEYCODE_BACK);
+        Activity act = PopupUtils.scanForActivity(context, 50);
+        if (act == null) return false;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            Window window = act.getWindow();
+            if (window == null) return false;
+            Display display = window.getWindowManager().getDefaultDisplay();
+            display.getRealSize(point);
 
-            return !hasMenuKey && !hasBackKey;
+            View decorView = window.getDecorView();
+            Configuration conf = context.getResources().getConfiguration();
+            if (Configuration.ORIENTATION_LANDSCAPE == conf.orientation) {
+                View contentView = decorView.findViewById(android.R.id.content);
+                return (point.x != contentView.getWidth());
+            } else {
+                Rect rect = new Rect();
+                decorView.getWindowVisibleDisplayFrame(rect);
+                return (rect.bottom != point.y);
+            }
         } else {
-            Activity act = PopupUtils.scanForActivity(context, 50);
-            if (act == null) return false;
             ViewGroup decorView = (ViewGroup) act.getWindow().getDecorView();
             if (decorView != null) {
                 final int childCount = decorView.getChildCount();
@@ -86,7 +97,7 @@ public class PopupUiUtils {
 
     public static int getScreenHeightCompat(Context context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return context.getResources().getDisplayMetrics().heightPixels;
+            return context.getResources().getDisplayMetrics().heightPixels + (!checkHasNavigationBar(context) ? getNavigationBarHeightInternal(context) : 0);
         } else {
             int orientation = context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? PORTRAIT : LANDSCAPE;
             if (mRealSizes[orientation] == null) {

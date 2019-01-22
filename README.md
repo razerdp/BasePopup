@@ -318,10 +318,11 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
-* **【Candy】2.1.8-beta5**(2019/01/22)
-  * beta3和beta4被我吃了~
+* **【Candy】2.1.8-beta6**(2019/01/22)
+  * beta3和beta4和beta5被我吃了~
   * 修复beta2关于focusable的问题，去掉无用代码
   * 修复构造器传入宽高无效的问题
+  * **支持不拦截事件下的背景蒙层，没错！那个黑科技换了个更友好的方式来啦~**
 
 * **【Candy】2.1.8-beta2**(2019/01/22)
   * 修复popup弹出的时候，金刚键（虚拟按键）一同弹出的问题 **该功能目前测试中，如果有问题请务必反馈到candy**

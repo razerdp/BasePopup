@@ -1,6 +1,7 @@
 package razerdp.basepopup;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.text.TextUtils;
@@ -10,9 +11,11 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 
 import razerdp.util.PopupUiUtils;
+import razerdp.util.PopupUtils;
 import razerdp.util.log.LogTag;
 import razerdp.util.log.PopupLogUtil;
 
@@ -35,7 +38,6 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     private int childBottomMargin;
 
     private static int statusBarHeight;
-    private boolean isOnAchorTop;
     private CheckAndCallAutoAnchorLocate mCheckAndCallAutoAnchorLocate;
 
     private PopupDecorViewProxy(Context context) {
@@ -61,9 +63,9 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         mHelper = helper;
         mHelper.registerKeyboardStateChangeListener(this);
         setClipChildren(mHelper.isClipChildren());
+        mMaskLayout = PopupMaskLayout.create(getContext(), mHelper);
         if (mHelper.isInterceptTouchEvent()) {
             setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-            mMaskLayout = PopupMaskLayout.create(getContext(), mHelper);
             addViewInLayout(mMaskLayout, -1, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             mMaskLayout.setOnTouchListener(new OnTouchListener() {
                 @Override
@@ -89,9 +91,40 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             });
         } else {
             setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+            Activity act = PopupUtils.scanForActivity(getContext(), 50);
+            if (act == null) return;
+            checkAndClearDecorMaskLayout(act);
+            addMaskToDecor(act.getWindow());
         }
     }
 
+    private void checkAndClearDecorMaskLayout(Activity act) {
+        if (act == null || act.getWindow() == null || act.getWindow().getDecorView() == null)
+            return;
+        View decorView = act.getWindow().getDecorView();
+        if (decorView instanceof ViewGroup) {
+            ViewGroup vg = ((ViewGroup) decorView);
+            int childCount = vg.getChildCount();
+            for (int i = childCount - 1; i >= 0; i--) {
+                View child = vg.getChildAt(i);
+                if (child instanceof PopupMaskLayout) {
+                    vg.removeViewInLayout(child);
+                }
+            }
+        }
+    }
+
+    private void addMaskToDecor(Window window) {
+        View decorView = window == null ? null : window.getDecorView();
+        if (!(decorView instanceof ViewGroup)) {
+            if (mMaskLayout != null) {
+                mMaskLayout.onDetachedFromWindow();
+                mMaskLayout = null;
+            }
+            return;
+        }
+        ((ViewGroup) decorView).addView(mMaskLayout, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+    }
 
     public void addPopupDecorView(View target, WindowManager.LayoutParams params) {
         if (target == null) {
@@ -251,6 +284,16 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             for (int i = 0; i < childCount; i++) {
                 View child = getChildAt(i);
                 child.layout(l, t, r, b);
+                if (child == mTarget && mMaskLayout != null) {
+                    if (getLayoutParams() instanceof WindowManager.LayoutParams) {
+                        WindowManager.LayoutParams p = ((WindowManager.LayoutParams) getLayoutParams());
+                        l += p.x;
+                        t += p.y;
+                        r += p.x;
+                        b += p.y;
+                    }
+                    mMaskLayout.handleAlignBackground(mHelper.getAlignBackgroundGravity(), l, t, r, b);
+                }
             }
         }
     }
@@ -557,6 +600,11 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        if (!mHelper.isInterceptTouchEvent()) {
+            if (mMaskLayout != null && mMaskLayout.getParent() != null) {
+                ((ViewGroup) mMaskLayout.getParent()).removeViewInLayout(mMaskLayout);
+            }
+        }
         mHelper.registerKeyboardStateChangeListener(null);
         if (mCheckAndCallAutoAnchorLocate != null) {
             removeCallbacks(mCheckAndCallAutoAnchorLocate);
