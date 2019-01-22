@@ -1,6 +1,9 @@
 ## BasePopup更新日志
 
 * **【Candy】2.1.8-beta2**(2019/01/22)
+  * 修复beta2关于focusable的问题，去掉无用代码
+
+* **【Candy】2.1.8-beta2**(2019/01/22)
   * 修复popup弹出的时候，金刚键（虚拟按键）一同弹出的问题 **该功能目前测试中，如果有问题请务必反馈到candy**
     * fixed  [**#141**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/141)
   * QuickPopup增加`dismissOnOutSideTouch()`方法

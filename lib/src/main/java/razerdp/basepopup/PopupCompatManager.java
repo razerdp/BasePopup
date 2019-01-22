@@ -1,20 +1,10 @@
 package razerdp.basepopup;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.os.Build;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Field;
-import java.util.HashMap;
-
-import razerdp.util.log.PopupLogUtil;
 
 /**
  * Created by 大灯泡 on 2017/11/27.
@@ -61,7 +51,6 @@ final class PopupCompatManager {
 
     //base impl
     static abstract class BaseImpl implements PopupWindowImpl {
-        private final HashMap<String, OnSystemUiVisibilityChangeListenerWrapper> mSystemUiVisibilityChangeListenerBucket = new HashMap<>();
 
         abstract void showAsDropDownImpl(Activity activity, BasePopupWindowProxy popupWindow, View anchor, int xoff, int yoff, int gravity);
 
@@ -95,52 +84,18 @@ final class PopupCompatManager {
 
         @Override
         public void clear(BasePopupWindowProxy popupWindow) {
-            Activity activity = popupWindow.scanForActivity(popupWindow.getContentView().getContext());
-            if (activity == null) return;
-            Window window = activity.getWindow();
-            View decorView = window == null ? null : window.getDecorView();
-            String decorStr = decorView == null ? null : String.valueOf(decorView.hashCode());
-            OnSystemUiVisibilityChangeListenerWrapper targetWrapper = mSystemUiVisibilityChangeListenerBucket.get(decorStr);
-            if (targetWrapper != null) {
-                //清除引用
-                targetWrapper.clear();
-            }
-            boolean die = false;
-            if (activity.isFinishing()) {
-                die = true;
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                if (activity.isDestroyed()) {
-                    die = true;
-                }
-            }
-            if (die) {
-                mSystemUiVisibilityChangeListenerBucket.remove(decorStr);
-            }
+
         }
 
 
         protected void onBeforeShowExec(BasePopupWindowProxy popupWindowProxy, Activity act) {
-            if (OnSystemUiVisibilityChangeListenerWrapper.needListenUiVisibilityChange(act)) {
-                popupWindowProxy.setFocusable(false);
-                Window window = act.getWindow();
-                View decorView = window == null ? null : window.getDecorView();
-                String decorStr = decorView == null ? null : String.valueOf(decorView.hashCode());
-                if (TextUtils.isEmpty(decorStr)) return;
-                OnSystemUiVisibilityChangeListenerWrapper targetWrapper = mSystemUiVisibilityChangeListenerBucket.get(decorStr);
-                if (targetWrapper == null) {
-                    targetWrapper = new OnSystemUiVisibilityChangeListenerWrapper(act);
-                    mSystemUiVisibilityChangeListenerBucket.put(decorStr, targetWrapper);
-                }
-                if (!targetWrapper.isAttached()) {
-                    targetWrapper.attached(act);
-                }
-                popupWindowProxy.getContentView().setSystemUiVisibility(OnSystemUiVisibilityChangeListenerWrapper.flags);
+            if (needListenUiVisibilityChange(act)) {
+                popupWindowProxy.handleFullScreenFocusable();
             }
         }
 
         protected void onAfterShowExec(BasePopupWindowProxy popupWindowProxy, Activity act) {
-            popupWindowProxy.setFocusable(true);
+            popupWindowProxy.restoreFocusable();
         }
 
         boolean isPopupShowing(BasePopupWindowProxy popupWindow) {
@@ -169,140 +124,18 @@ final class PopupCompatManager {
         }
     }
 
-    static class OnSystemUiVisibilityChangeListenerWrapper implements View.OnSystemUiVisibilityChangeListener {
-        private WeakReference<View.OnSystemUiVisibilityChangeListener> target;
-        private WeakReference<View> targetView;
-        private boolean isAttached;
-        private int oldUiVisibility = 0;
-        public static final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+    static boolean needListenUiVisibilityChange(Activity act) {
+        if (act == null) return false;
+        try {
+            View decorView = act.getWindow().getDecorView();
+            WindowManager.LayoutParams lp = act.getWindow().getAttributes();
+            int i = lp.flags;
+            int f = decorView.getWindowSystemUiVisibility();
 
-        public boolean isAttached() {
-            return isAttached;
-        }
-
-        public OnSystemUiVisibilityChangeListenerWrapper(Activity act) {
-            Window window = act.getWindow();
-            View decorView = window == null ? null : window.getDecorView();
-            checkTarget(decorView);
-        }
-
-        public OnSystemUiVisibilityChangeListenerWrapper(View targetView) {
-            checkTarget(targetView);
-        }
-
-        public void attached(Activity act) {
-            if (act == null) return;
-            Window window = act.getWindow();
-            View decorView = window == null ? null : window.getDecorView();
-            if (decorView != null) {
-                attached(decorView);
-            }
-        }
-
-        public void attached(View targetView) {
-            this.targetView = new WeakReference<>(targetView);
-            checkTarget(targetView);
-            targetView.setOnSystemUiVisibilityChangeListener(this);
-            isAttached = true;
-        }
-
-
-        private void checkTarget(View targetView) {
-            if (target == null) {
-                target = new WeakReference<>(tryToGetListener(targetView));
-            }
-        }
-
-        private View.OnSystemUiVisibilityChangeListener tryToGetListener(View targetView) {
-            if (targetView == null) return null;
-            return tryToReflectGetListener(targetView);
-        }
-
-        @SuppressLint("PrivateApi")
-        private View.OnSystemUiVisibilityChangeListener tryToReflectGetListener(View targetView) {
-            try {
-                oldUiVisibility = targetView.getSystemUiVisibility();
-                Field mListenerInfo = View.class.getDeclaredField("mListenerInfo");
-                mListenerInfo.setAccessible(true);
-                Object viewListenerInfo = mListenerInfo.get(targetView);
-                if (viewListenerInfo != null) {
-                    Field listenerField = viewListenerInfo.getClass().getDeclaredField("mOnSystemUiVisibilityChangeListener");
-                    listenerField.setAccessible(true);
-                    return (View.OnSystemUiVisibilityChangeListener) listenerField.get(viewListenerInfo);
-                }
-            } catch (NoSuchFieldException e) {
-                if (Build.VERSION.SDK_INT >= 27) {
-                    return tryToReflectOverP(targetView);
-                }
-                PopupLogUtil.trace(e);
-            } catch (Exception e) {
-                PopupLogUtil.trace(e);
-            }
-            return null;
-        }
-
-        private View.OnSystemUiVisibilityChangeListener tryToReflectOverP(View targetView) {
-            try {
-                return PopupReflectionHelper.getInstance().getSystemUiVisibilityChangeListener(targetView);
-            } catch (Exception e) {
-                PopupLogUtil.trace(e);
-            }
-            return null;
-        }
-
-        @Override
-        public void onSystemUiVisibilityChange(int visibility) {
-            if (target != null) {
-                if (target.get() != null) {
-                    target.get().onSystemUiVisibilityChange(visibility);
-                }
-            }
-            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0 &&
-                    targetView != null) {
-                View decor = targetView.get();
-                if (decor != null) {
-                    decor.setSystemUiVisibility(flags);
-                }
-            }
-        }
-
-        public void clear() {
-            if (targetView != null) {
-                View weakTarget = targetView.get();
-                View.OnSystemUiVisibilityChangeListener l = target == null ? null : target.get();
-                if (weakTarget != null) {
-                    weakTarget.setOnSystemUiVisibilityChangeListener(l);
-                    restoreToOriginalSystemUi(weakTarget);
-                    targetView.clear();
-                }
-            }
-            targetView = null;
-            target = null;
-            isAttached = false;
-        }
-
-        private void restoreToOriginalSystemUi(View targetView) {
-            targetView.setSystemUiVisibility(oldUiVisibility);
-        }
-
-        public static boolean needListenUiVisibilityChange(Activity act) {
-            if (act == null) return false;
-            try {
-                View decorView = act.getWindow().getDecorView();
-                WindowManager.LayoutParams lp = act.getWindow().getAttributes();
-                int i = lp.flags;
-                int f = decorView.getWindowSystemUiVisibility();
-
-                return (i & WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0
-                        && ((f & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0 || (f & View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION) != 0);
-            } catch (Exception e) {
-                return false;
-            }
+            return (i & WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0
+                    && ((f & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0 || (f & View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION) != 0);
+        } catch (Exception e) {
+            return false;
         }
     }
 }
