@@ -1,4 +1,4 @@
-[**1.x版本**](./README_OLD.md) | 2.x版本 | [**English**](./README_V2_EN.md)
+[**1.x版本**](./README_OLD.md) | **2.x版本** | [**English**](./README_V2_EN.md)
 
 <p align="center"><img src="./img/logo.png" alt="Logo图片似乎加载不出来" height="360"/></p>
 <h2 align="center">BasePopup - Android下打造通用便捷的PopupWindow</h2>
