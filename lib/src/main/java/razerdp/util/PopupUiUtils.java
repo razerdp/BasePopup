@@ -15,20 +15,15 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
  * Created by 大灯泡 on 2018/12/23.
  */
 public class PopupUiUtils {
 
-    private static final int CHECK_SHIFT = 4;
-    private static final int CHECK_MASK = 0x3 << CHECK_SHIFT;
     private static final int PORTRAIT = 0;
     private static final int LANDSCAPE = 1;
     private volatile static Point[] mRealSizes = new Point[2];
     private static final Point point = new Point();
-    private static AtomicInteger mFullDisplayCheckFlag = new AtomicInteger(0x0000);
 
     public static int getNavigationBarHeight(Context context) {
         if (!checkHasNavigationBar(context)) return 0;
@@ -74,17 +69,15 @@ public class PopupUiUtils {
             ViewGroup decorView = (ViewGroup) act.getWindow().getDecorView();
             if (decorView != null) {
                 final int childCount = decorView.getChildCount();
-                String resourceEntryName = null;
                 for (int i = 0; i < childCount; i++) {
                     View child = decorView.getChildAt(i);
-                    resourceEntryName = null;
+                    String resourceEntryName;
                     try {
                         resourceEntryName = act.getResources().getResourceEntryName(child.getId());
                     } catch (Exception e) {
-
+                        continue;
                     }
-                    if (child != null
-                            && child.getId() != View.NO_ID
+                    if (child.getId() != View.NO_ID
                             && child.isShown()
                             && TextUtils.equals("navigationBarBackground", resourceEntryName)) {
                         return true;
@@ -96,71 +89,41 @@ public class PopupUiUtils {
     }
 
     public static int getScreenHeightCompat(Context context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return context.getResources().getDisplayMetrics().heightPixels + (!checkHasNavigationBar(context) ? getNavigationBarHeightInternal(context) : 0);
+        int orientation = context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? PORTRAIT : LANDSCAPE;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return context.getResources().getDisplayMetrics().heightPixels + (orientation == PORTRAIT ? (!checkHasNavigationBar(context) ? getNavigationBarHeightInternal(context) : 0) : 0);
         } else {
-            int orientation = context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? PORTRAIT : LANDSCAPE;
             if (mRealSizes[orientation] == null) {
                 WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
                 if (windowManager == null) {
-                    return context.getResources().getDisplayMetrics().heightPixels;
-                }
-                Display display = windowManager.getDefaultDisplay();
-                display.getRealSize(point);
-                mRealSizes[orientation] = point;
-            }
-            return mRealSizes[orientation].y - getNavigationBarHeight(context);
-        }
-    }
-
-    public static int getScreenWidthCompat(Context context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return context.getResources().getDisplayMetrics().widthPixels;
-        } else {
-            int orientation = context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? PORTRAIT : LANDSCAPE;
-            if (mRealSizes[orientation] == null) {
-                WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-                if (windowManager == null) {
-                    return context.getResources().getDisplayMetrics().widthPixels;
+                    return context.getResources().getDisplayMetrics().heightPixels + (orientation == PORTRAIT ? (!checkHasNavigationBar(context) ? getNavigationBarHeightInternal(context) : 0) : 0);
                 }
                 Display display = windowManager.getDefaultDisplay();
                 Point point = new Point();
                 display.getRealSize(point);
                 mRealSizes[orientation] = point;
             }
-            return mRealSizes[orientation].x;
+            return mRealSizes[orientation].y - (orientation == PORTRAIT ? getNavigationBarHeight(context) : 0);
         }
     }
 
-
-    public static boolean isFullDisplay(Context context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return false;
-        }
-        if ((mFullDisplayCheckFlag.get() & CHECK_MASK) != 0) {
-            int flag = mFullDisplayCheckFlag.get() & ~CHECK_MASK;
-            return flag == 1;
-        }
-        boolean isFullDisplay = false;
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        if (windowManager != null) {
-            Display display = windowManager.getDefaultDisplay();
-            display.getRealSize(point);
-            float width, height;
-            if (point.x < point.y) {
-                width = point.x;
-                height = point.y;
-            } else {
-                width = point.y;
-                height = point.x;
+    public static int getScreenWidthCompat(Context context) {
+        int orientation = context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? PORTRAIT : LANDSCAPE;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return context.getResources().getDisplayMetrics().widthPixels + (orientation == LANDSCAPE ? (!checkHasNavigationBar(context) ? getNavigationBarHeightInternal(context) : 0) : 0);
+        } else {
+            if (mRealSizes[orientation] == null) {
+                WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                if (windowManager == null) {
+                    return context.getResources().getDisplayMetrics().widthPixels + (orientation == LANDSCAPE ? (!checkHasNavigationBar(context) ? getNavigationBarHeightInternal(context) : 0) : 0);
+                }
+                Display display = windowManager.getDefaultDisplay();
+                Point point = new Point();
+                display.getRealSize(point);
+                mRealSizes[orientation] = point;
             }
-            if (height * 1.0f / width * 1.0f >= 1.97f) {
-                isFullDisplay = true;
-                mFullDisplayCheckFlag.set(CHECK_MASK + 1);
-            } else {
-                mFullDisplayCheckFlag.set(CHECK_MASK + 2);
-            }
+            return mRealSizes[orientation].x - (orientation == LANDSCAPE ? getNavigationBarHeight(context) : 0);
         }
-        return isFullDisplay;
     }
+
 }
