@@ -58,7 +58,7 @@
      - [Blur Configuration](#Blur-Configuration)
    - [Dependence](#Dependence)
    - [Common Usage](#Common-Usage)
-     - [1.Create your popup xml file](#1Create -your-popup-xml-file)
+     - [1.Create your popup xml file](#1Create-your-popup-xml-file)
      - [2.Create popup class which extends BasePopupWindow](#2Create-popup-class-which-extends-BasePopupWindow)
      - [3.Complete abstract method](#3Complete-abstract-method)
      - [4.show！](#4show)
