@@ -1,4 +1,4 @@
-[CN](./README.md) | **English**
+[**Chinese**](./README.md) | **English**
 
 <p align="center"><img src="./img/logo.png" alt="Logo load failed" height="360"/></p>
 <h2 align="center">BasePopup - A powerful and convenient PopupWindow library for Android</h2>
