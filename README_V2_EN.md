@@ -135,9 +135,9 @@ Add dependencies to Gradle (Please replace <b>{$latestVersion}</b> with the vers
 
 #### Blur Configuration
 
-**从1.9.0-alpha开始支持背景模糊（只需要一个方法：`setBlurBackgroundEnable(boolean)`）**
+**Support blur background from 1.9.0-alpha（Just call：`setBlurBackgroundEnable(boolean)`）**
 
-**RenderScript最低支持api 17（更低的情况将会使用fastblur），您需要在gradle配置一下代码**
+**RenderScript minimum support api 17 (lower case will use fastblur),you need to configure the following code in gradle**
 
 ```xml
 defaultConfig {
@@ -152,7 +152,7 @@ defaultConfig {
 
 #### 1.Create your popup xml file
 
-像您平时定制View布局文件一样定制您的PopupWindow布局
+Customize your PopupWindow layout just like you would normally customize a View layout.
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -198,7 +198,7 @@ public class DemoPopup extends BasePopupWindow {
 
 #### 3.Complete abstract method
 
-**强烈建议在`onCreateContentView()`里使用`createPopupById()`来进行inflate，这样本库才能正确的做出对应的解析和适配**
+**It is strongly recommended to use `createPopupById()` in `onCreateContentView()` to inflate view so that the library can correctly parse and adapt.**
 
 ```java
 public class DemoPopup extends BasePopupWindow {
@@ -206,7 +206,7 @@ public class DemoPopup extends BasePopupWindow {
         super(context);
     }
 
-    // 必须实现，这里返回您的contentView
+    // Must be implemented, return your contentView here
     // 为了让库更加准确的做出适配，强烈建议使用createPopupById()进行inflate
     @Override
     public View onCreateContentView() {
