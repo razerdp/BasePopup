@@ -207,14 +207,14 @@ public class DemoPopup extends BasePopupWindow {
     }
 
     // Must be implemented, return your contentView here
-    // 为了让库更加准确的做出适配，强烈建议使用createPopupById()进行inflate
+    // recommended to use createPopupById() for inflate
     @Override
     public View onCreateContentView() {
         return createPopupById(R.layout.popup_normal);
     }
 
-    // 以下为可选代码（非必须实现）
-    // 返回作用于PopupWindow的show和dismiss动画，本库提供了默认的几款动画，这里可以自由实现
+    // The following are optional codes (not required)
+    // Return to the show and dismiss animations for PopupWindow. Basepopup provides several default animations, which can be freely implemented here.
     @Override
     protected Animation onCreateShowAnimation() {
         return getDefaultScaleAnimation(true);
@@ -230,7 +230,8 @@ public class DemoPopup extends BasePopupWindow {
 
 #### 4.show！
 
-展示PopupWindow的方法有三种种，分别是`showPopupWindow()`、`showPopupWindow(View anchor)`和`showPopupWindow(int x, int y)`：
+There are three ways to show PopupWindow:`showPopupWindow()`,`showPopupWindow(View anchor)` and `showPopupWindow(int x, int y)`：
+
 
 ```java
 new DemoPopup(getContext()).showPopupWindow();
@@ -239,34 +240,34 @@ new DemoPopup(getContext()).showPopupWindow();
 ```
 <br>
 
-这三个方法有不同的含义：
+These three methods have different meanings:
 
- - `showPopupWindow()`：无参传入，此时PopupWindow参考对象为屏幕（或者说整个DecorView），Gravity的表现就像在FrameLayout里面的Gravity表现一样，表示其处于屏幕的哪个方位
- - `showPopupWindow(View anchor)`：传入AnchorView，此时PopupWindow参考对象为传入的anchorView，Gravity的表现则意味着这个PopupWindow应该处于目标AnchorView的哪个方位
- - `showPopupWindow(int x, int y)`：传入位置信息，此时PopupWindow将会在指定位置弹出。
+ - `showPopupWindow()`：No-params method，At this point, the PopupWindow reference object is the screen (or the entire DecorView).Gravity behaves just like the Gravity in FrameLayout, indicating which position it is on the screen.
+ - `showPopupWindow(View anchor)`：Set an anchorView.At this point, the PopupWindow reference object is the incoming anchorView.The performance of Gravity means that this PopupWindow should be in the orientation of the target AnchorView.
+ - `showPopupWindow(int x, int y)`：Set the position for basepopup,At this point PopupWindow will pop up at the specified location.
 
->建议：如果PopupWindow需要重复展示或者保留状态，建议作为成员变量使用，而不要作为局部变量每次都创建
+>Suggestion：If PopupWindow needs to repeat the display or retain state, it is recommended to be used as a member variable instead of being created as a local variable each time.
 
->关于Gravity的更多api，请查看：[Wiki-Api：Gravity](https://github.com/razerdp/BasePopup/wiki/API#setpopupgravityint-popupgravity)
+>For more apis on Gravity, check out：[Wiki-Api：Gravity](https://github.com/razerdp/BasePopup/wiki/API#setpopupgravityint-popupgravity)
 
-例子展示：
+Sample for `showPopupWindow()`：
 
- - `showPopupWindow()无参传入`
+ - `showPopupWindow()`
 
-| **gravity = CENTER<br>上述例子中xml写明了layout_gravity=center** | **gravity = RIGHT \| CENTER_VERTICAL** |
+| **gravity = CENTER<br>In the above example<br>xml specifies layout_gravity=center** | **gravity = RIGHT \| CENTER_VERTICAL** |
 | - | - |
 | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_1.gif" height="360"/></p> | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_2.gif" height="360"/></p> |
 
- - `showPopupWindow(View v)传入anchorView`
+ - `showPopupWindow(View v)`
 
-| **gravity = CENTER<br>上述例子中xml写明了layout_gravity=center** | **gravity = RIGHT \| CENTER_VERTICAL** |
+| **gravity = CENTER<br>In the above example<br>xml specifies layout_gravity=center** | **gravity = RIGHT \| CENTER_VERTICAL** |
 | - | - |
 | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_3.gif" height="360"/></p> | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/show_4.gif" height="360"/></p> |
 
 
- - `showPopupWindow(int x, int y)传入位置x,y坐标`
+ - `showPopupWindow(int x, int y)`
 
- | **gravity = CENTER<br>上述例子中xml写明了layout_gravity=center** |
+ | **gravity = CENTER<br>In the above example<br>xml specifies layout_gravity=center** |
  | - |
  | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/anypos/anypos.gif" height="360"/></p> |
 
@@ -274,15 +275,14 @@ new DemoPopup(getContext()).showPopupWindow();
 
 ### QuickPopupBuilder chained usage
 
-QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，该Builder旨在快速建立一个简单的不包含复杂逻辑的PopupWindow，如上述案例，避免过于简单的PopupWindow也要继承BasePopupWindow，导致存在过多的类。
+QuickPopupBuilder supports chained calls to generate a PopupWindow based on QuickPopup.The Builder is designed to quickly build a simple PopupWindow that does not contain complex logic, such as the above case.Avoid creating too many BasePopupWindow implementation classes.
 
 #### Sample
 
 
 ----
-如果您并不需要很详细的定义一个PopupWindow，您也可以选择`QuickPopupBuilder`采取链式写法快速编写出一个Popup以使用。
 
->注意：默认QuickPopupBuilder.QuickPopupConfig配置中PopupWindow动画为缩放弹出和消失
+>Attention：The PopupWindow animation in the default `QuickPopupBuilder.QuickPopupConfig` is zoomed out and disappears.
 
 ```java
         QuickPopupBuilder.with(getContext())
@@ -307,7 +307,7 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### Api (see wiki)
 
-请看wiki（陆续完善中）
+See more in wiki (continuous improvement)
 
 **Link👉**[WIKI](https://github.com/razerdp/BasePopup/wiki)
 
@@ -318,63 +318,62 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 * **【Candy】2.1.8**
   * **【Candy】2.1.8-prerelease**(2019/01/23)
-    * 修复对横屏不兼容的问题
+    * Repair of horizontal screen incompatibility problems
   * **【Candy】2.1.8-beta7**(2019/01/22)
-    * beta3和beta4和beta5和beta6被我吃了~
-    * 修复beta2关于focusable的问题，去掉无用代码
-    * 修复构造器传入宽高无效的问题
-    * **支持不拦截事件下的背景蒙层，没错！那个黑科技换了个更友好的方式来啦~**
+    * Beta3 and beta4 and beta5 and beta6 were deleted~
+    * Fix beta2's problem with focusable, remove useless code
+    * Fix the problem that the constructor width is not valid
+    * **Support for background masks without intercepting events. That black technology has changed to a more friendly way!**
   * **【Candy】2.1.8-beta2**(2019/01/22)
-    * 修复popup弹出的时候，金刚键（虚拟按键）一同弹出的问题 **该功能目前测试中，如果有问题请务必反馈到candy**
+    * Fix the problem that the virtual button is displayed together when the popup is displayed.**This function is currently tested, please be sure to feedback to candy if you have any questions.**
       * fixed  [**#141**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/141)
-    * QuickPopup增加`dismissOnOutSideTouch()`方法
+    * QuickPopup adds `dismissOnOutSideTouch()` method
   * **【Candy】2.1.8-beta1**(2019/01/21)
-    * 修复popup弹出的时候，金刚键（虚拟按键）一同弹出的问题 **该功能目前测试中，如果有问题请务必反馈到candy**
+    * Fix the problem that the virtual button is displayed together when the popup is displayed.**This function is currently tested, please be sure to feedback to candy if you have any questions.**
       * fixed  [**#120**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/59)
   * **【Candy】2.1.8-alpha2**(2019/01/18)
-    * 优化QuickPopupBuilder，增加[**Wiki**](https://github.com/razerdp/BasePopup/wiki/QuickPopupBuilder)
+    * Optimize QuickPopupBuilder, see more in[**Wiki**](https://github.com/razerdp/BasePopup/wiki/QuickPopupBuilder)
   * **【Candy】2.1.8-alpha**(2019/01/17)
-    * 针对[**#138**](https://github.com/razerdp/BasePopup/issues/138)出现的问题进行优化
-    * 修复`setAlignBackgroundGravity()`与`setAlignBackground()`互相覆盖导致的顺序硬性要求问题
+    * Optimize for problems with [**#138**](https://github.com/razerdp/BasePopup/issues/138)
+    * Fix the call order of `setAlignBackgroundGravity()` and `setAlignBackground()`
 
 * **【Release】2.1.7**(2019/01/16)
-  * 修复在`setAutoLocatePopup(true)`时，`onAnchorTop()`或`onAnchorBottom()`多次被调用的问题
-  * 修复`setAllowInterceptTouchEvent(false)`时，因受默认限制而导致的无法定位到anchorView的问题
-  * 优化弹起软键盘默认偏移量计算逻辑
-  * 优化键盘高度计算逻辑
-  * 感谢[**@ParfoisMeng**](https://github.com/ParfoisMeng)发现软键盘偏移问题并提交了PR[**PR#130**](https://github.com/razerdp/BasePopup/pull/130)
+  * Fixed an issue where `onAnchorTop()` or `onAnchorBottom()` was called multiple times during `setAutoLocatePopup(true)`
+  * Fixing 'setAllowInterceptTouchEvent(false)`, the problem of not being able to locate anchorView due to default restrictions
+  * Optimize the soft keyboard default offset calculation method
+  * Optimize keyboard height calculation method
+  * Thanks to [**@ParfoisMeng**] (https://github.com/ParfoisMeng) for finding the soft keyboard offset problem and submitting [**PR#130**] (https://github.com/razerdp/ BasePopup/pull/130)
   * 发布2.1.7 release
 
 * **【Candy】2.1.7-beta**(2019/01/10~2019/01/13)
-  * 修复`setAllowInterceptTouchEvent(false)`时，因受默认限制而导致的无法定位到anchorView的问题
-  * 优化弹起软键盘默认偏移量计算逻辑
-  * 优化键盘高度计算逻辑
+  * Fixing 'setAllowInterceptTouchEvent(false)`, the problem of not being able to locate anchorView due to default restrictions
+  * Optimize the soft keyboard default offset calculation method
+  * Optimize keyboard height calculation method
 
 * **【Release】2.1.6**（2019/01/08）
-  * 发布2.1.6-Release
-  * 修复`preMeasure`方法错误的问题
-  * 修复wrap_content下，在某个view显示同时底部空间不足以完整显示内容时无法完整显示内容的问题
+  * Fix the problem with the `preMeasure` method error
+  * Fix problems displayed under wrap_content
 
 * **【Candy】2.1.6-alpha2**（2019/01/03）
-  * 修复`preMeasure`方法错误的问题
-    * 感谢&fixed[**#125**](https://github.com/razerdp/BasePopup/issues/125)
+  * Fix the problem with the `preMeasure` method error
+    * Fixed [**#125**](https://github.com/razerdp/BasePopup/issues/125)
 
 * **【Candy】2.1.6-alpha**（2019/01/03）
-  * 修复wrap_content下，在某个view显示同时底部空间不足以完整显示内容时无法完整显示内容的问题
+  * Fix problems displayed under wrap_content
 
 * **【Release】2.1.5**(2019/01/02)
-  * **新年新气象~祝大家新年快乐，zhu事顺意-V-**
-  * 2.1.5 如期新年发布，改动如下：
-    * 优化了获取是否展示虚拟按键的方法
-    * 利用了另外一个骚方法来判断全面屏是否含有虚拟按键
-      * >方法来源：[**掘金**](https://juejin.im/post/5bb5c4e75188255c72285b54)
-    * 针对`showPopupWindow(anchorview)`同时`clipToScreen(true)`时，无法完整展示满屏的View的问题
-    * 增加`setAlignBackgroundGravity()`方法，背景对齐的位置由您来制定~
+  * **Happy New Year**
+  * 2.1.5 As scheduled for the New Year, the changes are as follows:
+    * Optimized method for judging whether a virtual button has been displayed
+    * Use another method to determine whether the full screen contains virtual buttons
+      * >Method Source: [**Nuggets**] (https://juejin.im/post/5bb5c4e75188255c72285b54)
+    * Fix `showPopupWindow(anchorview)` at the same time `clipToScreen(true)`, it is not possible to fully display the view with height match_parent
+    * Add the `setAlignBackgroundGravity()` method
       * <img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/align/alignbg_plus.gif" height="360"/>
-    * 增加`update(int width ,int height)`方法
-    * 修复构造器传入width/height失效的问题，增加setWidth/setHeight方法
-    * 构造器增加延迟加载参数，如果您的Popup需要提前传参后，请在构造其中传入true以确认延迟加载
-      * 如果使用延迟加载，初始化时机由您来制定，您需要调用`delayInit()`方法来进行BasePopup的初始化
+    * Add `update(int width ,int height)` method
+    * Fix the problem that the constructor width is not valid.Add `setWidth` and `setHeight` method
+    * The constructor adds lazy loading parameters, if your Popup needs lazy loading, pass in the constructor where true
+      * If you use lazy loading, you need to call the `delayInit()` method to initialize the BasePopup.
 
 <br>
 
@@ -408,19 +407,9 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### More Q&A：[**WIKI#Q&A**](https://github.com/razerdp/BasePopup/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)
 
-#### Q：如何取消默认的背景颜色
+#### Q：How to cancel the default background color
 
-A：调用[**setBackgroundColor**](https://github.com/razerdp/BasePopup/wiki/API#setbackgroundcolorint-color)(Color.TRANSPARENT)或者[**setBackground**](https://github.com/razerdp/BasePopup/wiki/API#setbackgroundint-drawableids)(0)
-
-<br>
-
-***
-
-<br>
-
-#### Q：如何在dismiss()时不执行退出动画
-
-A：调用dismiss(false)或者dismissWithOutAnimate()
+A：Call [**setBackgroundColor**](https://github.com/razerdp/BasePopup/wiki/API#setbackgroundcolorint-color)(Color.TRANSPARENT) or [**setBackground**](https://github.com /razerdp/BasePopup/wiki/API#setbackgroundint-drawableids)(0)
 
 <br>
 
@@ -428,19 +417,9 @@ A：调用dismiss(false)或者dismissWithOutAnimate()
 
 <br>
 
-#### Q：点击popupwindow背景部分不想让popupwindow隐藏怎么办
+#### Q：How to perform no animation when dismiss()
 
-A：设置[**setAllowDismissWhenTouchOutside**](https://github.com/razerdp/BasePopup/wiki/API#setallowdismisswhentouchoutsideboolean-dismisswhentouchoutside)(false)
-
-<br>
-
-***
-
-<br>
-
-#### Q：Service里无法弹出
-
-A：PopupWindow需要windowToken，因此ApplicationContext或者Service里面是无法弹出的，建议通过发出事件通知栈顶Activity来弹出
+A：Call `dismiss(false)` or `dismissWithOutAnimate()`
 
 <br>
 
@@ -448,13 +427,33 @@ A：PopupWindow需要windowToken，因此ApplicationContext或者Service里面�
 
 <br>
 
-#### Q：为什么PopupWindow里面的EditText无法粘贴
+#### Q：How to prevent popupwindow from dismissing when click on the popupwindow background
+
+A：Call [**setAllowDismissWhenTouchOutside**](https://github.com/razerdp/BasePopup/wiki/API#setallowdismisswhentouchoutsideboolean-dismisswhentouchoutside)(false)
+
+<br>
+
+***
+
+<br>
+
+#### Q：Why can't I pop up in the Service?
+
+A：PopupWindow needs windowToken, so the ApplicationContext or Service can't be popped up. It is recommended to pop the popupwindow by event notification to the top of the stack.
+
+<br>
+
+***
+
+<br>
+
+#### Q：Why is the EditText inside PopupWindow not available for pasting?
 
 >ISSUE REF：[**#140**](https://github.com/razerdp/BasePopup/issues/140)
 
 >Google Issue Tracker：[**#36984016**](https://issuetracker.google.com/issues/36984016)
 
-A：PopupWindow内的View是无法获取WindowToken的，而粘贴功能也是一个PopupWindow，它的显示必定需要WindowToken，因此无法粘贴。
+A：The View in PopupWindow can't get WindowToken, and the paste function is also a PopupWindow. Its display must require WindowToken, so it can't be pasted.
 
 <br>
 
@@ -462,19 +461,9 @@ A：PopupWindow内的View是无法获取WindowToken的，而粘贴功能也是�
 
 <br>
 
-#### Q：如何不让PopupWindow的蒙层覆盖状态栏
+#### Q：How to prevent PopupWindow for overlaying the status bar
 
-A：设置[**setPopupWindowFullScreen**](https://github.com/razerdp/BasePopup/wiki/API#setpopupwindowfullscreenboolean-isfullscreen)(false)
-
-<br>
-
-***
-
-<br>
-
-#### Q：如何点击back键不关闭pop
-
-A：设置[**setBackPressEnable**](https://github.com/razerdp/BasePopup/wiki/API#setBackPressEnableboolean-backPressEnable)(false)
+A：Set [**setPopupWindowFullScreen**](https://github.com/razerdp/BasePopup/wiki/API#setpopupwindowfullscreenboolean-isfullscreen)(false)
 
 <br>
 
@@ -482,12 +471,9 @@ A：设置[**setBackPressEnable**](https://github.com/razerdp/BasePopup/wiki/API
 
 <br>
 
-#### Q：为什么设置setAllowInterceptTouchEvent(false)后，蒙层或者背景模糊都消失了
+#### Q：How to prevent dismiss under backpress
 
-A：~~在2.0.0到2.0.9之间，setAllowInterceptTouchEvent（）不影响蒙层或背景，但从2.1.0开始，不再开启这个黑科技，而是选择跟官方保持同步，原因在于如果背景模糊或者有蒙层，那么该PopupWindow理应拦截事件，而不应该穿透事件，否则不应该拥有背景蒙层。<br><br>~~
-**但是！从2.1.8-beta6之后，该黑科技又支持啦~换了个比较友好的方式**<br><br>
-同时，因为系统PopupWindow默认是clipToScreen，也就是限制PopupWindow在屏幕内显示，当view边缘超过屏幕的时候，PopupWindow会反向移动以完整展示内容，因此如果您的PopupWindow需要突破屏幕显示（比如高度是全屏，但展示在某个view下面，此时bottom大于屏幕底部），请设置`setClipToScreen(false)`。
-
+A：Set [**setBackPressEnable**](https://github.com/razerdp/BasePopup/wiki/API#setBackPressEnableboolean-backPressEnable)(false)
 
 <br>
 
@@ -495,13 +481,14 @@ A：~~在2.0.0到2.0.9之间，setAllowInterceptTouchEvent（）不影响蒙层�
 
 <br>
 
-#### Q：根布局高度`match_parent`和`wrap_content`的区别
 
-A：当根布局是match_parent的时候，basepopup会做一定的差异处理。
+#### Q：The difference between the root layout height `match_parent` and `wrap_content`
+
+A：When the root layout is match_parent, basepopup will do some difference handling.
 <br>
-当您设置了[**setClipToScreen(true)**](https://github.com/razerdp/BasePopup/wiki/API#setcliptoscreenboolean-cliptoscreen)时，如果您的根布局是`match_parent`，那么意味着您的布局最大高度仅为屏幕高度，如果您的根布局是`wrap_content`，那么最大高度可能是可以突破屏幕高度的。
+When you set [**setClipToScreen(true)**](https://github.com/razerdp/BasePopup/wiki/API#setcliptoscreenboolean-cliptoscreen), if your root layout is `match_parent`, then it means The maximum height of your layout is the screen height. If your root layout is `wrap_content`, the maximum height may be higher than the screen height.
 <br>
-**例如demo中的全屏listview**
+**Such as full screen listview in demo**
 
 ```xml
 <RelativeLayout
@@ -526,7 +513,8 @@ A：当根布局是match_parent的时候，basepopup会做一定的差异处理�
 | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/qa/qa_match_parent.png" height="360"/></p> | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/qa/qa_wrap_content.png" height="360"/></p> |
 
 <br>
-**留意两张图的listview底部区别，其中wrap_content底部已经突破屏幕底部，无法完整显示。**
+
+**Pay attention to the difference between the bottom of the listview of the two images, where the bottom of the `wrap_content` has exceeded the bottom of the screen and cannot be displayed completely.**
 
 <br>
 
