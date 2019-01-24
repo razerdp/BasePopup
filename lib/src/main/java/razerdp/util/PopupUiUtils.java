@@ -77,10 +77,11 @@ public class PopupUiUtils {
                     } catch (Exception e) {
                         continue;
                     }
-                    if (child.getId() != View.NO_ID
-                            && child.isShown()
-                            && TextUtils.equals("navigationBarBackground", resourceEntryName)) {
-                        return true;
+                    if (!TextUtils.isEmpty(resourceEntryName) && child.getId() != View.NO_ID && child.isShown()) {
+                        if (TextUtils.equals("navigationbarbackground", resourceEntryName.toLowerCase()) ||
+                                TextUtils.equals("immersion_navigation_bar_view", resourceEntryName.toLowerCase())) {
+                            return true;
+                        }
                     }
                 }
             }

@@ -317,6 +317,8 @@ See more in wiki (continuous improvement)
 ### Update log ([Historical update](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
 * **【Candy】2.1.8**
+  * **【Candy】2.1.8-prerelease2**(2019/01/24)
+    * Adapted to use [**ImmersionBar**] (https://github.com/gyf-dev/ImmersionBar)
   * **【Candy】2.1.8-prerelease**(2019/01/23)
     * Repair of horizontal screen incompatibility problems
   * **【Candy】2.1.8-beta7**(2019/01/22)
