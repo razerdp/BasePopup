@@ -125,7 +125,7 @@ Add dependencies to Gradle (Please replace <b>{$latestVersion}</b> with the vers
 	dependencies {
 	        implementation 'com.github.razerdp:BasePopup:{$latestVersion}'
 
-	        //candy版本
+	        //candy version
 	        //implementation 'com.github.razerdp:BasePopup_Candy:{$latestVersion}'
 	}
 ```
