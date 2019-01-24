@@ -69,7 +69,7 @@
    - [Historical update](./UpdateLog.md)
  - [Demo preview](#Demo-preview)
  - [Coffee me](#Coffee-me)
- - [Q&A](#Q&A)
+ - [Q&A](#qa)
  - [LICENSE](#license)
 
 <br>
