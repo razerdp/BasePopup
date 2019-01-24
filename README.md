@@ -319,6 +319,8 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
 * **【Candy】2.1.8**
+  * **【Candy】2.1.8-prerelease2**(2019/01/24)
+    * 适配使用了[**ImmersionBar**](https://github.com/gyf-dev/ImmersionBar)的情况
   * **【Candy】2.1.8-prerelease**(2019/01/23)
     * 修复对横屏不兼容的问题
   * **【Candy】2.1.8-beta7**(2019/01/22)
