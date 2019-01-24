@@ -318,7 +318,7 @@ See more in wiki (continuous improvement)
 
 * **【Candy】2.1.8**
   * **【Candy】2.1.8-prerelease2**(2019/01/24)
-    * Adapted to use [**ImmersionBar**] (https://github.com/gyf-dev/ImmersionBar)
+    * Adapted to use [**ImmersionBar**](https://github.com/gyf-dev/ImmersionBar)
   * **【Candy】2.1.8-prerelease**(2019/01/23)
     * Repair of horizontal screen incompatibility problems
   * **【Candy】2.1.8-beta7**(2019/01/22)
@@ -345,7 +345,6 @@ See more in wiki (continuous improvement)
   * Optimize the soft keyboard default offset calculation method
   * Optimize keyboard height calculation method
   * Thanks to [**@ParfoisMeng**] (https://github.com/ParfoisMeng) for finding the soft keyboard offset problem and submitting [**PR#130**] (https://github.com/razerdp/ BasePopup/pull/130)
-  * 发布2.1.7 release
 
 * **【Candy】2.1.7-beta**(2019/01/10~2019/01/13)
   * Fixing 'setAllowInterceptTouchEvent(false)`, the problem of not being able to locate anchorView due to default restrictions
