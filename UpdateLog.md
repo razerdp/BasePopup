@@ -1,5 +1,20 @@
 ## BasePopup更新日志
 
+* **【Release】2.1.8**(2019/01/26)
+  * 本次版本更新添加了许多新特性哦~特别是不拦截事件的背景黑科技又回来了
+  * 更新细节：
+    * 适配使用了[**ImmersionBar**](https://github.com/gyf-dev/ImmersionBar)的情况
+    * 修复对横屏不兼容的问题
+    * 修复构造器传入宽高无效的问题
+    * **支持不拦截事件下的背景蒙层，没错！那个黑科技换了个更友好的方式来啦~**
+    * 修复popup弹出的时候，金刚键（虚拟按键）一同弹出的问题（锁屏回来导致焦点变化从而导致全屏Activity又出现虚拟导航栏这个不算哈）
+      * fixed  [**#141**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/141)
+      * fixed  [**#120**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/59)
+    * QuickPopupConfig增加`dismissOnOutSideTouch()`方法
+    * 优化QuickPopupBuilder，增加[**Wiki**](https://github.com/razerdp/BasePopup/wiki/QuickPopupBuilder)
+    * 针对[**#138**](https://github.com/razerdp/BasePopup/issues/138)出现的问题进行优化
+    * 修复`setAlignBackgroundGravity()`与`setAlignBackground()`互相覆盖导致的顺序硬性要求问题
+
 * **【Candy】2.1.8**
   * **【Candy】2.1.8-prerelease**(2019/01/23)
     * 修复对横屏不兼容的问题
@@ -11,7 +26,7 @@
   * **【Candy】2.1.8-beta2**(2019/01/22)
     * 修复popup弹出的时候，金刚键（虚拟按键）一同弹出的问题 **该功能目前测试中，如果有问题请务必反馈到candy**
       * fixed  [**#141**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/141)
-    * QuickPopup增加`dismissOnOutSideTouch()`方法
+    * QuickPopupConfig增加`dismissOnOutSideTouch()`方法
   * **【Candy】2.1.8-beta1**(2019/01/21)
     * 修复popup弹出的时候，金刚键（虚拟按键）一同弹出的问题 **该功能目前测试中，如果有问题请务必反馈到candy**
       * fixed  [**#120**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/59)

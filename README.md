@@ -318,6 +318,21 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Release】2.1.8**(2019/01/26)
+  * 本次版本更新添加了许多新特性哦~特别是不拦截事件的背景黑科技又回来了
+  * 更新细节：
+    * 适配使用了[**ImmersionBar**](https://github.com/gyf-dev/ImmersionBar)的情况
+    * 修复对横屏不兼容的问题
+    * 修复构造器传入宽高无效的问题
+    * **支持不拦截事件下的背景蒙层，没错！那个黑科技换了个更友好的方式来啦~**
+    * 修复popup弹出的时候，金刚键（虚拟按键）一同弹出的问题（锁屏回来导致焦点变化从而导致全屏Activity又出现虚拟导航栏这个不算哈）
+      * fixed  [**#141**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/141)
+      * fixed  [**#120**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/59)
+    * QuickPopupConfig增加`dismissOnOutSideTouch()`方法
+    * 优化QuickPopupBuilder，增加[**Wiki**](https://github.com/razerdp/BasePopup/wiki/QuickPopupBuilder)
+    * 针对[**#138**](https://github.com/razerdp/BasePopup/issues/138)出现的问题进行优化
+    * 修复`setAlignBackgroundGravity()`与`setAlignBackground()`互相覆盖导致的顺序硬性要求问题
+
 * **【Candy】2.1.8**
   * **【Candy】2.1.8-prerelease2**(2019/01/24)
     * 适配使用了[**ImmersionBar**](https://github.com/gyf-dev/ImmersionBar)的情况
@@ -331,7 +346,7 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
   * **【Candy】2.1.8-beta2**(2019/01/22)
     * 修复popup弹出的时候，金刚键（虚拟按键）一同弹出的问题 **该功能目前测试中，如果有问题请务必反馈到candy**
       * fixed  [**#141**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/141)
-    * QuickPopup增加`dismissOnOutSideTouch()`方法
+    * QuickPopupConfig增加`dismissOnOutSideTouch()`方法
   * **【Candy】2.1.8-beta1**(2019/01/21)
     * 修复popup弹出的时候，金刚键（虚拟按键）一同弹出的问题 **该功能目前测试中，如果有问题请务必反馈到candy**
       * fixed  [**#120**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/59)
@@ -353,32 +368,6 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
   * 修复`setAllowInterceptTouchEvent(false)`时，因受默认限制而导致的无法定位到anchorView的问题
   * 优化弹起软键盘默认偏移量计算逻辑
   * 优化键盘高度计算逻辑
-
-* **【Release】2.1.6**（2019/01/08）
-  * 发布2.1.6-Release
-  * 修复`preMeasure`方法错误的问题
-  * 修复wrap_content下，在某个view显示同时底部空间不足以完整显示内容时无法完整显示内容的问题
-
-* **【Candy】2.1.6-alpha2**（2019/01/03）
-  * 修复`preMeasure`方法错误的问题
-    * 感谢&fixed[**#125**](https://github.com/razerdp/BasePopup/issues/125)
-
-* **【Candy】2.1.6-alpha**（2019/01/03）
-  * 修复wrap_content下，在某个view显示同时底部空间不足以完整显示内容时无法完整显示内容的问题
-
-* **【Release】2.1.5**(2019/01/02)
-  * **新年新气象~祝大家新年快乐，zhu事顺意-V-**
-  * 2.1.5 如期新年发布，改动如下：
-    * 优化了获取是否展示虚拟按键的方法
-    * 利用了另外一个骚方法来判断全面屏是否含有虚拟按键
-      * >方法来源：[**掘金**](https://juejin.im/post/5bb5c4e75188255c72285b54)
-    * 针对`showPopupWindow(anchorview)`同时`clipToScreen(true)`时，无法完整展示满屏的View的问题
-    * 增加`setAlignBackgroundGravity()`方法，背景对齐的位置由您来制定~
-      * <img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/align/alignbg_plus.gif" height="360"/>
-    * 增加`update(int width ,int height)`方法
-    * 修复构造器传入width/height失效的问题，增加setWidth/setHeight方法
-    * 构造器增加延迟加载参数，如果您的Popup需要提前传参后，请在构造其中传入true以确认延迟加载
-      * 如果使用延迟加载，初始化时机由您来制定，您需要调用`delayInit()`方法来进行BasePopup的初始化
 
 <br>
 

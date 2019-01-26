@@ -316,6 +316,21 @@ See more in wiki (continuous improvement)
 
 ### Update log ([Historical update](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Release】2.1.8**(2019/01/26)
+  * This version update adds a lot of new features.
+  * Update details:
+    * Adapted to use [**ImmersionBar**](https://github.com/gyf-dev/ImmersionBar)
+    * Repair of horizontal screen incompatibility problems
+    * Fix the problem that the constructor width is not valid
+    * **Support for background masks without intercepting events. That black technology has changed to a more friendly way!**
+    * Fix the problem that the virtual button is displayed together when the popup is displayed.
+      * fixed  [**#141**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/141)
+      * fixed  [**#120**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/59)
+    * QuickPopupConfig adds `dismissOnOutSideTouch()` method
+    * Optimize QuickPopupBuilder, see more in[**Wiki**](https://github.com/razerdp/BasePopup/wiki/QuickPopupBuilder)
+    * Optimize for problems with [**#138**](https://github.com/razerdp/BasePopup/issues/138)
+    * Fix the call order of `setAlignBackgroundGravity()` and `setAlignBackground()`
+
 * **【Candy】2.1.8**
   * **【Candy】2.1.8-prerelease2**(2019/01/24)
     * Adapted to use [**ImmersionBar**](https://github.com/gyf-dev/ImmersionBar)
@@ -350,31 +365,6 @@ See more in wiki (continuous improvement)
   * Fixing 'setAllowInterceptTouchEvent(false)`, the problem of not being able to locate anchorView due to default restrictions
   * Optimize the soft keyboard default offset calculation method
   * Optimize keyboard height calculation method
-
-* **【Release】2.1.6**（2019/01/08）
-  * Fix the problem with the `preMeasure` method error
-  * Fix problems displayed under wrap_content
-
-* **【Candy】2.1.6-alpha2**（2019/01/03）
-  * Fix the problem with the `preMeasure` method error
-    * Fixed [**#125**](https://github.com/razerdp/BasePopup/issues/125)
-
-* **【Candy】2.1.6-alpha**（2019/01/03）
-  * Fix problems displayed under wrap_content
-
-* **【Release】2.1.5**(2019/01/02)
-  * **Happy New Year**
-  * 2.1.5 As scheduled for the New Year, the changes are as follows:
-    * Optimized method for judging whether a virtual button has been displayed
-    * Use another method to determine whether the full screen contains virtual buttons
-      * >Method Source: [**Nuggets**] (https://juejin.im/post/5bb5c4e75188255c72285b54)
-    * Fix `showPopupWindow(anchorview)` at the same time `clipToScreen(true)`, it is not possible to fully display the view with height match_parent
-    * Add the `setAlignBackgroundGravity()` method
-      * <img src="https://github.com/razerdp/Pics/blob/master/BasePopup/wiki/align/alignbg_plus.gif" height="360"/>
-    * Add `update(int width ,int height)` method
-    * Fix the problem that the constructor width is not valid.Add `setWidth` and `setHeight` method
-    * The constructor adds lazy loading parameters, if your Popup needs lazy loading, pass in the constructor where true
-      * If you use lazy loading, you need to call the `delayInit()` method to initialize the BasePopup.
 
 <br>
 
