@@ -9,7 +9,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 45
-        versionName "2.1.8-prerelease2"
+        versionName "2.1.8"
     }
     buildTypes {
         release {
@@ -29,12 +29,12 @@ dependencies {
 
 def siteUrl = 'https://github.com/razerdp/BasePopup'
 def gitUrl = 'git@github.com:razerdp/BasePopup.git'
-//def moduleName = 'BasePopup'
-def moduleName = 'BasePopup_Candy'
+def moduleName = 'BasePopup'
+//def moduleName = 'BasePopup_Candy'
 
 
 group = "com.github.razerdp"
-version = "2.1.8-prerelease2"
+version = "2.1.8"
 
 install {
     repositories.mavenInstaller {
@@ -43,7 +43,7 @@ install {
             project {
                 packaging 'aar'
                 name  moduleName
-                description '打造一个通用的Popup'
+                description 'Android下打造通用便捷的PopupWindow'
                 url siteUrl
 
                 licenses {
