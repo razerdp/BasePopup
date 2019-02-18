@@ -56,7 +56,7 @@ public class OtherDemoActivity extends AppCompatActivity {
         fragMap.put(R.id.id_blur_slide_from_bottom_popup, new BlurSlideFromBottomPopupFrag());
         fragMap.put(R.id.id_locate_with_view, new LocatePopupFrag());
         fragMap.put(R.id.id_slide_from_bottom_input_popup, new BottomInputFragment());
-        fragMap.put(R.id.id_other_1,new OtherPopupFrag1());
+        fragMap.put(R.id.id_other_1, new OtherPopupFrag1());
     }
 
 
@@ -76,6 +76,9 @@ public class OtherDemoActivity extends AppCompatActivity {
             }
             if (item.getItemId() == R.id.id_leakcanary_activity) {
                 intent = new Intent(this, DemoLeakcanaryActivity.class);
+            }
+            if (item.getItemId() == R.id.id_dialogfragment_activity) {
+                intent = new Intent(this, DemoDialogFragmentActivity.class);
             }
             if (intent != null) {
                 startActivity(intent);
