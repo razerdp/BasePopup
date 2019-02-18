@@ -123,7 +123,7 @@ final class PopupCompatManager {
                 yoff = anchorLocation[1] + anchor.getHeight();
             }
             //offset在basepopupwindow已经计算好，在windowmanagerproxy里面进行适配
-            popupWindow.callSuperShowAtLocation(activity.getWindow().getDecorView(), Gravity.NO_GRAVITY, xoff, yoff);
+            popupWindow.callSuperShowAtLocation(anchor, Gravity.NO_GRAVITY, xoff, yoff);
         }
 
         @Override

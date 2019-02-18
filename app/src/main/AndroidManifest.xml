@@ -23,13 +23,16 @@
         </activity>
         <activity
             android:name="razerdp.demo.DemoFullScreenActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
             android:name="razerdp.demo.OtherDemoActivity"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity
             android:name="razerdp.demo.DemoLeakcanaryActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity
+            android:name="razerdp.demo.DemoDialogFragmentActivity"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
     </application>
 

@@ -215,6 +215,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
@@ -837,7 +840,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 if (activity == null) {
                     Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
                 } else {
-                    mPopupWindow.showAtLocationProxy(activity.findViewById(android.R.id.content),
+                    mPopupWindow.showAtLocationProxy(findDecorView(activity),
                             Gravity.NO_GRAVITY,
                             offset.x,
                             offset.y);
@@ -863,6 +866,24 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             PopupLogUtil.trace(LogTag.e, TAG, "show error\n" + e);
             e.printStackTrace();
         }
+    }
+
+    private View findDecorView(Activity activity) {
+        View result = null;
+        if (activity instanceof AppCompatActivity) {
+            AppCompatActivity supportAct = (AppCompatActivity) activity;
+            List<Fragment> fragments = supportAct.getSupportFragmentManager().getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof DialogFragment) {
+                    DialogFragment d = ((DialogFragment) fragment);
+                    if (d.getDialog() != null && d.getDialog().isShowing() && !d.isRemoving()) {
+                        result = d.getView();
+                        break;
+                    }
+                }
+            }
+        }
+        return result == null ? activity.getWindow().getDecorView() : result;
     }
 
     private void tryToUpdate(View v, boolean positionMode) {
@@ -1290,8 +1311,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             if (optionInitListener != null) {
                 optionInitListener.onCreateBlurOption(option);
             }
-            View decorView = ((Activity) getContext()).getWindow().getDecorView();
-            if (decorView instanceof ViewGroup) {
+            View decorView = findDecorView((Activity) getContext());
+            if (decorView instanceof ViewGroup && (decorView == ((Activity) getContext()).getWindow().getDecorView())) {
                 option.setBlurView(((ViewGroup) decorView).getChildAt(0));
             } else {
                 option.setBlurView(decorView);
