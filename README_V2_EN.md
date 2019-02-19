@@ -316,8 +316,11 @@ See more in wiki (continuous improvement)
 
 ### Update log ([Historical update](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
-* **【Candy】2.1.9-alpha**(2019/02/18)
-  * Adapted DialogFragment，fixed [**#145**](https://github.com/razerdp/BasePopup/issues/145)
+* **【Candy】2.1.9**
+  * **【Candy】2.1.9-alpha2**(2019/2/19)
+    * Removed from lib's AndroidManifest,fixed [**#149**](https://github.com/razerdp/BasePopup/issues/149)
+  * **【Candy】2.1.9-alpha1**(2019/02/18)
+    * Adapted DialogFragment，fixed [**#145**](https://github.com/razerdp/BasePopup/issues/145)
 
 * **【Release】2.1.8**(2019/01/26)
   * This version update adds a lot of new features.
