@@ -883,7 +883,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 }
             }
         }
-        return result == null ? activity.getWindow().getDecorView() : result;
+        return result == null ? activity.findViewById(android.R.id.content) : result;
     }
 
     private void tryToUpdate(View v, boolean positionMode) {

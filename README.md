@@ -319,6 +319,8 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
 * **【Candy】2.1.9**
+  * **【Candy】2.1.9-alpha3**(2019/2/21)
+    * 紧急修复alpha2留下的坑
   * **【Candy】2.1.9-alpha2**(2019/2/19)
     * 去除lib的AndroidManifest内容，预防冲突，fixed [**#149**](https://github.com/razerdp/BasePopup/issues/149)
   * **【Candy】2.1.9-alpha1**(2019/02/18)

@@ -317,6 +317,8 @@ See more in wiki (continuous improvement)
 ### Update log ([Historical update](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
 * **【Candy】2.1.9**
+  * **【Candy】2.1.9-alpha3**(2019/2/21)
+    * fixed alpha2
   * **【Candy】2.1.9-alpha2**(2019/2/19)
     * Removed from lib's AndroidManifest,fixed [**#149**](https://github.com/razerdp/BasePopup/issues/149)
   * **【Candy】2.1.9-alpha1**(2019/02/18)
