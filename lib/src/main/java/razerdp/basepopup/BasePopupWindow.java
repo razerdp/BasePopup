@@ -1312,8 +1312,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 optionInitListener.onCreateBlurOption(option);
             }
             View decorView = findDecorView((Activity) getContext());
-            if (decorView instanceof ViewGroup && (decorView == ((Activity) getContext()).getWindow().getDecorView())) {
-                option.setBlurView(((ViewGroup) decorView).getChildAt(0));
+            if (decorView instanceof ViewGroup && decorView.getId() == android.R.id.content) {
+                option.setBlurView(((ViewGroup) ((Activity) getContext()).getWindow().getDecorView()).getChildAt(0));
+                option.setFullScreen(true);
             } else {
                 option.setBlurView(decorView);
             }
