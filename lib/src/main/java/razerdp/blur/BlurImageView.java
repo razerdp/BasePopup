@@ -28,14 +28,12 @@ import razerdp.util.log.PopupLogUtil;
 public class BlurImageView extends ImageView {
     private static final String TAG = "BlurImageView";
 
-    private static final long BLUR_TASK_WAIT_TIMEOUT = 1000;//图片模糊超时1秒
     private volatile boolean abortBlur = false;
     private WeakReference<PopupBlurOption> mBlurOption;
     private AtomicBoolean blurFinish = new AtomicBoolean(false);
     private volatile boolean isAnimating = false;
-    private AtomicBoolean waitForBlurTask = new AtomicBoolean(false);
     private long startDuration;
-    private long startTime;
+    private CacheAction mCacheAction;
 
 
     public BlurImageView(Context context) {
@@ -73,6 +71,7 @@ public class BlurImageView extends ImageView {
         View anchorView = option.getBlurView();
         if (anchorView == null) {
             PopupLogUtil.trace(LogTag.e, TAG, "模糊锚点View为空，放弃模糊操作...");
+            destroy();
             return;
         }
         //因为考虑到实时更新位置（包括模糊也要实时）的原因，因此强制更新时模糊操作在主线程完成。
@@ -89,6 +88,7 @@ public class BlurImageView extends ImageView {
             } catch (Exception e) {
                 PopupLogUtil.trace(LogTag.e, TAG, "模糊异常");
                 e.printStackTrace();
+                destroy();
             }
         }
     }
@@ -117,14 +117,25 @@ public class BlurImageView extends ImageView {
      */
     public void start(long duration) {
         startDuration = duration;
-        if (!blurFinish.get() || waitForBlurTask.get()) {
-            startTime = System.currentTimeMillis();
-            waitForBlurTask.compareAndSet(false, true);
-            PopupLogUtil.trace(LogTag.e, TAG, "等待模糊完成");
+        if (!blurFinish.get()) {
+            if (mCacheAction == null) {
+                mCacheAction = new CacheAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        start(startDuration);
+                    }
+                }, 0);
+                PopupLogUtil.trace(LogTag.e, TAG, "缓存模糊动画，等待模糊完成");
+            }
             return;
         }
+        //干掉缓存的runnable
+        if (mCacheAction != null) {
+            mCacheAction.destroy();
+            mCacheAction = null;
+        }
         if (isAnimating) return;
-        PopupLogUtil.trace(LogTag.i, TAG, "开始模糊imageview alpha动画");
+        PopupLogUtil.trace(LogTag.i, TAG, "开始模糊alpha动画");
         isAnimating = true;
         if (duration > 0) {
             animate()
@@ -218,30 +229,23 @@ public class BlurImageView extends ImageView {
         }
         setAlpha(isOnUpdate ? 1f : 0f);
         setImageBitmap(bitmap);
-        if (getOption() != null) {
-            PopupBlurOption option = getOption();
-            if (!option.isFullScreen()) {
-                //非全屏的话，则需要将bitmap变化到对应位置
-                View anchorView = option.getBlurView();
-                if (anchorView == null) return;
-                Rect rect = new Rect();
-                anchorView.getGlobalVisibleRect(rect);
-                Matrix matrix = getImageMatrix();
-                matrix.setTranslate(rect.left, rect.top);
-                setImageMatrix(matrix);
-            }
+        PopupBlurOption option = getOption();
+        if (option != null && !option.isFullScreen()) {
+            //非全屏的话，则需要将bitmap变化到对应位置
+            View anchorView = option.getBlurView();
+            if (anchorView == null) return;
+            Rect rect = new Rect();
+            anchorView.getGlobalVisibleRect(rect);
+            Matrix matrix = getImageMatrix();
+            matrix.setTranslate(rect.left, rect.top);
+            setImageMatrix(matrix);
         }
         blurFinish.compareAndSet(false, true);
-        if (waitForBlurTask.get()) {
-            if (System.currentTimeMillis() - startTime >= BLUR_TASK_WAIT_TIMEOUT) {
-                PopupLogUtil.trace(LogTag.e, TAG, "模糊等待超时");
-                waitForBlurTask.set(false);
-            } else {
-                waitForBlurTask.compareAndSet(true, false);
-                start(startDuration);
-            }
-        }
         PopupLogUtil.trace(LogTag.i, TAG, "设置成功：" + blurFinish.get());
+        if (mCacheAction != null) {
+            PopupLogUtil.trace(LogTag.i, TAG, "恢复缓存动画");
+            mCacheAction.restore();
+        }
     }
 
     private boolean isUiThread() {
@@ -254,6 +258,10 @@ public class BlurImageView extends ImageView {
         if (mBlurOption != null) {
             mBlurOption.clear();
             mBlurOption = null;
+        }
+        if (mCacheAction != null) {
+            mCacheAction.destroy();
+            mCacheAction = null;
         }
         blurFinish.set(false);
         isAnimating = false;
@@ -274,7 +282,51 @@ public class BlurImageView extends ImageView {
                 PopupLogUtil.trace(LogTag.e, TAG, "放弃模糊，可能是已经移除了布局");
                 return;
             }
+            PopupLogUtil.trace(LogTag.i, TAG, "子线程模糊执行");
             setImageBitmapOnUiThread(BlurHelper.blur(getContext(), bitmap, getOption().getBlurPreScaleRatio(), getOption().getBlurRadius()), false);
+        }
+    }
+
+    class CacheAction {
+        private static final long BLUR_TASK_WAIT_TIMEOUT = 1000;//图片模糊超时1秒
+        Runnable action;
+        long delay;
+        final long startTime;
+
+        public CacheAction(Runnable action, long delay) {
+            this.action = action;
+            this.delay = delay;
+            this.startTime = System.currentTimeMillis();
+        }
+
+        public void restore() {
+            if (isOverTime()) {
+                PopupLogUtil.trace(LogTag.e, TAG, "模糊超时");
+                destroy();
+                return;
+            }
+            if (action != null) {
+                post(action);
+            }
+        }
+
+        boolean isOverTime() {
+            return System.currentTimeMillis() - startTime > BLUR_TASK_WAIT_TIMEOUT;
+        }
+
+        public void destroy() {
+            if (action != null) {
+                removeCallbacks(action);
+            }
+            action = null;
+            delay = 0;
+
+        }
+
+
+        public boolean matches(Runnable otherAction) {
+            return otherAction == null && action == null
+                    || action != null && action.equals(otherAction);
         }
     }
 }

@@ -14,7 +14,6 @@ import android.renderscript.Element;
 import android.renderscript.RSIllegalArgumentException;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
-import android.util.TypedValue;
 import android.view.View;
 
 import razerdp.util.log.LogTag;
@@ -63,7 +62,7 @@ public class BlurHelper {
 
         final int originWidth = origin.getWidth();
         final int originHeight = origin.getHeight();
-        PopupLogUtil.trace(LogTag.i, "模糊原始图像分辨率 [" + originWidth + " x " + originHeight+"]");
+        PopupLogUtil.trace(LogTag.i, "模糊原始图像分辨率 [" + originWidth + " x " + originHeight + "]");
 
         int scaledWidth = originWidth;
         int scaledHeight = originHeight;
@@ -73,7 +72,7 @@ public class BlurHelper {
             scaledHeight = (int) (scaledHeight * scaledRatio);
         }
 
-        PopupLogUtil.trace(LogTag.i, "模糊缩放图像分辨率 [" + scaledWidth + " x " + scaledHeight+"]");
+        PopupLogUtil.trace(LogTag.i, "模糊缩放图像分辨率 [" + scaledWidth + " x " + scaledHeight + "]");
 
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(origin, scaledWidth, scaledHeight, false);
         Bitmap result = Bitmap.createBitmap(scaledBitmap);
@@ -121,7 +120,7 @@ public class BlurHelper {
 
         final int originWidth = origin.getWidth();
         final int originHeight = origin.getHeight();
-        PopupLogUtil.trace(LogTag.i, "模糊原始图像分辨率 [" + originWidth + " x " + originHeight+"]");
+        PopupLogUtil.trace(LogTag.i, "模糊原始图像分辨率 [" + originWidth + " x " + originHeight + "]");
 
         int scaledWidth = originWidth;
         int scaledHeight = originHeight;
@@ -131,7 +130,7 @@ public class BlurHelper {
             scaledHeight = (int) (scaledHeight * scaledRatio);
         }
 
-        PopupLogUtil.trace(LogTag.i, "模糊缩放图像分辨率 [" + scaledWidth + " x " + scaledHeight+"]");
+        PopupLogUtil.trace(LogTag.i, "模糊缩放图像分辨率 [" + scaledWidth + " x " + scaledHeight + "]");
 
         Bitmap result = Bitmap.createScaledBitmap(origin, scaledWidth, scaledHeight, false);
 
@@ -156,22 +155,8 @@ public class BlurHelper {
         Bitmap b = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
         if (v.getBackground() == null) {
-            //背景为空，则填充colorBackground背景
-            TypedValue tv = new TypedValue();
-            v.getContext().getTheme().resolveAttribute(android.R.attr.colorBackground, tv, true);
-            if (tv.type >= TypedValue.TYPE_FIRST_COLOR_INT && tv.type <= TypedValue.TYPE_LAST_COLOR_INT) {
-                c.drawColor(tv.data);
-            } else {
-                c.drawColor(Color.parseColor("#FAFAFA"));
-            }
+            c.drawColor(Color.parseColor("#FAFAFA"));
         }
-        // FIXME: 2018/1/16 有争议，是否需要绘制背景？
-        /*else {
-            Drawable bgDrawable = v.getBackground();
-            if (bgDrawable != null) {
-                bgDrawable.draw(c);
-            }
-        }*/
         if (fullScreen) {
             if (statusBarHeight > 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && v.getContext() instanceof Activity) {
                 int statusBarColor = ((Activity) v.getContext()).getWindow().getStatusBarColor();

@@ -317,6 +317,8 @@ See more in wiki (continuous improvement)
 ### Update log ([Historical update](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
 * **【Candy】2.1.9**
+  * **【Candy】2.1.9-alpha4**(2019/2/21)
+    * optimized background blur
   * **【Candy】2.1.9-alpha3**(2019/2/21)
     * fixed alpha2
   * **【Candy】2.1.9-alpha2**(2019/2/19)
