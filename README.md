@@ -319,6 +319,8 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
 * **【Candy】2.1.9**
+  * **【Candy】2.1.9-beta**(2019/2/26)
+    * 为模糊图片方法添加oom捕捉
   * **【Candy】2.1.9-alpha4**(2019/2/21)
     * 优化背景和局部模糊逻辑
   * **【Candy】2.1.9-alpha3**(2019/2/21)
