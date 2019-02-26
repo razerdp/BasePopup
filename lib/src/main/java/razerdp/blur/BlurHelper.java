@@ -152,7 +152,17 @@ public class BlurHelper {
             return null;
         }
         if (statusBarHeight <= 0) statusBarHeight = getStatusBarHeight(v.getContext());
-        Bitmap b = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap b = null;
+        try {
+            b = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.ARGB_8888);
+        } catch (OutOfMemoryError error) {
+            if (b != null && !b.isRecycled()) {
+                b.recycle();
+            }
+            System.gc();
+            return null;
+        }
+
         Canvas c = new Canvas(b);
         if (v.getBackground() == null) {
             c.drawColor(Color.parseColor("#FAFAFA"));
