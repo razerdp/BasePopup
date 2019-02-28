@@ -333,7 +333,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                     case Gravity.LEFT:
                     case Gravity.START:
                         if (isRelativeToAnchor) {
-                            childLeft = mHelper.getAnchorX() - width + childLeftMargin;
+                            childLeft = mHelper.getAnchorX() - width + childLeftMargin - childRightMargin;
                         } else {
                             childLeft += childLeftMargin;
                         }
@@ -341,7 +341,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                     case Gravity.RIGHT:
                     case Gravity.END:
                         if (isRelativeToAnchor) {
-                            childLeft = mHelper.getAnchorX() + mHelper.getAnchorViewWidth() + childLeftMargin;
+                            childLeft = mHelper.getAnchorX() + mHelper.getAnchorViewWidth() + childLeftMargin - childRightMargin;
                         } else {
                             childLeft = getMeasuredWidth() - width - childRightMargin;
                         }
@@ -356,7 +356,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                         break;
                     default:
                         if (isRelativeToAnchor) {
-                            childLeft = mHelper.getAnchorX() + childLeftMargin;
+                            childLeft = mHelper.getAnchorX() + childLeftMargin - childRightMargin;
                         }
                         break;
                 }
@@ -364,7 +364,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
                     case Gravity.TOP:
                         if (isRelativeToAnchor) {
-                            childTop = mHelper.getAnchorY() - height + childTopMargin;
+                            childTop = mHelper.getAnchorY() - height + childTopMargin - childBottomMargin;
                         } else {
                             childTop += childTopMargin;
                         }
@@ -372,7 +372,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                     case Gravity.BOTTOM:
                         if (isRelativeToAnchor) {
                             keepClipScreenTop = true;
-                            childTop = mHelper.getAnchorY() + mHelper.getAnchorHeight() + childTopMargin;
+                            childTop = mHelper.getAnchorY() + mHelper.getAnchorHeight() + childTopMargin - childBottomMargin;
                         } else {
                             childTop = b - t - height - childBottomMargin;
                         }
@@ -388,7 +388,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                     default:
                         if (isRelativeToAnchor) {
                             keepClipScreenTop = true;
-                            childTop = mHelper.getAnchorY() + mHelper.getAnchorHeight() + childTopMargin;
+                            childTop = mHelper.getAnchorY() + mHelper.getAnchorHeight() + childTopMargin - childBottomMargin;
                         } else {
                             childTop += childTopMargin;
                         }

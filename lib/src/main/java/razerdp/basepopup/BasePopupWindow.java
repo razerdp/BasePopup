@@ -205,7 +205,6 @@
 package razerdp.basepopup;
 
 import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
@@ -1024,7 +1023,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             case Gravity.LEFT:
             case Gravity.START:
                 if (relativeToAnchor) {
-                    offset.x += -getWidth() + leftMargin;
+                    offset.x += -getWidth() + leftMargin - rightMargin;
                 } else {
                     offset.x += leftMargin;
                 }
@@ -1032,7 +1031,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             case Gravity.RIGHT:
             case Gravity.END:
                 if (relativeToAnchor) {
-                    offset.x += mHelper.getAnchorViewWidth() + leftMargin;
+                    offset.x += mHelper.getAnchorViewWidth() + leftMargin - rightMargin;
                 } else {
                     offset.x += getScreenWidth() - getWidth() - rightMargin;
                 }
@@ -1046,7 +1045,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 break;
             default:
                 if (!relativeToAnchor) {
-                    offset.x += leftMargin;
+                    offset.x += leftMargin - rightMargin;
                 }
                 break;
         }
@@ -1054,14 +1053,16 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         switch (getPopupGravity() & Gravity.VERTICAL_GRAVITY_MASK) {
             case Gravity.TOP:
                 if (relativeToAnchor) {
-                    offset.y += -(mHelper.getAnchorHeight() + getHeight()) + topMargin;
+                    offset.y += -(mHelper.getAnchorHeight() + getHeight()) + topMargin - bottomMargin;
                 } else {
                     offset.y += topMargin;
                 }
                 break;
             case Gravity.BOTTOM:
                 //系统默认就在下面.
-                if (!relativeToAnchor) {
+                if (relativeToAnchor) {
+                    offset.y += topMargin - bottomMargin;
+                } else {
                     offset.y += getScreenHeight() - getHeight() - bottomMargin;
                 }
                 break;
@@ -1073,9 +1074,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 }
                 break;
             default:
-                if (!relativeToAnchor) {
-                    offset.y += topMargin;
-                }
+                offset.y += topMargin - bottomMargin;
                 break;
         }
 
@@ -1783,10 +1782,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 if (mAutoShowInputEdittext != null && mHelper.isAutoShowInputMethod()) {
                     InputMethodUtils.close(mAutoShowInputEdittext);
                 }
-                mPopupWindow.dismiss();
             } catch (Exception e) {
-                PopupLogUtil.trace(LogTag.e, TAG, "dismiss error");
+                PopupLogUtil.trace(LogTag.e, TAG, e);
                 e.printStackTrace();
+            } finally {
+                mPopupWindow.dismiss();
             }
         } else {
             dismissWithOutAnimate();
@@ -1806,27 +1806,31 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     @Override
     public boolean callDismissAtOnce() {
-        boolean hasAnimate = false;
+        long duration = -1;
         if (mHelper.getDismissAnimation() != null && mDisplayAnimateView != null) {
             if (!isExitAnimatePlaying) {
-                mHelper.getDismissAnimation().setAnimationListener(mAnimationListener);
+                duration = mHelper.getDismissAnimation().getDuration();
                 mHelper.getDismissAnimation().cancel();
                 mDisplayAnimateView.startAnimation(mHelper.getDismissAnimation());
-                hasAnimate = true;
+                isExitAnimatePlaying = true;
             }
         } else if (mHelper.getDismissAnimator() != null) {
             if (!isExitAnimatePlaying) {
-                mHelper.getDismissAnimator().removeListener(mAnimatorListener);
-                mHelper.getDismissAnimator().addListener(mAnimatorListener);
+                duration = mHelper.getDismissAnimator().getDuration();
                 mHelper.getDismissAnimator().start();
-                hasAnimate = true;
+                isExitAnimatePlaying = true;
             }
         }
-        if (!hasAnimate) {
-            mHelper.onDismiss(false);
-        }
+        mContentView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                isExitAnimatePlaying = false;
+                mPopupWindow.callSuperDismiss();
+            }
+        }, Math.max(mHelper.getExitAnimationDuration(), duration));
+        mHelper.onDismiss(duration > -1);
         //如果有动画，则不立刻执行dismiss
-        return !hasAnimate;
+        return duration <= 0;
     }
 
     /**
@@ -1838,7 +1842,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             mHelper.getDismissAnimation().cancel();
         }
         if (mHelper.getDismissAnimator() != null) {
-            mHelper.getDismissAnimator().removeAllListeners();
+            mHelper.getDismissAnimator().cancel();
         }
         if (mAutoShowInputEdittext != null && mHelper.isAutoShowInputMethod()) {
             InputMethodUtils.close(mAutoShowInputEdittext);
@@ -1928,54 +1932,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         return result;
     }
-
-    //------------------------------------------Animate-----------------------------------------------
-
-    private Animator.AnimatorListener mAnimatorListener = new AnimatorListenerAdapter() {
-
-        @Override
-        public void onAnimationStart(Animator animation) {
-            isExitAnimatePlaying = true;
-            mHelper.onDismiss(true);
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            mContentView.post(new Runnable() {
-                @Override
-                public void run() {
-                    isExitAnimatePlaying = false;
-                    mPopupWindow.callSuperDismiss();
-                }
-            });
-
-        }
-
-        @Override
-        public void onAnimationCancel(Animator animation) {
-            isExitAnimatePlaying = false;
-        }
-
-    };
-
-    private Animation.AnimationListener mAnimationListener = new SimpleAnimationUtils.AnimationListenerAdapter() {
-        @Override
-        public void onAnimationStart(Animation animation) {
-            isExitAnimatePlaying = true;
-            mHelper.onDismiss(true);
-        }
-
-        @Override
-        public void onAnimationEnd(Animation animation) {
-            mContentView.post(new Runnable() {
-                @Override
-                public void run() {
-                    isExitAnimatePlaying = false;
-                    mPopupWindow.callSuperDismiss();
-                }
-            });
-        }
-    };
 
     /**
      * 生成TranslateAnimation
