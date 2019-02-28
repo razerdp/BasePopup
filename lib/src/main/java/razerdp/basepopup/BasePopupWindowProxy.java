@@ -141,7 +141,6 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     @Override
     public void dismiss() {
         if (mHelper == null) return;
-
         boolean performDismiss = mHelper.onBeforeDismiss();
         if (!performDismiss) return;
         boolean dismissAtOnce = mHelper.callDismissAtOnce();
@@ -153,15 +152,14 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     void callSuperDismiss() {
         try {
             super.dismiss();
-            clear();
         } catch (Exception e) {
-            Log.e(TAG, "dismiss error");
             e.printStackTrace();
+        } finally {
             clear();
         }
     }
 
-    void clear() {
+    private void clear() {
         if (mWindowManagerProxy != null) {
             mWindowManagerProxy.clear();
         }
