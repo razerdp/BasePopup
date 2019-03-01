@@ -243,7 +243,6 @@ import razerdp.util.PopupUtils;
 import razerdp.util.SimpleAnimationUtils;
 import razerdp.util.log.LogTag;
 import razerdp.util.log.PopupLogUtil;
-import razerdp.widget.QuickPopup;
 
 /**
  * <br>
@@ -387,7 +386,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public BasePopupWindow(Context context, int width, int height, boolean delayInit) {
         mContext = new WeakReference<Context>(context);
-        if (!(this instanceof QuickPopup) && !delayInit) {
+        if (!delayInit) {
             initView(width, height);
         } else {
             mDelayInitCached = new DelayInitCached();
@@ -436,7 +435,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
         hookContentViewDismissClick(width, height);
         preMeasurePopupView(width, height);
-
         //show or dismiss animate
         mHelper.setShowAnimation(onCreateShowAnimation())
                 .setShowAnimator(onCreateShowAnimator())
