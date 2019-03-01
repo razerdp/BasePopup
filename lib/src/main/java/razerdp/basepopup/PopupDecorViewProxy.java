@@ -577,11 +577,15 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     }
 
     int getScreenWidth() {
-        return PopupUiUtils.getScreenWidthCompat(getContext());
+        int screenWidth = PopupUiUtils.getScreenWidthCompat(getContext());
+        PopupLogUtil.trace("autoSize  width = " + screenWidth);
+        return screenWidth;
     }
 
     int getScreenHeight() {
-        return PopupUiUtils.getScreenHeightCompat(getContext());
+        int screenHeight = PopupUiUtils.getScreenHeightCompat(getContext());
+        PopupLogUtil.trace("autoSize  height = " + screenHeight);
+        return screenHeight;
     }
 
     private int getStatusBarHeight() {

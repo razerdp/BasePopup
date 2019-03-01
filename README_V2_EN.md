@@ -317,6 +317,8 @@ See more in wiki (continuous improvement)
 ### Update log ([Historical update](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
 * **【Candy】2.1.9**
+  * **【Candy】2.1.9-beta3**(2019/03/1)
+    * fixed [**#152**](https://github.com/razerdp/BasePopup/issues/152)
   * **【Candy】2.1.9-beta1**(2019/02/28)
     * optimized code,fix override AnimationListener for dismissAnimation
   * **【Candy】2.1.9-beta**(2019/2/26)
