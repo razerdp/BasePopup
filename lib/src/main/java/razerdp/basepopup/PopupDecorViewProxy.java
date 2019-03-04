@@ -78,7 +78,12 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                                 int x = (int) event.getX();
                                 int y = (int) event.getY();
                                 if (mTarget != null) {
-                                    mTarget.getGlobalVisibleRect(mTouchRect);
+                                    View contentView = mTarget.findViewById(mHelper.getContentRootId());
+                                    if (contentView == null) {
+                                        mTarget.getGlobalVisibleRect(mTouchRect);
+                                    } else {
+                                        contentView.getGlobalVisibleRect(mTouchRect);
+                                    }
                                 }
                                 if (!mTouchRect.contains(x, y)) {
                                     mHelper.onOutSideTouch();
