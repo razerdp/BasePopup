@@ -30,8 +30,12 @@ import razerdp.library.R;
  */
 final class BasePopupHelper implements PopupTouchController, PopupWindowActionListener, PopupWindowLocationListener, PopupKeyboardStateChangeListener {
 
+    public static final int CONTENT_VIEW_ID = R.id.base_popup_content_root;
+
     static final int DEFAULT_WIDTH = ViewGroup.LayoutParams.WRAP_CONTENT;
     static final int DEFAULT_HEIGHT = ViewGroup.LayoutParams.WRAP_CONTENT;
+
+    private int contentRootId = CONTENT_VIEW_ID;
 
     //是否自动弹出输入框(default:false)
     private boolean autoShowInputMethod = false;
@@ -584,6 +588,15 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     public PopupWindowEventInterceptor getEventInterceptor() {
         return mEventInterceptor;
+    }
+
+    public BasePopupHelper setContentRootId(int contentRootId) {
+        this.contentRootId = contentRootId == View.NO_ID ? CONTENT_VIEW_ID : contentRootId;
+        return this;
+    }
+
+    public int getContentRootId() {
+        return contentRootId;
     }
 
     //-----------------------------------------controller-----------------------------------------
