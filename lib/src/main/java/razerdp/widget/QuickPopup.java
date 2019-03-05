@@ -73,6 +73,7 @@ public class QuickPopup extends BasePopupWindow {
         setPopupGravity(config.getGravity());
         setAlignBackground(config.isAlignBackground());
         setAutoLocatePopup(config.isAutoLocated());
+        setOnDismissListener(config.getDismissListener());
         if (config.getBackground() != null) {
             setBackground(config.getBackground());
         }
