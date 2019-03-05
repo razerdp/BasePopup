@@ -74,11 +74,11 @@ abstract class BasePopupWindowProxy extends PopupWindow {
         init(contentView.getContext());
     }
 
-    void bindPopupHelper(BasePopupHelper mHelper) {
+    void attachPopupHelper(BasePopupHelper mHelper) {
         if (mWindowManagerProxy == null) {
             tryToProxyWindowManagerMethod(this);
         }
-        mWindowManagerProxy.bindPopupHelper(mHelper);
+        mWindowManagerProxy.attachPopupHelper(mHelper);
     }
 
     private void init(Context context) {
