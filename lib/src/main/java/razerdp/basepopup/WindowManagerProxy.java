@@ -202,7 +202,7 @@ final class WindowManagerProxy implements WindowManager {
         return mPopupHelper.get();
     }
 
-    void bindPopupHelper(BasePopupHelper helper) {
+    void attachPopupHelper(BasePopupHelper helper) {
         mPopupHelper = new WeakReference<BasePopupHelper>(helper);
     }
 
