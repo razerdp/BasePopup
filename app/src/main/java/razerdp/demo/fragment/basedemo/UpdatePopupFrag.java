@@ -59,7 +59,9 @@ public class UpdatePopupFrag extends SimpleBaseFrag {
         vh.popupShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDemoPopup.showPopupWindow(v);
+                if (!mDemoPopup.isShowing()) {
+                    mDemoPopup.showPopupWindow(v);
+                }
             }
         });
 
@@ -93,7 +95,9 @@ public class UpdatePopupFrag extends SimpleBaseFrag {
             @TargetApi(Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
-                mDemoPopup.showPopupWindow(vh.popupShow);
+                if (!mDemoPopup.isShowing()) {
+                    mDemoPopup.showPopupWindow(vh.popupShow);
+                }
                 if (vh.popupShow.getX() <= mDemoPopup.getScreenWidth() / 2) {
                     vh.popupShow.animate()
                             .translationX(mDemoPopup.getScreenWidth() - vh.popupShow.getX() - vh.popupShow.getWidth())
