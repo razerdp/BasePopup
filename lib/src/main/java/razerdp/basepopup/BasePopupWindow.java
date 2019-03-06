@@ -1811,12 +1811,14 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 duration = mHelper.getDismissAnimation().getDuration();
                 mHelper.getDismissAnimation().cancel();
                 mDisplayAnimateView.startAnimation(mHelper.getDismissAnimation());
+                callDismissAnimationStart();
                 isExitAnimatePlaying = true;
             }
         } else if (mHelper.getDismissAnimator() != null) {
             if (!isExitAnimatePlaying) {
                 duration = mHelper.getDismissAnimator().getDuration();
                 mHelper.getDismissAnimator().start();
+                callDismissAnimationStart();
                 isExitAnimatePlaying = true;
             }
         }
@@ -1830,6 +1832,12 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         mHelper.onDismiss(duration > -1);
         //如果有动画，则不立刻执行dismiss
         return duration <= 0;
+    }
+
+    private void callDismissAnimationStart() {
+        if (getOnDismissListener() != null) {
+            getOnDismissListener().onDismissAnimationStart();
+        }
     }
 
     /**
@@ -2129,6 +2137,15 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
          */
         public boolean onBeforeDismiss() {
             return true;
+        }
+
+        /**
+         * <p>
+         * 在PopupWindow消失之前，如果您设置好了该监听器{@link #setOnDismissListener(OnDismissListener)}
+         * 如果有退出动画，则在退出动画播放的时候会回调该方法
+         * </p>
+         */
+        public void onDismissAnimationStart() {
         }
     }
 
