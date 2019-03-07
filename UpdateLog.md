@@ -1,5 +1,28 @@
 ## BasePopup更新日志
 
+* **【Candy】2.1.9**
+  * **【Candy】2.1.9-prerelease**(2019/03/07)
+    * 优化对android P刘海的支持，允许PopupWindow布局到刘海，fixed [**#154**](https://github.com/razerdp/BasePopup/issues/154)
+  * **【Candy】2.1.9-beta4~5**(2019/03/1)
+    * 修复quickpopup没有设置回调的问题
+    * OnDismissListener添加退出动画开始的回调
+    * 优化模糊逻辑
+    * 优化退出动画逻辑
+  * **【Candy】2.1.9-beta3**(2019/03/1)
+    * fixed [**#152**](https://github.com/razerdp/BasePopup/issues/152)
+  * **【Candy】2.1.9-beta1**(2019/02/28)
+    * 优化代码，修复覆盖动画监听器的bug，优化layout逻辑
+  * **【Candy】2.1.9-beta**(2019/2/26)
+    * 为模糊图片方法添加oom捕捉
+  * **【Candy】2.1.9-alpha4**(2019/2/21)
+    * 优化背景和局部模糊逻辑
+  * **【Candy】2.1.9-alpha3**(2019/2/21)
+    * 紧急修复alpha2留下的坑
+  * **【Candy】2.1.9-alpha2**(2019/2/19)
+    * 去除lib的AndroidManifest内容，预防冲突，fixed [**#149**](https://github.com/razerdp/BasePopup/issues/149)
+  * **【Candy】2.1.9-alpha1**(2019/02/18)
+    * 针对DialogFragment适配，fixed [**#145**](https://github.com/razerdp/BasePopup/issues/145)
+
 * **【Release】2.1.8**(2019/01/26)
   * 本次版本更新添加了许多新特性哦~特别是不拦截事件的背景黑科技又回来了
   * 更新细节：
