@@ -91,6 +91,10 @@ final class WindowManagerProxy implements WindowManager {
             if (helper.isFullScreen()) {
                 PopupLogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  全屏");
                 p.flags |= LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    //允许占用刘海
+                    p.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+                }
                 if (helper.isInterceptTouchEvent()) {
                     p.flags |= LayoutParams.FLAG_LAYOUT_NO_LIMITS;
                 }
