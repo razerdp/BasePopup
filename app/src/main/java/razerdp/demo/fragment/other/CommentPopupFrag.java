@@ -116,7 +116,8 @@ public class CommentPopupFrag extends SimpleBaseFrag {
                     public void onClick(View v) {
                         mCommentPopup.setAllowInterceptTouchEvent(!mLinkViewCheck.isChecked())
                                 .setAllowDismissWhenTouchOutside(!mLinkViewCheck.isChecked())
-                                .linkTo(mLinkViewCheck.isChecked()?v:null);
+                                .setBlurBackgroundEnable(!mLinkViewCheck.isChecked())
+                                .linkTo(mLinkViewCheck.isChecked() ? v : null);
                         mCommentPopup.showPopupWindow(v);
                     }
                 });
