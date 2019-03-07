@@ -96,7 +96,7 @@ public class DemoActivity extends AppCompatActivity {
                                     .offsetY(-20))
                             .show(actionMenu);
                 }
-            }, 500);
+            }, 200);
         }
     }
 
