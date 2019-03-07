@@ -319,6 +319,8 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
 * **【Candy】2.1.9**
+  * **【Candy】2.1.9-prerelease**(2019/03/07)
+    * 优化对android P刘海的支持，允许PopupWindow布局到刘海，fixed [**#154**](https://github.com/razerdp/BasePopup/issues/154)
   * **【Candy】2.1.9-beta4~5**(2019/03/1)
     * 修复quickpopup没有设置回调的问题
     * OnDismissListener添加退出动画开始的回调
