@@ -311,7 +311,6 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     BasePopupHelper setPopupFadeEnable(PopupWindow popupWindow, boolean needPopupFadeAnima) {
         if (popupWindow == null) return this;
         this.isPopupFadeEnable = needPopupFadeAnima;
-        popupWindow.setAnimationStyle(needPopupFadeAnima ? R.style.PopupAnimaFade : 0);
         return this;
     }
 

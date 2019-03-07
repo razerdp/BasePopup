@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
@@ -50,20 +49,13 @@ class PopupBackgroundView extends View {
             setBackgroundDrawable(mHelper.getPopupBackground());
         }
         if (mHelper.isPopupFadeEnable()) {
-            getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                @Override
-                public boolean onPreDraw() {
-                    Animation fadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.basepopup_fade_in);
-                    if (fadeIn != null) {
-                        long fadeInTime = mHelper.getShowAnimationDuration() - 200;
-                        fadeIn.setDuration(Math.max(fadeIn.getDuration(), fadeInTime));
-                        fadeIn.setFillAfter(true);
-                        startAnimation(fadeIn);
-                    }
-                    getViewTreeObserver().removeOnPreDrawListener(this);
-                    return true;
-                }
-            });
+            Animation fadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.basepopup_fade_in);
+            if (fadeIn != null) {
+                long fadeInTime = mHelper.getShowAnimationDuration() - 200;
+                fadeIn.setDuration(Math.max(fadeIn.getDuration(), fadeInTime));
+                fadeIn.setFillAfter(true);
+                startAnimation(fadeIn);
+            }
         }
     }
 
