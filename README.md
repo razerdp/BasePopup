@@ -318,6 +318,19 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Release】2.1.9**(2019/03/07)
+  * 优化对android P刘海的支持，允许PopupWindow布局到刘海，fixed [**#154**](https://github.com/razerdp/BasePopup/issues/154)
+  * 修复Quickpopup没有设置回调的问题
+  * OnDismissListener添加退出动画开始的回调
+  * 优化模糊逻辑
+  * 优化退出动画逻辑
+  * fixed [**#152**](https://github.com/razerdp/BasePopup/issues/152)
+  * 优化代码，修复覆盖动画监听器的bug，优化layout逻辑
+  * 为模糊图片方法添加oom捕捉
+  * 优化背景和局部模糊逻辑
+  * 去除lib的AndroidManifest内容，预防冲突，fixed [**#149**](https://github.com/razerdp/BasePopup/issues/149)
+  * 针对DialogFragment适配，fixed [**#145**](https://github.com/razerdp/BasePopup/issues/145)
+
 * **【Candy】2.1.9**
   * **【Candy】2.1.9-prerelease**(2019/03/07)
     * 优化对android P刘海的支持，允许PopupWindow布局到刘海，fixed [**#154**](https://github.com/razerdp/BasePopup/issues/154)
@@ -355,42 +368,6 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
     * 优化QuickPopupBuilder，增加[**Wiki**](https://github.com/razerdp/BasePopup/wiki/QuickPopupBuilder)
     * 针对[**#138**](https://github.com/razerdp/BasePopup/issues/138)出现的问题进行优化
     * 修复`setAlignBackgroundGravity()`与`setAlignBackground()`互相覆盖导致的顺序硬性要求问题
-
-* **【Candy】2.1.8**
-  * **【Candy】2.1.8-prerelease2**(2019/01/24)
-    * 适配使用了[**ImmersionBar**](https://github.com/gyf-dev/ImmersionBar)的情况
-  * **【Candy】2.1.8-prerelease**(2019/01/23)
-    * 修复对横屏不兼容的问题
-  * **【Candy】2.1.8-beta7**(2019/01/22)
-    * beta3和beta4和beta5和beta6被我吃了~
-    * 修复beta2关于focusable的问题，去掉无用代码
-    * 修复构造器传入宽高无效的问题
-    * **支持不拦截事件下的背景蒙层，没错！那个黑科技换了个更友好的方式来啦~**
-  * **【Candy】2.1.8-beta2**(2019/01/22)
-    * 修复popup弹出的时候，金刚键（虚拟按键）一同弹出的问题 **该功能目前测试中，如果有问题请务必反馈到candy**
-      * fixed  [**#141**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/141)
-    * QuickPopupConfig增加`dismissOnOutSideTouch()`方法
-  * **【Candy】2.1.8-beta1**(2019/01/21)
-    * 修复popup弹出的时候，金刚键（虚拟按键）一同弹出的问题 **该功能目前测试中，如果有问题请务必反馈到candy**
-      * fixed  [**#120**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/59)
-  * **【Candy】2.1.8-alpha2**(2019/01/18)
-    * 优化QuickPopupBuilder，增加[**Wiki**](https://github.com/razerdp/BasePopup/wiki/QuickPopupBuilder)
-  * **【Candy】2.1.8-alpha**(2019/01/17)
-    * 针对[**#138**](https://github.com/razerdp/BasePopup/issues/138)出现的问题进行优化
-    * 修复`setAlignBackgroundGravity()`与`setAlignBackground()`互相覆盖导致的顺序硬性要求问题
-
-* **【Release】2.1.7**(2019/01/16)
-  * 修复在`setAutoLocatePopup(true)`时，`onAnchorTop()`或`onAnchorBottom()`多次被调用的问题
-  * 修复`setAllowInterceptTouchEvent(false)`时，因受默认限制而导致的无法定位到anchorView的问题
-  * 优化弹起软键盘默认偏移量计算逻辑
-  * 优化键盘高度计算逻辑
-  * 感谢[**@ParfoisMeng**](https://github.com/ParfoisMeng)发现软键盘偏移问题并提交了PR[**PR#130**](https://github.com/razerdp/BasePopup/pull/130)
-  * 发布2.1.7 release
-
-* **【Candy】2.1.7-beta**(2019/01/10~2019/01/13)
-  * 修复`setAllowInterceptTouchEvent(false)`时，因受默认限制而导致的无法定位到anchorView的问题
-  * 优化弹起软键盘默认偏移量计算逻辑
-  * 优化键盘高度计算逻辑
 
 <br>
 

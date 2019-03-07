@@ -1,18 +1,26 @@
 package razerdp.demo;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.BasePopupDemoHooker;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
 import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import razerdp.basepopup.BasePopupWindow;
+import razerdp.basepopup.QuickPopupBuilder;
+import razerdp.basepopup.QuickPopupConfig;
 import razerdp.basepopup.R;
 import razerdp.demo.fragment.basedemo.AlignPopupFrag;
 import razerdp.demo.fragment.basedemo.AnimatePopupFrag;
@@ -31,6 +39,7 @@ import razerdp.demo.fragment.basedemo.ShowPopupFrag;
 import razerdp.demo.fragment.basedemo.TouchInterceptPopupFrag;
 import razerdp.demo.fragment.basedemo.UpdatePopupFrag;
 import razerdp.demo.fragment.other.SimpleBaseFrag;
+import razerdp.util.SimpleAnimationUtils;
 
 public class DemoActivity extends AppCompatActivity {
     private FragmentManager mFragmentManager;
@@ -64,9 +73,37 @@ public class DemoActivity extends AppCompatActivity {
         fragMap.put(R.id.id_update, new UpdatePopupFrag());
     }
 
+    private void showGuide() {
+        final ActionBar actionBar = getSupportActionBar();
+        final View actionMenu = BasePopupDemoHooker.getToolBarActionMenuView(actionBar);
+        if (actionMenu != null) {
+            actionMenu.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    QuickPopupBuilder.with(DemoActivity.this)
+                            .contentView(R.layout.popup_guide)
+                            .config(new QuickPopupConfig()
+                                    .withShowAnimation(SimpleAnimationUtils.getScaleAnimation(0f, 1f, 0f, 1f,
+                                            Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0f))
+                                    .withDismissAnimation(SimpleAnimationUtils.getScaleAnimation(1f, 0f, 1f, 0f,
+                                            Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0f))
+                                    .backgroundColor(Color.TRANSPARENT)
+                                    .blurBackground(true)
+                                    .gravity(Gravity.BOTTOM | Gravity.LEFT)
+                                    //12px为箭头与边缘的距离
+                                    .offsetX((actionMenu.getWidth() / 2) + 12)
+                                    //10px为actionMenu的内边距。。。
+                                    .offsetY(-20))
+                            .show(actionMenu);
+                }
+            }, 500);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_base, menu);
+        showGuide();
         return true;
     }
 

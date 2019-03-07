@@ -3,7 +3,6 @@ package razerdp.basepopup;
 import android.animation.Animator;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.View;
@@ -27,7 +26,7 @@ public class QuickPopupConfig {
     Animator mShowAnimator;
     Animator mDismissAnimator;
 
-    boolean fadeEnable = Build.VERSION.SDK_INT != Build.VERSION_CODES.M;
+    boolean fadeEnable = true;
 
     BasePopupWindow.OnDismissListener mDismissListener;
 

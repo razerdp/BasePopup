@@ -80,6 +80,9 @@ final class WindowManagerProxy implements WindowManager {
     private void applyHelper(ViewGroup.LayoutParams params, BasePopupHelper helper) {
         if (params instanceof LayoutParams && helper != null) {
             LayoutParams p = (LayoutParams) params;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                p.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT;
+            }
             if (!helper.isInterceptTouchEvent()) {
                 PopupLogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  不拦截事件");
                 p.flags |= LayoutParams.FLAG_NOT_TOUCH_MODAL;

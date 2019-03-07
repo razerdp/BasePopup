@@ -316,6 +316,9 @@ See more in wiki (continuous improvement)
 
 ### Update log ([Historical update](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Release】2.1.9**(2019/03/07)
+  * Please see candy updateLog on under
+
 * **【Candy】2.1.9**
   * **【Candy】2.1.9-prerelease**(2019/03/07)
     * Support layout in cutouts for Android P，fixed [**#154**](https://github.com/razerdp/BasePopup/issues/154)

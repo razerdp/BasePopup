@@ -1,5 +1,18 @@
 ## BasePopup更新日志
 
+* **【Release】2.1.9**(2019/03/07)
+  * 优化对android P刘海的支持，允许PopupWindow布局到刘海，fixed [**#154**](https://github.com/razerdp/BasePopup/issues/154)
+  * 修复quickpopup没有设置回调的问题
+  * OnDismissListener添加退出动画开始的回调
+  * 优化模糊逻辑
+  * 优化退出动画逻辑
+  * fixed [**#152**](https://github.com/razerdp/BasePopup/issues/152)
+  * 优化代码，修复覆盖动画监听器的bug，优化layout逻辑
+  * 为模糊图片方法添加oom捕捉
+  * 优化背景和局部模糊逻辑
+  * 去除lib的AndroidManifest内容，预防冲突，fixed [**#149**](https://github.com/razerdp/BasePopup/issues/149)
+  * 针对DialogFragment适配，fixed [**#145**](https://github.com/razerdp/BasePopup/issues/145)
+
 * **【Candy】2.1.9**
   * **【Candy】2.1.9-prerelease**(2019/03/07)
     * 优化对android P刘海的支持，允许PopupWindow布局到刘海，fixed [**#154**](https://github.com/razerdp/BasePopup/issues/154)
