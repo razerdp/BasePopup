@@ -589,8 +589,12 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return mEventInterceptor;
     }
 
-    public BasePopupHelper setContentRootId(int contentRootId) {
-        this.contentRootId = contentRootId == View.NO_ID ? CONTENT_VIEW_ID : contentRootId;
+    public BasePopupHelper setContentRootId(View contentRoot) {
+        if (contentRoot==null)return this;
+        if (contentRoot.getId()==View.NO_ID){
+            contentRoot.setId(CONTENT_VIEW_ID);
+        }
+        this.contentRootId = contentRoot.getId();
         return this;
     }
 
