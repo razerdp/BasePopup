@@ -649,7 +649,8 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         if (mCheckAndCallAutoAnchorLocate == null) {
             mCheckAndCallAutoAnchorLocate = new CheckAndCallAutoAnchorLocate(onTop);
         }
-        postDelayed(mCheckAndCallAutoAnchorLocate, 16);
+        mCheckAndCallAutoAnchorLocate.onTop = onTop;
+        postDelayed(mCheckAndCallAutoAnchorLocate, 32);
     }
 
     private final class CheckAndCallAutoAnchorLocate implements Runnable {

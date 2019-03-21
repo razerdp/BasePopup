@@ -318,6 +318,10 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Candy】2.2.0**
+  * **【Candy】2.2.0-alpha**(2019/03/21)
+    * 增加`setBackgroundView(View)`方法，现在BasePopup的背景控件可以随意由你定制啦~当然PopupWindow的背景动画控制方法依旧生效
+
 * **【Release】2.1.9**(2019/03/07)
   * 优化对android P刘海的支持，允许PopupWindow布局到刘海，fixed [**#154**](https://github.com/razerdp/BasePopup/issues/154)
   * 修复Quickpopup没有设置回调的问题

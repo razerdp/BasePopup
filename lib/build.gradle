@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 51
-        versionName "2.1.9"
+        versionCode 52
+        versionName "2.2.0"
     }
     buildTypes {
         release {
@@ -30,12 +30,12 @@ dependencies {
 
 def siteUrl = 'https://github.com/razerdp/BasePopup'
 def gitUrl = 'git@github.com:razerdp/BasePopup.git'
-def moduleName = 'BasePopup'
-//def moduleName = 'BasePopup_Candy'
+//def moduleName = 'BasePopup'
+def moduleName = 'BasePopup_Candy'
 
 
 group = "com.github.razerdp"
-version = "2.1.9"
+version = "2.2.0-alpha"
 
 install {
     repositories.mavenInstaller {

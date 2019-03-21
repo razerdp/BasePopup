@@ -87,6 +87,8 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     private Drawable mBackgroundDrawable = new ColorDrawable(Color.parseColor("#8f000000"));
     //背景对齐方向
     private int alignBackgroundGravity = Gravity.TOP;
+    //背景View
+    private View mBackgroundView;
 
     private PopupTouchController mTouchControllerDelegate;
     private PopupWindowActionListener mActionListener;
@@ -454,7 +456,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return this;
     }
 
-    public Point getCachedOffset() {
+    Point getCachedOffset() {
         return mOffsetCached;
     }
 
@@ -483,11 +485,11 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return mAnchorViewLocation[1];
     }
 
-    public boolean isBackPressEnable() {
+    boolean isBackPressEnable() {
         return backPressEnable;
     }
 
-    public boolean isClipToScreen() {
+    boolean isClipToScreen() {
         return mClipToScreen;
     }
 
@@ -535,20 +537,20 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return duration < 0 ? 500 : duration;
     }
 
-    public Drawable getPopupBackground() {
+    Drawable getPopupBackground() {
         return mBackgroundDrawable;
     }
 
-    public BasePopupHelper setPopupBackground(Drawable background) {
+    BasePopupHelper setPopupBackground(Drawable background) {
         mBackgroundDrawable = background;
         return this;
     }
 
-    public boolean isAlignBackground() {
+    boolean isAlignBackground() {
         return mAlignBackground;
     }
 
-    public BasePopupHelper setAlignBackgound(boolean mAlignBackground) {
+    BasePopupHelper setAlignBackgound(boolean mAlignBackground) {
         this.mAlignBackground = mAlignBackground;
         if (!mAlignBackground) {
             setAlignBackgroundGravity(Gravity.NO_GRAVITY);
@@ -556,54 +558,67 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return this;
     }
 
-    public int getAlignBackgroundGravity() {
+    int getAlignBackgroundGravity() {
         if (mAlignBackground && alignBackgroundGravity == Gravity.NO_GRAVITY) {
             alignBackgroundGravity = Gravity.TOP;
         }
         return alignBackgroundGravity;
     }
 
-    public BasePopupHelper setAlignBackgroundGravity(int gravity) {
+    BasePopupHelper setAlignBackgroundGravity(int gravity) {
         this.alignBackgroundGravity = gravity;
         return this;
     }
 
-    public boolean isAllowToBlur() {
+    boolean isAllowToBlur() {
         return mBlurOption != null && mBlurOption.isAllowToBlur();
     }
 
 
-    public boolean isClipChildren() {
+    boolean isClipChildren() {
         return mClipChildren;
     }
 
-    public ViewGroup.MarginLayoutParams getParaseFromXmlParams() {
+    ViewGroup.MarginLayoutParams getParaseFromXmlParams() {
         return mParaseFromXmlParams;
     }
 
-    public int getShowCount() {
+    int getShowCount() {
         return showCount;
     }
 
-    public PopupWindowEventInterceptor getEventInterceptor() {
+    PopupWindowEventInterceptor getEventInterceptor() {
         return mEventInterceptor;
     }
 
-    public BasePopupHelper setContentRootId(View contentRoot) {
-        if (contentRoot==null)return this;
-        if (contentRoot.getId()==View.NO_ID){
+    BasePopupHelper setContentRootId(View contentRoot) {
+        if (contentRoot == null) return this;
+        if (contentRoot.getId() == View.NO_ID) {
             contentRoot.setId(CONTENT_VIEW_ID);
         }
         this.contentRootId = contentRoot.getId();
         return this;
     }
 
-    public int getContentRootId() {
+    int getContentRootId() {
         return contentRootId;
     }
 
+    int getSoftInputMode() {
+        return mSoftInputMode;
+    }
+
+    View getBackgroundView() {
+        return mBackgroundView;
+    }
+
+    BasePopupHelper setBackgroundView(View backgroundView) {
+        mBackgroundView = backgroundView;
+        return this;
+    }
+
     //-----------------------------------------controller-----------------------------------------
-    public void handleShow() {
+    void handleShow() {
         //针对官方的坑（两个popup切换页面后重叠）
         if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP ||
                 android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
@@ -611,7 +626,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         }
     }
 
-    public void handleDismiss() {
+    void handleDismiss() {
         if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP ||
                 android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
             showCount--;
@@ -680,10 +695,6 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         if (mLocationListener != null) {
             mLocationListener.onAnchorBottom();
         }
-    }
-
-    public int getSoftInputMode() {
-        return mSoftInputMode;
     }
 
     @Override
