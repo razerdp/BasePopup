@@ -5,9 +5,13 @@ import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
 import razerdp.blur.BlurImageView;
+import razerdp.library.R;
 import razerdp.util.PopupUtils;
 import razerdp.util.log.PopupLogUtil;
 
@@ -18,8 +22,8 @@ import razerdp.util.log.PopupLogUtil;
  */
 class PopupMaskLayout extends FrameLayout {
 
-    private PopupBackgroundView mBackgroundView;
     private BlurImageView mBlurImageView;
+    private BackgroundViewHolder mBackgroundViewHolder;
 
     private PopupMaskLayout(Context context) {
         this(context, null);
@@ -57,9 +61,15 @@ class PopupMaskLayout extends FrameLayout {
             mBlurImageView.applyBlurOption(mHelper.getBlurOption());
             addViewInLayout(mBlurImageView, -1, generateDefaultLayoutParams());
         }
-        if (!PopupUtils.isBackgroundInvalidated(mHelper.getPopupBackground())) {
-            mBackgroundView = PopupBackgroundView.creaete(context, mHelper);
-            addViewInLayout(mBackgroundView, -1, generateDefaultLayoutParams());
+        if (mHelper.getBackgroundView() != null) {
+            mBackgroundViewHolder = new BackgroundViewHolder(mHelper.getBackgroundView(), mHelper);
+        } else {
+            if (!PopupUtils.isBackgroundInvalidated(mHelper.getPopupBackground())) {
+                mBackgroundViewHolder = new BackgroundViewHolder(PopupBackgroundView.creaete(context, mHelper), mHelper);
+            }
+        }
+        if (mBackgroundViewHolder != null) {
+            mBackgroundViewHolder.addInLayout();
         }
         mHelper.registerActionListener(new PopupWindowActionListener() {
             @Override
@@ -104,7 +114,9 @@ class PopupMaskLayout extends FrameLayout {
             default:
                 break;
         }
-        mBackgroundView.layout(left, top, right, bottom);
+        if (mBackgroundViewHolder != null) {
+            mBackgroundViewHolder.handleAlignBackground(left, top, right, bottom);
+        }
     }
 
     @Override
@@ -116,8 +128,8 @@ class PopupMaskLayout extends FrameLayout {
         if (mBlurImageView != null) {
             mBlurImageView.update();
         }
-        if (mBackgroundView!=null){
-            mBackgroundView.update();
+        if (mBackgroundViewHolder != null) {
+            mBackgroundViewHolder.update();
         }
     }
 
@@ -131,8 +143,8 @@ class PopupMaskLayout extends FrameLayout {
         if (mBlurImageView != null) {
             mBlurImageView.dismiss(duration);
         }
-        if (mBackgroundView != null) {
-            mBackgroundView.handleAnimateDismiss();
+        if (mBackgroundViewHolder != null) {
+            mBackgroundViewHolder.dismiss();
         }
     }
 
@@ -140,14 +152,79 @@ class PopupMaskLayout extends FrameLayout {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         removeAllViews();
-        if (mBackgroundView != null) {
-            mBackgroundView.destroy();
-            mBackgroundView = null;
+        if (mBackgroundViewHolder != null) {
+            mBackgroundViewHolder.destroy();
+            mBackgroundViewHolder = null;
         }
 
         if (mBlurImageView != null) {
             mBlurImageView.destroy();
             mBlurImageView = null;
+        }
+    }
+
+
+    final class BackgroundViewHolder {
+
+        View mBackgroundView;
+        BasePopupHelper mHelper;
+
+        BackgroundViewHolder(View backgroundView, BasePopupHelper helper) {
+            mBackgroundView = backgroundView;
+            mHelper = helper;
+            if (!(mBackgroundView instanceof PopupBackgroundView)) {
+                if (mHelper.isPopupFadeEnable()) {
+                    Animation fadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.basepopup_fade_in);
+                    if (fadeIn != null) {
+                        long fadeInTime = mHelper.getShowAnimationDuration() - 200;
+                        fadeIn.setDuration(Math.max(fadeIn.getDuration(), fadeInTime));
+                        fadeIn.setFillAfter(true);
+                        mBackgroundView.startAnimation(fadeIn);
+                    }
+                }
+            }
+        }
+
+        void addInLayout() {
+            if (mBackgroundView != null) {
+                addViewInLayout(mBackgroundView, -1, generateDefaultLayoutParams());
+            }
+        }
+
+        void handleAlignBackground(int left, int top, int right, int bottom) {
+            if (mBackgroundView == null) return;
+            mBackgroundView.layout(left, top, right, bottom);
+        }
+
+        void update() {
+            if (mBackgroundView instanceof PopupBackgroundView) {
+                ((PopupBackgroundView) mBackgroundView).update();
+            }
+        }
+
+        void dismiss() {
+            if (mBackgroundView instanceof PopupBackgroundView) {
+                ((PopupBackgroundView) mBackgroundView).handleAnimateDismiss();
+            } else {
+                if (mBackgroundView != null && mHelper != null && mHelper.isPopupFadeEnable()) {
+                    Animation fadeOut = AnimationUtils.loadAnimation(getContext(), R.anim.basepopup_fade_out);
+                    if (fadeOut != null) {
+                        long fadeDismissTime = mHelper.getExitAnimationDuration() - 200;
+                        fadeOut.setDuration(Math.max(fadeOut.getDuration(), fadeDismissTime));
+                        fadeOut.setFillAfter(true);
+                        mBackgroundView.startAnimation(fadeOut);
+                    }
+                }
+            }
+        }
+
+        void destroy() {
+            if (mBackgroundView instanceof PopupBackgroundView) {
+                ((PopupBackgroundView) mBackgroundView).destroy();
+                mBackgroundView = null;
+            } else {
+                mBackgroundView = null;
+            }
         }
     }
 }

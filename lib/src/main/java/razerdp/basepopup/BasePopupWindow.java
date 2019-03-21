@@ -1253,6 +1253,19 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return this;
     }
 
+
+    /**
+     * <p>
+     * 设置PopupWindow背景View，因为背景全屏的原因，该View将会被强制设为MATCH_PARENT/MATCH_PARENT</strong>
+     * </p>
+     *
+     * @param backgroundView 背景View
+     */
+    public BasePopupWindow setBackgroundView(View backgroundView) {
+        mHelper.setBackgroundView(backgroundView);
+        return this;
+    }
+
     /**
      * <p>
      * 获取当前PopupWindow背景
