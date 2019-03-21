@@ -1761,6 +1761,15 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return this;
     }
 
+    public BasePopupWindow setMaxWidth(int maxWidth) {
+        mHelper.setMaxWidth(maxWidth);
+        return this;
+    }
+
+    public BasePopupWindow setMaxHeight(int maxHeight) {
+        mHelper.setMaxHeight(maxHeight);
+        return this;
+    }
     //------------------------------------------状态控制-----------------------------------------------
 
 

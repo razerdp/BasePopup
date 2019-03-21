@@ -319,6 +319,8 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
 * **【Candy】2.2.0**
+  * **【Candy】2.2.0-alpha2**(2019/03/21)
+    * 增加`setMaxWidth()`和`setMaxHeight()`方法，想最大半屏显示？走起~
   * **【Candy】2.2.0-alpha**(2019/03/21)
     * 增加`setBackgroundView(View)`方法，现在BasePopup的背景控件可以随意由你定制啦~当然PopupWindow的背景动画控制方法依旧生效
 
