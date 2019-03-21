@@ -108,6 +108,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     private boolean isCustomMeasureWidth;
     private boolean isCustomMeasureHeight;
 
+    private int maxWidth, maxHeight;
 
     BasePopupHelper(PopupTouchController controller) {
         mAnchorViewLocation = new int[2];
@@ -614,6 +615,24 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     BasePopupHelper setBackgroundView(View backgroundView) {
         mBackgroundView = backgroundView;
+        return this;
+    }
+
+    int getMaxWidth() {
+        return maxWidth;
+    }
+
+    BasePopupHelper setMaxWidth(int maxWidth) {
+        this.maxWidth = maxWidth;
+        return this;
+    }
+
+    int getMaxHeight() {
+        return maxHeight;
+    }
+
+    BasePopupHelper setMaxHeight(int maxHeight) {
+        this.maxHeight = maxHeight;
         return this;
     }
 

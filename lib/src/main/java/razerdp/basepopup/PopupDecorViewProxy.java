@@ -217,17 +217,31 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 measureChild(child, MeasureSpec.makeMeasureSpec(getScreenWidth(), MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(getScreenHeight(), MeasureSpec.EXACTLY));
             } else {
                 final LayoutParams lp = child.getLayoutParams();
+
+                int modeHeight = MeasureSpec.getMode(heightMeasureSpec);
+                if (mHelper.getMaxWidth() > 0) {
+                    int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
+                    if (sizeWidth > mHelper.getMaxWidth()) {
+                        widthMeasureSpec = MeasureSpec.makeMeasureSpec(mHelper.getMaxWidth(), MeasureSpec.EXACTLY);
+                    }
+                }
+
                 final int childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec,
                         childLeftMargin + childRightMargin, lp.width);
                 int fixedHeightMeasureSpec = heightMeasureSpec;
                 //针对match_parent
                 if (mHelper.isClipToScreen() && mHelper.isShowAsDropDown() && lp.height == LayoutParams.MATCH_PARENT) {
-                    int mode = MeasureSpec.getMode(heightMeasureSpec);
                     int restContentHeight = getScreenHeight() - (mHelper.getAnchorY() + mHelper.getAnchorHeight()) - childTopMargin - childBottomMargin;
                     if (restContentHeight == 0) {
                         restContentHeight = MeasureSpec.getSize(heightMeasureSpec);
                     }
-                    fixedHeightMeasureSpec = MeasureSpec.makeMeasureSpec(restContentHeight, mode);
+                    fixedHeightMeasureSpec = MeasureSpec.makeMeasureSpec(restContentHeight, modeHeight);
+                }
+                if (mHelper.getMaxHeight() > 0) {
+                    int sizeHeight = MeasureSpec.getSize(fixedHeightMeasureSpec);
+                    if (sizeHeight > mHelper.getMaxHeight()) {
+                        fixedHeightMeasureSpec = MeasureSpec.makeMeasureSpec(mHelper.getMaxHeight(), MeasureSpec.EXACTLY);
+                    }
                 }
                 final int childHeightMeasureSpec = getChildMeasureSpec(fixedHeightMeasureSpec,
                         childTopMargin + childBottomMargin, lp.height);
@@ -249,6 +263,14 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             if (child.getVisibility() != GONE) {
                 if (child == mTarget) {
                     final LayoutParams lp = child.getLayoutParams();
+
+                    if (mHelper.getMaxWidth() > 0) {
+                        int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
+                        if (sizeWidth > mHelper.getMaxWidth()) {
+                            widthMeasureSpec = MeasureSpec.makeMeasureSpec(mHelper.getMaxWidth(), MeasureSpec.EXACTLY);
+                        }
+                    }
+
                     int fixedHeightMeasureSpec = heightMeasureSpec;
                     if (mHelper.isClipToScreen() && mHelper.isShowAsDropDown() && lp.height == LayoutParams.MATCH_PARENT) {
                         int mode = MeasureSpec.getMode(heightMeasureSpec);
@@ -258,6 +280,14 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                         }
                         fixedHeightMeasureSpec = MeasureSpec.makeMeasureSpec(restContentHeight, mode);
                     }
+
+                    if (mHelper.getMaxHeight() > 0) {
+                        int sizeHeight = MeasureSpec.getSize(fixedHeightMeasureSpec);
+                        if (sizeHeight > mHelper.getMaxHeight()) {
+                            fixedHeightMeasureSpec = MeasureSpec.makeMeasureSpec(mHelper.getMaxHeight(), MeasureSpec.EXACTLY);
+                        }
+                    }
+
                     final int childHeightMeasureSpec = getChildMeasureSpec(fixedHeightMeasureSpec,
                             childTopMargin + childBottomMargin, lp.height);
 
