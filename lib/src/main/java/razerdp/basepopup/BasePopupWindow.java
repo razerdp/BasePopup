@@ -869,16 +869,20 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private View findDecorView(Activity activity) {
         View result = null;
         if (activity instanceof AppCompatActivity) {
-            AppCompatActivity supportAct = (AppCompatActivity) activity;
-            List<Fragment> fragments = supportAct.getSupportFragmentManager().getFragments();
-            for (Fragment fragment : fragments) {
-                if (fragment instanceof DialogFragment) {
-                    DialogFragment d = ((DialogFragment) fragment);
-                    if (d.getDialog() != null && d.getDialog().isShowing() && !d.isRemoving()) {
-                        result = d.getView();
-                        break;
+            try {
+                AppCompatActivity supportAct = (AppCompatActivity) activity;
+                List<Fragment> fragments = supportAct.getSupportFragmentManager().getFragments();
+                for (Fragment fragment : fragments) {
+                    if (fragment instanceof DialogFragment) {
+                        DialogFragment d = ((DialogFragment) fragment);
+                        if (d.getDialog() != null && d.getDialog().isShowing() && !d.isRemoving()) {
+                            result = d.getView();
+                            break;
+                        }
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return result == null ? activity.findViewById(android.R.id.content) : result;
