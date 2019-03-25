@@ -208,7 +208,6 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -809,6 +808,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private void tryToShowPopup(View v, boolean positionMode, boolean abortAnimate) {
         addListener();
         mHelper.handleShow();
+        mHelper.prepare(v,positionMode);
         if (mEventInterceptor != null && mEventInterceptor.onTryToShowPopup(this,
                 mPopupWindow,
                 v,
@@ -819,16 +819,12 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         try {
             if (isShowing()) return;
-            Point offset = calculateOffset(v, positionMode);
-            if (mEventInterceptor != null) {
-                mEventInterceptor.onCalculateOffsetResult(this, v, offset, mHelper.getOffsetX(), mHelper.getOffsetY());
-            }
             //传递了view
             if (v != null) {
                 if (mHelper.isShowAsDropDown()) {
-                    mPopupWindow.showAsDropDownProxy(v, offset.x, offset.y, getPopupGravity());
+                    mPopupWindow.showAsDropDownProxy(v, 0, 0, getPopupGravity());
                 } else {
-                    mPopupWindow.showAtLocationProxy(v, getPopupGravity(), offset.x, offset.y);
+                    mPopupWindow.showAtLocationProxy(v, getPopupGravity(), 0,0);
                 }
             } else {
                 //什么都没传递，取顶级view的id
@@ -839,9 +835,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                     Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
                 } else {
                     mPopupWindow.showAtLocationProxy(findDecorView(activity),
-                            Gravity.NO_GRAVITY,
-                            offset.x,
-                            offset.y);
+                            Gravity.NO_GRAVITY,0,0);
                 }
             }
             mHelper.onShow(mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
@@ -890,7 +884,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     private void tryToUpdate(View v, boolean positionMode) {
         if (!isShowing() || getContentView() == null) return;
-        mHelper.cacheOffset(calculateOffset(v, positionMode));
+        mHelper.prepare(v,positionMode);
         mPopupWindow.update();
     }
 
@@ -970,139 +964,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             }, 350);
         }
 
-    }
-
-
-    /**
-     * 计算popupwindow的偏移量
-     *
-     * @param anchorView
-     * @see #showPopupWindow(View)
-     */
-    private Point calculateOffset(View anchorView, boolean positionMode) {
-        Point offset;
-        if (mEventInterceptor != null) {
-            offset = mEventInterceptor.onCalculateOffset(this, anchorView, mHelper.getOffsetX(), mHelper.getOffsetY());
-            if (offset != null) {
-                mHelper.cacheOffset(offset);
-                return offset;
-            }
-        }
-        offset = mHelper.getTempOffset(mHelper.getOffsetX(), mHelper.getOffsetY());
-        mHelper.getAnchorLocation(anchorView);
-
-        if (positionMode) {
-            //此时传入的是位置信息，默认以NO_GRAVITY测量
-            /**@see BasePopupHelper#setShowLocation(int, int) */
-            offset.offset(mHelper.getAnchorX(), mHelper.getAnchorY());
-        }
-
-        onCalculateOffsetAdjust(offset, positionMode, anchorView != null);
-        mHelper.cacheOffset(offset);
-        return offset;
-
-    }
-
-    /**
-     * 针对不同的情况进行调整偏移量
-     * <p>
-     * 针对RecyclerView等非提前测量到的值无效
-     *
-     * @see PopupDecorViewProxy#layoutWithIntercept(int, int, int, int)
-     */
-    private void onCalculateOffsetAdjust(Point offset, boolean positionMode, boolean relativeToAnchor) {
-        int leftMargin = 0;
-        int topMargin = 0;
-        int rightMargin = 0;
-        int bottomMargin = 0;
-        if (mHelper.getParaseFromXmlParams() != null) {
-            leftMargin = mHelper.getParaseFromXmlParams().leftMargin;
-            topMargin = mHelper.getParaseFromXmlParams().topMargin;
-            rightMargin = mHelper.getParaseFromXmlParams().rightMargin;
-            bottomMargin = mHelper.getParaseFromXmlParams().bottomMargin;
-        }
-        //由于showAsDropDown系统已经帮我们定位在view的下方，因此这里的offset我们仅需要做微量偏移
-        switch (getPopupGravity() & Gravity.HORIZONTAL_GRAVITY_MASK) {
-            case Gravity.LEFT:
-            case Gravity.START:
-                if (relativeToAnchor) {
-                    offset.x += -getWidth() + leftMargin - rightMargin;
-                } else {
-                    offset.x += leftMargin;
-                }
-                break;
-            case Gravity.RIGHT:
-            case Gravity.END:
-                if (relativeToAnchor) {
-                    offset.x += mHelper.getAnchorViewWidth() + leftMargin - rightMargin;
-                } else {
-                    offset.x += getScreenWidth() - getWidth() - rightMargin;
-                }
-                break;
-            case Gravity.CENTER_HORIZONTAL:
-                if (relativeToAnchor) {
-                    offset.x += (mHelper.getAnchorViewWidth() - getWidth()) >> 1;
-                } else {
-                    offset.x += ((getScreenWidth() - getWidth()) >> 1) + leftMargin - rightMargin;
-                }
-                break;
-            default:
-                if (!relativeToAnchor) {
-                    offset.x += leftMargin - rightMargin;
-                }
-                break;
-        }
-
-        switch (getPopupGravity() & Gravity.VERTICAL_GRAVITY_MASK) {
-            case Gravity.TOP:
-                if (relativeToAnchor) {
-                    offset.y += -(mHelper.getAnchorHeight() + getHeight()) + topMargin - bottomMargin;
-                } else {
-                    offset.y += topMargin;
-                }
-                break;
-            case Gravity.BOTTOM:
-                //系统默认就在下面.
-                if (relativeToAnchor) {
-                    offset.y += topMargin - bottomMargin;
-                } else {
-                    offset.y += getScreenHeight() - getHeight() - bottomMargin;
-                }
-                break;
-            case Gravity.CENTER_VERTICAL:
-                if (relativeToAnchor) {
-                    offset.y += -((getHeight() + mHelper.getAnchorHeight()) >> 1);
-                } else {
-                    offset.y += ((getScreenHeight() - getHeight()) >> 1) + topMargin - bottomMargin;
-                }
-                break;
-            default:
-                offset.y += topMargin - bottomMargin;
-                break;
-        }
-
-        PopupLogUtil.trace("calculateOffset  :: " +
-                "\nscreenHeight = " + getScreenHeight() +
-                "\nanchorX = " + mHelper.getAnchorX() +
-                "\nanchorY = " + mHelper.getAnchorY() +
-                "\noffsetX = " + offset.x +
-                "\noffsetY = " + offset.y);
-
-        if (mHelper.isAutoLocatePopup() && !mHelper.isInterceptTouchEvent()) {
-            final int offsetY = positionMode ? 0 : offset.y;
-            final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offsetY) < getHeight());
-            if (onTop) {
-                if (positionMode) {
-                    offset.y += ((getPopupGravity() & Gravity.VERTICAL_GRAVITY_MASK) == Gravity.CENTER_VERTICAL) ?
-                            -getHeight() >> 1 : -getHeight();
-                } else {
-                    offset.y = -mHelper.getAnchorHeight() - getHeight() - offsetY;
-                }
-                onAnchorTop();
-            } else {
-                onAnchorBottom();
-            }
-        }
     }
 
     /**

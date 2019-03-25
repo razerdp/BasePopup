@@ -1,10 +1,8 @@
 package razerdp.basepopup;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.os.Build;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +25,7 @@ final class WindowManagerProxy implements WindowManager {
     private WeakReference<BasePopupHelper> mPopupHelper;
     private static int statusBarHeight;
 
-    public WindowManagerProxy(WindowManager windowManager) {
+    WindowManagerProxy(WindowManager windowManager) {
         mWindowManager = windowManager;
     }
 
@@ -68,10 +66,10 @@ final class WindowManagerProxy implements WindowManager {
 
             applyHelper(params, helper);
             //添加popup主体
-            final PopupDecorViewProxy popupDecorViewProxy = PopupDecorViewProxy.create(view.getContext(), helper);
+            final PopupDecorViewProxy popupDecorViewProxy = PopupDecorViewProxy.create(view.getContext(), this, helper);
             popupDecorViewProxy.addPopupDecorView(view, (LayoutParams) params);
             mPopupDecorViewProxy = new WeakReference<PopupDecorViewProxy>(popupDecorViewProxy);
-            mWindowManager.addView(popupDecorViewProxy, fitLayoutParamsPosition(params));
+            mWindowManager.addView(popupDecorViewProxy, fitLayoutParamsPosition(popupDecorViewProxy, params));
         } else {
             mWindowManager.addView(view, params);
         }
@@ -105,7 +103,7 @@ final class WindowManagerProxy implements WindowManager {
         }
     }
 
-    private ViewGroup.LayoutParams fitLayoutParamsPosition(ViewGroup.LayoutParams params) {
+    private ViewGroup.LayoutParams fitLayoutParamsPosition(PopupDecorViewProxy viewProxy, ViewGroup.LayoutParams params) {
         if (params instanceof LayoutParams) {
             LayoutParams p = (LayoutParams) params;
             BasePopupHelper helper = getBasePopupHelper();
@@ -118,14 +116,7 @@ final class WindowManagerProxy implements WindowManager {
                     p.y = 0;
                     p.x = 0;
                 } else {
-                    if (helper.isShowAsDropDown()) {
-                        Point offset = helper.getCachedOffset();
-                        p.x += offset.x;
-                        p.y += offset.y;
-                        Log.d(TAG, "fitLayoutParamsPosition: x = " + p.x + "  y = " + p.y + "  offsetX = " + offset.x + "  offsetY = " + offset.y);
-                        //实际内容页在decorViewProxy已经测量
-                        p.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                    }
+                    viewProxy.fitWindowParams((LayoutParams) params);
                 }
             }
             applyHelper(p, helper);
@@ -138,9 +129,9 @@ final class WindowManagerProxy implements WindowManager {
         PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.updateViewLayout  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
         if (mWindowManager == null || view == null) return;
         checkStatusBarHeight(view.getContext());
-        if (isPopupInnerDecorView(view) && getPopupDecorViewProxy() != null) {
+        if (isPopupInnerDecorView(view) && getPopupDecorViewProxy() != null || view == getPopupDecorViewProxy()) {
             PopupDecorViewProxy popupDecorViewProxy = getPopupDecorViewProxy();
-            mWindowManager.updateViewLayout(popupDecorViewProxy, fitLayoutParamsPosition(params));
+            mWindowManager.updateViewLayout(popupDecorViewProxy, fitLayoutParamsPosition(popupDecorViewProxy, params));
         } else {
             mWindowManager.updateViewLayout(view, params);
         }
