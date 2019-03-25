@@ -30,6 +30,14 @@ import razerdp.library.R;
  */
 final class BasePopupHelper implements PopupTouchController, PopupWindowActionListener, PopupWindowLocationListener, PopupKeyboardStateChangeListener {
 
+    enum ShowMode {
+        RELATIVE_TO_ANCHOR,
+        SCREEN,
+        POSITION
+    }
+
+    private ShowMode mShowMode = ShowMode.SCREEN;
+
     public static final int CONTENT_VIEW_ID = R.id.base_popup_content_root;
 
     static final int DEFAULT_WIDTH = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -102,7 +110,6 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     private int mSoftInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
     private ViewGroup.MarginLayoutParams mParaseFromXmlParams;
-    private Point mOffsetCached = new Point();
     private Point mTempOffset = new Point();
 
     private boolean isCustomMeasureWidth;
@@ -451,16 +458,6 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return this;
     }
 
-    BasePopupHelper cacheOffset(Point offset) {
-        if (offset == null) return this;
-        this.mOffsetCached.set(offset.x, offset.y);
-        return this;
-    }
-
-    Point getCachedOffset() {
-        return mOffsetCached;
-    }
-
     public Point getTempOffset() {
         return mTempOffset;
     }
@@ -636,7 +633,26 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return this;
     }
 
+    ShowMode getShowMode() {
+        return mShowMode;
+    }
+
+    BasePopupHelper setShowMode(ShowMode showMode) {
+        mShowMode = showMode;
+        return this;
+    }
+
     //-----------------------------------------controller-----------------------------------------
+    void prepare(View v, boolean positionMode) {
+        if (positionMode) {
+            setShowMode(BasePopupHelper.ShowMode.POSITION);
+        } else {
+            setShowMode(v == null ? BasePopupHelper.ShowMode.SCREEN : BasePopupHelper.ShowMode.RELATIVE_TO_ANCHOR);
+        }
+        getAnchorLocation(v);
+    }
+
+
     void handleShow() {
         //针对官方的坑（两个popup切换页面后重叠）
         if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP ||

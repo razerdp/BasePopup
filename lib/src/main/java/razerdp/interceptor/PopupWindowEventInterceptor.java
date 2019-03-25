@@ -43,6 +43,8 @@ public interface PopupWindowEventInterceptor<P extends BasePopupWindow> {
 
     /**
      * 允许用户拦截BasePopup默认的偏移计算过程
+     * <br>
+     * <strong>该方法已弃用，且不再回调</strong>
      *
      * @param basePopupWindow basePopupWindow对象
      * @param anchorView      锚点View
@@ -50,19 +52,25 @@ public interface PopupWindowEventInterceptor<P extends BasePopupWindow> {
      * @param offsetY         垂直偏移
      * @return 如果返回true，则意味着用户处理了该方法，则不默认执行BasePopupWindow的默认方法
      * @see BasePopupWindow#calculateOffset(View, boolean)
+     * @deprecated
      */
+    @Deprecated
     Point onCalculateOffset(P basePopupWindow, View anchorView, int offsetX, int offsetY);
 
     /**
      * 提供BasePopup偏移量计算结果回调，允许用户在回调中做弹出前最后一次修正
+     * <br>
+     * <strong>该方法已弃用，且不再回调</strong>
      *
-     * @param basePopupWindow  basePopupWindow对象
-     * @param anchorView       锚点View
-     * @param offsetX          水平偏移
-     * @param offsetResult 已经经过默认计算的偏移量
-     * @param offsetY          垂直偏移
+     * @param basePopupWindow basePopupWindow对象
+     * @param anchorView      锚点View
+     * @param offsetX         水平偏移
+     * @param offsetResult    已经经过默认计算的偏移量
+     * @param offsetY         垂直偏移
      * @see BasePopupWindow#tryToShowPopup(View, boolean, boolean)
+     * @deprecated
      */
+    @Deprecated
     void onCalculateOffsetResult(P basePopupWindow, View anchorView, Point offsetResult, int offsetX, int offsetY);
 
 
@@ -71,7 +79,7 @@ public interface PopupWindowEventInterceptor<P extends BasePopupWindow> {
      *
      * @param keyboardHeight    键盘高度
      * @param isKeyBoardVisible 键盘是否已经弹出
-     * @param offsetResult  默认计算的偏移量
+     * @param offsetResult      默认计算的偏移量
      * @return 返回新的偏移量，返回0则不进行修正。
      */
     int onKeyboardChangeResult(int keyboardHeight, boolean isKeyBoardVisible, int offsetResult);
