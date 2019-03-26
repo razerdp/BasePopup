@@ -548,20 +548,19 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         }
         int offsetX = 0;
         int offsetY = 0;
-        //由于showAsDropDown系统已经帮我们定位在view的下方，因此这里的offset我们仅需要做微量偏移
+        // offset需要自行计算，不采用系统方法了
         switch (mHelper.getPopupGravity() & Gravity.HORIZONTAL_GRAVITY_MASK) {
             case Gravity.LEFT:
             case Gravity.START:
-                if (mHelper.isShowAsDropDown()) {
-                    offsetX += -getMeasuredWidth();
-                }
+                offsetX += mHelper.isShowAsDropDown() ? mHelper.getAnchorX() - getMeasuredWidth() : 0;
                 break;
             case Gravity.RIGHT:
             case Gravity.END:
-                offsetX += mHelper.isShowAsDropDown() ? mHelper.getAnchorViewWidth() : (getScreenWidth() - getMeasuredWidth());
+                offsetX += mHelper.isShowAsDropDown() ? mHelper.getAnchorX() + mHelper.getAnchorViewWidth() : getScreenWidth() - getMeasuredWidth();
                 break;
             case Gravity.CENTER_HORIZONTAL:
-                offsetX += mHelper.isShowAsDropDown() ? (mHelper.getAnchorViewWidth() - getMeasuredWidth()) >> 1 : (getScreenWidth() - getMeasuredWidth()) >> 1;
+                offsetX += mHelper.isShowAsDropDown() ? mHelper.getAnchorX() + ((mHelper.getAnchorViewWidth() - getMeasuredWidth()) >> 1)
+                        : (getScreenWidth() - getMeasuredWidth()) >> 1;
                 break;
             default:
                 break;
@@ -570,17 +569,13 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
         switch (mHelper.getPopupGravity() & Gravity.VERTICAL_GRAVITY_MASK) {
             case Gravity.TOP:
-                if (mHelper.isShowAsDropDown()) {
-                    offsetY += -(mHelper.getAnchorHeight() + getMeasuredHeight());
-                }
+                offsetY += mHelper.isShowAsDropDown() ? mHelper.getAnchorY() - getMeasuredHeight() : 0;
                 break;
             case Gravity.BOTTOM:
-                if (!mHelper.isShowAsDropDown()) {
-                    offsetY += getScreenHeight() - getMeasuredHeight();
-                }
+                offsetY += mHelper.isShowAsDropDown() ? mHelper.getAnchorY() + mHelper.getAnchorHeight() : getScreenHeight() - getMeasuredHeight();
                 break;
             case Gravity.CENTER_VERTICAL:
-                offsetY += mHelper.isShowAsDropDown() ? -(getMeasuredHeight() + mHelper.getAnchorHeight()) >> 1 : (getScreenHeight() - getMeasuredHeight()) >> 1;
+                offsetY += mHelper.isShowAsDropDown() ? mHelper.getAnchorY() + ((mHelper.getAnchorHeight() - getMeasuredHeight()) >> 1) : (getScreenHeight() - getMeasuredHeight()) >> 1;
                 break;
             default:
                 break;
