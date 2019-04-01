@@ -29,6 +29,10 @@
 				<a href = "https://github.com/razerdp/BasePopup/blob/master/LICENSE">
 					<img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"/>		
 				</a>
+				<br></br>
+				<a href = "https://github.com/razerdp/BasePopup/blob/master/LICENSE_996">
+                	<img src="https://img.shields.io/badge/license-NPL%20(The%20996%20Prohibited%20License)-blue.svg"/>		
+                </a>
 			</td>
 			<td>
 				<a href="https://img.shields.io/badge/Api-14%2B-green.svg">
@@ -323,6 +327,8 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
     * 增加`setMaxWidth()`和`setMaxHeight()`方法，想最大半屏显示？走起~
   * **【Candy】2.2.0-alpha**(2019/03/21)
     * 增加`setBackgroundView(View)`方法，现在BasePopup的背景控件可以随意由你定制啦~当然PopupWindow的背景动画控制方法依旧生效
+  * **【other】**
+    * add 996 license
 
 * **【Release】2.1.9**(2019/03/07)
   * 优化对android P刘海的支持，允许PopupWindow布局到刘海，fixed [**#154**](https://github.com/razerdp/BasePopup/issues/154)

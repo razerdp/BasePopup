@@ -27,8 +27,12 @@
 			</td>
 			<td>
 				<a href = "https://github.com/razerdp/BasePopup/blob/master/LICENSE">
-					<img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"/>
+					<img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"/>		
 				</a>
+				<br></br>
+				<a href = "https://github.com/razerdp/BasePopup/blob/master/LICENSE_996">
+                	<img src="https://img.shields.io/badge/license-NPL%20(The%20996%20Prohibited%20License)-blue.svg"/>		
+                </a>
 			</td>
 			<td>
 				<a href="https://img.shields.io/badge/Api-14%2B-green.svg">
