@@ -427,7 +427,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         mPopupWindow = new PopupWindowProxy(mContentView, width, height, mHelper);
         mPopupWindow.setOnDismissListener(this);
         mPopupWindow.attachPopupHelper(mHelper);
-        setAllowDismissWhenTouchOutside(true);
+        setOutSideDismiss(true);
         setPopupAnimationStyle(0);
 
         mHelper.setPopupViewWidth(width);
@@ -808,7 +808,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private void tryToShowPopup(View v, boolean positionMode, boolean abortAnimate) {
         addListener();
         mHelper.handleShow();
-        mHelper.prepare(v,positionMode);
+        mHelper.prepare(v, positionMode);
         if (mEventInterceptor != null && mEventInterceptor.onTryToShowPopup(this,
                 mPopupWindow,
                 v,
@@ -824,7 +824,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 if (mHelper.isShowAsDropDown()) {
                     mPopupWindow.showAsDropDownProxy(v, 0, 0, getPopupGravity());
                 } else {
-                    mPopupWindow.showAtLocationProxy(v, getPopupGravity(), 0,0);
+                    mPopupWindow.showAtLocationProxy(v, getPopupGravity(), 0, 0);
                 }
             } else {
                 //什么都没传递，取顶级view的id
@@ -835,7 +835,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                     Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
                 } else {
                     mPopupWindow.showAtLocationProxy(findDecorView(activity),
-                            Gravity.NO_GRAVITY,0,0);
+                            Gravity.NO_GRAVITY, 0, 0);
                 }
             }
             mHelper.onShow(mHelper.getShowAnimation() != null || mHelper.getShowAnimator() != null);
@@ -884,7 +884,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     private void tryToUpdate(View v, boolean positionMode) {
         if (!isShowing() || getContentView() == null) return;
-        mHelper.prepare(v,positionMode);
+        mHelper.prepare(v, positionMode);
         mPopupWindow.update();
     }
 
@@ -1494,9 +1494,25 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * dismiss popup when touch outside from popup
      *
      * @param dismissWhenTouchOutside true for allow
+     * @deprecated please use {@link #setOutSideDismiss(boolean)} instead
      */
+    @Deprecated
     public BasePopupWindow setAllowDismissWhenTouchOutside(boolean dismissWhenTouchOutside) {
-        mHelper.setDismissWhenTouchOutside(mPopupWindow, dismissWhenTouchOutside);
+        setOutSideDismiss(dismissWhenTouchOutside);
+        return this;
+    }
+
+    /**
+     * <p>
+     * 是否允许点击PopupWindow外部时触发dismiss
+     * </p>
+     * <br>
+     * dismiss popup when touch outside from popup
+     *
+     * @param outSideDismiss true for allow
+     */
+    public BasePopupWindow setOutSideDismiss(boolean outSideDismiss) {
+        mHelper.setDismissWhenTouchOutside(mPopupWindow, outSideDismiss);
         return this;
     }
 
@@ -1512,14 +1528,34 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *                  <li>ture:PopupWindow拦截事件</li>
      *                  <li>false：不拦截事件</li>
      *                  </ul>
+     * @deprecated please use {@link #setOutSideTouchAble(boolean)} instead
      */
+    @Deprecated
     public BasePopupWindow setAllowInterceptTouchEvent(boolean touchable) {
-        mHelper.setInterceptTouchEvent(mPopupWindow, touchable);
+        setOutSideTouchAble(!touchable);
         return this;
     }
 
     /**
-     * 当{@link #setAllowInterceptTouchEvent(boolean)}为true时，该参数决定popupWindow是否被限制在绘制边界
+     * <p>
+     * 是否允许点击PopupWindow拦截事件。
+     * <br>
+     * <br>
+     * 如果允许拦截事件，则PopupWindow外部无法响应事件。
+     * </p>
+     *
+     * @param touchable <ul>
+     *                  <li>ture:外部可点击</li>
+     *                  <li>false：外部不可点击</li>
+     *                  </ul>
+     */
+    public BasePopupWindow setOutSideTouchAble(boolean touchable) {
+        mHelper.setInterceptTouchEvent(mPopupWindow, !touchable);
+        return this;
+    }
+
+    /**
+     * 该参数决定popupWindow是否被限制在绘制边界
      * <p>
      * <br>
      * <ul>
@@ -1556,14 +1592,20 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return mHelper.isDismissWhenTouchOutside();
     }
 
+    /**
+     * @deprecated please use {@link #isOutSideTouchable()}
+     */
+    @Deprecated
     public boolean isAllowInterceptTouchEvent() {
         return mHelper.isInterceptTouchEvent();
     }
 
-    public boolean isAlignMaskToPopup() {
-        return mHelper.isAlignBackground();
+    /**
+     * 外部是否可以点击
+     */
+    public boolean isOutSideTouchable() {
+        return !mHelper.isInterceptTouchEvent();
     }
-
 
     /**
      * <p>
@@ -1626,11 +1668,17 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return this;
     }
 
+    /**
+     * 设置BasePopup最大宽度
+     */
     public BasePopupWindow setMaxWidth(int maxWidth) {
         mHelper.setMaxWidth(maxWidth);
         return this;
     }
 
+    /**
+     * 设置BasePopup最大高度
+     */
     public BasePopupWindow setMaxHeight(int maxHeight) {
         mHelper.setMaxHeight(maxHeight);
         return this;

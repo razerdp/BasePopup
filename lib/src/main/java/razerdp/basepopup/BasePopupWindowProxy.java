@@ -82,8 +82,6 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     }
 
     private void init(Context context) {
-//       int i = Reflection.unseal(context);
-//        Log.d(TAG, "init: "+i);
         setFocusable(true);
         setOutsideTouchable(true);
         setBackgroundDrawable(new ColorDrawable());

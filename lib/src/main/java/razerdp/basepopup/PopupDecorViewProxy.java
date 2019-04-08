@@ -219,37 +219,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             if (child == mMaskLayout) {
                 measureChild(child, MeasureSpec.makeMeasureSpec(getScreenWidth(), MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(getScreenHeight(), MeasureSpec.EXACTLY));
             } else {
-                final LayoutParams lp = child.getLayoutParams();
-
-                int modeHeight = MeasureSpec.getMode(heightMeasureSpec);
-                if (mHelper.getMaxWidth() > 0) {
-                    int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
-                    if (sizeWidth > mHelper.getMaxWidth()) {
-                        widthMeasureSpec = MeasureSpec.makeMeasureSpec(mHelper.getMaxWidth(), MeasureSpec.EXACTLY);
-                    }
-                }
-
-                final int childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec,
-                        childLeftMargin + childRightMargin, lp.width);
-                int fixedHeightMeasureSpec = heightMeasureSpec;
-                //针对match_parent
-                if (mHelper.isClipToScreen() && mHelper.isShowAsDropDown() && lp.height == LayoutParams.MATCH_PARENT) {
-                    int restContentHeight = getScreenHeight() - (mHelper.getAnchorY() + mHelper.getAnchorHeight()) - childTopMargin - childBottomMargin;
-                    if (restContentHeight == 0) {
-                        restContentHeight = MeasureSpec.getSize(heightMeasureSpec);
-                    }
-                    fixedHeightMeasureSpec = MeasureSpec.makeMeasureSpec(restContentHeight, modeHeight);
-                }
-                if (mHelper.getMaxHeight() > 0) {
-                    int sizeHeight = MeasureSpec.getSize(fixedHeightMeasureSpec);
-                    if (sizeHeight > mHelper.getMaxHeight()) {
-                        fixedHeightMeasureSpec = MeasureSpec.makeMeasureSpec(mHelper.getMaxHeight(), MeasureSpec.EXACTLY);
-                    }
-                }
-                final int childHeightMeasureSpec = getChildMeasureSpec(fixedHeightMeasureSpec,
-                        childTopMargin + childBottomMargin, lp.height);
-
-                child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
+                measureWrappedDecorView(child, widthMeasureSpec, heightMeasureSpec);
             }
         }
         setMeasuredDimension(getScreenWidth(), getScreenHeight());
@@ -263,51 +233,71 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
-            if (child.getVisibility() != GONE) {
-                if (child == mTarget) {
-                    final LayoutParams lp = child.getLayoutParams();
-
-                    widthMeasureSpec = getChildMeasureSpec(widthMeasureSpec, 0, lp.width);
-                    heightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, 0, lp.height);
-
-                    if (mHelper.getMaxWidth() > 0) {
-                        int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
-                        if (sizeWidth > mHelper.getMaxWidth()) {
-                            widthMeasureSpec = MeasureSpec.makeMeasureSpec(mHelper.getMaxWidth(), MeasureSpec.EXACTLY);
-                        }
-                    }
-
-                    int fixedHeightMeasureSpec = heightMeasureSpec;
-                    if (mHelper.isClipToScreen() && mHelper.isShowAsDropDown() && lp.height == LayoutParams.MATCH_PARENT) {
-                        int mode = MeasureSpec.getMode(heightMeasureSpec);
-                        int restContentHeight = getScreenHeight() - (mHelper.getAnchorY() + mHelper.getAnchorHeight()) - childTopMargin - childBottomMargin;
-                        if (restContentHeight == 0) {
-                            restContentHeight = MeasureSpec.getSize(heightMeasureSpec);
-                        }
-                        fixedHeightMeasureSpec = MeasureSpec.makeMeasureSpec(restContentHeight, mode);
-                    }
-
-                    if (mHelper.getMaxHeight() > 0) {
-                        int sizeHeight = MeasureSpec.getSize(fixedHeightMeasureSpec);
-                        if (sizeHeight > mHelper.getMaxHeight()) {
-                            fixedHeightMeasureSpec = MeasureSpec.makeMeasureSpec(mHelper.getMaxHeight(), MeasureSpec.EXACTLY);
-                        }
-                    }
-
-                    final int childHeightMeasureSpec = getChildMeasureSpec(fixedHeightMeasureSpec,
-                            childTopMargin + childBottomMargin, lp.height);
-
-                    child.measure(widthMeasureSpec, childHeightMeasureSpec);
-                } else {
-                    measureChild(child, widthMeasureSpec, heightMeasureSpec);
-                }
-                maxWidth = Math.max(maxWidth, child.getMeasuredWidth());
-                maxHeight = Math.max(maxHeight, child.getMeasuredHeight());
-                childState = combineMeasuredStates(childState, child.getMeasuredState());
+            if (child == mTarget) {
+                measureWrappedDecorView(mTarget, widthMeasureSpec, heightMeasureSpec);
+            } else {
+                measureChild(child, widthMeasureSpec, heightMeasureSpec);
             }
+
+            maxWidth = Math.max(maxWidth, child.getMeasuredWidth());
+            maxHeight = Math.max(maxHeight, child.getMeasuredHeight());
+            childState = combineMeasuredStates(childState, child.getMeasuredState());
         }
         setMeasuredDimension(resolveSizeAndState(maxWidth, widthMeasureSpec, childState), resolveSizeAndState(maxHeight, heightMeasureSpec,
                 childState << MEASURED_HEIGHT_STATE_SHIFT));
+    }
+
+
+    private void measureWrappedDecorView(View mTarget, int widthMeasureSpec, int heightMeasureSpec) {
+        if (mTarget == null || mTarget.getVisibility() == GONE) return;
+        final LayoutParams lp = mTarget.getLayoutParams();
+
+        widthMeasureSpec = getChildMeasureSpec(widthMeasureSpec, 0, lp.width);
+        heightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, 0, lp.height);
+
+
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+
+        int targetWidthMode = widthMode;
+        int targetHeightMode = heightMode;
+
+
+        widthSize += Math.max(0, childLeftMargin) + Math.max(0, childRightMargin);
+        heightSize += Math.max(0, childTopMargin) + Math.max(0, childBottomMargin);
+
+
+        if (mHelper.getMaxWidth() > 0) {
+            if (widthSize > mHelper.getMaxWidth()) {
+                widthSize = mHelper.getMaxWidth();
+                targetWidthMode = MeasureSpec.EXACTLY;
+            }
+        }
+
+        //以下针对突破屏幕的内容进行重新测量
+        if (mHelper.isClipChildren() && (mHelper.isShowAsDropDown()||lp.height== LayoutParams.MATCH_PARENT)) {
+            //剩余可用空间
+            int canShowContentHeight = getScreenHeight() - (mHelper.getAnchorY() + mHelper.getAnchorHeight()) - childTopMargin - childBottomMargin;
+            if (heightSize > canShowContentHeight) {
+                heightSize = canShowContentHeight;
+                targetHeightMode = MeasureSpec.EXACTLY;
+            }
+        }
+
+        if (mHelper.getMaxHeight() > 0) {
+            if (heightSize > mHelper.getMaxHeight()) {
+                heightSize = mHelper.getMaxHeight();
+                targetHeightMode = MeasureSpec.EXACTLY;
+            }
+        }
+
+        widthMeasureSpec = MeasureSpec.makeMeasureSpec(widthSize, targetWidthMode);
+        heightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, targetHeightMode);
+
+        mTarget.measure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
