@@ -71,6 +71,7 @@ public class PopupUiUtils {
                 final int childCount = decorView.getChildCount();
                 for (int i = 0; i < childCount; i++) {
                     View child = decorView.getChildAt(i);
+                    if (child.getId()==View.NO_ID)continue;
                     String resourceEntryName;
                     try {
                         resourceEntryName = act.getResources().getResourceEntryName(child.getId());
