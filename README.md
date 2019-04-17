@@ -330,6 +330,9 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
 * **【Candy】2.2.0**
+  * **【Candy】2.2.0-alpha4**(2019/04/17)
+    * fixed [#164](https://github.com/razerdp/BasePopup/issues/164)
+    * 优化测量逻辑，尝试修复wrap_content等高度问题
   * **【Candy】2.2.0-alpha2**(2019/03/21)
     * 增加`setMaxWidth()`和`setMaxHeight()`方法，想最大半屏显示？走起~
   * **【Candy】2.2.0-alpha**(2019/03/21)
