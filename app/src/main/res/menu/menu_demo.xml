@@ -89,4 +89,9 @@
         android:orderInCategory="115"
         android:title="其他1"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_other_2"
+        android:orderInCategory="116"
+        android:title="其他2"
+        app:showAsAction="never"/>
 </menu>

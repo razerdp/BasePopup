@@ -332,6 +332,12 @@ import razerdp.util.log.PopupLogUtil;
  */
 public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismissListener, PopupTouchController, PopupWindowLocationListener {
     private static final String TAG = "BasePopupWindow";
+
+    public enum GravityMode {
+        RELATIVE_TO_ANCHOR,
+        ALIGN_TO_ANCHOR
+    }
+
     private static final int MAX_RETRY_SHOW_TIME = 3;
     public static final int MATCH_PARENT = ViewGroup.LayoutParams.MATCH_PARENT;
     public static final int WRAP_CONTENT = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -1414,7 +1420,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     /**
      * <p>
-     * 设置参考点 {@link Gravity}
+     * 设置参考方向  {@link Gravity}
      * <br>
      * <ul>
      * <li> 不跟anchorView联系的情况下，gravity意味着在整个view中的方位{@link #showPopupWindow()}</li>
@@ -1424,7 +1430,24 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param popupGravity
      */
     public BasePopupWindow setPopupGravity(int popupGravity) {
-        mHelper.setPopupGravity(popupGravity);
+        return setPopupGravity(GravityMode.RELATIVE_TO_ANCHOR, popupGravity);
+    }
+
+    /**
+     * <p>
+     * 设置参考方向 {@link Gravity}
+     * <br>
+     * <ul>
+     * <li> 不跟anchorView联系的情况下，gravity意味着在整个view中的方位{@link #showPopupWindow()}</li>
+     * <li> 如果跟anchorView联系，gravity意味着以anchorView为中心的方位{@link #showPopupWindow(View)}</li>
+     * </ul>
+     *
+     * @param mode         <ul><li>GravityMode.RELATIVE_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup处于该Anchor的哪个位置</li>
+     *                     <li>GravityMode.ALIGN_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪个位置</li></ul>
+     * @param popupGravity
+     */
+    public BasePopupWindow setPopupGravity(GravityMode mode, int popupGravity) {
+        mHelper.setPopupGravity(mode, popupGravity);
         return this;
     }
 

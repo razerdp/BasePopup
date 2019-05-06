@@ -23,6 +23,7 @@ import razerdp.demo.fragment.other.ListPopupFrag;
 import razerdp.demo.fragment.other.LocatePopupFrag;
 import razerdp.demo.fragment.other.MenuPopupFrag;
 import razerdp.demo.fragment.other.OtherPopupFrag1;
+import razerdp.demo.fragment.other.OtherPopupFrag2;
 import razerdp.demo.fragment.other.ScalePopupFrag;
 import razerdp.demo.fragment.other.SimpleBaseFrag;
 import razerdp.demo.fragment.other.SlideFromBottomPopupFrag;
@@ -57,6 +58,7 @@ public class OtherDemoActivity extends AppCompatActivity {
         fragMap.put(R.id.id_locate_with_view, new LocatePopupFrag());
         fragMap.put(R.id.id_slide_from_bottom_input_popup, new BottomInputFragment());
         fragMap.put(R.id.id_other_1, new OtherPopupFrag1());
+        fragMap.put(R.id.id_other_2, new OtherPopupFrag2());
     }
 
 
