@@ -19,32 +19,30 @@ import razerdp.demo.base.baseadapter.BaseRecyclerViewHolder;
 import razerdp.demo.utils.ToastUtils;
 
 /**
- * Created by 大灯泡 on 2016/11/23.
+ * Created by 大灯泡 on 2019/5/6.
  * <p>
- * 自动定位的popup，空间不足显示在上面
  */
-public class AutoLocatedRecyclerViewPopup extends BasePopupWindow implements View.OnClickListener {
+public class RecyclerViewPopup extends BasePopupWindow implements View.OnClickListener {
 
     private RecyclerView mRecyclerView;
 
 
-    public AutoLocatedRecyclerViewPopup(Context context) {
+    public RecyclerViewPopup(Context context) {
         this(context, -1);
     }
 
-    public AutoLocatedRecyclerViewPopup(Context context, int count) {
+    public RecyclerViewPopup(Context context, int count) {
         super(context);
         if (count <= 0) {
             count = 10;
         }
         mRecyclerView = findViewById(R.id.rv_content);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         List<String> data = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            data.add("test" + String.valueOf(i));
+            data.add("test" + i);
         }
-        mRecyclerView.setAdapter(new InnerAdapter(getContext(), data));
-        setAutoLocatePopup(true);
+        mRecyclerView.setAdapter(new InnerAdapter(context, data));
         bindEvent();
     }
 

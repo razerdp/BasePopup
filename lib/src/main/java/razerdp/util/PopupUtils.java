@@ -64,4 +64,19 @@ public class PopupUtils {
         return null;
     }
 
+    public static float range(float value, float min, float max) {
+        return Math.max(min, Math.min(value, max));
+    }
+
+    public static double range(double value, double min, double max) {
+        return Math.max(min, Math.min(value, max));
+    }
+
+    public static int range(int value, int min, int max) {
+        return Math.max(min, Math.min(value, max));
+    }
+
+    public static long range(long value, long min, long max) {
+        return Math.max(min, Math.min(value, max));
+    }
 }

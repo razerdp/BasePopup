@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -17,8 +16,7 @@
             android:lineSpacingMultiplier="1.2"
             android:padding="16dp"
             android:textColor="@color/color_black2"
-            android:textSize="12sp"
-            />
+            android:textSize="12sp" />
     </ScrollView>
 
     <LinearLayout
@@ -37,14 +35,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Gravity.LEFT"/>
+                android:text="Gravity.LEFT" />
 
             <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/check_gravity_top"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Gravity.TOP"/>
+                android:text="Gravity.TOP" />
         </LinearLayout>
 
         <LinearLayout
@@ -57,14 +55,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Gravity.RIGHT"/>
+                android:text="Gravity.RIGHT" />
 
             <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/check_gravity_bottom"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Gravity.BOTTOM"/>
+                android:text="Gravity.BOTTOM" />
         </LinearLayout>
 
         <LinearLayout
@@ -77,14 +75,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Gravity.CENTER_VERTICAL"/>
+                android:text="Gravity.CENTER_VERTICAL" />
 
             <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/check_gravity_center_horizontal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Gravity.CENTER_HORIZONTAL"/>
+                android:text="Gravity.CENTER_HORIZONTAL" />
 
         </LinearLayout>
 
@@ -98,7 +96,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Gravity.CENTER"/>
+                android:text="Gravity.CENTER" />
 
             <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/check_combine_anchor"
@@ -106,7 +104,22 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:text="是否跟AnchorView关联"/>
+                android:text="是否跟AnchorView关联" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/check_gravity_mode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:text="模式（选中为ALIGN_TO_ANCHOR），默认（RELATIVE_TO_ANCHOR）" />
         </LinearLayout>
     </LinearLayout>
 
@@ -115,5 +128,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="show"/>
+        android:text="show" />
 </RelativeLayout>

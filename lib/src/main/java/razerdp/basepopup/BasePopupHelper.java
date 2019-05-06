@@ -60,6 +60,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     private BasePopupWindow.OnBeforeShowCallback mOnBeforeShowCallback;
 
     //option
+    private BasePopupWindow.GravityMode gravityMode = BasePopupWindow.GravityMode.RELATIVE_TO_ANCHOR;
     private int popupGravity = Gravity.NO_GRAVITY;
     private int offsetX;
     private int offsetY;
@@ -115,7 +116,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     private boolean isCustomMeasureWidth;
     private boolean isCustomMeasureHeight;
 
-    private int maxWidth, maxHeight;
+    private int maxWidth, maxHeight, minWidth, minHeight;
 
     BasePopupHelper(PopupTouchController controller) {
         mAnchorViewLocation = new int[2];
@@ -174,9 +175,9 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     private void checkAndSetGravity(ViewGroup.LayoutParams p) {
         if (p == null) return;
         if (p instanceof LinearLayout.LayoutParams) {
-            setPopupGravity(((LinearLayout.LayoutParams) p).gravity);
+            setPopupGravity(gravityMode, ((LinearLayout.LayoutParams) p).gravity);
         } else if (p instanceof FrameLayout.LayoutParams) {
-            setPopupGravity(((FrameLayout.LayoutParams) p).gravity);
+            setPopupGravity(gravityMode, ((FrameLayout.LayoutParams) p).gravity);
         }
     }
 
@@ -341,12 +342,17 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return this;
     }
 
+    BasePopupWindow.GravityMode getGravityMode() {
+        return gravityMode;
+    }
+
     int getPopupGravity() {
         return popupGravity;
     }
 
-    BasePopupHelper setPopupGravity(int popupGravity) {
-        if (popupGravity == this.popupGravity) return this;
+    BasePopupHelper setPopupGravity(BasePopupWindow.GravityMode mode, int popupGravity) {
+        if (popupGravity == this.popupGravity && gravityMode == mode) return this;
+        this.gravityMode = mode;
         this.popupGravity = popupGravity;
         return this;
     }
@@ -467,7 +473,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return mTempOffset;
     }
 
-    int getAnchorViewWidth() {
+    int getAnchorWidth() {
         return mAnchorViewWidth;
     }
 
@@ -639,6 +645,24 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     BasePopupHelper setShowMode(ShowMode showMode) {
         mShowMode = showMode;
+        return this;
+    }
+
+    int getMinWidth() {
+        return minWidth;
+    }
+
+    BasePopupHelper setMinWidth(int minWidth) {
+        this.minWidth = minWidth;
+        return this;
+    }
+
+    int getMinHeight() {
+        return minHeight;
+    }
+
+    BasePopupHelper setMinHeight(int minHeight) {
+        this.minHeight = minHeight;
         return this;
     }
 

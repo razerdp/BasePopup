@@ -30,6 +30,7 @@ public class GravityPopupFrag extends SimpleBaseFrag implements View.OnClickList
     private AppCompatCheckBox checkGravityCenterVertical;
     private AppCompatCheckBox checkGravityCenterHorizontal;
     private AppCompatCheckBox checkGravityCenter;
+    private AppCompatCheckBox checkGravityMode;
     private Button popupShow;
     private AppCompatCheckBox checkCombineAnchor;
     private static final String DESC = " · 不跟anchorView关联的情况下，gravity意味着在整个decorView中的方位，默认Gravity为NO_GRAVITY，即屏幕左上角\n\n" +
@@ -73,7 +74,8 @@ public class GravityPopupFrag extends SimpleBaseFrag implements View.OnClickList
                 if (checkGravityCenter.isChecked()) {
                     gravity |= Gravity.CENTER;
                 }
-                mPopupWindow.setPopupGravity(gravity);
+                mPopupWindow.setPopupGravity(checkGravityMode.isChecked() ? BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR : BasePopupWindow.GravityMode.RELATIVE_TO_ANCHOR,
+                        gravity);
                 if (checkCombineAnchor.isChecked()) {
                     mPopupWindow.showPopupWindow(v);
                 } else {
@@ -94,6 +96,7 @@ public class GravityPopupFrag extends SimpleBaseFrag implements View.OnClickList
         this.checkGravityCenterHorizontal = (AppCompatCheckBox) findViewById(R.id.check_gravity_center_horizontal);
         this.checkGravityCenter = (AppCompatCheckBox) findViewById(R.id.check_gravity_center);
         this.checkCombineAnchor = (AppCompatCheckBox) findViewById(R.id.check_combine_anchor);
+        this.checkGravityMode = (AppCompatCheckBox) findViewById(R.id.check_gravity_mode);
         this.popupShow = (Button) findViewById(R.id.popup_show);
         initDesc();
     }
