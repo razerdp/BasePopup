@@ -1,8 +1,8 @@
 package razerdp.basepopup;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -93,7 +93,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     //背景层是否对齐popup
     private boolean mAlignBackground = false;
     //背景颜色
-    private Drawable mBackgroundDrawable = new ColorDrawable(Color.parseColor("#8f000000"));
+    private Drawable mBackgroundDrawable = new ColorDrawable(BasePopupWindow.DEFAULT_BACKGROUND_COLOR);
     //背景对齐方向
     private int alignBackgroundGravity = Gravity.TOP;
     //背景View
@@ -440,7 +440,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return interceptOutSideTouchEvent;
     }
 
-    BasePopupHelper setInterceptTouchEvent(PopupWindow popupWindow, boolean intecept) {
+    BasePopupHelper setOutSideTouchable(PopupWindow popupWindow, boolean intecept) {
         if (popupWindow == null) return this;
         interceptOutSideTouchEvent = intecept;
         return this;
@@ -536,7 +536,17 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         if (mDismissAnimation != null) {
             duration = mDismissAnimation.getDuration();
         } else if (mDismissAnimator != null) {
-            duration = mDismissAnimator.getDuration();
+            if (mDismissAnimator instanceof AnimatorSet) {
+                AnimatorSet set = ((AnimatorSet) mDismissAnimator);
+                duration = set.getDuration();
+                if (duration < 0) {
+                    for (Animator childAnimation : set.getChildAnimations()) {
+                        duration = Math.max(duration, childAnimation.getDuration());
+                    }
+                }
+            } else {
+                duration = mDismissAnimator.getDuration();
+            }
         }
         return duration < 0 ? 500 : duration;
     }

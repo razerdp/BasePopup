@@ -32,7 +32,6 @@ public class DialogPopup extends BasePopupWindow implements View.OnClickListener
         setViewClickListener(this, ok, cancel);
         setPopupGravity(Gravity.CENTER);
         setClipChildren(false);
-        setAllowInterceptTouchEvent(false);
     }
 
     @Override

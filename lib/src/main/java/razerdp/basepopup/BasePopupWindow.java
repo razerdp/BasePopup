@@ -207,7 +207,12 @@ package razerdp.basepopup;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.app.Activity;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -330,12 +335,14 @@ import razerdp.util.log.PopupLogUtil;
  * @version 2.0
  * @since 2016/1/14
  */
-public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismissListener, PopupTouchController, PopupWindowLocationListener {
+public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismissListener, PopupTouchController,
+        PopupWindowLocationListener, LifecycleObserver {
     private static final String TAG = "BasePopupWindow";
+    public static int DEFAULT_BACKGROUND_COLOR = Color.parseColor("#8f000000");
 
     public enum GravityMode {
         RELATIVE_TO_ANCHOR,
-        ALIGN_TO_ANCHOR
+        ALIGN_TO_ANCHOR_SIDE
     }
 
     private static final int MAX_RETRY_SHOW_TIME = 3;
@@ -362,6 +369,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private LinkedViewLayoutChangeListenerWrapper mLinkedViewLayoutChangeListenerWrapper;
     private WeakReference<View> mLinkedViewRef;
     private DelayInitCached mDelayInitCached;
+
+    private boolean attachLifeCycle = false;
+    private boolean pendingShowOnCreate = false;
 
     public BasePopupWindow(Context context) {
         this(context, false);
@@ -410,6 +420,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     private void initView(int width, int height) {
+        if (getContext() instanceof LifecycleOwner) {
+            attachLifeCycle((LifecycleOwner) getContext());
+        }
         mHelper = new BasePopupHelper(this);
         registerListener(mHelper);
         mContentView = onCreateContentView();
@@ -1443,7 +1456,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </ul>
      *
      * @param mode         <ul><li>GravityMode.RELATIVE_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup处于该Anchor的哪个位置</li>
-     *                     <li>GravityMode.ALIGN_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪个位置</li></ul>
+     *                     <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪个位置</li></ul>
      * @param popupGravity
      */
     public BasePopupWindow setPopupGravity(GravityMode mode, int popupGravity) {
@@ -1552,11 +1565,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *                  <li>ture:PopupWindow拦截事件</li>
      *                  <li>false：不拦截事件</li>
      *                  </ul>
-     * @deprecated please use {@link #setOutSideTouchAble(boolean)} instead
+     * @deprecated please use {@link #setOutSideTouchable(boolean)} instead
      */
     @Deprecated
     public BasePopupWindow setAllowInterceptTouchEvent(boolean touchable) {
-        setOutSideTouchAble(!touchable);
+        setOutSideTouchable(!touchable);
         return this;
     }
 
@@ -1573,8 +1586,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *                  <li>false：外部不可点击</li>
      *                  </ul>
      */
-    public BasePopupWindow setOutSideTouchAble(boolean touchable) {
-        mHelper.setInterceptTouchEvent(mPopupWindow, !touchable);
+    public BasePopupWindow setOutSideTouchable(boolean touchable) {
+        mHelper.setOutSideTouchable(mPopupWindow, !touchable);
         return this;
     }
 
@@ -1707,6 +1720,41 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         mHelper.setMaxHeight(maxHeight);
         return this;
     }
+
+    /**
+     * 设置BasePopup最小宽度
+     */
+    public BasePopupWindow setMinWidth(int minWidth) {
+        mHelper.setMinWidth(minWidth);
+        return this;
+    }
+
+    /**
+     * 设置BasePopup最小高度
+     */
+    public BasePopupWindow setMinHeight(int minHeight) {
+        mHelper.setMinHeight(minHeight);
+        return this;
+    }
+
+
+    /**
+     * 绑定lifecycle
+     */
+    public BasePopupWindow attachLifeCycle(LifecycleOwner owner) {
+        if (attachLifeCycle) return this;
+        owner.getLifecycle().addObserver(this);
+        attachLifeCycle = true;
+        return this;
+    }
+
+    /**
+     * 解绑lifecycle
+     */
+    public BasePopupWindow removeLifeCycle(LifecycleOwner owner) {
+        owner.getLifecycle().removeObserver(this);
+        return this;
+    }
     //------------------------------------------状态控制-----------------------------------------------
 
 
@@ -1804,6 +1852,21 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public void dismissWithOutAnimate() {
         if (!checkPerformDismiss()) return;
+        if (mHelper.getDismissAnimation() != null && mDisplayAnimateView != null) {
+            mHelper.getDismissAnimation().cancel();
+        }
+        if (mHelper.getDismissAnimator() != null) {
+            mHelper.getDismissAnimator().cancel();
+        }
+        if (mAutoShowInputEdittext != null && mHelper.isAutoShowInputMethod()) {
+            InputMethodUtils.close(mAutoShowInputEdittext);
+        }
+        mPopupWindow.callSuperDismiss();
+        mHelper.onDismiss(false);
+        removeListener();
+    }
+
+    private void forceDismiss() {
         if (mHelper.getDismissAnimation() != null && mDisplayAnimateView != null) {
             mHelper.getDismissAnimation().cancel();
         }
@@ -2055,6 +2118,16 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     public static void setDebugLogEnable(boolean printLog) {
         PopupLogUtil.setOpenLog(printLog);
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    protected void onActivityDestroy() {
+        if (isShowing()) {
+            forceDismiss();
+        }
+        if (getContext() instanceof LifecycleOwner) {
+            removeLifeCycle((LifecycleOwner) getContext());
+        }
     }
 
     //------------------------------------------Interface-----------------------------------------------

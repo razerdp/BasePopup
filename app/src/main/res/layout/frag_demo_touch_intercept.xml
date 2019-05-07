@@ -53,7 +53,7 @@
                 android:id="@+id/check_touch_intercept"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="是否拦截事件"/>
+                android:text="外部是否响应事件"/>
 
         </LinearLayout>
     </LinearLayout>
