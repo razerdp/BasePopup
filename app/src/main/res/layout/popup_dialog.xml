@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="92dp"
+    android:layout_margin="25dp"
     android:background="@drawable/bg_dialog">
 
     <TextView
@@ -15,8 +13,7 @@
         android:paddingLeft="15dp"
         android:text="This is title"
         android:textColor="#3dd1a5"
-        android:textSize="18sp"
-        />
+        android:textSize="18sp" />
 
     <View
         android:id="@+id/line"
@@ -25,7 +22,7 @@
         android:layout_below="@id/title"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:background="#3dd1a5"/>
+        android:background="#3dd1a5" />
 
     <TextView
         android:id="@+id/content"
@@ -33,14 +30,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/line"
         android:lineSpacingMultiplier="1.2"
-        android:paddingBottom="15dp"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp"
         android:paddingTop="20dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="15dp"
         android:text="Warning:nuclear silo detected.\nWarning:nuclear silo detected.\nWarning:nuclear silo detected."
         android:textColor="#1a1a1a"
-        android:textSize="14sp"
-        />
+        android:textSize="14sp" />
 
     <View
         android:id="@+id/line2"
@@ -48,22 +44,22 @@
         android:layout_height="0.5dp"
         android:layout_below="@id/content"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
-        android:background="@color/line_bg"/>
+        android:layout_marginRight="15dp"
+        android:background="@color/line_bg" />
 
     <TextView
         android:id="@+id/cancel"
         android:layout_width="60dp"
         android:layout_height="40dp"
-        android:layout_alignParentRight="true"
         android:layout_below="@id/line2"
+        android:layout_alignParentRight="true"
         android:layout_marginRight="15dp"
         android:gravity="center"
         android:padding="3dp"
         android:text="CANCEL"
         android:textColor="#bfbfbf"
-        android:textSize="14sp"/>
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/ok"
@@ -76,6 +72,6 @@
         android:padding="3dp"
         android:text="OK"
         android:textColor="#3dd1a5"
-        android:textSize="14sp"/>
+        android:textSize="14sp" />
 
 </RelativeLayout>

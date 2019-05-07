@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.BasePopupDemoHooker;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,9 +35,9 @@ import razerdp.demo.fragment.basedemo.ClipToScreenPopupFrag;
 import razerdp.demo.fragment.basedemo.GravityPopupFrag;
 import razerdp.demo.fragment.basedemo.InputPopupFrag;
 import razerdp.demo.fragment.basedemo.OffsetPopupFrag;
+import razerdp.demo.fragment.basedemo.OutSideTouchPopupFrag;
 import razerdp.demo.fragment.basedemo.OutsideDismissPopupFrag;
 import razerdp.demo.fragment.basedemo.ShowPopupFrag;
-import razerdp.demo.fragment.basedemo.TouchInterceptPopupFrag;
 import razerdp.demo.fragment.basedemo.UpdatePopupFrag;
 import razerdp.demo.fragment.other.SimpleBaseFrag;
 import razerdp.util.SimpleAnimationUtils;
@@ -63,7 +64,7 @@ public class DemoActivity extends AppCompatActivity {
         fragMap.put(R.id.id_input, new InputPopupFrag());
         fragMap.put(R.id.id_align, new AlignPopupFrag());
         fragMap.put(R.id.id_outside_dismiss, new OutsideDismissPopupFrag());
-        fragMap.put(R.id.id_touch_intercept, new TouchInterceptPopupFrag());
+        fragMap.put(R.id.id_touch_intercept, new OutSideTouchPopupFrag());
         fragMap.put(R.id.id_backpress_enable, new BackPressEnablePopupFrag());
         fragMap.put(R.id.id_auto_located_popup, new AutoLocatedPopupFrag());
         fragMap.put(R.id.id_clip_children, new ClipChildrenPopupFrag());
@@ -87,13 +88,24 @@ public class DemoActivity extends AppCompatActivity {
                                             Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0f))
                                     .withDismissAnimation(SimpleAnimationUtils.getScaleAnimation(1f, 0f, 1f, 0f,
                                             Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0f))
-                                    .backgroundColor(Color.TRANSPARENT)
+                                    .background(null)
                                     .blurBackground(true)
                                     .gravity(Gravity.BOTTOM | Gravity.LEFT)
                                     //12px为箭头与边缘的距离
                                     .offsetX((actionMenu.getWidth() / 2) + 12)
                                     //10px为actionMenu的内边距。。。
-                                    .offsetY(-20))
+                                    .offsetY(-20)
+                                    .dismissListener(new BasePopupWindow.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss() {
+                                            View menuBar = getWindow().getDecorView().findViewById(R.id.action_bar);
+                                            if (menuBar instanceof Toolbar) {
+                                                ((Toolbar) menuBar).showOverflowMenu();
+                                            } else {
+                                                openOptionsMenu();
+                                            }
+                                        }
+                                    }))
                             .show(actionMenu);
                 }
             }, 200);

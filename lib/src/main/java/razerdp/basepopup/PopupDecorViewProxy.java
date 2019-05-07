@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 
 import razerdp.util.PopupUiUtils;
 import razerdp.util.PopupUtils;
@@ -69,6 +70,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         mHelper.registerKeyboardStateChangeListener(this);
         setClipChildren(mHelper.isClipChildren());
         mMaskLayout = PopupMaskLayout.create(getContext(), mHelper);
+        mFlag.flag = Flag.IDLE;
         if (mHelper.isInterceptTouchEvent()) {
             setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             addViewInLayout(mMaskLayout, -1, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
@@ -109,8 +111,9 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     }
 
     private void checkAndClearDecorMaskLayout(Activity act) {
-        if (act == null || act.getWindow() == null || act.getWindow().getDecorView() == null)
+        if (act == null || act.getWindow() == null) {
             return;
+        }
         View decorView = act.getWindow().getDecorView();
         if (decorView instanceof ViewGroup) {
             ViewGroup vg = ((ViewGroup) decorView);
@@ -166,6 +169,14 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 }
             }
         } else {
+            if (target instanceof ViewGroup) {
+                View child = ((ViewGroup) target).getChildAt(0);
+                if (child != null) {
+                    child.setLayoutParams(new FrameLayout.LayoutParams(mHelper.getParaseFromXmlParams()));
+                }
+            }
+
+
             wp.width = mHelper.getPopupViewWidth();
             wp.height = mHelper.getPopupViewHeight();
             childLeftMargin = mHelper.getParaseFromXmlParams().leftMargin;
@@ -206,7 +217,8 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        mFlag.reset();
+        mFlag.flag &= ~Flag.FLAG_REST_WIDTH_NOT_ENOUGHT;
+        mFlag.flag &= ~Flag.FLAG_REST_HEIGHT_NOT_ENOUGHT;
         if (mHelper.isInterceptTouchEvent()) {
             measureWithIntercept(widthMeasureSpec, heightMeasureSpec);
         } else {
@@ -266,19 +278,17 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 
         int gravity = mHelper.getPopupGravity();
-        boolean isAlignAnchorMode = mHelper.getGravityMode() == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR;
-
-        widthSize -= Math.max(0, childLeftMargin) + Math.max(0, childRightMargin);
-        heightSize -= Math.max(0, childTopMargin) + Math.max(0, childBottomMargin);
-
+        boolean isAlignAnchorMode = mHelper.getGravityMode() == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE;
 
         //当且仅当clipScreen同时有锚点的情况下需要进行剩余空间测量
         boolean needCheckClipToScreen = mHelper.isClipToScreen() && mHelper.isShowAsDropDown();
 
         if (needCheckClipToScreen) {
-            int restWidth;
+            int restWidth = widthSize;
 
-            switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
+            //暂时对宽度不做autoLocated，因为触碰边缘会回弹
+
+         /*   switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
                 case Gravity.RIGHT:
                     restWidth = isAlignAnchorMode ?
                             mHelper.getAnchorX() + mHelper.getAnchorWidth() :
@@ -297,13 +307,14 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             if (restWidth <= 0) {
                 Log.e(TAG, "BasePopup 可用展示空间小于或等于0，宽度将按原测量值设定，不进行调整适配");
                 restWidth = widthSize;
-                mFlag.compute(Flag.FLAG_REST_WIDTH_NOT_ENOUGHT);
+                mFlag.flag |= Flag.FLAG_REST_WIDTH_NOT_ENOUGHT;
             } else {
                 restWidth = PopupUtils.range(restWidth, mHelper.getMinWidth(), restWidth);
-            }
+            }*/
+            restWidth = PopupUtils.range(restWidth, mHelper.getMinWidth(), restWidth);
             if (widthSize > restWidth) {
                 widthSize = restWidth;
-                mFlag.compute(Flag.FLAG_REST_WIDTH_NOT_ENOUGHT);
+                mFlag.flag |= Flag.FLAG_REST_WIDTH_NOT_ENOUGHT;
             }
         }
 
@@ -340,7 +351,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                     if (mHelper.isAutoLocatePopup() &&
                             ((mHelper.getMinHeight() > 0 && restHeight < mHelper.getMinHeight())
                                     || (restHeight <= (heightSize >> 2)))) {
-                        //剩余空间不足测量高度一半，同时是autoLocated，则测量其反方向(align模式下不需要)
+                        //剩余空间不足测量高度1/4，同时是autoLocated，则测量其反方向(align模式下不需要)
                         restHeight = isAlignAnchorMode ?
                                 mHelper.getAnchorY() + mHelper.getAnchorHeight() :
                                 mHelper.getAnchorY();
@@ -353,14 +364,14 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             if (restHeight <= 0) {
                 Log.e(TAG, "BasePopup 可用展示空间小于或等于0，高度将按原测量值设定，不进行调整适配");
                 restHeight = heightSize;
-                mFlag.compute(Flag.FLAG_REST_HEIGHT_NOT_ENOUGHT);
+                mFlag.flag |= Flag.FLAG_REST_HEIGHT_NOT_ENOUGHT;
             } else {
                 restHeight = PopupUtils.range(restHeight, mHelper.getMinHeight(), restHeight);
             }
 
             if (heightSize > restHeight) {
                 heightSize = restHeight;
-                mFlag.compute(Flag.FLAG_REST_HEIGHT_NOT_ENOUGHT);
+                mFlag.flag |= Flag.FLAG_REST_HEIGHT_NOT_ENOUGHT;
             }
         }
 
@@ -384,7 +395,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     }
 
     private void layoutWithOutIntercept(int l, int t, int r, int b) {
-        if (mFlag.contains(Flag.FLAG_WINDOW_PARAMS_FIT_REQUEST) && getLayoutParams() instanceof WindowManager.LayoutParams) {
+        if ((mFlag.flag & Flag.FLAG_WINDOW_PARAMS_FIT_REQUEST) != 0 && getLayoutParams() instanceof WindowManager.LayoutParams) {
             mWindowManagerProxy.updateViewLayout(this, getLayoutParams());
         }
         final int childCount = getChildCount();
@@ -440,7 +451,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 child.layout(childLeft, childTop, childLeft + width, childTop + height);
             } else {
                 boolean isRelativeToAnchor = mHelper.isShowAsDropDown();
-                boolean isAlignAnchorMode = mHelper.getGravityMode() == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR;
+                boolean isAlignAnchorMode = mHelper.getGravityMode() == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE;
                 int anchorCenterX = mHelper.getAnchorX() + (mHelper.getAnchorWidth() >> 1);
                 int anchorCenterY = mHelper.getAnchorY() + (mHelper.getAnchorHeight() >> 1);
 
@@ -481,6 +492,9 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                         }
                         break;
                 }
+                //目前对水平方向不需要限制边界
+                windowLeft = 0;
+                windowRight = getMeasuredWidth();
                 childLeft = childLeft + childLeftMargin - childRightMargin;
 
                 switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
@@ -530,7 +544,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                                     mHelper.getAnchorY();
                             if (height > restHeight) {
                                 //需要移位
-                                offsetY += isAlignAnchorMode ? 0 : mHelper.getAnchorY() + mHelper.getMinHeight() - childTop;
+                                offsetY += isAlignAnchorMode ? 0 : mHelper.getAnchorY() + mHelper.getAnchorHeight() - childTop;
                                 //如果自动定位到下方，则可显示的window区域为[anchor底部，屏幕底部]
                                 windowTop = mHelper.getAnchorY() + mHelper.getAnchorHeight();
                                 postAnchorLocation(false);
@@ -552,6 +566,12 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                             }
                             break;
                     }
+                } else {
+                    //不需要autoLocate的情况下，只需要限定在屏幕内即可
+                    windowLeft = 0;
+                    windowTop = 0;
+                    windowRight = getMeasuredWidth();
+                    windowBottom = getMeasuredHeight();
                 }
 
                 int left = childLeft + offsetX;
@@ -619,19 +639,27 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
     public void fitWindowParams(WindowManager.LayoutParams params) {
         if (getMeasuredWidth() == 0 || getMeasuredHeight() == 0) {
-            mFlag.compute(Flag.FLAG_WINDOW_PARAMS_FIT_REQUEST);
+            mFlag.flag |= Flag.FLAG_WINDOW_PARAMS_FIT_REQUEST;
             return;
         }
         int offsetX = 0;
         int offsetY = 0;
+        int gravity = mHelper.getPopupGravity();
+        boolean isAlignAnchorMode = mHelper.getGravityMode() == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE;
 
         // offset需要自行计算，不采用系统方法了
         switch (mHelper.getPopupGravity() & Gravity.HORIZONTAL_GRAVITY_MASK) {
             case Gravity.LEFT:
-                offsetX += mHelper.isShowAsDropDown() ? mHelper.getAnchorX() - getMeasuredWidth() : 0;
+                if (mHelper.isShowAsDropDown()) {
+                    offsetX += isAlignAnchorMode ? mHelper.getAnchorX() : mHelper.getAnchorX() - getMeasuredWidth();
+                }
                 break;
             case Gravity.RIGHT:
-                offsetX += mHelper.isShowAsDropDown() ? mHelper.getAnchorX() + mHelper.getAnchorWidth() : getScreenWidth() - getMeasuredWidth();
+                if (mHelper.isShowAsDropDown()) {
+                    offsetX += isAlignAnchorMode ? mHelper.getAnchorX() + mHelper.getAnchorWidth() - getMeasuredWidth() : mHelper.getAnchorX() + mHelper.getAnchorWidth();
+                } else {
+                    offsetX += getScreenWidth() - getMeasuredWidth();
+                }
                 break;
             case Gravity.CENTER_HORIZONTAL:
                 offsetX += mHelper.isShowAsDropDown() ? mHelper.getAnchorX() + ((mHelper.getAnchorWidth() - getMeasuredWidth()) >> 1)
@@ -644,10 +672,16 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
         switch (mHelper.getPopupGravity() & Gravity.VERTICAL_GRAVITY_MASK) {
             case Gravity.TOP:
-                offsetY += mHelper.isShowAsDropDown() ? mHelper.getAnchorY() - getMeasuredHeight() : 0;
+                if (mHelper.isShowAsDropDown()) {
+                    offsetY += isAlignAnchorMode ? mHelper.getAnchorY() : mHelper.getAnchorY() - getMeasuredHeight();
+                }
                 break;
             case Gravity.BOTTOM:
-                offsetY += mHelper.isShowAsDropDown() ? mHelper.getAnchorY() + mHelper.getAnchorHeight() : getScreenHeight() - getMeasuredHeight();
+                if (mHelper.isShowAsDropDown()) {
+                    offsetY += isAlignAnchorMode ? mHelper.getAnchorY() + mHelper.getAnchorHeight() - getMeasuredHeight() : mHelper.getAnchorY() + mHelper.getAnchorHeight();
+                } else {
+                    offsetY += getScreenHeight() - getMeasuredHeight();
+                }
                 break;
             case Gravity.CENTER_VERTICAL:
                 offsetY += mHelper.isShowAsDropDown() ? mHelper.getAnchorY() + ((mHelper.getAnchorHeight() - getMeasuredHeight()) >> 1) : (getScreenHeight() - getMeasuredHeight()) >> 1;
@@ -658,35 +692,48 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         offsetY = offsetY + childTopMargin - childBottomMargin;
 
         PopupLogUtil.trace("fitWindowParams  ::  " +
-                "{\nscreenWidth = " + getScreenWidth() +
-                "\nscreenHeight = " + getScreenHeight() +
-                "\nanchorX = " + mHelper.getAnchorX() +
-                "\nanchorY = " + mHelper.getAnchorY() +
-                "\nviewWidth = " + getMeasuredWidth() +
-                "\nviewHeight = " + getMeasuredHeight() +
-                "\noffsetX = " + offsetX +
-                "\noffsetY = " + offsetY +
+                "{\n\t\tscreenWidth = " + getScreenWidth() +
+                "\n\t\tscreenHeight = " + getScreenHeight() +
+                "\n\t\tanchorX = " + mHelper.getAnchorX() +
+                "\n\t\tanchorY = " + mHelper.getAnchorY() +
+                "\n\t\tviewWidth = " + getMeasuredWidth() +
+                "\n\t\tviewHeight = " + getMeasuredHeight() +
+                "\n\t\toffsetX = " + offsetX +
+                "\n\t\toffsetY = " + offsetY +
                 "\n}");
 
-        if (mHelper.isAutoLocatePopup()) {
-            boolean isPositionMode = mHelper.getShowMode() == BasePopupHelper.ShowMode.POSITION;
-            offsetY = isPositionMode ? 0 : offsetY;
-            final boolean onTop = (getScreenHeight() - (mHelper.getAnchorY() + offsetY)) < getMeasuredHeight();
-            if (onTop) {
-                if (isPositionMode) {
-                    offsetY += ((mHelper.getPopupGravity() & Gravity.VERTICAL_GRAVITY_MASK) == Gravity.CENTER_VERTICAL) ?
-                            -getMeasuredHeight() >> 1 : -getMeasuredHeight();
-                } else {
-                    offsetY = -mHelper.getAnchorHeight() - getMeasuredHeight() - offsetY;
-                }
-                postAnchorLocation(true);
-            } else {
-                postAnchorLocation(false);
+        if (mHelper.isAutoLocatePopup() && mHelper.isClipToScreen()) {
+            int tBottom = offsetY + (mHelper.isFullScreen() ? 0 : -getStatusBarHeight());
+            int restHeight;
+            switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
+                case Gravity.TOP:
+                    restHeight = isAlignAnchorMode ?
+                            getScreenHeight() - mHelper.getAnchorY() :
+                            mHelper.getAnchorY();
+                    if (getMeasuredHeight() > restHeight) {
+                        //需要移位
+                        offsetY += isAlignAnchorMode ? 0 : mHelper.getAnchorY() + mHelper.getMinHeight() - offsetY;
+                        postAnchorLocation(false);
+                    }
+                    break;
+                case Gravity.BOTTOM:
+                default:
+                    restHeight = isAlignAnchorMode ?
+                            mHelper.getAnchorY() + mHelper.getAnchorHeight() :
+                            getScreenHeight() - (mHelper.getAnchorY() + mHelper.getAnchorHeight());
+
+                    if (getMeasuredHeight() > restHeight) {
+                        //需要移位
+                        offsetY -= isAlignAnchorMode ? 0 : tBottom - mHelper.getAnchorY();
+                        postAnchorLocation(true);
+                    }
+                    break;
             }
         }
+
         params.x = offsetX + mHelper.getOffsetX();
         params.y = offsetY + mHelper.getOffsetY();
-        mFlag.remove(Flag.FLAG_WINDOW_PARAMS_FIT_REQUEST);
+        mFlag.flag &= ~Flag.FLAG_WINDOW_PARAMS_FIT_REQUEST;
     }
 
     @Override
@@ -902,20 +949,5 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
         int flag;
 
-        void compute(int mFlag) {
-            flag |= mFlag;
-        }
-
-        void remove(int mFlag) {
-            flag &= ~mFlag;
-        }
-
-        void reset() {
-            flag = IDLE;
-        }
-
-        boolean contains(int mFlag) {
-            return (flag & mFlag) != 0;
-        }
     }
 }

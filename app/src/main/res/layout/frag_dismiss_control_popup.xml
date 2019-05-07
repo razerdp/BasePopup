@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="点击外部dismiss(setAllowDismissWhenTouchOutside)"
+            android:text="点击外部dismiss(setOutSideDismiss)"
             android:textColor="#666666"
             android:textSize="12sp"/>
 
@@ -39,9 +39,8 @@
             android:id="@+id/switch_intercept_touch_event"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="true"
             android:padding="8dp"
-            android:text="popup是否拦截事件（setInterceptTouchEvent），如果不拦截事件，则背景去除，因为背景存在的情况下，理解为无法穿透事件也是正常的。"
+            android:text="BasePopup外部是否响应事件（setOutSideTouchable）"
             android:textColor="#666666"
             android:textSize="12sp"/>
     </LinearLayout>

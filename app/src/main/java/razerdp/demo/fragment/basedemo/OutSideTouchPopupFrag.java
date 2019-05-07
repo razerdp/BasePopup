@@ -11,6 +11,7 @@ import android.widget.TextView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.fragment.other.SimpleBaseFrag;
+import razerdp.demo.popup.AutoLocatedRecyclerViewPopup;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.demo.utils.MultiSpanUtil;
 import razerdp.demo.utils.UIHelper;
@@ -19,20 +20,20 @@ import razerdp.util.SimpleAnimationUtils;
 /**
  * Created by 大灯泡 on 2018/12/11.
  */
-public class TouchInterceptPopupFrag extends SimpleBaseFrag {
+public class OutSideTouchPopupFrag extends SimpleBaseFrag {
     private ViewHolder vh;
-    private static final String DESC = "· 设置是否允许BasePopup拦截事件，默认拦截。\n" +
-            "· 【注】：如果不拦截事件，则背景层将会被去除（如果存在背景层又可以点击外部，这在交互和逻辑上是冲突的），去除背景层自2.1.0版本开始生效。\n" +
-            "· 【注】：2.1.8-beta6开始，继续支持背景和模糊，黑科技换了个实现方案~DecorView无敌！";
+    private static final String DESC = "· 设置BasePopup外部是否可以响应事件，默认不响应。\n" +
+            "· 【注】：如果响应事件，则背景层将会被去除（如果存在背景层又可以点击外部，这在交互和逻辑上是冲突的），去除背景层自2.1.0版本开始生效。\n" +
+            "· 【注】：2.1.8-beta6开始，响应外部事件的情况下继续支持背景和模糊，黑科技换了个实现方案~DecorView无敌！";
     private DemoPopup mDemoPopup;
 
     @Override
     public void onInitView(View rootView) {
         vh = new ViewHolder(rootView);
         MultiSpanUtil.create(DESC)
-                .append("默认拦截").setTextColor(Color.RED)
-                .append("· 【注】：如果不拦截事件，则背景层将会被去除（如果存在背景层又可以点击外部，这在交互和逻辑上是冲突的），去除背景层自2.1.0版本开始生效。").setDeleteLine(true)
-                .append("· 【注】：2.1.8-beta6开始，继续支持背景和模糊，黑科技换了个实现方案~DecorView无敌！").setTextColor(Color.BLUE).setTextType(Typeface.DEFAULT_BOLD)
+                .append("默认不响应").setTextColor(Color.RED)
+                .append("· 【注】：如果响应事件，则背景层将会被去除（如果存在背景层又可以点击外部，这在交互和逻辑上是冲突的），去除背景层自2.1.0版本开始生效。").setDeleteLine(true)
+                .append("· 【注】：2.1.8-beta6开始，响应外部事件的情况下继续支持背景和模糊，黑科技换了个实现方案~DecorView无敌！").setTextColor(Color.BLUE).setTextType(Typeface.DEFAULT_BOLD)
                 .into(vh.tvDesc);
         mDemoPopup = new DemoPopup(getContext());
         mDemoPopup.setPopupGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL)
@@ -41,7 +42,7 @@ public class TouchInterceptPopupFrag extends SimpleBaseFrag {
         vh.popupShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDemoPopup.setAllowInterceptTouchEvent(vh.checkTouchIntercept.isChecked());
+                mDemoPopup.setOutSideTouchable(vh.checkTouchIntercept.isChecked());
                 mDemoPopup.showPopupWindow(v);
             }
         });

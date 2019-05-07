@@ -38,8 +38,13 @@ public class QuickPopupConfig {
     int offsetX;
     int offsetY;
 
+    int minWidth;
+    int maxWidth;
+    int minHeight;
+    int maxHeight;
+
     boolean alignBackground;
-    Drawable background;
+    Drawable background = new ColorDrawable(BasePopupWindow.DEFAULT_BACKGROUND_COLOR);
     boolean autoLocated;
 
     boolean clipChildren;
@@ -161,8 +166,14 @@ public class QuickPopupConfig {
         return this;
     }
 
+    @Deprecated
     public QuickPopupConfig allowInterceptTouchEvent(boolean allowInterceptTouchEvent) {
         this.allowInterceptTouchEvent = allowInterceptTouchEvent;
+        return this;
+    }
+
+    public QuickPopupConfig outSideTouchable(boolean outSideTouchable) {
+        this.allowInterceptTouchEvent = !outSideTouchable;
         return this;
     }
 
@@ -178,6 +189,26 @@ public class QuickPopupConfig {
 
     public QuickPopupConfig dismissOnOutSideTouch(boolean dismissOutSide) {
         this.dismissOutSide = dismissOutSide;
+        return this;
+    }
+
+    public QuickPopupConfig minWidth(int minWidth) {
+        this.minWidth = minWidth;
+        return this;
+    }
+
+    public QuickPopupConfig maxWidth(int maxWidth) {
+        this.maxWidth = maxWidth;
+        return this;
+    }
+
+    public QuickPopupConfig minHeight(int minHeight) {
+        this.minHeight = minHeight;
+        return this;
+    }
+
+    public QuickPopupConfig maxHeight(int maxHeight) {
+        this.maxHeight = maxHeight;
         return this;
     }
     //-----------------------------------------getter-----------------------------------------
@@ -269,5 +300,21 @@ public class QuickPopupConfig {
 
     public boolean isDismissOutSide() {
         return dismissOutSide;
+    }
+
+    public int getMinWidth() {
+        return minWidth;
+    }
+
+    public int getMaxWidth() {
+        return maxWidth;
+    }
+
+    public int getMinHeight() {
+        return minHeight;
+    }
+
+    public int getMaxHeight() {
+        return maxHeight;
     }
 }

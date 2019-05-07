@@ -49,8 +49,10 @@ public class AutoLocatedPopupFrag extends SimpleBaseFrag implements View.OnClick
             @Override
             public void onClick(View v) {
                 if (mUseRcv.isChecked()) {
+                    mAutoLocatedRecyclerViewPopup.setPopupGravity((v == popup_show || v == popup_show1) ? Gravity.TOP : Gravity.BOTTOM);
                     mAutoLocatedRecyclerViewPopup.showPopupWindow(v);
                 } else {
+                    mAutoLocatedPopup.setPopupGravity((v == popup_show || v == popup_show1) ? Gravity.TOP : Gravity.BOTTOM);
                     mAutoLocatedPopup.showPopupWindow(v);
                 }
             }

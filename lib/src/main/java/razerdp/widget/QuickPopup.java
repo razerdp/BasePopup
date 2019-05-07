@@ -68,16 +68,19 @@ public class QuickPopup extends BasePopupWindow {
         setClipChildren(config.isClipChildren());
         setClipToScreen(config.isClipToScreen());
 
-        setAllowDismissWhenTouchOutside(config.isDismissOutSide());
-        setAllowInterceptTouchEvent(config.isAllowInterceptTouchEvent());
+        setOutSideDismiss(config.isDismissOutSide());
+        setOutSideTouchable(!config.isAllowInterceptTouchEvent());
         setPopupGravity(config.getGravity());
         setAlignBackground(config.isAlignBackground());
         setAutoLocatePopup(config.isAutoLocated());
         setOnDismissListener(config.getDismissListener());
-        if (config.getBackground() != null) {
-            setBackground(config.getBackground());
-        }
+        setBackground(config.getBackground());
         linkTo(config.getLinkedView());
+        setMinWidth(config.getMinWidth());
+        setMaxWidth(config.getMaxWidth());
+        setMinHeight(config.getMinHeight());
+        setMaxHeight(config.getMaxHeight());
+
         if (mOnConfigApplyListener != null) {
             mOnConfigApplyListener.onConfigApply(this, config);
         }

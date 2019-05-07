@@ -58,6 +58,8 @@
  - [特性](#特性)
  - [文章分享](https://github.com/razerdp/Article/blob/master/%E4%BA%B2%EF%BC%8C%E8%BF%98%E5%9C%A8%E4%B8%BAPopupWindow%E7%83%A6%E6%81%BC%E5%90%97.md)
  - [注意事项](#注意事项)
+   - [WARN](#WARN)
+   - [声明](#声明)
  - [快速入门](#快速入门)
    - [配置](#配置)
      - [模糊配置](#模糊配置)
@@ -68,7 +70,8 @@
      - [3.补充对应方法](#3补充对应方法)
      - [4.show！](#4show)
    - [QuickPopupBuilder链式调用](#QuickPopupBuilder链式调用)
-     - [示例代码](#示例代码) 
+     - [示例代码](#示例代码)
+ - [混淆](#混淆)
  - [Api（请看Wiki）](#api请看wiki)
  - [更新日志](#更新日志-历史更新)
    - [历史更新](./UpdateLog.md)
@@ -98,7 +101,7 @@
 
 ### 注意事项
 
-**WARN：**
+#### WARN
  
   - **请务必仔细阅读本README,每个版本升级请务必查阅更新日志，这可以为您减少不必要弯路**
   - **请注意引用版本的问题，Release版本是稳定版，Candy是预览版。**
@@ -113,7 +116,7 @@
 <br>
 <br>
 
-**声明：**
+#### 声明
 
 BasePopup并非一个 **“一句话完成需求”** 的库，从起名带有 **【Base】** 也应该可以知道这是一个高度抽象的类。<br><br>这也意味着本库所提供的api是基于通用抽象层面的。<br><br>因此，具体的需求比如点击事件，比如列表弹窗等等都需要您自行完成。<br><br>因为众口难调，你的需求并不适用于别人的需求，而作为一个通用库，就如ListAdapter一样，最大程度的开放给用户完成是最好的方案。<br><br>因此，如果您期望使用BasePopup可以一句话完成所有事情，很抱歉~可能本库不能满足您的需求。<br><br>BTW，如果您需要的是更便捷的弹窗库，据我观察，我推荐您使用[**XPopup**](https://github.com/li-xiaojun/XPopup)
 
@@ -318,6 +321,37 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 <br>
 
+### 混淆
+---
+
+**如果您需要LifeCycle的支持，请添加LifeCycle的混淆**
+
+```xml
+## Android architecture components: Lifecycle
+# LifecycleObserver's empty constructor is considered to be unused by proguard
+-dontnote android.arch.lifecycle.**
+-keepclassmembers class * implements android.arch.lifecycle.LifecycleObserver {
+    <init>(...);
+}
+# ViewModel's empty constructor is considered to be unused by proguard
+-keepclassmembers class * extends android.arch.lifecycle.ViewModel {
+    <init>(...);
+}
+# keep Lifecycle State and Event enums values
+-keepclassmembers class android.arch.lifecycle.Lifecycle$State { *; }
+-keepclassmembers class android.arch.lifecycle.Lifecycle$Event { *; }
+# keep methods annotated with @OnLifecycleEvent even if they seem to be unused
+# (Mostly for LiveData.LifecycleBoundObserver.onStateChange(), but who knows)
+-keepclassmembers class * {
+    @android.arch.lifecycle.OnLifecycleEvent *;
+}
+-keep class * implements android.arch.lifecycle.GeneratedAdapter {
+    <init>(...);
+}
+
+```
+
+<br>
 ### Api（请看Wiki）
 
 请看wiki（陆续完善中）
@@ -330,6 +364,18 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
 * **【Candy】2.2.0**
+  * **【Candy】2.2.0-beta**(2019/05/07)
+    * 重构BasePopup测量与布局，减少冗余代码
+    * 增加GravityMode方法，现在允许您配置PopupGravity的参考模式
+      * RELATIVE_TO_ANCHOR：默认模式，以Anchor为参考点
+      * ALIGN_TO_ANCHOR_SIDE：对齐模式，以Anchor的边为参考点
+    * 增加minWidth/minHeight 方法，允许设置最小宽高
+    * fix [#171](https://github.com/razerdp/BasePopup/issues/171)、[#181](https://github.com/razerdp/BasePopup/issues/181)、[#182](https://github.com/razerdp/BasePopup/issues/182)、[#183](https://github.com/razerdp/BasePopup/issues/183)
+    * 去除高度match_parent和wrap_content的测量差异
+    * 部分Api标记过时：
+      * ~~setAllowDismissWhenTouchOutside~~ -> **setOutSideDismiss**
+      * ~~setAllowInterceptTouchEvent~~ -> **setOutSideTouchable**
+    * 增加对Lifecycle的支持（如果需要混淆请混淆Lifecycle相关）
   * **近期工作**
     * 近期很少更新，除了因为入职新公司外，更重要的是随着使用本库的开发者数量增多，一些遗留的bug出现越来也多，因此，为了更好地适应，决定开始了第三次重构。
     * 本次重构大致构思以及内容：
@@ -526,7 +572,7 @@ A：~~在2.0.0到2.0.9之间，setAllowInterceptTouchEvent（）不影响蒙层�
 
 <br>
 
-#### Q：根布局高度`match_parent`和`wrap_content`的区别
+#### Q：根布局高度`match_parent`和`wrap_content`的区别(该问题从2.2.0开始修复)
 
 A：当根布局是match_parent的时候，basepopup会做一定的差异处理。
 <br>
@@ -557,7 +603,8 @@ A：当根布局是match_parent的时候，basepopup会做一定的差异处理�
 | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/qa/qa_match_parent.png" height="360"/></p> | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/qa/qa_wrap_content.png" height="360"/></p> |
 
 <br>
-**留意两张图的listview底部区别，其中wrap_content底部已经突破屏幕底部，无法完整显示。**
+
+** 留意两张图的listview底部区别，其中wrap_content底部已经突破屏幕底部，无法完整显示。**
 
 <br>
 

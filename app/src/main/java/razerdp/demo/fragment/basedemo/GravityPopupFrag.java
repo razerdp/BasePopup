@@ -33,8 +33,10 @@ public class GravityPopupFrag extends SimpleBaseFrag implements View.OnClickList
     private AppCompatCheckBox checkGravityMode;
     private Button popupShow;
     private AppCompatCheckBox checkCombineAnchor;
-    private static final String DESC = " · 不跟anchorView关联的情况下，gravity意味着在整个decorView中的方位，默认Gravity为NO_GRAVITY，即屏幕左上角\n\n" +
-            " · 如果跟anchorView关联，gravity意味着以anchorView为中心的方位，默认处于anchorView正下方，并且尽可能左对齐。";
+    private static final String DESC = " · 不跟anchorView关联的情况下，gravity意味着在整个decorView中的方位，默认Gravity为NO_GRAVITY，即屏幕左上角\n" +
+            " · 如果跟anchorView关联\n" +
+            "\t\t· GravityMode = ALIGN_TO_ANCHOR_SIDE，此时gravity意味着以anchorView的边为参考点，BasePopup将尝试对齐anchorView的边。\n"+
+            "\t\t· GravityMode = RELATIVE_TO_ANCHOR，此时gravity意味着以anchorView整体为参考点，BasePopup将尝试定位到anchorView的某个方位。";
 
 
     @Nullable
@@ -74,7 +76,7 @@ public class GravityPopupFrag extends SimpleBaseFrag implements View.OnClickList
                 if (checkGravityCenter.isChecked()) {
                     gravity |= Gravity.CENTER;
                 }
-                mPopupWindow.setPopupGravity(checkGravityMode.isChecked() ? BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR : BasePopupWindow.GravityMode.RELATIVE_TO_ANCHOR,
+                mPopupWindow.setPopupGravity(checkGravityMode.isChecked() ? BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE : BasePopupWindow.GravityMode.RELATIVE_TO_ANCHOR,
                         gravity);
                 if (checkCombineAnchor.isChecked()) {
                     mPopupWindow.showPopupWindow(v);
@@ -106,7 +108,10 @@ public class GravityPopupFrag extends SimpleBaseFrag implements View.OnClickList
         TextView desc = (TextView) findViewById(R.id.tv_desc);
         MultiSpanUtil.create(DESC)
                 .append("默认Gravity为NO_GRAVITY，即屏幕左上角").setTextColor(Color.RED)
-                .append("默认处于anchorView正下方，并且尽可能左对齐。").setTextColor(Color.RED)
+                .append("ALIGN_TO_ANCHOR_SIDE").setTextColor(Color.RED)
+                .append("以anchorView的边为参考点").setTextColor(Color.RED)
+                .append("RELATIVE_TO_ANCHOR").setTextColor(Color.RED)
+                .append("以anchorView整体为参考点").setTextColor(Color.RED)
                 .into(desc);
     }
 

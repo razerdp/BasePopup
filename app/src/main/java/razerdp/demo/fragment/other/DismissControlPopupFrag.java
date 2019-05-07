@@ -47,9 +47,9 @@ public class DismissControlPopupFrag extends SimpleBaseFrag {
         mDismissControlPopup.setOnBeforeShowCallback(new BasePopupWindow.OnBeforeShowCallback() {
             @Override
             public boolean onBeforeShow(View popupRootView, View anchorView, boolean hasShowAnima) {
-                mDismissControlPopup.setAllowDismissWhenTouchOutside(switchDismissWhenTouchOutside.isChecked());
+                mDismissControlPopup.setOutSideDismiss(switchDismissWhenTouchOutside.isChecked());
                 mDismissControlPopup.setBackPressEnable(switchBackpressEnable.isChecked());
-                mDismissControlPopup.setAllowInterceptTouchEvent(switchInterceptTouchEvent.isChecked());
+                mDismissControlPopup.setOutSideTouchable(switchInterceptTouchEvent.isChecked());
                 return true;
             }
         });
