@@ -3,6 +3,7 @@ package razerdp.demo.fragment.basedemo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ public class AutoLocatedPopupFrag extends SimpleBaseFrag implements View.OnClick
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mAutoLocatedRecyclerViewPopup = new AutoLocatedRecyclerViewPopup(getActivity());
+        mAutoLocatedRecyclerViewPopup = new AutoLocatedRecyclerViewPopup(getContext(), 50);
         mAutoLocatedPopup = new AutoLocatedPopup(getContext());
         return super.onCreateView(inflater, container, savedInstanceState);
     }
