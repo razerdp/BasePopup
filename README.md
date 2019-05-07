@@ -293,9 +293,8 @@ new DemoPopup(getContext()).showPopupWindow();
 QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，该Builder旨在快速建立一个简单的不包含复杂逻辑的PopupWindow，如上述案例，避免过于简单的PopupWindow也要继承BasePopupWindow，导致存在过多的类。
 
 #### 示例代码
-
-
 ----
+
 如果您并不需要很详细的定义一个PopupWindow，您也可以选择`QuickPopupBuilder`采取链式写法快速编写出一个Popup以使用。
 
 >注意：默认QuickPopupBuilder.QuickPopupConfig配置中PopupWindow动画为缩放弹出和消失
@@ -352,6 +351,7 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 ```
 
 <br>
+
 ### Api（请看Wiki）
 
 请看wiki（陆续完善中）
@@ -559,12 +559,16 @@ A：设置[**setBackPressEnable**](https://github.com/razerdp/BasePopup/wiki/API
 
 <br>
 
-#### Q：为什么设置setAllowInterceptTouchEvent(false)后，蒙层或者背景模糊都消失了
+#### Q：如何在BasePopup里使用ButterKnife
 
-A：~~在2.0.0到2.0.9之间，setAllowInterceptTouchEvent（）不影响蒙层或背景，但从2.1.0开始，不再开启这个黑科技，而是选择跟官方保持同步，原因在于如果背景模糊或者有蒙层，那么该PopupWindow理应拦截事件，而不应该穿透事件，否则不应该拥有背景蒙层。<br><br>~~
-**但是！从2.1.8-beta6之后，该黑科技又支持啦~换了个比较友好的方式**<br><br>
-同时，因为系统PopupWindow默认是clipToScreen，也就是限制PopupWindow在屏幕内显示，当view边缘超过屏幕的时候，PopupWindow会反向移动以完整展示内容，因此如果您的PopupWindow需要突破屏幕显示（比如高度是全屏，但展示在某个view下面，此时bottom大于屏幕底部），请设置`setClipToScreen(false)`。
+A：您可以在构造器中进行绑定：
 
+```java
+   public DemoPopup(Context context) {
+        super(context);
+        ButterKnife.bind(this,getContentView());
+    }
+```
 
 <br>
 
@@ -572,39 +576,9 @@ A：~~在2.0.0到2.0.9之间，setAllowInterceptTouchEvent（）不影响蒙层�
 
 <br>
 
-#### Q：根布局高度`match_parent`和`wrap_content`的区别(该问题从2.2.0开始修复)
+#### Q：为什么BasePopup的宽度不对或者留有一条缝隙
 
-A：当根布局是match_parent的时候，basepopup会做一定的差异处理。
-<br>
-当您设置了[**setClipToScreen(true)**](https://github.com/razerdp/BasePopup/wiki/API#setcliptoscreenboolean-cliptoscreen)时，如果您的根布局是`match_parent`，那么意味着您的布局最大高度仅为屏幕高度，如果您的根布局是`wrap_content`，那么最大高度可能是可以突破屏幕高度的。
-<br>
-**例如demo中的全屏listview**
-
-```xml
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"   // 请留意这里
-    android:background="@android:color/white"
-    >
-
-    <ListView
-        android:id="@+id/popup_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@color/line_bg"
-        android:dividerHeight="0.5dp"
-        android:scrollbars="vertical"
-        />
-</RelativeLayout>
-```
-| **layout_height = match_parent** | **layout_height = wrap_content** |
-| - | - |
-| <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/qa/qa_match_parent.png" height="360"/></p> | <p align="center"><img src="https://github.com/razerdp/Pics/blob/master/BasePopup/qa/qa_wrap_content.png" height="360"/></p> |
-
-<br>
-
-** 留意两张图的listview底部区别，其中wrap_content底部已经突破屏幕底部，无法完整显示。**
+A：请务必留意您是否使用了头条类等修改Density的适配方案，BasePopup只遵循官方的测量方法并没有额外的添加别的测量方式，因此如果因为第三方修改导致的适配问题，本库概不负责
 
 <br>
 
