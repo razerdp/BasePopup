@@ -1459,6 +1459,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * <p>
      * 是否自动设置PopupWindow位置
      * <br>
+     * 在设定了clipToScreen的情况下{@link #setClipToScreen(boolean)}
      * <br>
      * 如果当前屏幕不足以完整显示您的PopupWindow，则PopupWindow会自行布置在其镜像位置。
      * <br>
