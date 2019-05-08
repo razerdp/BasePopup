@@ -71,7 +71,7 @@ public class PopupUiUtils {
                 final int childCount = decorView.getChildCount();
                 for (int i = 0; i < childCount; i++) {
                     View child = decorView.getChildAt(i);
-                    if (child.getId()==View.NO_ID)continue;
+                    if (child.getId() == View.NO_ID) continue;
                     String resourceEntryName;
                     try {
                         resourceEntryName = act.getResources().getResourceEntryName(child.getId());
@@ -128,4 +128,8 @@ public class PopupUiUtils {
         }
     }
 
+    public static int getScreenOrientation(Context context) {
+        if (context == null) return Configuration.ORIENTATION_PORTRAIT;
+        return context.getResources().getConfiguration().orientation;
+    }
 }

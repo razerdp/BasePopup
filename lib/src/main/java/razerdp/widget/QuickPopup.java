@@ -9,6 +9,7 @@ import android.view.animation.Animation;
 import java.util.HashMap;
 import java.util.Map;
 
+import razerdp.basepopup.BasePopupFlag;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.QuickPopupBuilder.OnConfigApplyListener;
 import razerdp.basepopup.QuickPopupConfig;
@@ -55,24 +56,26 @@ public class QuickPopup extends BasePopupWindow {
         if (config.getPopupBlurOption() != null) {
             setBlurOption(config.getPopupBlurOption());
         } else {
-            setBlurBackgroundEnable(config.isBlurBackground(), config.getOnBlurOptionInitListener());
+            setBlurBackgroundEnable((config.flag & BasePopupFlag.BLUR_BACKGROUND) != 0, config.getOnBlurOptionInitListener());
         }
 
-        setPopupFadeEnable(config.isFadeEnable());
+        setPopupFadeEnable((config.flag & BasePopupFlag.FADE_ENABLE) != 0);
 
         applyClick();
 
         setOffsetX(config.getOffsetX());
         setOffsetY(config.getOffsetY());
 
-        setClipChildren(config.isClipChildren());
-        setClipToScreen(config.isClipToScreen());
+        setClipChildren((config.flag & BasePopupFlag.CLIP_CHILDREN) != 0);
+        setClipToScreen((config.flag & BasePopupFlag.CLIP_TO_SCREEN) != 0);
 
-        setOutSideDismiss(config.isDismissOutSide());
-        setOutSideTouchable(!config.isAllowInterceptTouchEvent());
+        setOutSideDismiss((config.flag & BasePopupFlag.OUT_SIDE_DISMISS) != 0);
+        setOutSideTouchable((config.flag & BasePopupFlag.OUT_SIDE_TOUCHABLE) != 0);
         setPopupGravity(config.getGravity());
-        setAlignBackground(config.isAlignBackground());
-        setAutoLocatePopup(config.isAutoLocated());
+        setAlignBackground((config.flag & BasePopupFlag.ALIGN_BACKGROUND) != 0);
+        setAlignBackgroundGravity(config.getAlignBackgroundGravity());
+        setAutoLocatePopup((config.flag & BasePopupFlag.AUTO_LOCATED) != 0);
+        setPopupWindowFullScreen((config.flag & BasePopupFlag.FULL_SCREEN) != 0);
         setOnDismissListener(config.getDismissListener());
         setBackground(config.getBackground());
         linkTo(config.getLinkedView());
