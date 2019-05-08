@@ -364,6 +364,10 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
 * **【Candy】2.2.0**
+  * **【Candy】2.2.0-beta2**(2019/05/08)
+    * 重构代码，使用flag代替各种boolean
+    * 屏幕旋转适配，fix [#180](https://github.com/razerdp/BasePopup/issues/180)
+    * 补全QuickPopupConfig配置
   * **【Candy】2.2.0-beta**(2019/05/07)
     * 重构BasePopup测量与布局，减少冗余代码
     * 增加GravityMode方法，现在允许您配置PopupGravity的参考模式

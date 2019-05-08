@@ -9,4 +9,5 @@ interface PopupWindowActionListener {
 
     void onDismiss(boolean hasAnimate);
 
+    boolean onUpdate();
 }

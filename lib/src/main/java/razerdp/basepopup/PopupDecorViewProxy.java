@@ -3,6 +3,7 @@ package razerdp.basepopup;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -71,7 +72,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         setClipChildren(mHelper.isClipChildren());
         mMaskLayout = PopupMaskLayout.create(getContext(), mHelper);
         mFlag.flag = Flag.IDLE;
-        if (mHelper.isInterceptTouchEvent()) {
+        if (!mHelper.isOutSideTouchable()) {
             setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             addViewInLayout(mMaskLayout, -1, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             mMaskLayout.setOnTouchListener(new OnTouchListener() {
@@ -79,9 +80,9 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 public boolean onTouch(View v, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                            return mHelper.isDismissWhenTouchOutside();
+                            return mHelper.isOutSideDismiss();
                         case MotionEvent.ACTION_UP:
-                            if (mHelper.isDismissWhenTouchOutside()) {
+                            if (mHelper.isOutSideDismiss()) {
                                 int x = (int) event.getX();
                                 int y = (int) event.getY();
                                 if (mTarget != null) {
@@ -219,7 +220,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         mFlag.flag &= ~Flag.FLAG_REST_WIDTH_NOT_ENOUGHT;
         mFlag.flag &= ~Flag.FLAG_REST_HEIGHT_NOT_ENOUGHT;
-        if (mHelper.isInterceptTouchEvent()) {
+        if (!mHelper.isOutSideTouchable()) {
             measureWithIntercept(widthMeasureSpec, heightMeasureSpec);
         } else {
             measureWithOutIntercept(widthMeasureSpec, heightMeasureSpec);
@@ -387,7 +388,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        if (mHelper.isInterceptTouchEvent()) {
+        if (!mHelper.isOutSideTouchable()) {
             layoutWithIntercept(l, t, r, b);
         } else {
             layoutWithOutIntercept(l, t, r, b);
@@ -461,15 +462,15 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                     case Gravity.LEFT:
                         if (isRelativeToAnchor) {
                             childLeft = isAlignAnchorMode ? mHelper.getAnchorX() : mHelper.getAnchorX() - width;
-                            windowLeft = isAlignAnchorMode ? mHelper.getAnchorX() : 0;
-                            windowRight = isAlignAnchorMode ? getMeasuredWidth() : mHelper.getAnchorX();
+                            // windowLeft = isAlignAnchorMode ? mHelper.getAnchorX() : 0;
+                            // windowRight = isAlignAnchorMode ? getMeasuredWidth() : mHelper.getAnchorX();
                         }
                         break;
                     case Gravity.RIGHT:
                         if (isRelativeToAnchor) {
                             childLeft = isAlignAnchorMode ? mHelper.getAnchorX() + mHelper.getAnchorWidth() - width : mHelper.getAnchorX() + mHelper.getAnchorWidth();
-                            windowLeft = isAlignAnchorMode ? 0 : mHelper.getAnchorX() + mHelper.getAnchorWidth();
-                            windowRight = isAlignAnchorMode ? mHelper.getAnchorX() + mHelper.getAnchorWidth() : 0;
+                            // windowLeft = isAlignAnchorMode ? 0 : mHelper.getAnchorX() + mHelper.getAnchorWidth();
+                            // windowRight = isAlignAnchorMode ? mHelper.getAnchorX() + mHelper.getAnchorWidth() : 0;
                         } else {
                             childLeft = getMeasuredWidth() - width;
                         }
@@ -478,8 +479,8 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                         if (isRelativeToAnchor) {
                             childLeft = mHelper.getAnchorX();
                             offsetX += anchorCenterX - (childLeft + (width >> 1));
-                            windowLeft = 0;
-                            windowRight = getMeasuredWidth();
+                            // windowLeft = 0;
+                            //windowRight = getMeasuredWidth();
                         } else {
                             childLeft = ((r - l - width) >> 1);
                         }
@@ -487,8 +488,8 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                     default:
                         if (isRelativeToAnchor) {
                             childLeft = mHelper.getAnchorX();
-                            windowLeft = 0;
-                            windowRight = getMeasuredWidth();
+                            //windowLeft = 0;
+                            //windowRight = getMeasuredWidth();
                         }
                         break;
                 }
@@ -838,7 +839,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (!mHelper.isInterceptTouchEvent()) {
+        if (mHelper.isOutSideTouchable()) {
             if (mMaskLayout != null && mMaskLayout.getParent() != null) {
                 ((ViewGroup) mMaskLayout.getParent()).removeViewInLayout(mMaskLayout);
             }
@@ -857,6 +858,9 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
 
     public void updateLayout() {
+        if (mHelper != null) {
+            mHelper.onUpdate();
+        }
         if (mMaskLayout != null) {
             mMaskLayout.update();
         }
@@ -898,6 +902,19 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 mHelper.onAnchorBottom();
             }
             hasCalled = true;
+        }
+    }
+
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (mHelper.getBlurOption() != null && mHelper.getBlurOption().getBlurView() != null) {
+            mHelper.getBlurOption().getBlurView().post(new Runnable() {
+                @Override
+                public void run() {
+                    updateLayout();
+                }
+            });
         }
     }
 

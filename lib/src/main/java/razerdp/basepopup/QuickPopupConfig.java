@@ -17,42 +17,35 @@ import razerdp.util.SimpleAnimationUtils;
 /**
  * Created by 大灯泡 on 2018/8/23.
  */
-public class QuickPopupConfig {
-    int contentViewLayoutid;
+public class QuickPopupConfig implements BasePopupFlag {
+    protected int contentViewLayoutid;
 
-    Animation mShowAnimation;
-    Animation mDismissAnimation;
+    protected Animation mShowAnimation;
+    protected Animation mDismissAnimation;
 
-    Animator mShowAnimator;
-    Animator mDismissAnimator;
+    protected Animator mShowAnimator;
+    protected Animator mDismissAnimator;
 
-    boolean fadeEnable = true;
+    public int flag = BasePopupHelper.IDLE;
 
-    BasePopupWindow.OnDismissListener mDismissListener;
+    protected BasePopupWindow.OnDismissListener mDismissListener;
 
-    boolean blurBackground;
-    WeakReference<BasePopupWindow.OnBlurOptionInitListener> mOnBlurOptionInitListener;
-    PopupBlurOption mPopupBlurOption;
-    int gravity = Gravity.CENTER;
+    protected WeakReference<BasePopupWindow.OnBlurOptionInitListener> mOnBlurOptionInitListener;
+    protected PopupBlurOption mPopupBlurOption;
+    protected int gravity = Gravity.CENTER;
+    protected int alignBackgroundGravity = Gravity.TOP;
 
-    int offsetX;
-    int offsetY;
+    protected int offsetX;
+    protected int offsetY;
 
-    int minWidth;
-    int maxWidth;
-    int minHeight;
-    int maxHeight;
+    protected int minWidth;
+    protected int maxWidth;
+    protected int minHeight;
+    protected int maxHeight;
 
-    boolean alignBackground;
-    Drawable background = new ColorDrawable(BasePopupWindow.DEFAULT_BACKGROUND_COLOR);
-    boolean autoLocated;
+    protected Drawable background = new ColorDrawable(BasePopupWindow.DEFAULT_BACKGROUND_COLOR);
 
-    boolean clipChildren;
-    boolean clipToScreen = true;
-    boolean allowInterceptTouchEvent = true;
-    boolean dismissOutSide = true;
-
-    View mLinkedView;
+    protected View mLinkedView;
 
 
     HashMap<Integer, Pair<View.OnClickListener, Boolean>> mListenersHolderMap;
@@ -95,7 +88,7 @@ public class QuickPopupConfig {
     }
 
     public QuickPopupConfig blurBackground(boolean blurBackground, BasePopupWindow.OnBlurOptionInitListener mInitListener) {
-        this.blurBackground = blurBackground;
+        setFlag(BLUR_BACKGROUND, blurBackground);
         this.mOnBlurOptionInitListener = new WeakReference<>(mInitListener);
         return this;
     }
@@ -118,7 +111,7 @@ public class QuickPopupConfig {
     }
 
     public QuickPopupConfig fadeInAndOut(boolean fadeEnable) {
-        this.fadeEnable = fadeEnable;
+        setFlag(FADE_ENABLE, fadeEnable);
         return this;
     }
 
@@ -133,12 +126,17 @@ public class QuickPopupConfig {
     }
 
     public QuickPopupConfig alignBackground(boolean alignBackground) {
-        this.alignBackground = alignBackground;
+        setFlag(ALIGN_BACKGROUND, alignBackground);
+        return this;
+    }
+
+    public QuickPopupConfig alignBackgroundGravity(int gravity) {
+        this.alignBackgroundGravity = gravity;
         return this;
     }
 
     public QuickPopupConfig autoLocated(boolean autoLocated) {
-        this.autoLocated = autoLocated;
+        setFlag(AUTO_LOCATED, autoLocated);
         return this;
     }
 
@@ -157,23 +155,23 @@ public class QuickPopupConfig {
     }
 
     public QuickPopupConfig clipChildren(boolean clipChildren) {
-        this.clipChildren = clipChildren;
+        setFlag(CLIP_CHILDREN, clipChildren);
         return this;
     }
 
     public QuickPopupConfig clipToScreen(boolean clipToScreen) {
-        this.clipToScreen = clipToScreen;
+        setFlag(CLIP_TO_SCREEN, clipToScreen);
         return this;
     }
 
     @Deprecated
     public QuickPopupConfig allowInterceptTouchEvent(boolean allowInterceptTouchEvent) {
-        this.allowInterceptTouchEvent = allowInterceptTouchEvent;
+        setFlag(OUT_SIDE_TOUCHABLE, !allowInterceptTouchEvent);
         return this;
     }
 
     public QuickPopupConfig outSideTouchable(boolean outSideTouchable) {
-        this.allowInterceptTouchEvent = !outSideTouchable;
+        setFlag(OUT_SIDE_TOUCHABLE, outSideTouchable);
         return this;
     }
 
@@ -188,7 +186,7 @@ public class QuickPopupConfig {
     }
 
     public QuickPopupConfig dismissOnOutSideTouch(boolean dismissOutSide) {
-        this.dismissOutSide = dismissOutSide;
+        setFlag(OUT_SIDE_DISMISS, dismissOutSide);
         return this;
     }
 
@@ -209,6 +207,16 @@ public class QuickPopupConfig {
 
     public QuickPopupConfig maxHeight(int maxHeight) {
         this.maxHeight = maxHeight;
+        return this;
+    }
+
+    public QuickPopupConfig backpressEnable(boolean enable) {
+        setFlag(BACKPRESS_ENABLE, enable);
+        return this;
+    }
+
+    public QuickPopupConfig fullScreen(boolean fullscreen) {
+        setFlag(FULL_SCREEN, fullscreen);
         return this;
     }
     //-----------------------------------------getter-----------------------------------------
@@ -233,14 +241,6 @@ public class QuickPopupConfig {
         return mPopupBlurOption;
     }
 
-    public boolean isBlurBackground() {
-        return blurBackground;
-    }
-
-    public boolean isFadeEnable() {
-        return fadeEnable;
-    }
-
     public int getOffsetX() {
         return offsetX;
     }
@@ -249,9 +249,6 @@ public class QuickPopupConfig {
         return offsetY;
     }
 
-    public boolean isAlignBackground() {
-        return alignBackground;
-    }
 
     public HashMap<Integer, Pair<View.OnClickListener, Boolean>> getListenersHolderMap() {
         return mListenersHolderMap;
@@ -262,8 +259,8 @@ public class QuickPopupConfig {
         return mOnBlurOptionInitListener.get();
     }
 
-    public boolean isAutoLocated() {
-        return autoLocated;
+    public int getAlignBackgroundGravity() {
+        return alignBackgroundGravity;
     }
 
     public BasePopupWindow.OnDismissListener getDismissListener() {
@@ -278,28 +275,12 @@ public class QuickPopupConfig {
         return gravity;
     }
 
-    public boolean isAllowInterceptTouchEvent() {
-        return allowInterceptTouchEvent;
-    }
-
-    public boolean isClipChildren() {
-        return clipChildren;
-    }
-
     public int getContentViewLayoutid() {
         return contentViewLayoutid;
     }
 
-    public boolean isClipToScreen() {
-        return clipToScreen;
-    }
-
     public View getLinkedView() {
         return mLinkedView;
-    }
-
-    public boolean isDismissOutSide() {
-        return dismissOutSide;
     }
 
     public int getMinWidth() {
@@ -316,5 +297,14 @@ public class QuickPopupConfig {
 
     public int getMaxHeight() {
         return maxHeight;
+    }
+
+
+    private void setFlag(int flag, boolean added) {
+        if (!added) {
+            this.flag &= ~flag;
+        } else {
+            this.flag |= flag;
+        }
     }
 }

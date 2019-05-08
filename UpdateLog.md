@@ -1,8 +1,38 @@
 ## BasePopup更新日志
 
 * **【Candy】2.2.0**
+  * **【Candy】2.2.0-beta2**(2019/05/08)
+    * 重构代码，使用flag代替各种boolean
+    * 屏幕旋转适配，fix [#180](https://github.com/razerdp/BasePopup/issues/180)
+    * 补全QuickPopupConfig配置
+  * **【Candy】2.2.0-beta**(2019/05/07)
+    * 重构BasePopup测量与布局，减少冗余代码
+    * 增加GravityMode方法，现在允许您配置PopupGravity的参考模式
+      * RELATIVE_TO_ANCHOR：默认模式，以Anchor为参考点
+      * ALIGN_TO_ANCHOR_SIDE：对齐模式，以Anchor的边为参考点
+    * 增加minWidth/minHeight 方法，允许设置最小宽高
+    * fix [#171](https://github.com/razerdp/BasePopup/issues/171)、[#181](https://github.com/razerdp/BasePopup/issues/181)、[#182](https://github.com/razerdp/BasePopup/issues/182)、[#183](https://github.com/razerdp/BasePopup/issues/183)
+    * 去除高度match_parent和wrap_content的测量差异
+    * 部分Api标记过时：
+      * ~~setAllowDismissWhenTouchOutside~~ -> **setOutSideDismiss**
+      * ~~setAllowInterceptTouchEvent~~ -> **setOutSideTouchable**
+    * 增加对Lifecycle的支持（如果需要混淆请混淆Lifecycle相关）
+  * **近期工作**
+    * 近期很少更新，除了因为入职新公司外，更重要的是随着使用本库的开发者数量增多，一些遗留的bug出现越来也多，因此，为了更好地适应，决定开始了第三次重构。
+    * 本次重构大致构思以及内容：
+      * 保持现有Api，部分Api将会被记录过时（仍然可用），将会由新的Api代替
+      * 全面优化测量方法，解决遗留的问题
+      * 针对issue优化
+      * 去掉冗余代码
+  * **【Candy】2.2.0-alpha4**(2019/04/17)
+    * fixed [#164](https://github.com/razerdp/BasePopup/issues/164)
+    * 优化测量逻辑，尝试修复wrap_content等高度问题
+  * **【Candy】2.2.0-alpha2**(2019/03/21)
+    * 增加`setMaxWidth()`和`setMaxHeight()`方法，想最大半屏显示？走起~
   * **【Candy】2.2.0-alpha**(2019/03/21)
     * 增加`setBackgroundView(View)`方法，现在BasePopup的背景控件可以随意由你定制啦~当然PopupWindow的背景动画控制方法依旧生效
+  * **【other】**
+    * add 996 license
 
 * **【Release】2.1.9**(2019/03/07)
   * 优化对android P刘海的支持，允许PopupWindow布局到刘海，fixed [**#154**](https://github.com/razerdp/BasePopup/issues/154)

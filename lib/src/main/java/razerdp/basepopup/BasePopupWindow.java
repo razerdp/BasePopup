@@ -1031,7 +1031,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </p>
      */
     public BasePopupWindow setAutoShowInputMethod(EditText editText, boolean autoShow) {
-        mHelper.setAutoShowInputMethod(mPopupWindow, autoShow);
+        mHelper.autoShowInputMethod(mPopupWindow, autoShow);
         mAutoShowInputEdittext = editText;
         return this;
     }
@@ -1055,7 +1055,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * <p>
      */
     public BasePopupWindow setBackPressEnable(boolean backPressEnable) {
-        mHelper.setBackPressEnable(mPopupWindow, backPressEnable);
+        mHelper.backPressEnable(mPopupWindow, backPressEnable);
         return this;
     }
 
@@ -1091,7 +1091,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 允许PopupWindow覆盖屏幕（包含状态栏）
      */
     public BasePopupWindow setPopupWindowFullScreen(boolean isFullScreen) {
-        mHelper.setFullScreen(isFullScreen);
+        mHelper.fullScreen(isFullScreen);
         return this;
     }
 
@@ -1489,7 +1489,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param isAutoLocatePopup 是否自适配
      */
     public BasePopupWindow setAutoLocatePopup(boolean isAutoLocatePopup) {
-        mHelper.setAutoLocatePopup(isAutoLocatePopup);
+        mHelper.autoLocatePopup(isAutoLocatePopup);
         return this;
     }
 
@@ -1549,7 +1549,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param outSideDismiss true for allow
      */
     public BasePopupWindow setOutSideDismiss(boolean outSideDismiss) {
-        mHelper.setDismissWhenTouchOutside(mPopupWindow, outSideDismiss);
+        mHelper.dismissOutSideTouch(mPopupWindow, outSideDismiss);
         return this;
     }
 
@@ -1587,7 +1587,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *                  </ul>
      */
     public BasePopupWindow setOutSideTouchable(boolean touchable) {
-        mHelper.setOutSideTouchable(mPopupWindow, !touchable);
+        mHelper.outSideTouchable(mPopupWindow, touchable);
         return this;
     }
 
@@ -1626,7 +1626,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     public boolean isAllowDismissWhenTouchOutside() {
-        return mHelper.isDismissWhenTouchOutside();
+        return mHelper.isOutSideDismiss();
     }
 
     /**
@@ -1634,14 +1634,14 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     @Deprecated
     public boolean isAllowInterceptTouchEvent() {
-        return mHelper.isInterceptTouchEvent();
+        return !mHelper.isOutSideTouchable();
     }
 
     /**
      * 外部是否可以点击
      */
     public boolean isOutSideTouchable() {
-        return !mHelper.isInterceptTouchEvent();
+        return mHelper.isOutSideTouchable();
     }
 
     /**
@@ -1953,10 +1953,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     @Override
     public boolean onOutSideTouch() {
         boolean result = false;
-        if (mHelper.isDismissWhenTouchOutside()) {
+        if (mHelper.isOutSideDismiss()) {
             dismiss();
             result = true;
-        } else if (mHelper.isInterceptTouchEvent()) {
+        } else if (!mHelper.isOutSideTouchable()) {
             result = true;
         }
         return result;

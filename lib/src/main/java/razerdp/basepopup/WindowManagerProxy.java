@@ -81,7 +81,7 @@ final class WindowManagerProxy implements WindowManager {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 p.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT;
             }
-            if (!helper.isInterceptTouchEvent()) {
+            if (helper.isOutSideTouchable()) {
                 PopupLogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  不拦截事件");
                 p.flags |= LayoutParams.FLAG_NOT_TOUCH_MODAL;
                 p.flags |= LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
@@ -96,7 +96,7 @@ final class WindowManagerProxy implements WindowManager {
                     //允许占用刘海
                     p.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
                 }
-                if (helper.isInterceptTouchEvent()) {
+                if (!helper.isOutSideTouchable()) {
                     p.flags |= LayoutParams.FLAG_LAYOUT_NO_LIMITS;
                 }
             }
@@ -111,7 +111,7 @@ final class WindowManagerProxy implements WindowManager {
                 if (helper.getShowCount() > 1) {
                     p.type = LayoutParams.TYPE_APPLICATION_SUB_PANEL;
                 }
-                if (helper.isInterceptTouchEvent()) {
+                if (!helper.isOutSideTouchable()) {
                     //偏移交给PopupDecorViewProxy处理，此处固定为0
                     p.y = 0;
                     p.x = 0;

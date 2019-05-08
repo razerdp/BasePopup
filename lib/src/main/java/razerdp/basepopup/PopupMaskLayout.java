@@ -18,7 +18,7 @@ import razerdp.util.log.PopupLogUtil;
 /**
  * Created by 大灯泡 on 2018/5/9.
  * <p>
- * popup第二层window的蒙层
+ * 蒙层
  */
 class PopupMaskLayout extends FrameLayout {
 
@@ -80,6 +80,11 @@ class PopupMaskLayout extends FrameLayout {
             @Override
             public void onDismiss(boolean hasAnimate) {
                 handleDismiss(hasAnimate ? -2 : 0);
+            }
+
+            @Override
+            public boolean onUpdate() {
+                return false;
             }
         });
     }

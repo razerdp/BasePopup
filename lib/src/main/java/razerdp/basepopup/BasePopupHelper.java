@@ -19,6 +19,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import java.lang.ref.WeakReference;
+
 import razerdp.blur.PopupBlurOption;
 import razerdp.interceptor.PopupWindowEventInterceptor;
 import razerdp.library.R;
@@ -28,7 +30,8 @@ import razerdp.library.R;
  * <p>
  * popupoption
  */
-final class BasePopupHelper implements PopupTouchController, PopupWindowActionListener, PopupWindowLocationListener, PopupKeyboardStateChangeListener {
+final class BasePopupHelper implements PopupTouchController, PopupWindowActionListener, PopupWindowLocationListener,
+        PopupKeyboardStateChangeListener, BasePopupFlag {
 
     enum ShowMode {
         RELATIVE_TO_ANCHOR,
@@ -36,20 +39,21 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         POSITION
     }
 
-    private ShowMode mShowMode = ShowMode.SCREEN;
-
-    public static final int CONTENT_VIEW_ID = R.id.base_popup_content_root;
-
+    private static final int CONTENT_VIEW_ID = R.id.base_popup_content_root;
     static final int DEFAULT_WIDTH = ViewGroup.LayoutParams.WRAP_CONTENT;
     static final int DEFAULT_HEIGHT = ViewGroup.LayoutParams.WRAP_CONTENT;
 
+    private ShowMode mShowMode = ShowMode.SCREEN;
+
     private int contentRootId = CONTENT_VIEW_ID;
 
-    //是否自动弹出输入框(default:false)
-    private boolean autoShowInputMethod = false;
+    static final int IDLE = OUT_SIDE_DISMISS | BACKPRESS_ENABLE | FULL_SCREEN | CLIP_CHILDREN | CLIP_TO_SCREEN | FADE_ENABLE;
+
+    private int flag = IDLE;
+
     private static int showCount;
 
-    //anima
+    //animate
     private Animation mShowAnimation;
     private Animator mShowAnimator;
     private Animation mDismissAnimation;
@@ -74,24 +78,8 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     private int mAnchorViewHeight;
     private int mAnchorViewWidth;
 
-    //是否自动适配popup的位置
-    private boolean isAutoLocatePopup;
-    //是否showAsDropDown
-    private boolean isShowAsDropDown;
-    //点击popup外部是否消失
-    private boolean dismissWhenTouchOutside = true;
-    //是否全屏
-    private boolean fullScreen = true;
-    //是否需要淡入window动画
-    private volatile boolean isPopupFadeEnable = true;
-    //是否禁止后退键dismiss
-    private boolean backPressEnable = true;
-    //popup params
-    private boolean interceptOutSideTouchEvent = true;
     //模糊option(为空的话则不模糊）
     private PopupBlurOption mBlurOption;
-    //背景层是否对齐popup
-    private boolean mAlignBackground = false;
     //背景颜色
     private Drawable mBackgroundDrawable = new ColorDrawable(BasePopupWindow.DEFAULT_BACKGROUND_COLOR);
     //背景对齐方向
@@ -105,18 +93,24 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     private PopupKeyboardStateChangeListener mKeyboardStateChangeListener;
     private PopupWindowEventInterceptor mEventInterceptor;
 
-
-    private boolean mClipChildren = true;
-    private boolean mClipToScreen = true;
-
     private int mSoftInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
-    private ViewGroup.MarginLayoutParams mParaseFromXmlParams;
+    private ViewGroup.MarginLayoutParams mParseFromXmlParams;
     private Point mTempOffset = new Point();
 
-    private boolean isCustomMeasureWidth;
-    private boolean isCustomMeasureHeight;
-
     private int maxWidth, maxHeight, minWidth, minHeight;
+
+    private InnerShowInfo mShowInfo;
+
+    private static class InnerShowInfo {
+        WeakReference<View> mAnchorView;
+        boolean positionMode;
+
+        InnerShowInfo(View mAnchorView, boolean positionMode) {
+            this.mAnchorView = new WeakReference<>(mAnchorView);
+            this.positionMode = positionMode;
+        }
+
+    }
 
     BasePopupHelper(PopupTouchController controller) {
         mAnchorViewLocation = new int[2];
@@ -146,22 +140,22 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
             if (childParams != null) {
                 checkAndSetGravity(childParams);
                 if (childParams instanceof ViewGroup.MarginLayoutParams) {
-                    mParaseFromXmlParams = new ViewGroup.MarginLayoutParams((ViewGroup.MarginLayoutParams) childParams);
-                    if (isCustomMeasureWidth) {
-                        mParaseFromXmlParams.width = popupViewWidth;
+                    mParseFromXmlParams = new ViewGroup.MarginLayoutParams((ViewGroup.MarginLayoutParams) childParams);
+                    if ((flag & CUSTOM_WIDTH) != 0) {
+                        mParseFromXmlParams.width = popupViewWidth;
                     }
-                    if (isCustomMeasureHeight) {
-                        mParaseFromXmlParams.height = popupViewHeight;
+                    if ((flag & CUSTOM_HEIGHT) != 0) {
+                        mParseFromXmlParams.height = popupViewHeight;
                     }
                     tempLayout = null;
                     return result;
                 }
-                mParaseFromXmlParams = new ViewGroup.MarginLayoutParams(childParams);
-                if (isCustomMeasureWidth) {
-                    mParaseFromXmlParams.width = popupViewWidth;
+                mParseFromXmlParams = new ViewGroup.MarginLayoutParams(childParams);
+                if ((flag & CUSTOM_WIDTH) != 0) {
+                    mParseFromXmlParams.width = popupViewWidth;
                 }
-                if (isCustomMeasureHeight) {
-                    mParaseFromXmlParams.height = popupViewHeight;
+                if ((flag & CUSTOM_HEIGHT) != 0) {
+                    mParseFromXmlParams.height = popupViewHeight;
                 }
                 tempLayout = null;
                 return result;
@@ -245,16 +239,16 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return this;
     }
 
-    public boolean isCustomMeasure() {
-        return isCustomMeasureWidth || isCustomMeasureHeight;
+    boolean isCustomMeasure() {
+        return (flag & (CUSTOM_WIDTH | CUSTOM_HEIGHT)) != 0;
     }
 
     int getPopupViewWidth() {
-        if (isCustomMeasureWidth) {
+        if ((flag & CUSTOM_WIDTH) != 0) {
             return popupViewWidth;
         } else {
-            if (mParaseFromXmlParams != null) {
-                return mParaseFromXmlParams.width;
+            if (mParseFromXmlParams != null) {
+                return mParseFromXmlParams.width;
             }
         }
         return popupViewWidth;
@@ -263,22 +257,22 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     BasePopupHelper setPopupViewWidth(int popupViewWidth) {
         this.popupViewWidth = popupViewWidth;
         if (popupViewWidth != DEFAULT_WIDTH) {
-            isCustomMeasureWidth = true;
-            if (mParaseFromXmlParams != null) {
-                mParaseFromXmlParams.width = popupViewWidth;
+            setFlag(CUSTOM_WIDTH, true);
+            if (mParseFromXmlParams != null) {
+                mParseFromXmlParams.width = popupViewWidth;
             }
         } else {
-            isCustomMeasureWidth = false;
+            setFlag(CUSTOM_WIDTH, false);
         }
         return this;
     }
 
     int getPopupViewHeight() {
-        if (isCustomMeasureHeight) {
+        if ((flag & CUSTOM_HEIGHT) != 0) {
             return popupViewHeight;
         } else {
-            if (mParaseFromXmlParams != null) {
-                return mParaseFromXmlParams.height;
+            if (mParseFromXmlParams != null) {
+                return mParseFromXmlParams.height;
             }
         }
         return popupViewHeight;
@@ -287,12 +281,12 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     BasePopupHelper setPopupViewHeight(int popupViewHeight) {
         this.popupViewHeight = popupViewHeight;
         if (popupViewHeight != DEFAULT_HEIGHT) {
-            isCustomMeasureHeight = true;
-            if (mParaseFromXmlParams != null) {
-                mParaseFromXmlParams.height = popupViewHeight;
+            setFlag(CUSTOM_HEIGHT, true);
+            if (mParseFromXmlParams != null) {
+                mParseFromXmlParams.height = popupViewHeight;
             }
         } else {
-            isCustomMeasureHeight = false;
+            setFlag(CUSTOM_HEIGHT, false);
         }
         return this;
     }
@@ -316,21 +310,21 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     }
 
     boolean isPopupFadeEnable() {
-        return isPopupFadeEnable;
+        return (flag & FADE_ENABLE) != 0;
     }
 
-    BasePopupHelper setPopupFadeEnable(PopupWindow popupWindow, boolean needPopupFadeAnima) {
+    BasePopupHelper setPopupFadeEnable(PopupWindow popupWindow, boolean fadeEnable) {
         if (popupWindow == null) return this;
-        this.isPopupFadeEnable = needPopupFadeAnima;
+        setFlag(FADE_ENABLE, fadeEnable);
         return this;
     }
 
     boolean isShowAsDropDown() {
-        return isShowAsDropDown;
+        return (flag & AS_DROP_DOWN) != 0;
     }
 
     BasePopupHelper setShowAsDropDown(boolean showAsDropDown) {
-        this.isShowAsDropDown = showAsDropDown;
+        setFlag(AS_DROP_DOWN, showAsDropDown);
         return this;
     }
 
@@ -358,7 +352,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     }
 
     public BasePopupHelper setClipChildren(boolean clipChildren) {
-        mClipChildren = clipChildren;
+        setFlag(CLIP_CHILDREN, clipChildren);
         return this;
     }
 
@@ -381,12 +375,12 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     }
 
     boolean isAutoShowInputMethod() {
-        return autoShowInputMethod;
+        return (flag & AUTO_INPUT_METHOD) != 0;
     }
 
-    BasePopupHelper setAutoShowInputMethod(PopupWindow popupWindow, boolean autoShowInputMethod) {
+    BasePopupHelper autoShowInputMethod(PopupWindow popupWindow, boolean autoShowInputMethod) {
         if (popupWindow == null) return this;
-        this.autoShowInputMethod = autoShowInputMethod;
+        setFlag(AUTO_INPUT_METHOD, autoShowInputMethod);
         popupWindow.setSoftInputMode(autoShowInputMethod ? WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE : WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED);
         return this;
     }
@@ -397,14 +391,11 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     }
 
     boolean isAutoLocatePopup() {
-        return isAutoLocatePopup;
+        return (flag & AUTO_LOCATED) != 0;
     }
 
-    BasePopupHelper setAutoLocatePopup(boolean autoLocatePopup) {
-        isAutoLocatePopup = autoLocatePopup;
-        if (autoLocatePopup) {
-            isShowAsDropDown = true;
-        }
+    BasePopupHelper autoLocatePopup(boolean autoLocatePopup) {
+        setFlag(AUTO_LOCATED, autoLocatePopup);
         return this;
     }
 
@@ -426,28 +417,28 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return this;
     }
 
-    boolean isDismissWhenTouchOutside() {
-        return dismissWhenTouchOutside;
+    boolean isOutSideDismiss() {
+        return (flag & OUT_SIDE_DISMISS) != 0;
     }
 
-    BasePopupHelper setDismissWhenTouchOutside(PopupWindow popupWindow, boolean dismissWhenTouchOutside) {
+    BasePopupHelper dismissOutSideTouch(PopupWindow popupWindow, boolean dismissWhenTouchOutside) {
         if (popupWindow == null) return this;
-        this.dismissWhenTouchOutside = dismissWhenTouchOutside;
+        setFlag(OUT_SIDE_DISMISS, dismissWhenTouchOutside);
         return this;
     }
 
-    boolean isInterceptTouchEvent() {
-        return interceptOutSideTouchEvent;
+    boolean isOutSideTouchable() {
+        return (flag & OUT_SIDE_TOUCHABLE) != 0;
     }
 
-    BasePopupHelper setOutSideTouchable(PopupWindow popupWindow, boolean intecept) {
+    BasePopupHelper outSideTouchable(PopupWindow popupWindow, boolean touchAble) {
         if (popupWindow == null) return this;
-        interceptOutSideTouchEvent = intecept;
+        setFlag(OUT_SIDE_TOUCHABLE, touchAble);
         return this;
     }
 
     BasePopupHelper setClipToScreen(boolean clipToScreen) {
-        mClipToScreen = clipToScreen;
+        setFlag(CLIP_TO_SCREEN, clipToScreen);
         return this;
     }
 
@@ -490,25 +481,25 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     }
 
     boolean isBackPressEnable() {
-        return backPressEnable;
+        return (flag & BACKPRESS_ENABLE) != 0;
     }
 
     boolean isClipToScreen() {
-        return mClipToScreen;
+        return (flag & CLIP_TO_SCREEN) != 0;
     }
 
-    BasePopupHelper setBackPressEnable(PopupWindow popupWindow, boolean backPressEnable) {
+    BasePopupHelper backPressEnable(PopupWindow popupWindow, boolean backPressEnable) {
         if (popupWindow == null) return this;
-        this.backPressEnable = backPressEnable;
+        setFlag(BACKPRESS_ENABLE, backPressEnable);
         return this;
     }
 
     boolean isFullScreen() {
-        return fullScreen;
+        return (flag & FULL_SCREEN) != 0;
     }
 
-    BasePopupHelper setFullScreen(boolean fullScreen) {
-        this.fullScreen = fullScreen;
+    BasePopupHelper fullScreen(boolean fullScreen) {
+        setFlag(FULL_SCREEN, fullScreen);
         return this;
     }
 
@@ -561,11 +552,11 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     }
 
     boolean isAlignBackground() {
-        return mAlignBackground;
+        return (flag & ALIGN_BACKGROUND) != 0;
     }
 
     BasePopupHelper setAlignBackgound(boolean mAlignBackground) {
-        this.mAlignBackground = mAlignBackground;
+        setFlag(ALIGN_BACKGROUND, mAlignBackground);
         if (!mAlignBackground) {
             setAlignBackgroundGravity(Gravity.NO_GRAVITY);
         }
@@ -573,7 +564,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     }
 
     int getAlignBackgroundGravity() {
-        if (mAlignBackground && alignBackgroundGravity == Gravity.NO_GRAVITY) {
+        if (isAlignBackground() && alignBackgroundGravity == Gravity.NO_GRAVITY) {
             alignBackgroundGravity = Gravity.TOP;
         }
         return alignBackgroundGravity;
@@ -590,11 +581,11 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
 
     boolean isClipChildren() {
-        return mClipChildren;
+        return (flag & CLIP_CHILDREN) != 0;
     }
 
     ViewGroup.MarginLayoutParams getParaseFromXmlParams() {
-        return mParaseFromXmlParams;
+        return mParseFromXmlParams;
     }
 
     int getShowCount() {
@@ -678,6 +669,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     //-----------------------------------------controller-----------------------------------------
     void prepare(View v, boolean positionMode) {
+        mShowInfo = new InnerShowInfo(v, positionMode);
         if (positionMode) {
             setShowMode(BasePopupHelper.ShowMode.POSITION);
         } else {
@@ -700,6 +692,17 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
                 android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
             showCount--;
             showCount = Math.max(0, showCount);
+        }
+    }
+
+    private void setFlag(int flag, boolean added) {
+        if (!added) {
+            this.flag &= ~flag;
+        } else {
+            this.flag |= flag;
+            if (flag == AUTO_LOCATED) {
+                this.flag |= AS_DROP_DOWN;
+            }
         }
     }
 
@@ -771,5 +774,13 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         if (mKeyboardStateChangeListener != null) {
             mKeyboardStateChangeListener.onKeyboardChange(keyboardHeight, isVisible);
         }
+    }
+
+    @Override
+    public boolean onUpdate() {
+        if (mShowInfo != null) {
+            prepare(mShowInfo.mAnchorView == null ? null : mShowInfo.mAnchorView.get(), mShowInfo.positionMode);
+        }
+        return false;
     }
 }
