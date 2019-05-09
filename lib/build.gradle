@@ -37,7 +37,7 @@ def moduleName = 'BasePopup_Candy'
 
 
 group = "com.github.razerdp"
-version = "2.2.0-beta"
+version = "2.2.0-beta2"
 
 install {
     repositories.mavenInstaller {

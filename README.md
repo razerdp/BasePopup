@@ -582,7 +582,9 @@ A：您可以在构造器中进行绑定：
 
 #### Q：为什么BasePopup的宽度不对或者留有一条缝隙
 
-A：请务必留意您是否使用了头条类等修改Density的适配方案，BasePopup只遵循官方的测量方法并没有额外的添加别的测量方式，因此如果因为第三方修改导致的适配问题，本库概不负责
+A：请务必留意您是否使用了头条类等修改Density的适配方案，BasePopup只遵循官方的测量方法并没有额外的添加别的测量方式，因此如果因为第三方修改导致的适配问题，本库概不负责<br><br>
+如果您用的是[**AndroidAutoSize**](https://github.com/JessYanCoding/AndroidAutoSize)，请尝试[issue#13](https://github.com/JessYanCoding/AndroidAutoSize/issues/13)的解决方案：<br><br>
+>在任何情况下本来适配正常的布局突然出现适配失效，适配异常等问题，只要重写 Activity 的 getResources() 方法即可，如果是 Dialog、PopupWindow 等控件出现适配失效或适配异常，同样在每次 show() 之前调用 AutoSize#autoConvertDensity() 即可
 
 <br>
 
