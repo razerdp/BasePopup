@@ -511,7 +511,7 @@ A：调用dismiss(false)或者dismissWithOutAnimate()
 
 #### Q：点击popupwindow背景部分不想让popupwindow隐藏怎么办
 
-A：设置[**setAllowDismissWhenTouchOutside**](https://github.com/razerdp/BasePopup/wiki/API#setallowdismisswhentouchoutsideboolean-dismisswhentouchoutside)(false)
+A：设置[**setOutSideDismiss**](https://github.com/razerdp/BasePopup/wiki/API#setoutsidedismissboolean-outsidedismiss)(false)
 
 <br>
 
