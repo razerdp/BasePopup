@@ -3,6 +3,7 @@ package razerdp.basepopup;
 import android.animation.Animator;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.View;
@@ -51,11 +52,18 @@ public class QuickPopupConfig implements BasePopupFlag {
     HashMap<Integer, Pair<View.OnClickListener, Boolean>> mListenersHolderMap;
 
 
+    public QuickPopupConfig() {
+        //https://github.com/razerdp/BasePopup/issues/152
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+            flag &= ~FADE_ENABLE;
+        }
+    }
+
     public static QuickPopupConfig generateDefault() {
         return new QuickPopupConfig()
                 .withShowAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(true))
                 .withDismissAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(false))
-                .fadeInAndOut(true);
+                .fadeInAndOut(Build.VERSION.SDK_INT != Build.VERSION_CODES.M);//https://github.com/razerdp/BasePopup/issues/152
     }
 
     public QuickPopupConfig withShowAnimation(Animation showAnimation) {
