@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -17,8 +16,7 @@
             android:lineSpacingMultiplier="1.2"
             android:padding="16dp"
             android:textColor="@color/color_black2"
-            android:textSize="12sp"
-            />
+            android:textSize="12sp" />
     </ScrollView>
 
 
@@ -34,7 +32,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="show"/>
+            android:background="@drawable/common_selector"
+            android:text="show"
+            android:textColor="@color/white" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,7 +47,7 @@
                 android:id="@+id/check_align_background"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="对齐背景"/>
+                android:text="对齐背景" />
 
         </LinearLayout>
     </LinearLayout>
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"
-            android:text="对齐方位"/>
+            android:text="对齐方位" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -76,14 +76,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Gravity.LEFT"/>
+                android:text="Gravity.LEFT" />
 
             <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/check_gravity_top"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Gravity.TOP"/>
+                android:text="Gravity.TOP" />
         </LinearLayout>
 
         <LinearLayout
@@ -96,14 +96,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Gravity.RIGHT"/>
+                android:text="Gravity.RIGHT" />
 
             <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/check_gravity_bottom"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Gravity.BOTTOM"/>
+                android:text="Gravity.BOTTOM" />
         </LinearLayout>
 
     </LinearLayout>

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white"
-              android:orientation="vertical"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,8 +17,7 @@
             android:lineSpacingMultiplier="1.2"
             android:padding="16dp"
             android:textColor="@color/color_black2"
-            android:textSize="12sp"
-            />
+            android:textSize="12sp" />
     </ScrollView>
 
 
@@ -38,13 +36,17 @@
             android:lineSpacingExtra="1.2dp"
             android:lineSpacingMultiplier="1.2"
             android:text="click | move"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/start_animate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="start animate"/>
+            android:background="@drawable/common_selector"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="start animate"
+            android:textColor="@color/white" />
     </LinearLayout>
 </LinearLayout>

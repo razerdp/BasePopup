@@ -32,7 +32,6 @@ public abstract class SimpleBaseFrag extends Fragment implements View.OnClickLis
         mFragment = getFragment();
         this.mButton = getButton();
         if (mButton != null) mButton.setOnClickListener(this);
-        if (mFragment != null) mFragment.setBackgroundColor(Color.WHITE);
         onInitView(mFragment.getRootView());
         return mFragment;
     }

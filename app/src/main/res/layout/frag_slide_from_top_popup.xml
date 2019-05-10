@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rl_title"
@@ -16,7 +17,7 @@
             android:layout_centerVertical="true"
             android:padding="8dp"
             android:text="取消"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <LinearLayout
             android:id="@+id/ll_title"
@@ -31,13 +32,13 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:text="相机胶卷"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/iv_arrow"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/ic_arrow_weibo_popup"/>
+                android:src="@drawable/ic_arrow_weibo_popup" />
         </LinearLayout>
 
         <TextView
@@ -49,7 +50,7 @@
             android:padding="8dp"
             android:text="下一步"
             android:textColor="#ffc6c6c6"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
     </RelativeLayout>
 
     <TextView
@@ -58,6 +59,6 @@
         android:background="#aac6c6c6"
         android:gravity="left"
         android:text="该popup主要是用来测试针对7.0系统谜一样的bug，现在经过测试已经修复了7.0系统蛋疼的showAsDropDown的问题了。。。具体在PopupWindowProxy有相关逻辑"
-        android:textSize="25sp"/>
+        android:textSize="25sp" />
 
 </LinearLayout>

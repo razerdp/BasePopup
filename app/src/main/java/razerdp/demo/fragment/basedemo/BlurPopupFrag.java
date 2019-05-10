@@ -36,7 +36,8 @@ public class BlurPopupFrag extends SimpleBaseFrag {
         mDemoPopup = new DemoPopup(getContext());
         mDemoPopup.setPopupGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL)
                 .setShowAnimation(SimpleAnimationUtils.getTranslateVerticalAnimation(1f, 0, 500))
-                .setDismissAnimation(SimpleAnimationUtils.getTranslateVerticalAnimation(0, 1f, 500));
+                .setDismissAnimation(SimpleAnimationUtils.getTranslateVerticalAnimation(0, 1f, 500))
+                .setBackground(null);
         vh.popupShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

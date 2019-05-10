@@ -15,7 +15,7 @@
         android:layout_centerInParent="true"
         android:text="各式各样的例子"
         android:textColor="@color/color_black1"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
     <FrameLayout
         android:id="@+id/popup_fragment"

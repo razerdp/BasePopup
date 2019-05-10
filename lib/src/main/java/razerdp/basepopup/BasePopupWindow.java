@@ -339,6 +339,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         PopupWindowLocationListener, LifecycleObserver {
     private static final String TAG = "BasePopupWindow";
     public static int DEFAULT_BACKGROUND_COLOR = Color.parseColor("#8f000000");
+    public static boolean DEBUG = false;
 
     public enum GravityMode {
         RELATIVE_TO_ANCHOR,
@@ -2116,8 +2117,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return dip * getContext().getResources().getDisplayMetrics().density + 0.5f;
     }
 
-    public static void setDebugLogEnable(boolean printLog) {
-        PopupLogUtil.setOpenLog(printLog);
+    public static void setDebugMode(boolean debugMode) {
+        DEBUG = debugMode;
+        PopupLogUtil.setOpenLog(debugMode);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)

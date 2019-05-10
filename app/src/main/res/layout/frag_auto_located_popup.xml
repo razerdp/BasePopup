@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,13 +15,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="自动定位的popup\n与 setAutoLocatePopup(boolean)相关\n当popup显示的位置不足，则自动定位在view的上方"/>
+            android:text="自动定位的popup\n与 setAutoLocatePopup(boolean)相关\n当popup显示的位置不足，则自动定位在view的上方" />
 
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/check_use_rcv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="使用RecyclerView的PopupWindow"/>
+            android:text="使用RecyclerView的PopupWindow" />
     </LinearLayout>
 
     <Button
@@ -31,32 +31,44 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
-        android:text="Left|Top"/>
+        android:background="@drawable/common_selector"
+        android:text="Left|Top"
+        android:textColor="@color/white" />
 
     <Button
         android:id="@+id/popup_show1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
-        android:text="Right|top"/>
+        android:background="@drawable/common_selector"
+        android:text="Right|top"
+        android:textColor="@color/white" />
 
     <Button
         android:id="@+id/popup_show2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:text="Left|BOTTOM"/>
+        android:background="@drawable/common_selector"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="Left|BOTTOM"
+        android:textColor="@color/white" />
 
     <Button
         android:id="@+id/popup_show3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:text="RIGHT|BOTTOM"/>
+        android:background="@drawable/common_selector"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="RIGHT|BOTTOM"
+        android:textColor="@color/white" />
 </RelativeLayout>

@@ -2,17 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:background="@color/white">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="带有输入的popup，请注意，在popup中并不能做到长按弹出新的popup来弹出赋值/粘贴等，因为popup没办法获取popup里面的view作为anchor"
-        />
+        android:text="带有输入的popup，请注意，在popup中并不能做到长按弹出新的popup来弹出赋值/粘贴等，因为popup没办法获取popup里面的view作为anchor" />
+
     <Button
         android:id="@+id/popup_show"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/common_selector"
         android:text="show"
-        android:layout_centerInParent="true"/>
+        android:textColor="@color/white" />
 </RelativeLayout>

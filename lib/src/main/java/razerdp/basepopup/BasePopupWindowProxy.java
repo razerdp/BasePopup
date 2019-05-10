@@ -215,12 +215,11 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     public void update() {
         try {
             if (mHelper != null) {
-                if (!mHelper.isOutSideTouchable()) {
-                    if (mWindowManagerProxy != null) {
-                        mWindowManagerProxy.update();
-                    }
-                } else {
+                if (mHelper.isOutSideTouchable()) {
                     super.update(mHelper.getAnchorX(), mHelper.getAnchorY() + mHelper.getAnchorHeight(), mHelper.getPopupViewWidth(), mHelper.getPopupViewHeight(), true);
+                }
+                if (mWindowManagerProxy != null) {
+                    mWindowManagerProxy.update();
                 }
             } else {
                 super.update();
