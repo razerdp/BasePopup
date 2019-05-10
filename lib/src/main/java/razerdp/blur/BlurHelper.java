@@ -6,16 +6,20 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
+import android.os.Looper;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RSIllegalArgumentException;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.view.View;
+import android.widget.Toast;
 
+import razerdp.basepopup.BasePopupWindow;
 import razerdp.util.log.LogTag;
 import razerdp.util.log.PopupLogUtil;
 
@@ -27,8 +31,9 @@ import razerdp.util.log.PopupLogUtil;
 public class BlurHelper {
     private static final String TAG = "BlurHelper";
     private static int statusBarHeight = 0;
-
     private static long startTime;
+
+    private static RenderScript renderScript;
 
     public static boolean renderScriptSupported() {
         return Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1;
@@ -39,51 +44,41 @@ public class BlurHelper {
     }
 
     public static Bitmap blur(Context context, View view, float scaledRatio, float radius, boolean fullScreen) {
-        return blur(context, getViewBitmap(view, fullScreen), scaledRatio, radius);
+        return blur(context,
+                getViewBitmap(view, scaledRatio, fullScreen),
+                view.getWidth(),
+                view.getHeight(),
+                radius);
     }
 
-    public static Bitmap blur(Context context, Bitmap origin, float scaledRatio, float radius) {
+    public static Bitmap blur(Context context, Bitmap origin, int resultWidth, int resultHeight, float radius) {
         startTime = System.currentTimeMillis();
+        if (renderScript == null) {
+            renderScript = RenderScript.create(context.getApplicationContext());
+        }
         if (renderScriptSupported()) {
             PopupLogUtil.trace(LogTag.i, TAG, "脚本模糊");
-            return renderScriptblur(context, origin, scaledRatio, radius);
+            return scriptBlur(context,
+                    origin,
+                    resultWidth,
+                    resultHeight,
+                    radius);
         } else {
             PopupLogUtil.trace(LogTag.i, TAG, "快速模糊");
-            scaledRatio = checkFloatRange(scaledRatio / 8, 1, scaledRatio);
-            return fastBlur(context, origin, scaledRatio, radius);
+            return fastBlur(context,
+                    origin,
+                    resultWidth,
+                    resultHeight,
+                    radius);
         }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    public static Bitmap renderScriptblur(Context context, Bitmap origin, float scaledRatio, float radius) {
+    public static Bitmap scriptBlur(Context context, Bitmap origin, int outWidth, int outHeight, float radius) {
         if (origin == null || origin.isRecycled()) return null;
-        radius = checkFloatRange(radius, 0, 20);
-        scaledRatio = checkFloatRange(scaledRatio, 0, 1);
 
-        final int originWidth = origin.getWidth();
-        final int originHeight = origin.getHeight();
-        PopupLogUtil.trace(LogTag.i, "模糊原始图像分辨率 [" + originWidth + " x " + originHeight + "]");
-
-        int scaledWidth = originWidth;
-        int scaledHeight = originHeight;
-
-        if (scaledRatio > 0) {
-            scaledWidth = (int) (scaledWidth * scaledRatio);
-            scaledHeight = (int) (scaledHeight * scaledRatio);
-        }
-
-        PopupLogUtil.trace(LogTag.i, "模糊缩放图像分辨率 [" + scaledWidth + " x " + scaledHeight + "]");
-
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(origin, scaledWidth, scaledHeight, false);
-        Bitmap result = Bitmap.createBitmap(scaledBitmap);
-
-        if (scaledBitmap.isRecycled() || result == null || result.isRecycled()) {
-            return null;
-        }
-
-        RenderScript renderScript = RenderScript.create(context);
-        Allocation blurInput = Allocation.createFromBitmap(renderScript, scaledBitmap);
-        Allocation blurOutput = Allocation.createFromBitmap(renderScript, result);
+        Allocation blurInput = Allocation.createFromBitmap(renderScript, origin);
+        Allocation blurOutput = Allocation.createTyped(renderScript, blurInput.getType());
 
         ScriptIntrinsicBlur blur = null;
         try {
@@ -96,74 +91,67 @@ public class BlurHelper {
 
         if (blur == null) return null;
 
-        blur.setRadius(radius);
+        blur.setRadius(range(radius, 0, 20));
         blur.setInput(blurInput);
         blur.forEach(blurOutput);
-        blurOutput.copyTo(result);
+        blurOutput.copyTo(origin);
 
         //释放
         renderScript.destroy();
         blurInput.destroy();
         blurOutput.destroy();
-        scaledBitmap.recycle();
-        origin.recycle();
 
-        result = Bitmap.createScaledBitmap(result, originWidth, originHeight, false);
-        PopupLogUtil.trace(LogTag.i, TAG, "模糊用时：【" + (System.currentTimeMillis() - startTime) + "ms】");
+        Bitmap result = Bitmap.createScaledBitmap(origin, outWidth, outHeight, true);
+        origin.recycle();
+        long time = (System.currentTimeMillis() - startTime);
+        PopupLogUtil.trace(LogTag.i, TAG, "模糊用时：【" + time + "ms】");
+        if (BasePopupWindow.DEBUG) {
+            toast(context, "模糊用时：【" + time + "ms】");
+        }
         return result;
     }
 
-    public static Bitmap fastBlur(Context context, Bitmap origin, float scaledRatio, float radius) {
+    public static Bitmap fastBlur(Context context, Bitmap origin, int outWidth, int outHeight, float radius) {
         if (origin == null || origin.isRecycled()) return null;
-        radius = checkFloatRange(radius, 0, 20);
-        scaledRatio = checkFloatRange(scaledRatio, 0, 1);
-
-        final int originWidth = origin.getWidth();
-        final int originHeight = origin.getHeight();
-        PopupLogUtil.trace(LogTag.i, "模糊原始图像分辨率 [" + originWidth + " x " + originHeight + "]");
-
-        int scaledWidth = originWidth;
-        int scaledHeight = originHeight;
-
-        if (scaledRatio > 0) {
-            scaledWidth = (int) (scaledWidth * scaledRatio);
-            scaledHeight = (int) (scaledHeight * scaledRatio);
+        origin = FastBlur.doBlur(origin, (int) range(radius, 0, 20), false);
+        if (origin == null || origin.isRecycled()) return null;
+        origin = Bitmap.createScaledBitmap(origin,
+                outWidth,
+                outHeight,
+                true);
+        long time = (System.currentTimeMillis() - startTime);
+        PopupLogUtil.trace(LogTag.i, TAG, "模糊用时：【" + time + "ms】");
+        if (BasePopupWindow.DEBUG) {
+            toast(context, "模糊用时：【" + time + "ms】");
         }
-
-        PopupLogUtil.trace(LogTag.i, "模糊缩放图像分辨率 [" + scaledWidth + " x " + scaledHeight + "]");
-
-        Bitmap result = Bitmap.createScaledBitmap(origin, scaledWidth, scaledHeight, false);
-
-        if (result == null || result.isRecycled()) {
-            return null;
-        }
-
-        result = FastBlur.doBlur(result, (int) radius, false);
-        origin.recycle();
-
-        result = Bitmap.createScaledBitmap(result, originWidth, originHeight, false);
-        PopupLogUtil.trace(LogTag.i, TAG, "模糊用时：【" + (System.currentTimeMillis() - startTime) + "ms】");
-        return result;
+        return origin;
     }
 
     public static Bitmap getViewBitmap(final View v, boolean fullScreen) {
+        return getViewBitmap(v, 1.0f, fullScreen);
+    }
+
+
+    public static Bitmap getViewBitmap(final View v, float scaledRatio, boolean fullScreen) {
         if (v == null || v.getWidth() <= 0 || v.getHeight() <= 0) {
             PopupLogUtil.trace(LogTag.e, "getViewBitmap  >>  宽或者高为空");
             return null;
         }
         if (statusBarHeight <= 0) statusBarHeight = getStatusBarHeight(v.getContext());
         Bitmap b = null;
+        PopupLogUtil.trace(LogTag.i, "模糊原始图像分辨率 [" + v.getWidth() + " x " + v.getHeight() + "]");
+
         try {
-            b = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.ARGB_8888);
+            b = Bitmap.createBitmap((int) (v.getWidth() * scaledRatio), (int) (v.getHeight() * scaledRatio), Bitmap.Config.ARGB_8888);
         } catch (OutOfMemoryError error) {
-            if (b != null && !b.isRecycled()) {
-                b.recycle();
-            }
             System.gc();
             return null;
         }
 
         Canvas c = new Canvas(b);
+        Matrix matrix = new Matrix();
+        matrix.preScale(scaledRatio, scaledRatio);
+        c.setMatrix(matrix);
         if (v.getBackground() == null) {
             c.drawColor(Color.parseColor("#FAFAFA"));
         }
@@ -177,16 +165,13 @@ public class BlurHelper {
             }
         }
         v.draw(c);
+        PopupLogUtil.trace(LogTag.i, "模糊缩放图像分辨率 [" + b.getWidth() + " x " + b.getHeight() + "]");
         return b;
     }
 
-    private static float checkFloatRange(float originValue, float rangeFrom, float rangeTo) {
-        if (originValue < rangeFrom) {
-            originValue = rangeFrom;
-        } else if (originValue > rangeTo) {
-            originValue = rangeTo;
-        }
-        return originValue;
+
+    public static float range(float value, float min, float max) {
+        return Math.max(min, Math.min(value, max));
     }
 
 
@@ -198,5 +183,21 @@ public class BlurHelper {
             result = context.getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    private static void toast(final Context context, final String msg) {
+        if (Looper.myLooper() == null || Looper.myLooper() != Looper.getMainLooper()) {
+            if (context instanceof Activity) {
+                ((Activity) context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        toast(context, msg);
+                    }
+                });
+            }
+        } else {
+            Toast.makeText(context.getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

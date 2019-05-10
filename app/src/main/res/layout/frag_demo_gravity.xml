@@ -128,5 +128,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="show" />
+        android:background="@drawable/common_selector"
+        android:text="show"
+        android:textColor="@color/white" />
 </RelativeLayout>

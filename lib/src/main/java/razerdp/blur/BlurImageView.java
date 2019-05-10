@@ -2,6 +2,7 @@ package razerdp.blur;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -10,6 +11,8 @@ import android.os.Build;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
@@ -53,7 +56,6 @@ public class BlurImageView extends ImageView {
         setFocusable(false);
         setFocusableInTouchMode(false);
         setScaleType(ScaleType.MATRIX);
-        setAlpha(0f);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             setBackground(null);
         } else {
@@ -138,34 +140,31 @@ public class BlurImageView extends ImageView {
         PopupLogUtil.trace(LogTag.i, TAG, "开始模糊alpha动画");
         isAnimating = true;
         if (duration > 0) {
-            animate()
-                    .alpha(1f)
-                    .setDuration(duration)
-                    .setInterpolator(new DecelerateInterpolator())
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            isAnimating = false;
-                            animate().setListener(null);
-                        }
-                    })
-                    .start();
+            startAlphaInAnimation(duration);
         } else if (duration == -2) {
-            animate()
-                    .alpha(1f)
-                    .setDuration(getOption() == null ? 500 : getOption().getBlurInDuration())
-                    .setInterpolator(new DecelerateInterpolator())
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            isAnimating = false;
-                            animate().setListener(null);
-                        }
-                    })
-                    .start();
+            startAlphaInAnimation(getOption() == null ? 500 : getOption().getBlurInDuration());
         } else {
-            setAlpha(1f);
+            setImageAlpha(255);
         }
+    }
+
+    private void startAlphaInAnimation(long duration) {
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(0, 255);
+        valueAnimator.setDuration(duration);
+        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        valueAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                isAnimating = false;
+            }
+        });
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                setImageAlpha((Integer) animation.getAnimatedValue());
+            }
+        });
+        valueAnimator.start();
     }
 
     /**
@@ -175,20 +174,31 @@ public class BlurImageView extends ImageView {
         isAnimating = false;
         PopupLogUtil.trace(LogTag.i, TAG, "dismiss模糊imageview alpha动画");
         if (duration > 0) {
-            animate()
-                    .alpha(0f)
-                    .setDuration(duration)
-                    .setInterpolator(new DecelerateInterpolator())
-                    .start();
+            startAlphaOutAnimation(duration);
         } else if (duration == -2) {
-            animate()
-                    .alpha(0f)
-                    .setDuration(getOption() == null ? 500 : getOption().getBlurOutDuration())
-                    .setInterpolator(new DecelerateInterpolator())
-                    .start();
+            startAlphaOutAnimation(getOption() == null ? 500 : getOption().getBlurOutDuration());
         } else {
-            setAlpha(0f);
+            setImageAlpha(0);
         }
+    }
+
+    private void startAlphaOutAnimation(long duration) {
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(255, 0);
+        valueAnimator.setDuration(duration);
+        valueAnimator.setInterpolator(new AccelerateInterpolator());
+        valueAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                isAnimating = false;
+            }
+        });
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                setImageAlpha((Integer) animation.getAnimatedValue());
+            }
+        });
+        valueAnimator.start();
     }
 
     /**
@@ -197,7 +207,7 @@ public class BlurImageView extends ImageView {
      * @param anchorView
      */
     private void startBlurTask(View anchorView) {
-        ThreadPoolManager.execute(new CreateBlurBitmapRunnable(BlurHelper.getViewBitmap(anchorView, getOption().isFullScreen())));
+        ThreadPoolManager.execute(new CreateBlurBitmapRunnable(anchorView));
     }
 
     /**
@@ -227,7 +237,8 @@ public class BlurImageView extends ImageView {
         if (bitmap != null) {
             PopupLogUtil.trace(LogTag.i, "bitmap: 【" + bitmap.getWidth() + "," + bitmap.getHeight() + "】");
         }
-        setAlpha(isOnUpdate ? 1f : 0f);
+
+        setImageAlpha(isOnUpdate ? 255 : 0);
         setImageBitmap(bitmap);
         PopupBlurOption option = getOption();
         if (option != null && !option.isFullScreen()) {
@@ -270,10 +281,14 @@ public class BlurImageView extends ImageView {
 
     class CreateBlurBitmapRunnable implements Runnable {
 
-        private Bitmap bitmap;
+        private int outWidth;
+        private int outHeight;
+        private Bitmap mBitmap;
 
-        CreateBlurBitmapRunnable(Bitmap bitmap) {
-            this.bitmap = bitmap;
+        CreateBlurBitmapRunnable(View target) {
+            outWidth = target.getWidth();
+            outHeight = target.getHeight();
+            mBitmap = BlurHelper.getViewBitmap(target, getOption().getBlurPreScaleRatio(), getOption().isFullScreen());
         }
 
         @Override
@@ -283,7 +298,12 @@ public class BlurImageView extends ImageView {
                 return;
             }
             PopupLogUtil.trace(LogTag.i, TAG, "子线程模糊执行");
-            setImageBitmapOnUiThread(BlurHelper.blur(getContext(), bitmap, getOption().getBlurPreScaleRatio(), getOption().getBlurRadius()), false);
+            setImageBitmapOnUiThread(BlurHelper.blur(getContext(),
+                    mBitmap,
+                    outWidth,
+                    outHeight,
+                    getOption().getBlurRadius()),
+                    false);
         }
     }
 
@@ -293,13 +313,13 @@ public class BlurImageView extends ImageView {
         long delay;
         final long startTime;
 
-        public CacheAction(Runnable action, long delay) {
+        CacheAction(Runnable action, long delay) {
             this.action = action;
             this.delay = delay;
             this.startTime = System.currentTimeMillis();
         }
 
-        public void restore() {
+        void restore() {
             if (isOverTime()) {
                 PopupLogUtil.trace(LogTag.e, TAG, "模糊超时");
                 destroy();

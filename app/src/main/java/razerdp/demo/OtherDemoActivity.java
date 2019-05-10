@@ -3,7 +3,9 @@ package razerdp.demo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,12 +36,14 @@ public class OtherDemoActivity extends AppCompatActivity {
     private FragmentManager mFragmentManager;
 
     private Map<Integer, SimpleBaseFrag> fragMap;
+    private Fragment lastFragment;
+    private Fragment currentFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other_demo);
-        BasePopupWindow.setDebugLogEnable(true);
+        BasePopupWindow.setDebugMode(true);
         mFragmentManager = getSupportFragmentManager();
 
         fragMap = new HashMap<>();
@@ -87,7 +91,22 @@ public class OtherDemoActivity extends AppCompatActivity {
             }
             return false;
         }
-        mFragmentManager.beginTransaction().replace(R.id.popup_fragment, simpleBaseFrag).commit();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+
+        if (simpleBaseFrag == lastFragment) return false;
+
+        lastFragment = currentFragment;
+        if (lastFragment != null && lastFragment.isAdded()) {
+            fragmentTransaction.hide(lastFragment);
+        }
+
+        if (simpleBaseFrag.isAdded()) {
+            fragmentTransaction.show(simpleBaseFrag);
+        } else {
+            fragmentTransaction.add(R.id.popup_fragment, simpleBaseFrag, simpleBaseFrag.getClass().getSimpleName());
+        }
+        fragmentTransaction.commitAllowingStateLoss();
+        currentFragment = simpleBaseFrag;
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(item.getTitle());
         }

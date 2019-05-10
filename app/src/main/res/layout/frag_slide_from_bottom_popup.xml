@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="从底部上升的popup，常见于菜单选项"/>
+        android:text="从底部上升的popup，常见于菜单选项" />
 
     <Button
         android:id="@+id/popup_show"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="show"/>
+        android:background="@drawable/common_selector"
+        android:text="show"
+        android:textColor="@color/white" />
 </RelativeLayout>

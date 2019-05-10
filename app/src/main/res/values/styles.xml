@@ -18,4 +18,10 @@
         <item name="android:background">@color/line_bg</item>
         <item name="android:layout_margin">2dp</item>
     </style>
+
+
+    <style name="WhiteCheckBox" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">@color/white</item>
+    </style>
 </resources>

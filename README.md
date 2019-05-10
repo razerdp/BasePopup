@@ -364,6 +364,11 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
 * **【Candy】2.2.0**
+  * **【Candy】2.2.0-beta3**(2019/05/10)
+    * 预计下周发布新版
+    * 重构模糊相关逻辑
+      * 经测试，全屏模糊在默认情况下控制到6ms~12ms之间
+      * 增大模糊程度~
   * **【Candy】2.2.0-beta2**(2019/05/08)
     * 重构代码，使用flag代替各种boolean
     * 屏幕旋转适配，fix [#180](https://github.com/razerdp/BasePopup/issues/180)
