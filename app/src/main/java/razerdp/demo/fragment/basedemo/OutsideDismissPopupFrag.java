@@ -37,7 +37,7 @@ public class OutsideDismissPopupFrag extends SimpleBaseFrag {
         vh.popupShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDemoPopup.setAllowDismissWhenTouchOutside(vh.checkDismissOutside.isChecked());
+                mDemoPopup.setOutSideDismiss(vh.checkDismissOutside.isChecked());
                 mDemoPopup.showPopupWindow();
             }
         });

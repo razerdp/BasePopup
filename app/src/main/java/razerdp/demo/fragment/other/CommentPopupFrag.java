@@ -114,8 +114,8 @@ public class CommentPopupFrag extends SimpleBaseFrag {
                 show.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mCommentPopup.setAllowInterceptTouchEvent(!mLinkViewCheck.isChecked())
-                                .setAllowDismissWhenTouchOutside(!mLinkViewCheck.isChecked())
+                        mCommentPopup.setOutSideTouchable(mLinkViewCheck.isChecked())
+                                .setOutSideDismiss(!mLinkViewCheck.isChecked())
                                 .setBlurBackgroundEnable(!mLinkViewCheck.isChecked())
                                 .linkTo(mLinkViewCheck.isChecked() ? v : null);
                         mCommentPopup.showPopupWindow(v);

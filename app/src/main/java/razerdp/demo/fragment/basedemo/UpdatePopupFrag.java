@@ -49,8 +49,8 @@ public class UpdatePopupFrag extends SimpleBaseFrag {
 
         mDemoPopup = new BubblePopup(getContext());
         mDemoPopup.setPopupGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL)
-                .setAllowInterceptTouchEvent(false)
-                .setAllowDismissWhenTouchOutside(false)
+                .setOutSideTouchable(true)
+                .setOutSideDismiss(false)
                 //linkto方法添加，因此不用自己去update
                 .linkTo(vh.popupShow)
                 .setShowAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(true))

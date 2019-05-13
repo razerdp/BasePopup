@@ -1720,6 +1720,16 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return this;
     }
 
+    /**
+     * 是否保持测量高度
+     * <p>
+     * 在{@link #setClipToScreen(boolean)}为true的情况下，BasePopup会针对剩余高度来调整Popup的大小，因此可能出现实际显示高度过小的情况
+     * 该方法可以保持默认测量高度从而阻止BasePopup的自动调整
+     */
+    public BasePopupWindow setKeepSize(boolean keepSize) {
+        mHelper.keepSize(keepSize);
+        return this;
+    }
 
     /**
      * 绑定lifecycle

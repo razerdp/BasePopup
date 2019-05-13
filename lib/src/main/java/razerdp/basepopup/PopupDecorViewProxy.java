@@ -217,8 +217,8 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        mFlag.flag &= ~Flag.FLAG_REST_WIDTH_NOT_ENOUGHT;
-        mFlag.flag &= ~Flag.FLAG_REST_HEIGHT_NOT_ENOUGHT;
+        mFlag.flag &= ~Flag.FLAG_REST_WIDTH_NOT_ENOUGH;
+        mFlag.flag &= ~Flag.FLAG_REST_HEIGHT_NOT_ENOUGH;
         if (!mHelper.isOutSideTouchable()) {
             measureWithIntercept(widthMeasureSpec, heightMeasureSpec);
         } else {
@@ -281,9 +281,9 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         boolean isAlignAnchorMode = mHelper.getGravityMode() == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE;
 
         //当且仅当clipScreen同时有锚点的情况下需要进行剩余空间测量
-        boolean needCheckClipToScreen = mHelper.isClipToScreen() && mHelper.isShowAsDropDown();
+        boolean needCheckRest = mHelper.isClipToScreen() && mHelper.isShowAsDropDown();
 
-        if (needCheckClipToScreen) {
+        if (needCheckRest) {
             int restWidth = widthSize;
 
             //暂时对宽度不做autoLocated，因为触碰边缘会回弹
@@ -312,10 +312,14 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 restWidth = PopupUtils.range(restWidth, mHelper.getMinWidth(), restWidth);
             }*/
             restWidth = PopupUtils.range(restWidth, mHelper.getMinWidth(), restWidth);
-            if (widthSize > restWidth) {
+            if (widthSize > restWidth && !mHelper.isKeepSize()) {
                 widthSize = restWidth;
-                mFlag.flag |= Flag.FLAG_REST_WIDTH_NOT_ENOUGHT;
+                mFlag.flag |= Flag.FLAG_REST_WIDTH_NOT_ENOUGH;
             }
+        }
+
+        if (mHelper.getMinWidth() > 0 && heightSize < mHelper.getMinWidth()) {
+            widthSize = mHelper.getMinWidth();
         }
 
         if (mHelper.getMaxWidth() > 0 && widthSize > mHelper.getMaxWidth()) {
@@ -323,7 +327,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         }
 
 
-        if (needCheckClipToScreen) {
+        if (needCheckRest) {
             //剩余可用空间
             int restHeight;
 
@@ -332,6 +336,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                     restHeight = isAlignAnchorMode ?
                             getScreenHeight() - mHelper.getAnchorY() :
                             mHelper.getAnchorY();
+
 
                     if (mHelper.isAutoLocatePopup() &&
                             ((mHelper.getMinHeight() > 0 && restHeight < mHelper.getMinHeight())
@@ -364,15 +369,19 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             if (restHeight <= 0) {
                 Log.e(TAG, "BasePopup 可用展示空间小于或等于0，高度将按原测量值设定，不进行调整适配");
                 restHeight = heightSize;
-                mFlag.flag |= Flag.FLAG_REST_HEIGHT_NOT_ENOUGHT;
+                mFlag.flag |= Flag.FLAG_REST_HEIGHT_NOT_ENOUGH;
             } else {
                 restHeight = PopupUtils.range(restHeight, mHelper.getMinHeight(), restHeight);
             }
 
-            if (heightSize > restHeight) {
+            if (heightSize > restHeight && !mHelper.isKeepSize()) {
                 heightSize = restHeight;
-                mFlag.flag |= Flag.FLAG_REST_HEIGHT_NOT_ENOUGHT;
+                mFlag.flag |= Flag.FLAG_REST_HEIGHT_NOT_ENOUGH;
             }
+        }
+
+        if (mHelper.getMinHeight() > 0 && heightSize < mHelper.getMinHeight()) {
+            heightSize = mHelper.getMinHeight();
         }
 
         if (mHelper.getMaxHeight() > 0 && heightSize > mHelper.getMaxHeight()) {
@@ -959,8 +968,8 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
     static class Flag {
         static final int IDLE = 0;
-        static final int FLAG_REST_WIDTH_NOT_ENOUGHT = 0x00000001;
-        static final int FLAG_REST_HEIGHT_NOT_ENOUGHT = 0x00000010;
+        static final int FLAG_REST_WIDTH_NOT_ENOUGH = 0x00000001;
+        static final int FLAG_REST_HEIGHT_NOT_ENOUGH = 0x00000010;
         static final int FLAG_WINDOW_PARAMS_FIT_REQUEST = 0x00000100;
 
         int flag;
