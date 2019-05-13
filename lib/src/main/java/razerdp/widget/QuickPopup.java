@@ -83,6 +83,7 @@ public class QuickPopup extends BasePopupWindow {
         setMaxWidth(config.getMaxWidth());
         setMinHeight(config.getMinHeight());
         setMaxHeight(config.getMaxHeight());
+        setKeepSize((config.flag & BasePopupFlag.KEEP_SIZE) != 0);
 
         if (mOnConfigApplyListener != null) {
             mOnConfigApplyListener.onConfigApply(this, config);

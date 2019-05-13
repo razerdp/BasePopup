@@ -227,6 +227,11 @@ public class QuickPopupConfig implements BasePopupFlag {
         setFlag(FULL_SCREEN, fullscreen);
         return this;
     }
+
+    public QuickPopupConfig keepSize(boolean keep) {
+        setFlag(KEEP_SIZE, keep);
+        return this;
+    }
     //-----------------------------------------getter-----------------------------------------
 
     public Animation getShowAnimation() {
