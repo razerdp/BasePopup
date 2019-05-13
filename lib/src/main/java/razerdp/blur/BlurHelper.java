@@ -20,8 +20,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import razerdp.basepopup.BasePopupWindow;
-import razerdp.util.log.LogTag;
-import razerdp.util.log.PopupLogUtil;
+import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2017/12/27.
@@ -57,14 +56,14 @@ public class BlurHelper {
             renderScript = RenderScript.create(context.getApplicationContext());
         }
         if (renderScriptSupported()) {
-            PopupLogUtil.trace(LogTag.i, TAG, "脚本模糊");
+            PopupLog.i(TAG, "脚本模糊");
             return scriptBlur(context,
                     origin,
                     resultWidth,
                     resultHeight,
                     radius);
         } else {
-            PopupLogUtil.trace(LogTag.i, TAG, "快速模糊");
+            PopupLog.i(TAG, "快速模糊");
             return fastBlur(context,
                     origin,
                     resultWidth,
@@ -104,7 +103,7 @@ public class BlurHelper {
         Bitmap result = Bitmap.createScaledBitmap(origin, outWidth, outHeight, true);
         origin.recycle();
         long time = (System.currentTimeMillis() - startTime);
-        PopupLogUtil.trace(LogTag.i, TAG, "模糊用时：【" + time + "ms】");
+        PopupLog.i(TAG, "模糊用时：【" + time + "ms】");
         if (BasePopupWindow.DEBUG) {
             toast(context, "模糊用时：【" + time + "ms】");
         }
@@ -120,7 +119,7 @@ public class BlurHelper {
                 outHeight,
                 true);
         long time = (System.currentTimeMillis() - startTime);
-        PopupLogUtil.trace(LogTag.i, TAG, "模糊用时：【" + time + "ms】");
+        PopupLog.i(TAG, "模糊用时：【" + time + "ms】");
         if (BasePopupWindow.DEBUG) {
             toast(context, "模糊用时：【" + time + "ms】");
         }
@@ -134,12 +133,12 @@ public class BlurHelper {
 
     public static Bitmap getViewBitmap(final View v, float scaledRatio, boolean fullScreen) {
         if (v == null || v.getWidth() <= 0 || v.getHeight() <= 0) {
-            PopupLogUtil.trace(LogTag.e, "getViewBitmap  >>  宽或者高为空");
+            PopupLog.e("getViewBitmap  >>  宽或者高为空");
             return null;
         }
         if (statusBarHeight <= 0) statusBarHeight = getStatusBarHeight(v.getContext());
-        Bitmap b = null;
-        PopupLogUtil.trace(LogTag.i, "模糊原始图像分辨率 [" + v.getWidth() + " x " + v.getHeight() + "]");
+        Bitmap b;
+        PopupLog.i("模糊原始图像分辨率 [" + v.getWidth() + " x " + v.getHeight() + "]");
 
         try {
             b = Bitmap.createBitmap((int) (v.getWidth() * scaledRatio), (int) (v.getHeight() * scaledRatio), Bitmap.Config.ARGB_8888);
@@ -165,7 +164,7 @@ public class BlurHelper {
             }
         }
         v.draw(c);
-        PopupLogUtil.trace(LogTag.i, "模糊缩放图像分辨率 [" + b.getWidth() + " x " + b.getHeight() + "]");
+        PopupLog.i("模糊缩放图像分辨率 [" + b.getWidth() + " x " + b.getHeight() + "]");
         return b;
     }
 

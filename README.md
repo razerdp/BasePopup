@@ -139,10 +139,21 @@ BasePopup并非一个 **“一句话完成需求”** 的库，从起名带有 *
 
 ```xml
 	dependencies {
+
+	        //BasePopup主体库
 	        implementation 'com.github.razerdp:BasePopup:{$latestVersion}'
+	        //BasePopup support支持库
+	        implementation 'com.github.razerdp:BasePopup-compat-support:{$latestVersion}'
+	        //BasePopup lifecycle支持库
+	        implementation 'com.github.razerdp:BasePopup-compat-lifecycle:{$latestVersion}'
+	        //BasePopup androidx支持库
+	        implementation 'com.github.razerdp:BasePopup-compat-androidx:{$latestVersion}'
 	        
-	        //candy版本
+	        //candy渠道
 	        //implementation 'com.github.razerdp:BasePopup_Candy:{$latestVersion}'
+	        //implementation 'com.github.razerdp:BasePopup_Candy-compat-support:{$latestVersion}'
+            //implementation 'com.github.razerdp:BasePopup_Candy-compat-lifecycle:{$latestVersion}'
+            //implementation 'com.github.razerdp:BasePopup_Candy-compat-androidx:{$latestVersion}'
 	}
 ```
 <br>
@@ -364,6 +375,14 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
 * **【Candy】2.2.0**
+  * **【Candy】2.2.0-beta4**(2019/05/13)
+    * 拆分支持包，现在BasePopup原库剔除了Support的支持啦~
+      * 如果您需要其他的支持，请依赖对应版本的库：
+        * support:implementation 'com.github.razerdp:BasePopup-compat-support:2.2.0-beta4'
+        * androidx:implementation 'com.github.razerdp:BasePopup-compat-androidx:2.2.0-beta4'
+        * lifecycle:implementation 'com.github.razerdp:BasePopup-compat-lifecycle:2.2.0-beta4'
+    * 代码优化
+
   * **【Candy】2.2.0-beta3**(2019/05/10)
     * 预计下周发布新版
     * 重构模糊相关逻辑

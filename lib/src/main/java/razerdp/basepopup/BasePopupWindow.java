@@ -207,10 +207,6 @@ package razerdp.basepopup;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.app.Activity;
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleObserver;
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -218,9 +214,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
@@ -245,8 +238,7 @@ import razerdp.util.InputMethodUtils;
 import razerdp.util.PopupUiUtils;
 import razerdp.util.PopupUtils;
 import razerdp.util.SimpleAnimationUtils;
-import razerdp.util.log.LogTag;
-import razerdp.util.log.PopupLogUtil;
+import razerdp.util.log.PopupLog;
 
 /**
  * <br>
@@ -336,7 +328,7 @@ import razerdp.util.log.PopupLogUtil;
  * @since 2016/1/14
  */
 public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismissListener, PopupTouchController,
-        PopupWindowLocationListener, LifecycleObserver {
+        PopupWindowLocationListener {
     private static final String TAG = "BasePopupWindow";
     public static int DEFAULT_BACKGROUND_COLOR = Color.parseColor("#8f000000");
     public static boolean DEBUG = false;
@@ -371,8 +363,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private WeakReference<View> mLinkedViewRef;
     private DelayInitCached mDelayInitCached;
 
-    private boolean attachLifeCycle = false;
-    private boolean pendingShowOnCreate = false;
+    Object lifeCycleObserver;
 
     public BasePopupWindow(Context context) {
         this(context, false);
@@ -421,9 +412,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     private void initView(int width, int height) {
-        if (getContext() instanceof LifecycleOwner) {
-            attachLifeCycle((LifecycleOwner) getContext());
-        }
+        attachLifeCycle(getContext());
         mHelper = new BasePopupHelper(this);
         registerListener(mHelper);
         mContentView = onCreateContentView();
@@ -875,31 +864,24 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             retryCounter = 0;
         } catch (Exception e) {
             retryToShowPopup(v, positionMode, abortAnimate);
-            PopupLogUtil.trace(LogTag.e, TAG, "show error\n" + e);
+            PopupLog.e(TAG, e);
             e.printStackTrace();
         }
     }
 
     private View findDecorView(Activity activity) {
-        View result = null;
-        if (activity instanceof AppCompatActivity) {
-            try {
-                AppCompatActivity supportAct = (AppCompatActivity) activity;
-                List<Fragment> fragments = supportAct.getSupportFragmentManager().getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof DialogFragment) {
-                        DialogFragment d = ((DialogFragment) fragment);
-                        if (d.getDialog() != null && d.getDialog().isShowing() && !d.isRemoving()) {
-                            result = d.getView();
-                            break;
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        View result = onFindDecorView(activity);
+        if (result == null) {
+            result = BasePopupSupporterManager.getInstance().findDecorView(this, activity);
         }
         return result == null ? activity.findViewById(android.R.id.content) : result;
+    }
+
+    /**
+     * 指定DecorView，对于一些在弹窗上的弹窗（例如Dialog）里，其windowToken需要是Dialog的window才可以使PopupWindow悬浮在它的上面
+     */
+    protected View onFindDecorView(Activity activity) {
+        return null;
     }
 
     private void tryToUpdate(View v, boolean positionMode) {
@@ -959,7 +941,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     private void retryToShowPopup(final View v, final boolean positionMode, final boolean abortAnimate) {
         if (retryCounter > MAX_RETRY_SHOW_TIME) return;
-        PopupLogUtil.trace(LogTag.e, TAG, "catch an exception on showing popupwindow ...now retrying to show ... retry count  >>  " + retryCounter);
+        PopupLog.e("catch an exception on showing popupwindow ...now retrying to show ... retry count  >>  " + retryCounter);
         if (mPopupWindow.callSuperIsShowing()) {
             mPopupWindow.callSuperDismiss();
         }
@@ -979,7 +961,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 public void run() {
                     retryCounter++;
                     tryToShowPopup(v, positionMode, abortAnimate);
-                    PopupLogUtil.trace(LogTag.e, TAG, "retry to show >> " + retryCounter);
+                    PopupLog.e(TAG, "retry to show >> " + retryCounter);
                 }
             }, 350);
         }
@@ -1195,7 +1177,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public BasePopupWindow setBlurBackgroundEnable(boolean blurBackgroundEnable, OnBlurOptionInitListener optionInitListener) {
         if (!(getContext() instanceof Activity)) {
-            PopupLogUtil.trace(LogTag.e, TAG, "无法配置默认模糊脚本，因为context不是activity");
+            PopupLog.e(TAG, "无法配置默认模糊脚本，因为context不是activity");
             return this;
         }
         PopupBlurOption option = null;
@@ -1742,19 +1724,15 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     /**
      * 绑定lifecycle
      */
-    public BasePopupWindow attachLifeCycle(LifecycleOwner owner) {
-        if (attachLifeCycle) return this;
-        owner.getLifecycle().addObserver(this);
-        attachLifeCycle = true;
-        return this;
+    public BasePopupWindow attachLifeCycle(Object owner) {
+        return BasePopupSupporterManager.getInstance().attachLifeCycle(this, owner);
     }
 
     /**
      * 解绑lifecycle
      */
-    public BasePopupWindow removeLifeCycle(LifecycleOwner owner) {
-        owner.getLifecycle().removeObserver(this);
-        return this;
+    public BasePopupWindow removeLifeCycle(Object owner) {
+        return BasePopupSupporterManager.getInstance().removeLifeCycle(this, owner);
     }
     //------------------------------------------状态控制-----------------------------------------------
 
@@ -1790,7 +1768,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                     InputMethodUtils.close(mAutoShowInputEdittext);
                 }
             } catch (Exception e) {
-                PopupLogUtil.trace(LogTag.e, TAG, e);
+                PopupLog.e(TAG, e);
                 e.printStackTrace();
             } finally {
                 mPopupWindow.dismiss();
@@ -1867,7 +1845,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         removeListener();
     }
 
-    private void forceDismiss() {
+    void forceDismiss() {
         if (mHelper.getDismissAnimation() != null && mDisplayAnimateView != null) {
             mHelper.getDismissAnimation().cancel();
         }
@@ -2119,18 +2097,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     public static void setDebugMode(boolean debugMode) {
         DEBUG = debugMode;
-        PopupLogUtil.setOpenLog(debugMode);
+        PopupLog.setOpenLog(debugMode);
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    protected void onActivityDestroy() {
-        if (isShowing()) {
-            forceDismiss();
-        }
-        if (getContext() instanceof LifecycleOwner) {
-            removeLifeCycle((LifecycleOwner) getContext());
-        }
-    }
 
     //------------------------------------------Interface-----------------------------------------------
     public interface OnBeforeShowCallback {
