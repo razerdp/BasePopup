@@ -12,17 +12,17 @@
 			<th>Author</th>
         </tr>
         <tr>
-            <td>
+            <td align="center">
 				<a href ="https://bintray.com/razerdp/maven/BasePopup/_latestVersion">
 					<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg"/>
 				</a>
 			</td>
-			<td>
+			<td align="center">
 				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion">
 					<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg"/>
 				</a>
 			</td>
-			<td>
+			<td align="center">
 				<a href = "https://github.com/razerdp/BasePopup/blob/master/LICENSE">
 					<img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"/>		
 				</a>
@@ -31,59 +31,64 @@
                 	<img src="https://img.shields.io/badge/license-NPL%20(The%20996%20Prohibited%20License)-blue.svg"/>		
                 </a>
 			</td>
-			<td>
+			<td align="center">
 				<a href="https://img.shields.io/badge/Api-14%2B-green.svg">
 					<img src="https://img.shields.io/badge/Api-16%2B-green.svg"/>
 				</a>
 			</td>
-			<td>
+			<td align="center">
 				<a href = "https://github.com/razerdp">
 					<img src="https://img.shields.io/badge/Author-razerdp-blue.svg"/>
 				</a>
 			</td>
 		</tr>
 		<tr>
-			<td rowspan="2">Compat组件</td>
+			<td rowspan="3" align="center">Compat组件</td>
+			<td align="center"></td>
+			<td align="center">support</td>
+			<td align="center">lifecycle</td>
+			<td align="center">androidx</td>
 			<tr>
-			<td>Release</td>
-			<td>support：
+			<td align="center">Release</td>
+			<td align="center">
 				<a href = "https://bintray.com/razerdp/maven/BasePopup-compat-support/_latestVersion">
                 	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup-compat-support/images/download.svg"/>		
                 </a>
-			</td>
-			<td>lifecycle：
+            </td>
+			<td align="center">
 				<a href = "https://bintray.com/razerdp/maven/BasePopup-compat-lifecycle/_latestVersion">
                 	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup-compat-lifecycle/images/download.svg"/>		
                 </a>
 			</td>
-			<td>androidx：
+			<td align="center">
 				<a href = "https://bintray.com/razerdp/maven/BasePopup-compat-androidx/_latestVersion">
                 	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup-compat-androidx/images/download.svg"/>		
                 </a>
 			</td>
 			</tr>
 			<tr>
-			<td></td>
-			<td>Candy</td>
-			<td>support：
+			<td align="center">Candy</td>
+			<td align="center">
 				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy-compat-support/_latestVersion">
                 	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy-compat-support/images/download.svg"/>		
                 </a>
 			</td>
-			<td>lifecycle：
+			<td align="center">
 				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy-compat-lifecycle/_latestVersion">
                 	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy-compat-lifecycle/images/download.svg"/>		
                 </a>
 			</td>
-			<td>androidx：
+			<td align="center">
 				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy-compat-androidx/_latestVersion">
                 	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy-compat-androidx/images/download.svg"/>		
                 </a>
 			</td>
-			</tr>
 		</tr>
 			
 </table>
+
+
+
 </div>
 
 ---
@@ -179,18 +184,21 @@ BasePopup并非一个 **“一句话完成需求”** 的库，从起名带有 *
 
 	        //BasePopup主体库
 	        implementation 'com.github.razerdp:BasePopup:{$latestVersion}'
+
 	        //BasePopup support支持库
 	        implementation 'com.github.razerdp:BasePopup-compat-support:{$latestVersion}'
+
 	        //BasePopup lifecycle支持库
 	        implementation 'com.github.razerdp:BasePopup-compat-lifecycle:{$latestVersion}'
+
 	        //BasePopup androidx支持库
 	        implementation 'com.github.razerdp:BasePopup-compat-androidx:{$latestVersion}'
 	        
 	        //candy渠道
-	        //implementation 'com.github.razerdp:BasePopup_Candy:{$latestVersion}'
-	        //implementation 'com.github.razerdp:BasePopup_Candy-compat-support:{$latestVersion}'
-            //implementation 'com.github.razerdp:BasePopup_Candy-compat-lifecycle:{$latestVersion}'
-            //implementation 'com.github.razerdp:BasePopup_Candy-compat-androidx:{$latestVersion}'
+		//implementation 'com.github.razerdp:BasePopup_Candy:{$latestVersion}'
+		//implementation 'com.github.razerdp:BasePopup_Candy-compat-support:{$latestVersion}'
+		//implementation 'com.github.razerdp:BasePopup_Candy-compat-lifecycle:{$latestVersion}'
+		//implementation 'com.github.razerdp:BasePopup_Candy-compat-androidx:{$latestVersion}'
 	}
 ```
 <br>
