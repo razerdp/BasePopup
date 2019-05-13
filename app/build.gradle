@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
         applicationId "razerdp.basepopup"
-        minSdkVersion 16
-        targetSdkVersion 28
-        versionCode 3
-        versionName "1.1"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
 
         renderscriptTargetApi 25
         renderscriptSupportModeEnabled true
@@ -31,6 +31,7 @@ dependencies {
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.github.razerdp:StrokeLayouts:1.0.0'
     implementation project(path: ':lib')
+
 
     //leakcanary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'

@@ -248,7 +248,7 @@ These three methods have different meanings:
 
  - `showPopupWindow()`：No-params method，At this point, the PopupWindow reference object is the screen (or the entire DecorView).Gravity behaves just like the Gravity in FrameLayout, indicating which position it is on the screen.
  - `showPopupWindow(View anchor)`：Set an anchorView.At this point, the PopupWindow reference object is the incoming anchorView.The performance of Gravity means that this PopupWindow should be in the orientation of the target AnchorView.
- - `showPopupWindow(int x, int y)`：Set the position for basepopup,At this point PopupWindow will pop up at the specified location.
+ - `showPopupWindow(int x, int y)`：Set the position for razerdp.basepopup,At this point PopupWindow will pop up at the specified location.
 
 >Suggestion：If PopupWindow needs to repeat the display or retain state, it is recommended to be used as a member variable instead of being created as a local variable each time.
 
@@ -500,7 +500,7 @@ A：Set [**setBackPressEnable**](https://github.com/razerdp/BasePopup/wiki/API#s
 
 #### Q：The difference between the root layout height `match_parent` and `wrap_content`
 
-A：When the root layout is match_parent, basepopup will do some difference handling.
+A：When the root layout is match_parent, razerdp.basepopup will do some difference handling.
 <br>
 When you set [**setClipToScreen(true)**](https://github.com/razerdp/BasePopup/wiki/API#setcliptoscreenboolean-cliptoscreen), if your root layout is `match_parent`, then it means The maximum height of your layout is the screen height. If your root layout is `wrap_content`, the maximum height may be higher than the screen height.
 <br>

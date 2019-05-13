@@ -8,7 +8,7 @@ import android.widget.PopupWindow;
 import java.lang.reflect.Field;
 
 import razerdp.util.UnsafeHelper;
-import razerdp.util.log.PopupLogUtil;
+import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2018/10/12.
@@ -33,7 +33,7 @@ final class PopupReflectionHelper {
             long offset = UnsafeHelper.objectFieldOffset(clazzField);
             //将上面得到的地址传入到当前对象中，并设置classLoader为null
             UnsafeHelper.putObject(this.getClass(), offset, null);
-            PopupLogUtil.trace("绕开android p success,inject offset >>> " + offset);
+            PopupLog.i("绕开android p success,inject offset >>> " + offset);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (Exception e) {

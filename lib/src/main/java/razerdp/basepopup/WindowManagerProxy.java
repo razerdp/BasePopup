@@ -10,8 +10,7 @@ import android.view.WindowManager;
 
 import java.lang.ref.WeakReference;
 
-import razerdp.util.log.LogTag;
-import razerdp.util.log.PopupLogUtil;
+import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2017/12/25.
@@ -36,7 +35,7 @@ final class WindowManagerProxy implements WindowManager {
 
     @Override
     public void removeViewImmediate(View view) {
-        PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.removeViewImmediate  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
+        PopupLog.i(TAG, "WindowManager.removeViewImmediate  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
         if (mWindowManager == null || view == null) return;
         checkStatusBarHeight(view.getContext());
         if (isPopupInnerDecorView(view) && getPopupDecorViewProxy() != null) {
@@ -54,7 +53,7 @@ final class WindowManagerProxy implements WindowManager {
 
     @Override
     public void addView(View view, ViewGroup.LayoutParams params) {
-        PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.addView  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
+        PopupLog.i(TAG, "WindowManager.addView  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
         if (mWindowManager == null || view == null) return;
         checkStatusBarHeight(view.getContext());
         if (isPopupInnerDecorView(view)) {
@@ -82,7 +81,7 @@ final class WindowManagerProxy implements WindowManager {
                 p.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT;
             }
             if (helper.isOutSideTouchable()) {
-                PopupLogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  不拦截事件");
+                PopupLog.i(TAG, "applyHelper  >>>  不拦截事件");
                 p.flags |= LayoutParams.FLAG_NOT_TOUCH_MODAL;
                 p.flags |= LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
                 if (!helper.isClipToScreen()) {
@@ -90,7 +89,7 @@ final class WindowManagerProxy implements WindowManager {
                 }
             }
             if (helper.isFullScreen()) {
-                PopupLogUtil.trace(LogTag.i, TAG, "applyHelper  >>>  全屏");
+                PopupLog.i(TAG, "applyHelper  >>>  全屏");
                 p.flags |= LayoutParams.FLAG_LAYOUT_IN_SCREEN;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     //允许占用刘海
@@ -126,7 +125,7 @@ final class WindowManagerProxy implements WindowManager {
 
     @Override
     public void updateViewLayout(View view, ViewGroup.LayoutParams params) {
-        PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.updateViewLayout  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
+        PopupLog.i(TAG, "WindowManager.updateViewLayout  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
         if (mWindowManager == null || view == null) return;
         checkStatusBarHeight(view.getContext());
         if (isPopupInnerDecorView(view) && getPopupDecorViewProxy() != null || view == getPopupDecorViewProxy()) {
@@ -161,7 +160,7 @@ final class WindowManagerProxy implements WindowManager {
 
     @Override
     public void removeView(View view) {
-        PopupLogUtil.trace(LogTag.i, TAG, "WindowManager.removeView  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
+        PopupLog.i(TAG, "WindowManager.removeView  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
         if (mWindowManager == null || view == null) return;
         checkStatusBarHeight(view.getContext());
         if (isPopupInnerDecorView(view) && getPopupDecorViewProxy() != null) {

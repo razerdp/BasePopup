@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
 import razerdp.blur.BlurImageView;
 import razerdp.library.R;
 import razerdp.util.PopupUtils;
-import razerdp.util.log.PopupLogUtil;
+import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2018/5/9.
@@ -46,7 +46,7 @@ class PopupMaskLayout extends FrameLayout {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         boolean dispatch = super.dispatchKeyEvent(event);
-        PopupLogUtil.trace("dispatch  >> " + dispatch);
+        PopupLog.i("dispatch  >> " + dispatch);
         return dispatch;
     }
 

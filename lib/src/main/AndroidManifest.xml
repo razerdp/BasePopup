@@ -1,2 +1,11 @@
-<manifest package="razerdp.library"
-          xmlns:android="http://schemas.android.com/apk/res/android"/>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="razerdp.library">
+
+    <application>
+        <provider
+            android:name="razerdp.basepopup.BasePopupRuntimeTrojanProvider"
+            android:authorities="${applicationId}.basepopup-trojan"
+            android:exported="false"
+            android:multiprocess="true" />
+    </application>
+</manifest>

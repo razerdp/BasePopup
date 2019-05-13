@@ -56,7 +56,6 @@ public class DemoActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
-        BasePopupWindow.setDebugMode(true);
         mFragmentManager = getSupportFragmentManager();
 
         fragMap = new HashMap<>();

@@ -13,8 +13,7 @@ import android.widget.PopupWindow;
 import java.lang.reflect.Field;
 
 import razerdp.util.PopupUtils;
-import razerdp.util.log.LogTag;
-import razerdp.util.log.PopupLogUtil;
+import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2017/11/27.
@@ -173,7 +172,7 @@ abstract class BasePopupWindowProxy extends PopupWindow {
      */
     private void tryToProxyWindowManagerMethod(PopupWindow popupWindow) {
         if (mHelper == null || mWindowManagerProxy != null) return;
-        PopupLogUtil.trace("cur api >> " + Build.VERSION.SDK_INT);
+        PopupLog.i("cur api >> " + Build.VERSION.SDK_INT);
         troToProxyWindowManagerMethodBeforeP(popupWindow);
     }
 
@@ -198,7 +197,7 @@ abstract class BasePopupWindowProxy extends PopupWindow {
             if (windowManager == null) return;
             mWindowManagerProxy = new WindowManagerProxy(windowManager);
             fieldWindowManager.set(popupWindow, mWindowManagerProxy);
-            PopupLogUtil.trace(LogTag.i, TAG, "尝试代理WindowManager成功");
+            PopupLog.i(TAG, "尝试代理WindowManager成功");
         } catch (NoSuchFieldException e) {
             if (Build.VERSION.SDK_INT >= 27) {
                 troToProxyWindowManagerMethodOverP(popupWindow);

@@ -19,8 +19,7 @@ import android.widget.FrameLayout;
 
 import razerdp.util.PopupUiUtils;
 import razerdp.util.PopupUtils;
-import razerdp.util.log.LogTag;
-import razerdp.util.log.PopupLogUtil;
+import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2017/12/25.
@@ -692,7 +691,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         }
         offsetY = offsetY + childTopMargin - childBottomMargin;
 
-        PopupLogUtil.trace("fitWindowParams  ::  " +
+        PopupLog.i("fitWindowParams  ::  " +
                 "{\n\t\tscreenWidth = " + getScreenWidth() +
                 "\n\t\tscreenHeight = " + getScreenHeight() +
                 "\n\t\tanchorX = " + mHelper.getAnchorX() +
@@ -772,7 +771,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 final KeyEvent.DispatcherState state = getKeyDispatcherState();
                 if (state != null && state.isTracking(event) && !event.isCanceled()) {
                     if (mHelper != null) {
-                        PopupLogUtil.trace(LogTag.i, TAG, "dispatchKeyEvent: >>> onBackPressed");
+                        PopupLog.i(TAG, "dispatchKeyEvent: >>> onBackPressed");
                         return mHelper.onBackPressed();
                     }
                 }
@@ -796,12 +795,12 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         if ((event.getAction() == MotionEvent.ACTION_DOWN)
                 && ((x < 0) || (x >= getWidth()) || (y < 0) || (y >= getHeight()))) {
             if (mHelper != null) {
-                PopupLogUtil.trace(LogTag.i, TAG, "onTouchEvent:[ACTION_DOWN] >>> onOutSideTouch");
+                PopupLog.i(TAG, "onTouchEvent:[ACTION_DOWN] >>> onOutSideTouch");
                 return mHelper.onOutSideTouch();
             }
         } else if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
             if (mHelper != null) {
-                PopupLogUtil.trace(LogTag.i, TAG, "onTouchEvent:[ACTION_OUTSIDE] >>> onOutSideTouch");
+                PopupLog.i(TAG, "onTouchEvent:[ACTION_OUTSIDE] >>> onOutSideTouch");
                 return mHelper.onOutSideTouch();
             }
         }
@@ -810,13 +809,13 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
     int getScreenWidth() {
         int screenWidth = PopupUiUtils.getScreenWidthCompat(getContext());
-        PopupLogUtil.trace("autoSize  width = " + screenWidth);
+        PopupLog.i("autoSize  width = " + screenWidth);
         return screenWidth;
     }
 
     int getScreenHeight() {
         int screenHeight = PopupUiUtils.getScreenHeightCompat(getContext());
-        PopupLogUtil.trace("autoSize  height = " + screenHeight);
+        PopupLog.i("autoSize  height = " + screenHeight);
         return screenHeight;
     }
 
@@ -953,7 +952,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                     .translationY(-offset)
                     .setDuration(300)
                     .start();
-            PopupLogUtil.trace("onKeyboardChange : isVisible = " + isVisible + "  offset = " + offset);
+            PopupLog.i("onKeyboardChange : isVisible = " + isVisible + "  offset = " + offset);
         }
     }
 
