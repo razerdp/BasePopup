@@ -4,7 +4,6 @@
 <h2 align="center">BasePopup - Android下打造通用便捷的PopupWindow</h2>
 <div align="center">
 <table>
-    <thead>
         <tr>
             <th>Release</th>
             <th>Candy</th>
@@ -12,8 +11,6 @@
 			<th>Api</th>
 			<th>Author</th>
         </tr>
-    </thead>
-    <tbody>
         <tr>
             <td>
 				<a href ="https://bintray.com/razerdp/maven/BasePopup/_latestVersion">
@@ -45,7 +42,47 @@
 				</a>
 			</td>
 		</tr>
-    </tbody>
+		<tr>
+			<td rowspan="2">Compat组件</td>
+			<tr>
+			<td>Release</td>
+			<td>support：
+				<a href = "https://bintray.com/razerdp/maven/BasePopup-compat-support/_latestVersion">
+                	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup-compat-support/images/download.svg"/>		
+                </a>
+			</td>
+			<td>lifecycle：
+				<a href = "https://bintray.com/razerdp/maven/BasePopup-compat-lifecycle/_latestVersion">
+                	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup-compat-lifecycle/images/download.svg"/>		
+                </a>
+			</td>
+			<td>androidx：
+				<a href = "https://bintray.com/razerdp/maven/BasePopup-compat-androidx/_latestVersion">
+                	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup-compat-androidx/images/download.svg"/>		
+                </a>
+			</td>
+			</tr>
+			<tr>
+			<td></td>
+			<td>Candy</td>
+			<td>support：
+				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy-compat-support/_latestVersion">
+                	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy-compat-support/images/download.svg"/>		
+                </a>
+			</td>
+			<td>lifecycle：
+				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy-compat-lifecycle/_latestVersion">
+                	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy-compat-lifecycle/images/download.svg"/>		
+                </a>
+			</td>
+			<td>androidx：
+				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy-compat-androidx/_latestVersion">
+                	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy-compat-androidx/images/download.svg"/>		
+                </a>
+			</td>
+			</tr>
+		</tr>
+			
 </table>
 </div>
 
