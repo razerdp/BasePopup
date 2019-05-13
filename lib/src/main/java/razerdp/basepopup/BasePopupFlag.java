@@ -2,7 +2,7 @@ package razerdp.basepopup;
 
 /**
  * Created by 大灯泡 on 2019/5/8
- *
+ * <p>
  * Description：
  */
 public interface BasePopupFlag {
@@ -30,6 +30,7 @@ public interface BasePopupFlag {
      *                             1                   hold
      *                            ------------------ QUICK_POPUP_CONFIG
      *                            1                    BLUR_BACKGROUND
+     *                           1                     KEEP_SIZE
      *
      *          ------------------------------------ INNER_USAGE_SHIFT
      *         1                                       CUSTOM_WIDTH
@@ -55,6 +56,7 @@ public interface BasePopupFlag {
     int AS_DROP_DOWN = 0x4 << CONTROL_SHIFT;//0000 0100，关联Anchor
     int AUTO_INPUT_METHOD = 0x8 << CONTROL_SHIFT;//0000 1000，自动弹出输入法
     int ALIGN_BACKGROUND = 0x10 << CONTROL_SHIFT;//0001 0000，对齐蒙层
+    int KEEP_SIZE = 0x20 << CONTROL_SHIFT;//保持高度，不自动测量
 
     //quick popup config
     int QUICK_POPUP_CONFIG_SHIFT = 11;

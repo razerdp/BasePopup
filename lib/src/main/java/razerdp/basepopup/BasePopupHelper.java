@@ -667,6 +667,15 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return this;
     }
 
+    BasePopupHelper keepSize(boolean keep) {
+        setFlag(KEEP_SIZE, keep);
+        return this;
+    }
+
+    boolean isKeepSize() {
+        return (flag & KEEP_SIZE) != 0;
+    }
+
     //-----------------------------------------controller-----------------------------------------
     void prepare(View v, boolean positionMode) {
         mShowInfo = new InnerShowInfo(v, positionMode);
