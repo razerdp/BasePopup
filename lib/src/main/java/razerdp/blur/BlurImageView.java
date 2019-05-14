@@ -35,6 +35,8 @@ public class BlurImageView extends ImageView {
     private volatile boolean isAnimating = false;
     private long startDuration;
     private CacheAction mCacheAction;
+    private CacheAction mAttachedCache;
+    private boolean isAttachedToWindow = false;
 
 
     public BlurImageView(Context context) {
@@ -208,6 +210,7 @@ public class BlurImageView extends ImageView {
         ThreadPoolManager.execute(new CreateBlurBitmapRunnable(anchorView));
     }
 
+
     /**
      * 判断是否处于主线程，并进行设置bitmap
      *
@@ -217,12 +220,30 @@ public class BlurImageView extends ImageView {
         if (isUiThread()) {
             handleSetImageBitmap(blurBitmap, isOnUpdate);
         } else {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    handleSetImageBitmap(blurBitmap, isOnUpdate);
-                }
-            });
+            if (!isAttachedToWindow) {
+                mAttachedCache = new CacheAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        handleSetImageBitmap(blurBitmap, isOnUpdate);
+                    }
+                }, 0);
+            } else {
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        handleSetImageBitmap(blurBitmap, isOnUpdate);
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        isAttachedToWindow = true;
+        if (mAttachedCache != null) {
+            mAttachedCache.forceRestore();
         }
     }
 
@@ -254,6 +275,10 @@ public class BlurImageView extends ImageView {
         if (mCacheAction != null) {
             PopupLog.i(TAG, "恢复缓存动画");
             mCacheAction.restore();
+        }
+        if (mAttachedCache != null) {
+            mAttachedCache.destroy();
+            mAttachedCache = null;
         }
     }
 
@@ -323,6 +348,12 @@ public class BlurImageView extends ImageView {
                 destroy();
                 return;
             }
+            if (action != null) {
+                post(action);
+            }
+        }
+
+        void forceRestore() {
             if (action != null) {
                 post(action);
             }

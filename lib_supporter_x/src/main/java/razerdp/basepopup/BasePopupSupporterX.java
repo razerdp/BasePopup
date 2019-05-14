@@ -3,7 +3,6 @@ package razerdp.basepopup;
 import android.app.Activity;
 import android.view.View;
 
-import androidx.annotation.Keep;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -20,7 +19,6 @@ import java.util.List;
  * <p>
  * Description：
  */
-@Keep
 public class BasePopupSupporterX implements BasePopupSupporter {
     @Override
     public View findDecorView(BasePopupWindow basePopupWindow, Activity activity) {
@@ -65,7 +63,6 @@ public class BasePopupSupporterX implements BasePopupSupporter {
     }
 
 
-    @Keep
     private class BasePopupLifeCycleHolder implements LifecycleObserver {
         WeakReference<BasePopupWindow> mBasePopupWindow;
 

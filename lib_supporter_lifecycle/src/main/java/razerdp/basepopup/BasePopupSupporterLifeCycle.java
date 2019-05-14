@@ -5,7 +5,6 @@ import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.OnLifecycleEvent;
-import android.support.annotation.Keep;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
@@ -15,7 +14,6 @@ import java.lang.ref.WeakReference;
  * <p>
  * Description：
  */
-@Keep
 public class BasePopupSupporterLifeCycle implements BasePopupSupporter {
 
     @Override
@@ -43,7 +41,6 @@ public class BasePopupSupporterLifeCycle implements BasePopupSupporter {
     }
 
 
-    @Keep
     private class BasePopupLifeCycleHolder implements LifecycleObserver {
         WeakReference<BasePopupWindow> mBasePopupWindow;
 

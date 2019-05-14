@@ -27,7 +27,7 @@ public class QuickPopupConfig implements BasePopupFlag {
     protected Animator mShowAnimator;
     protected Animator mDismissAnimator;
 
-    public int flag = BasePopupHelper.IDLE;
+    public int flag = IDLE;
 
     protected BasePopupWindow.OnDismissListener mDismissListener;
 

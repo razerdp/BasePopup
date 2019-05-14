@@ -214,7 +214,7 @@ class PopupMaskLayout extends FrameLayout {
                 if (mBackgroundView != null && mHelper != null && mHelper.isPopupFadeEnable()) {
                     Animation fadeOut = AnimationUtils.loadAnimation(getContext(), R.anim.basepopup_fade_out);
                     if (fadeOut != null) {
-                        long fadeDismissTime = mHelper.getExitAnimationDuration() - 200;
+                        long fadeDismissTime = mHelper.getDismissAnimationDuration() - 200;
                         fadeOut.setDuration(Math.max(fadeOut.getDuration(), fadeDismissTime));
                         fadeOut.setFillAfter(true);
                         mBackgroundView.startAnimation(fadeOut);

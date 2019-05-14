@@ -1,6 +1,7 @@
 package razerdp.basepopup;
 
 import android.content.Context;
+import android.graphics.PixelFormat;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.Display;

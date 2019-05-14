@@ -47,8 +47,6 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     private int contentRootId = CONTENT_VIEW_ID;
 
-    static final int IDLE = OUT_SIDE_DISMISS | BACKPRESS_ENABLE | FULL_SCREEN | CLIP_CHILDREN | CLIP_TO_SCREEN | FADE_ENABLE;
-
     private int flag = IDLE;
 
     private static int showCount;
@@ -184,10 +182,8 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         if (mShowAnimation != null) {
             mShowAnimation.cancel();
         }
-        if (showAnimation != null && mBlurOption != null && mBlurOption.getBlurInDuration() <= 0) {
-            mBlurOption.setBlurInDuration(showAnimation.getDuration());
-        }
         mShowAnimation = showAnimation;
+        applyBlur(mBlurOption);
         return this;
     }
 
@@ -200,10 +196,8 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         if (mShowAnimator != null) {
             mShowAnimator.cancel();
         }
-        if (showAnimator != null && mBlurOption != null && mBlurOption.getBlurInDuration() <= 0) {
-            mBlurOption.setBlurInDuration(showAnimator.getDuration());
-        }
         mShowAnimator = showAnimator;
+        applyBlur(mBlurOption);
         return this;
     }
 
@@ -216,10 +210,8 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         if (mDismissAnimation != null) {
             mDismissAnimation.cancel();
         }
-        if (dismissAnimation != null && mBlurOption != null && mBlurOption.getBlurOutDuration() <= 0) {
-            mBlurOption.setBlurOutDuration(dismissAnimation.getDuration());
-        }
         mDismissAnimation = dismissAnimation;
+        applyBlur(mBlurOption);
         return this;
     }
 
@@ -232,10 +224,8 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         if (mDismissAnimator != null) {
             mDismissAnimator.cancel();
         }
-        if (dismissAnimator != null && mBlurOption != null && mBlurOption.getBlurOutDuration() <= 0) {
-            mBlurOption.setBlurOutDuration(dismissAnimator.getDuration());
-        }
         mDismissAnimator = dismissAnimator;
+        applyBlur(mBlurOption);
         return this;
     }
 
@@ -509,6 +499,20 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     BasePopupHelper applyBlur(PopupBlurOption option) {
         this.mBlurOption = option;
+        if (option != null) {
+            if (option.getBlurInDuration() <= 0) {
+                long duration = getShowAnimationDuration();
+                if (duration > 0) {
+                    option.setBlurInDuration(duration);
+                }
+            }
+            if (option.getBlurOutDuration() <= 0) {
+                long duration = getDismissAnimationDuration();
+                if (duration > 0) {
+                    option.setBlurOutDuration(duration);
+                }
+            }
+        }
         return this;
     }
 
@@ -517,29 +521,36 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         if (mShowAnimation != null) {
             duration = mShowAnimation.getDuration();
         } else if (mShowAnimator != null) {
-            duration = mShowAnimator.getDuration();
+            duration = getDurationFromAnimator(mShowAnimator);
         }
         return duration < 0 ? 500 : duration;
     }
 
-    long getExitAnimationDuration() {
+    long getDismissAnimationDuration() {
         long duration = 0;
         if (mDismissAnimation != null) {
             duration = mDismissAnimation.getDuration();
         } else if (mDismissAnimator != null) {
-            if (mDismissAnimator instanceof AnimatorSet) {
-                AnimatorSet set = ((AnimatorSet) mDismissAnimator);
-                duration = set.getDuration();
-                if (duration < 0) {
-                    for (Animator childAnimation : set.getChildAnimations()) {
-                        duration = Math.max(duration, childAnimation.getDuration());
-                    }
-                }
-            } else {
-                duration = mDismissAnimator.getDuration();
-            }
+            duration = getDurationFromAnimator(mDismissAnimator);
         }
         return duration < 0 ? 500 : duration;
+    }
+
+    private long getDurationFromAnimator(Animator animator) {
+        if (animator == null) return -1;
+        long duration = 0;
+        if (animator instanceof AnimatorSet) {
+            AnimatorSet set = ((AnimatorSet) animator);
+            duration = set.getDuration();
+            if (duration < 0) {
+                for (Animator childAnimation : set.getChildAnimations()) {
+                    duration = Math.max(duration, childAnimation.getDuration());
+                }
+            }
+        } else {
+            duration = animator.getDuration();
+        }
+        return duration;
     }
 
     Drawable getPopupBackground() {

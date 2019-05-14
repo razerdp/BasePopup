@@ -74,11 +74,9 @@ public class SlideFromTopPopup extends BasePopupWindow {
     //=============================================================adapter
     private static class InnerPopupAdapter extends BaseAdapter {
         private LayoutInflater mInflater;
-        private Context mContext;
         private List<String> mItemList;
 
         public InnerPopupAdapter(Context context, @NonNull List<String> itemList) {
-            mContext = context;
             mItemList = itemList;
             mInflater = LayoutInflater.from(context);
         }
