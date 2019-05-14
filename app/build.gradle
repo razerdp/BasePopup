@@ -10,7 +10,7 @@ android {
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
 
-        renderscriptTargetApi 25
+        renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
     }
     lintOptions {

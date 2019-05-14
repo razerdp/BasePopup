@@ -32,8 +32,6 @@ public class BlurHelper {
     private static int statusBarHeight = 0;
     private static long startTime;
 
-    private static RenderScript renderScript;
-
     public static boolean renderScriptSupported() {
         return Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1;
     }
@@ -52,9 +50,6 @@ public class BlurHelper {
 
     public static Bitmap blur(Context context, Bitmap origin, int resultWidth, int resultHeight, float radius) {
         startTime = System.currentTimeMillis();
-        if (renderScript == null) {
-            renderScript = RenderScript.create(context.getApplicationContext());
-        }
         if (renderScriptSupported()) {
             PopupLog.i(TAG, "脚本模糊");
             return scriptBlur(context,
@@ -75,6 +70,7 @@ public class BlurHelper {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     public static Bitmap scriptBlur(Context context, Bitmap origin, int outWidth, int outHeight, float radius) {
         if (origin == null || origin.isRecycled()) return null;
+        RenderScript renderScript = RenderScript.create(context.getApplicationContext());
 
         Allocation blurInput = Allocation.createFromBitmap(renderScript, origin);
         Allocation blurOutput = Allocation.createTyped(renderScript, blurInput.getType());
@@ -88,7 +84,10 @@ public class BlurHelper {
             }
         }
 
-        if (blur == null) return null;
+        if (blur == null) {
+            PopupLog.e(TAG, "脚本模糊失败，转fastBlur");
+            return fastBlur(context, origin, outWidth, outHeight, radius);
+        }
 
         blur.setRadius(range(radius, 0, 20));
         blur.setInput(blurInput);
@@ -103,10 +102,10 @@ public class BlurHelper {
         Bitmap result = Bitmap.createScaledBitmap(origin, outWidth, outHeight, true);
         origin.recycle();
         long time = (System.currentTimeMillis() - startTime);
-        PopupLog.i(TAG, "模糊用时：【" + time + "ms】");
         if (BasePopupWindow.DEBUG) {
             toast(context, "模糊用时：【" + time + "ms】");
         }
+        PopupLog.i(TAG, "模糊用时：【" + time + "ms】");
         return result;
     }
 
@@ -119,10 +118,10 @@ public class BlurHelper {
                 outHeight,
                 true);
         long time = (System.currentTimeMillis() - startTime);
-        PopupLog.i(TAG, "模糊用时：【" + time + "ms】");
         if (BasePopupWindow.DEBUG) {
             toast(context, "模糊用时：【" + time + "ms】");
         }
+        PopupLog.i(TAG, "模糊用时：【" + time + "ms】");
         return origin;
     }
 

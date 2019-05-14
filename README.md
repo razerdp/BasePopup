@@ -209,11 +209,14 @@ BasePopup并非一个 **“一句话完成需求”** 的库，从起名带有 *
 
 **从1.9.0-alpha开始支持背景模糊（只需要一个方法：`setBlurBackgroundEnable(boolean)`）**
 
-**RenderScript最低支持api 17（更低的情况将会使用fastblur），您需要在gradle配置一下代码**
+**RenderScript最低支持api 18（更低的情况将会使用fastblur），您需要在gradle配置一下代码**
+
+**我们建议你设置renderscriptTargetApi为能够提供你正在使用的所有功能的最低API级别**
 
 ```xml
 defaultConfig {
-        renderscriptTargetApi 25
+
+        renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
     }
 ```
@@ -420,6 +423,9 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
 * **【Candy】2.2.0**
+  * **【Candy】2.2.0-preview4**(2019/05/14)
+    * 修复某些情况下模糊失效的问题
+    * 拆分依赖优化
   * **【Candy】2.2.0-beta4**(2019/05/13)
     * 拆分支持包，现在BasePopup原库剔除了Support的支持啦~
       * 如果您需要其他的支持，请依赖对应的支持库

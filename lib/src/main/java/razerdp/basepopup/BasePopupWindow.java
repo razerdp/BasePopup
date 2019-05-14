@@ -1184,8 +1184,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         if (blurBackgroundEnable) {
             option = new PopupBlurOption();
             option.setFullScreen(true)
-                    .setBlurInDuration(mHelper.getShowAnimationDuration())
-                    .setBlurOutDuration(mHelper.getExitAnimationDuration());
+                    .setBlurInDuration(-1)
+                    .setBlurOutDuration(-1);
             if (optionInitListener != null) {
                 optionInitListener.onCreateBlurOption(option);
             }
@@ -1824,7 +1824,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 isExitAnimatePlaying = false;
                 mPopupWindow.callSuperDismiss();
             }
-        }, Math.max(mHelper.getExitAnimationDuration(), duration));
+        }, Math.max(mHelper.getDismissAnimationDuration(), duration));
         mHelper.onDismiss(duration > -1);
         //如果有动画，则不立刻执行dismiss
         return duration <= 0;
