@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import razerdp.basepopup.R;
@@ -38,6 +39,15 @@ public class DemoDialogFragmentActivity extends AppCompatActivity {
 
 
     public static class TestDialogFragment extends DialogFragment implements DialogInterface.OnKeyListener {
+        @Override
+        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            super.onActivityCreated(savedInstanceState);
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(0x00000000));
+            getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+        }
+
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
