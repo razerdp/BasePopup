@@ -31,7 +31,8 @@ dependencies {
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.github.razerdp:StrokeLayouts:1.0.0'
     implementation project(path: ':lib')
-
+    implementation project(path: ':lib_supporter')
+    implementation project(path: ':lib_supporter_lifecycle')
 
     //leakcanary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
