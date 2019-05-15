@@ -30,7 +30,6 @@ public class InputPopupFrag extends SimpleBaseFrag {
                 .append("仅有ADJUST_PAN或者ADJUST_RESIZE").setTextColor(Color.RED)
                 .into(vh.tvDesc);
         mDemoPopup = new InputPopup(getContext());
-        mDemoPopup.setOutSideTouchable(true);
         vh.popupShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
