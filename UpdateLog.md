@@ -1,5 +1,46 @@
 ## BasePopup更新日志
 
+* **【Release】2.2.0**(2019/05/15)
+  * 正式版2.2.0隆重归来，这次正式版又是一个重构版本哦~
+  * 优化输入法对齐逻辑
+  * **重构模糊逻辑：**
+    * 经测试，720p的手机在默认参数下全屏模糊时间平均在**6ms~16ms**之间
+    * 增大默认参数的模糊程度
+    * 模糊淡入淡出时间跟随Popup的动画时间
+    * 修复模糊偶尔失效的情况
+  * **测量/布局相关：**
+    * 重构测量逻辑：
+      * 现在在`clipToScreen`的情况下，会根据剩余空间对PopupDecor进行重新测量，以保证Popup完整的显示，如果您需要保持原始的测量值，请调用`keepSize(true)`
+      * 重构layout逻辑，针对**outSideTouch**优化
+      * 适配屏幕旋转，fix [#180](https://github.com/razerdp/BasePopup/issues/180)
+      * 采取flag代替各种boolean，清爽更简洁
+      * 减少冗余代码
+  * **优化相关：**
+    * 增加GravityMode值，现在允许您配置`PopupGravity`的参考模式啦~
+      * **RELATIVE_TO_ANCHOR**：默认模式，以Anchor为参考点，指定PopupWindow显示在Anchor的方位
+      * **ALIGN_TO_ANCHOR_SIDE**：对齐模式，以Anchor的边为参考点，指定PopupWindow的边与Anchor的哪条边对齐
+    * 增加minWidth/minHeight 方法，增加maxWidth/maxHeight 方法，让他们相互对应~
+    * 修复高度为match_parent和wrap_content的测量差异，现在可以安心地玩耍啦
+    * 部分Api标记过时：
+      * ~~setAllowDismissWhenTouchOutside~~ -> **setOutSideDismiss**
+      * ~~setAllowInterceptTouchEvent~~ -> **setOutSideTouchable**
+    * 增加`setBackgroundView(View)`方法，现在BasePopup的背景控件可以随意由你定制啦~当然PopupWindow的背景动画控制方法依旧生效
+  * **包拆分：**
+    * 现在BasePopup将会进行包的拆分，源工程仅针对没有任何依赖的原生Android进行适配，如果您需要别的适配，请分别依赖以下模块或多个模块：
+      * 如果您需要`support`库的支持，比如DialogFragment支持，请依赖
+        * `implementation 'com.github.razerdp:BasePopup-compat-support:{$latestVersion}'`
+      * 如果您需要`lifecycle`库的支持，比如destroy里自动释放或者关闭等，请依赖
+        * `implementation 'com.github.razerdp:BasePopup-compat-lifecycle:{$latestVersion}'`
+      * 如果您需要`androidX`库的支持，请依赖
+        * `implementation 'com.github.razerdp:BasePopup-compat-androidx:{$latestVersion}'`
+      * **请注意，如果您依赖了androidX支持组件，请不要依赖另外两个支持组件，否则会冲突**
+  * **Bug fixed：**
+    * fix [#171](https://github.com/razerdp/BasePopup/issues/171)、[#181](https://github.com/razerdp/BasePopup/issues/181)、[#182](https://github.com/razerdp/BasePopup/issues/182)、[#183](https://github.com/razerdp/BasePopup/issues/183)
+    * fix [#180](https://github.com/razerdp/BasePopup/issues/180)
+    * fixed [#164](https://github.com/razerdp/BasePopup/issues/164)
+  * **Other：**
+    * add 996 license
+
 * **【Candy】2.2.0**
   * **【Candy】2.2.0-preview4**(2019/05/14)
     * 修复某些情况下模糊失效的问题

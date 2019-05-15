@@ -902,11 +902,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         Activity activity = PopupUtils.scanForActivity(getContext(), 50);
         if (activity == null) return;
-        View decorView = activity.getWindow() == null ? null : activity.getWindow().getDecorView();
-        if (decorView == null) return;
-        if (decorView instanceof ViewGroup) {
-            decorView = (((ViewGroup) decorView).getChildAt(0));
-        }
+        View decorView = ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
         mGlobalLayoutListenerWrapper = new GlobalLayoutListenerWrapper(decorView, new OnKeyboardStateChangeListener() {
             @Override
             public void onKeyboardChange(int keyboardHeight, boolean isVisible) {
@@ -1789,7 +1785,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         removeListener();
     }
 
-    private void removeListener() {
+    void removeListener() {
         removeGlobalListener();
         removeLinkedLayoutListener();
     }
@@ -2176,24 +2172,24 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         boolean preVisible = false;
         private volatile boolean isAttached;
 
-        public GlobalLayoutListenerWrapper(View target, OnKeyboardStateChangeListener listener) {
+        GlobalLayoutListenerWrapper(View target, OnKeyboardStateChangeListener listener) {
             this.target = new WeakReference<>(target);
             mListener = listener;
             isAttached = false;
         }
 
-        public boolean isAttached() {
+        boolean isAttached() {
             return isAttached;
         }
 
-        public void addSelf() {
+        void addSelf() {
             if (getTarget() != null && !isAttached) {
                 getTarget().getViewTreeObserver().addOnGlobalLayoutListener(this);
                 isAttached = true;
             }
         }
 
-        public void remove() {
+        void remove() {
             if (getTarget() != null && isAttached) {
                 getTarget().getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 isAttached = false;
@@ -2212,19 +2208,25 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             mTarget.getWindowVisibleDisplayFrame(rect);
             int displayHeight = rect.height();
             int windowHeight = mTarget.getHeight();
-            int keyboardHeight = mTarget.getBottom() - rect.bottom;
-            if (preKeyboardHeight != keyboardHeight) {
-                //判定可见区域与原来的window区域占比是否小于0.75,小于意味着键盘弹出来了。
-                boolean isVisible = (displayHeight * 1.0f / windowHeight * 1.0f) < 0.75f;
-                if (isVisible != preVisible) {
-                    if (mListener != null) {
-                        mListener.onKeyboardChange(keyboardHeight, isVisible);
-                    }
-                    preVisible = isVisible;
+            int keyboardHeight = windowHeight - displayHeight;
+            boolean isVisible = keyboardHeight > windowHeight * .15f;
+
+            if (isVisible == preVisible) {
+                //二次检查
+                if (preKeyboardHeight == keyboardHeight) {
+                    return;
                 }
             }
+
+            if (mListener != null) {
+                mListener.onKeyboardChange(keyboardHeight, isVisible);
+            }
+
+            preVisible = isVisible;
             preKeyboardHeight = keyboardHeight;
+
         }
+
     }
 
     private class LinkedViewLayoutChangeListenerWrapper implements ViewTreeObserver.OnPreDrawListener {

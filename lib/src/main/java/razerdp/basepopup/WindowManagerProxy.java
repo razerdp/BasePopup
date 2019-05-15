@@ -1,7 +1,6 @@
 package razerdp.basepopup;
 
 import android.content.Context;
-import android.graphics.PixelFormat;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.Display;
@@ -135,6 +134,10 @@ final class WindowManagerProxy implements WindowManager {
         } else {
             mWindowManager.updateViewLayout(view, params);
         }
+    }
+
+    public void updateViewLayoutOriginal(View view, ViewGroup.LayoutParams params) {
+        mWindowManager.updateViewLayout(view, params);
     }
 
     public void updateFocus(boolean focus) {

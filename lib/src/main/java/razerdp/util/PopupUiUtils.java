@@ -67,22 +67,20 @@ public class PopupUiUtils {
             }
         } else {
             ViewGroup decorView = (ViewGroup) act.getWindow().getDecorView();
-            if (decorView != null) {
-                final int childCount = decorView.getChildCount();
-                for (int i = 0; i < childCount; i++) {
-                    View child = decorView.getChildAt(i);
-                    if (child.getId() == View.NO_ID) continue;
-                    String resourceEntryName;
-                    try {
-                        resourceEntryName = act.getResources().getResourceEntryName(child.getId());
-                    } catch (Exception e) {
-                        continue;
-                    }
-                    if (!TextUtils.isEmpty(resourceEntryName) && child.getId() != View.NO_ID && child.isShown()) {
-                        if (TextUtils.equals("navigationbarbackground", resourceEntryName.toLowerCase()) ||
-                                TextUtils.equals("immersion_navigation_bar_view", resourceEntryName.toLowerCase())) {
-                            return true;
-                        }
+            final int childCount = decorView.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View child = decorView.getChildAt(i);
+                if (child.getId() == View.NO_ID) continue;
+                String resourceEntryName;
+                try {
+                    resourceEntryName = act.getResources().getResourceEntryName(child.getId());
+                } catch (Exception e) {
+                    continue;
+                }
+                if (!TextUtils.isEmpty(resourceEntryName) && child.getId() != View.NO_ID && child.isShown()) {
+                    if (TextUtils.equals("navigationbarbackground", resourceEntryName.toLowerCase()) ||
+                            TextUtils.equals("immersion_navigation_bar_view", resourceEntryName.toLowerCase())) {
+                        return true;
                     }
                 }
             }
