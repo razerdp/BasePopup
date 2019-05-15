@@ -1,10 +1,10 @@
 package razerdp.basepopup;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -743,6 +743,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
         params.x = offsetX + mHelper.getOffsetX();
         params.y = offsetY + mHelper.getOffsetY();
+        originY = params.y;
         mFlag.flag &= ~Flag.FLAG_WINDOW_PARAMS_FIT_REQUEST;
     }
 
@@ -898,7 +899,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         private boolean onTop;
         private boolean hasCalled;
 
-        public CheckAndCallAutoAnchorLocate(boolean onTop) {
+        CheckAndCallAutoAnchorLocate(boolean onTop) {
             this.onTop = onTop;
         }
 
@@ -930,6 +931,8 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     //-----------------------------------------keyboard-----------------------------------------
     private Rect viewRect = new Rect();
     private int offset;
+    private int originY;
+    private ValueAnimator valueAnimator;
 
     @Override
     public void onKeyboardChange(int keyboardHeight, boolean isVisible) {
@@ -938,10 +941,22 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             View focusView = findFocus();
             if (focusView == null) return;
             focusView.getGlobalVisibleRect(viewRect);
+
+            final LayoutParams p = getLayoutParams();
+
+            int y = mHelper.isOutSideTouchable() ?
+                    (p instanceof WindowManager.LayoutParams) ? ((WindowManager.LayoutParams) p).y : mTarget.getTop()
+                    : 0;
+
             if (isVisible) {
-                int keyboardTop = getScreenHeight() - keyboardHeight;
-                int targetBottomOffset = mTarget.getBottom() - keyboardTop;
-                boolean alignToDecorView = targetBottomOffset > 0 && viewRect.top >= targetBottomOffset;
+                //键盘顶部
+                int keyboardTop = getScreenHeight() - keyboardHeight - PopupUiUtils.getNavigationBarHeight(getContext());
+                //decor的底部（区分outsideTouchable）
+                int decorBottom = y + mTarget.getBottom();
+                int targetBottomOffset = decorBottom - keyboardTop;
+                //是否对齐到decor底部
+                boolean alignToDecorView = targetBottomOffset > 0 && (y + viewRect.top) >= targetBottomOffset;
+
                 if (alignToDecorView) {
                     offset = targetBottomOffset;
                 } else {
@@ -952,17 +967,37 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             } else {
                 offset = 0;
             }
+
             if (mHelper.getEventInterceptor() != null) {
                 int customOffset = mHelper.getEventInterceptor().onKeyboardChangeResult(keyboardHeight, isVisible, offset);
                 if (customOffset != 0) {
                     offset = customOffset;
                 }
             }
-            mTarget.animate()
-                    .translationY(-offset)
-                    .setDuration(300)
-                    .start();
-            PopupLog.i("onKeyboardChange : isVisible = " + isVisible + "  offset = " + offset);
+            if (mHelper.isOutSideTouchable()) {
+                if (valueAnimator != null) {
+                    valueAnimator.cancel();
+                }
+                valueAnimator = ValueAnimator.ofInt(y, (isVisible ? y - offset : originY));
+                valueAnimator.setDuration(300);
+                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        if (p instanceof WindowManager.LayoutParams) {
+                            ((WindowManager.LayoutParams) p).y = (int) animation.getAnimatedValue();
+                            mWindowManagerProxy.updateViewLayoutOriginal(PopupDecorViewProxy.this, p);
+                        }
+                    }
+                });
+                valueAnimator.start();
+            } else {
+                mTarget.animate().cancel();
+                mTarget.animate()
+                        .translationY(-offset)
+                        .setDuration(300)
+                        .start();
+                PopupLog.i("onKeyboardChange", isVisible, keyboardHeight, offset);
+            }
         }
     }
 

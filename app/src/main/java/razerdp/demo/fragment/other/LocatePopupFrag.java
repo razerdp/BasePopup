@@ -68,14 +68,8 @@ public class LocatePopupFrag extends SimpleBaseFrag {
                                 .backgroundColor(Color.parseColor("#8C617D8A"))
                                 .withShowAnimation(enterAnimation)
                                 .withDismissAnimation(dismissAnimation)
+                                .blurBackground(true)
                                 .gravity(gravity)
-                                .blurBackground(true, new BasePopupWindow.OnBlurOptionInitListener() {
-                                    @Override
-                                    public void onCreateBlurOption(PopupBlurOption option) {
-                                        option.setBlurRadius(6)
-                                                .setBlurPreScaleRatio(0.9f);
-                                    }
-                                })
                                 .withClick(R.id.tx_1, new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {

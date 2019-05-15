@@ -17,6 +17,7 @@ import android.widget.PopupWindow;
 import razerdp.basepopup.QuickPopupBuilder;
 import razerdp.basepopup.QuickPopupConfig;
 import razerdp.basepopup.R;
+import razerdp.demo.popup.SlideFromBottomInputPopup;
 import razerdp.util.SimpleAnimationUtils;
 
 /**

@@ -422,102 +422,46 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
-* **【Candy】2.2.0**
-  * **【Candy】2.2.0-preview4**(2019/05/14)
-    * 修复某些情况下模糊失效的问题
-    * 拆分依赖优化
-  * **【Candy】2.2.0-beta4**(2019/05/13)
-    * 拆分支持包，现在BasePopup原库剔除了Support的支持啦~
-      * 如果您需要其他的支持，请依赖对应的支持库
-    * 代码优化
-  * **【Candy】2.2.0-beta3**(2019/05/10)
-    * 预计下周发布新版
-    * 重构模糊相关逻辑
-      * 经测试，全屏模糊在默认情况下控制到6ms~12ms之间
-      * 增大模糊程度~
-  * **【Candy】2.2.0-beta2**(2019/05/08)
-    * 重构代码，使用flag代替各种boolean
-    * 屏幕旋转适配，fix [#180](https://github.com/razerdp/BasePopup/issues/180)
-    * 补全QuickPopupConfig配置
-  * **【Candy】2.2.0-beta**(2019/05/07)
-    * 重构BasePopup测量与布局，减少冗余代码
-    * 增加GravityMode方法，现在允许您配置PopupGravity的参考模式
-      * RELATIVE_TO_ANCHOR：默认模式，以Anchor为参考点
-      * ALIGN_TO_ANCHOR_SIDE：对齐模式，以Anchor的边为参考点
-    * 增加minWidth/minHeight 方法，允许设置最小宽高
-    * fix [#171](https://github.com/razerdp/BasePopup/issues/171)、[#181](https://github.com/razerdp/BasePopup/issues/181)、[#182](https://github.com/razerdp/BasePopup/issues/182)、[#183](https://github.com/razerdp/BasePopup/issues/183)
-    * 去除高度match_parent和wrap_content的测量差异
+* **【Release】2.2.0**(2019/05/15)
+  * 正式版2.2.0隆重归来，这次正式版又是一个重构版本哦~
+  * 优化输入法对齐逻辑
+  * **重构模糊逻辑：**
+    * 经测试，720p的手机在默认参数下全屏模糊时间平均在**6ms~16ms**之间
+    * 增大默认参数的模糊程度
+    * 模糊淡入淡出时间跟随Popup的动画时间
+    * 修复模糊偶尔失效的情况
+  * **测量/布局相关：**
+    * 重构测量逻辑：
+      * 现在在`clipToScreen`的情况下，会根据剩余空间对PopupDecor进行重新测量，以保证Popup完整的显示，如果您需要保持原始的测量值，请调用`keepSize(true)`
+      * 重构layout逻辑，针对**outSideTouch**优化
+      * 适配屏幕旋转，fix [#180](https://github.com/razerdp/BasePopup/issues/180)
+      * 采取flag代替各种boolean，清爽更简洁
+      * 减少冗余代码
+  * **优化相关：**
+    * 增加GravityMode值，现在允许您配置`PopupGravity`的参考模式啦~
+      * **RELATIVE_TO_ANCHOR**：默认模式，以Anchor为参考点，指定PopupWindow显示在Anchor的方位
+      * **ALIGN_TO_ANCHOR_SIDE**：对齐模式，以Anchor的边为参考点，指定PopupWindow的边与Anchor的哪条边对齐
+    * 增加minWidth/minHeight 方法，增加maxWidth/maxHeight 方法，让他们相互对应~
+    * 修复高度为match_parent和wrap_content的测量差异，现在可以安心地玩耍啦
     * 部分Api标记过时：
       * ~~setAllowDismissWhenTouchOutside~~ -> **setOutSideDismiss**
       * ~~setAllowInterceptTouchEvent~~ -> **setOutSideTouchable**
-    * 增加对Lifecycle的支持（如果需要混淆请混淆Lifecycle相关）
-  * **近期工作**
-    * 近期很少更新，除了因为入职新公司外，更重要的是随着使用本库的开发者数量增多，一些遗留的bug出现越来也多，因此，为了更好地适应，决定开始了第三次重构。
-    * 本次重构大致构思以及内容：
-      * 保持现有Api，部分Api将会被记录过时（仍然可用），将会由新的Api代替
-      * 全面优化测量方法，解决遗留的问题
-      * 针对issue优化
-      * 去掉冗余代码
-  * **【Candy】2.2.0-alpha4**(2019/04/17)
-    * fixed [#164](https://github.com/razerdp/BasePopup/issues/164)
-    * 优化测量逻辑，尝试修复wrap_content等高度问题
-  * **【Candy】2.2.0-alpha2**(2019/03/21)
-    * 增加`setMaxWidth()`和`setMaxHeight()`方法，想最大半屏显示？走起~
-  * **【Candy】2.2.0-alpha**(2019/03/21)
     * 增加`setBackgroundView(View)`方法，现在BasePopup的背景控件可以随意由你定制啦~当然PopupWindow的背景动画控制方法依旧生效
-  * **【other】**
+  * **包拆分：**
+    * 现在BasePopup将会进行包的拆分，源工程仅针对没有任何依赖的原生Android进行适配，如果您需要别的适配，请分别依赖以下模块或多个模块：
+      * 如果您需要`support`库的支持，比如DialogFragment支持，请依赖
+        * `implementation 'com.github.razerdp:BasePopup-compat-support:{$latestVersion}'`
+      * 如果您需要`lifecycle`库的支持，比如destroy里自动释放或者关闭等，请依赖
+        * `implementation 'com.github.razerdp:BasePopup-compat-lifecycle:{$latestVersion}'`
+      * 如果您需要`androidX`库的支持，请依赖
+        * `implementation 'com.github.razerdp:BasePopup-compat-androidx:{$latestVersion}'`
+      * **请注意，如果您依赖了androidX支持组件，请不要依赖另外两个支持组件，否则会冲突**
+  * **Bug fixed：**
+    * fix [#171](https://github.com/razerdp/BasePopup/issues/171)、[#181](https://github.com/razerdp/BasePopup/issues/181)、[#182](https://github.com/razerdp/BasePopup/issues/182)、[#183](https://github.com/razerdp/BasePopup/issues/183)
+    * fix [#180](https://github.com/razerdp/BasePopup/issues/180)
+    * fixed [#164](https://github.com/razerdp/BasePopup/issues/164)
+  * **Other：**
     * add 996 license
-
-* **【Release】2.1.9**(2019/03/07)
-  * 优化对android P刘海的支持，允许PopupWindow布局到刘海，fixed [**#154**](https://github.com/razerdp/BasePopup/issues/154)
-  * 修复Quickpopup没有设置回调的问题
-  * OnDismissListener添加退出动画开始的回调
-  * 优化模糊逻辑
-  * 优化退出动画逻辑
-  * fixed [**#152**](https://github.com/razerdp/BasePopup/issues/152)
-  * 优化代码，修复覆盖动画监听器的bug，优化layout逻辑
-  * 为模糊图片方法添加oom捕捉
-  * 优化背景和局部模糊逻辑
-  * 去除lib的AndroidManifest内容，预防冲突，fixed [**#149**](https://github.com/razerdp/BasePopup/issues/149)
-  * 针对DialogFragment适配，fixed [**#145**](https://github.com/razerdp/BasePopup/issues/145)
-
-* **【Candy】2.1.9**
-  * **【Candy】2.1.9-prerelease**(2019/03/07)
-    * 优化对android P刘海的支持，允许PopupWindow布局到刘海，fixed [**#154**](https://github.com/razerdp/BasePopup/issues/154)
-  * **【Candy】2.1.9-beta4~5**(2019/03/1)
-    * 修复quickpopup没有设置回调的问题
-    * OnDismissListener添加退出动画开始的回调
-    * 优化模糊逻辑
-    * 优化退出动画逻辑
-  * **【Candy】2.1.9-beta3**(2019/03/1)
-    * fixed [**#152**](https://github.com/razerdp/BasePopup/issues/152)
-  * **【Candy】2.1.9-beta1**(2019/02/28)
-    * 优化代码，修复覆盖动画监听器的bug，优化layout逻辑
-  * **【Candy】2.1.9-beta**(2019/2/26)
-    * 为模糊图片方法添加oom捕捉
-  * **【Candy】2.1.9-alpha4**(2019/2/21)
-    * 优化背景和局部模糊逻辑
-  * **【Candy】2.1.9-alpha3**(2019/2/21)
-    * 紧急修复alpha2留下的坑
-  * **【Candy】2.1.9-alpha2**(2019/2/19)
-    * 去除lib的AndroidManifest内容，预防冲突，fixed [**#149**](https://github.com/razerdp/BasePopup/issues/149)
-  * **【Candy】2.1.9-alpha1**(2019/02/18)
-    * 针对DialogFragment适配，fixed [**#145**](https://github.com/razerdp/BasePopup/issues/145)
-
-* **【Release】2.1.8**(2019/01/26)
-  * 本次版本更新添加了许多新特性哦~特别是不拦截事件的背景黑科技又回来了
-  * 更新细节：
-    * 适配使用了[**ImmersionBar**](https://github.com/gyf-dev/ImmersionBar)的情况
-    * 修复对横屏不兼容的问题
-    * 修复构造器传入宽高无效的问题
-    * **支持不拦截事件下的背景蒙层，没错！那个黑科技换了个更友好的方式来啦~**
-    * 修复popup弹出的时候，金刚键（虚拟按键）一同弹出的问题（锁屏回来导致焦点变化从而导致全屏Activity又出现虚拟导航栏这个不算哈）
-      * fixed  [**#141**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/141)
-      * fixed  [**#120**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/59)
-    * QuickPopupConfig增加`dismissOnOutSideTouch()`方法
-    * 优化QuickPopupBuilder，增加[**Wiki**](https://github.com/razerdp/BasePopup/wiki/QuickPopupBuilder)
-    * 针对[**#138**](https://github.com/razerdp/BasePopup/issues/138)出现的问题进行优化
-    * 修复`setAlignBackgroundGravity()`与`setAlignBackground()`互相覆盖导致的顺序硬性要求问题
 
 <br>
 

@@ -56,9 +56,8 @@ public class BasePopupSupporterLifeCycle implements BasePopupSupporter {
             if (popupWindow.isShowing()) {
                 popupWindow.forceDismiss();
             }
-            if (popupWindow.getContext() instanceof LifecycleOwner) {
-                removeLifeCycle(popupWindow, popupWindow.getContext());
-            }
+            popupWindow.removeListener();
+            removeLifeCycle(popupWindow, popupWindow.getContext());
         }
 
 

@@ -75,7 +75,7 @@ public class PopupBlurOption {
     }
 
     public long getBlurInDuration() {
-        return mBlurInDuration;
+        return mBlurInDuration < 0 ? DEFAULT_ANIMATION_DURATION : mBlurInDuration;
     }
 
     public PopupBlurOption setBlurInDuration(long blurInDuration) {
@@ -84,7 +84,7 @@ public class PopupBlurOption {
     }
 
     public long getBlurOutDuration() {
-        return mBlurOutDuration;
+        return mBlurOutDuration < 0 ? DEFAULT_ANIMATION_DURATION : mBlurOutDuration;
     }
 
     public PopupBlurOption setBlurOutDuration(long blurOutDuration) {

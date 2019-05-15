@@ -132,7 +132,7 @@ final class PopupCompatManager {
         }
     }
 
-    static boolean needListenUiVisibilityChange(Activity act) {
+    private static boolean needListenUiVisibilityChange(Activity act) {
         if (act == null) return false;
         try {
             View decorView = act.getWindow().getDecorView();
