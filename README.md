@@ -537,9 +537,9 @@ A：设置[**setOutSideDismiss**](https://github.com/razerdp/BasePopup/wiki/API#
 
 <br>
 
-#### Q：Service里无法弹出
+#### ~~Q：Service里无法弹出~~【自2.2.1版本开始支持非ActivityContext里弹出】
 
-A：PopupWindow需要windowToken，因此ApplicationContext或者Service里面是无法弹出的，建议通过发出事件通知栈顶Activity来弹出
+~~A：PopupWindow需要windowToken，因此ApplicationContext或者Service里面是无法弹出的，建议通过发出事件通知栈顶Activity来弹出~~
 
 <br>
 
