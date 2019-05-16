@@ -12,6 +12,8 @@ import android.view.ViewParent;
 
 import java.util.List;
 
+import razerdp.basepopup.BasePopupSupporterManager;
+
 /**
  * Created by 大灯泡 on 2018/8/15.
  */
@@ -56,12 +58,12 @@ public class PopupUtils {
             }
             if (tryCount > limit) {
                 //break endless loop
-                return null;
+                return BasePopupSupporterManager.getInstance().getTopActivity();
             }
             result = ((ContextWrapper) result).getBaseContext();
             tryCount++;
         }
-        return null;
+        return BasePopupSupporterManager.getInstance().getTopActivity();
     }
 
     public static float range(float value, float min, float max) {

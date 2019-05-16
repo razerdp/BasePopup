@@ -13,7 +13,7 @@ import android.net.Uri;
 public final class BasePopupRuntimeTrojanProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
-        BasePopupSupporterManager.getInstance().init();
+        BasePopupSupporterManager.getInstance().init(getContext());
         return true;
     }
 

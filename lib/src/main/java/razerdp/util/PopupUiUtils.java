@@ -47,7 +47,7 @@ public class PopupUiUtils {
      */
     @SuppressLint("NewApi")
     public static boolean checkHasNavigationBar(Context context) {
-        Activity act = PopupUtils.scanForActivity(context, 50);
+        Activity act = PopupUtils.scanForActivity(context, 15);
         if (act == null) return false;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             Window window = act.getWindow();

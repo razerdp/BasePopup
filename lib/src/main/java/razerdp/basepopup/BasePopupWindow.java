@@ -839,7 +839,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 //什么都没传递，取顶级view的id
                 Context context = getContext();
                 assert context != null : "context is null ! please make sure your activity is not be destroyed";
-                Activity activity = PopupUtils.scanForActivity(context, 50);
+                Activity activity = getContext();
                 if (activity == null) {
                     Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
                 } else {
@@ -872,7 +872,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private View findDecorView(Activity activity) {
         View result = onFindDecorView(activity);
         if (result == null) {
-            result = BasePopupSupporterManager.getInstance().findDecorView(this, activity);
+            result = BasePopupSupporterManager.getInstance().proxy.findDecorView(this, activity);
         }
         return result == null ? activity.findViewById(android.R.id.content) : result;
     }
@@ -900,7 +900,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         if (mGlobalLayoutListenerWrapper != null && mGlobalLayoutListenerWrapper.isAttached()) {
             return;
         }
-        Activity activity = PopupUtils.scanForActivity(getContext(), 50);
+        Activity activity = getContext();
         if (activity == null) return;
         View decorView = ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
         mGlobalLayoutListenerWrapper = new GlobalLayoutListenerWrapper(decorView, new OnKeyboardStateChangeListener() {
@@ -941,7 +941,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         if (mPopupWindow.callSuperIsShowing()) {
             mPopupWindow.callSuperDismiss();
         }
-        Activity act = mPopupWindow.scanForActivity(getContext());
+        Activity act = getContext();
         if (act == null) return;
         boolean available;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -1172,7 +1172,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param optionInitListener   初始化回调
      */
     public BasePopupWindow setBlurBackgroundEnable(boolean blurBackgroundEnable, OnBlurOptionInitListener optionInitListener) {
-        if (!(getContext() instanceof Activity)) {
+        Activity activity = getContext();
+        if (activity == null) {
             PopupLog.e(TAG, "无法配置默认模糊脚本，因为context不是activity");
             return this;
         }
@@ -1185,9 +1186,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             if (optionInitListener != null) {
                 optionInitListener.onCreateBlurOption(option);
             }
-            View decorView = findDecorView((Activity) getContext());
+            View decorView = findDecorView(activity);
             if (decorView instanceof ViewGroup && decorView.getId() == android.R.id.content) {
-                option.setBlurView(((ViewGroup) ((Activity) getContext()).getWindow().getDecorView()).getChildAt(0));
+                option.setBlurView(((ViewGroup) activity.getWindow().getDecorView()).getChildAt(0));
                 option.setFullScreen(true);
             } else {
                 option.setBlurView(decorView);
@@ -1342,8 +1343,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *
      * @return 返回对应的context。如果为空，则返回{@code null}
      */
-    public Context getContext() {
-        return mContext == null ? null : mContext.get();
+    public Activity getContext() {
+        return mContext == null ? null : PopupUtils.scanForActivity(mContext.get(),15);
     }
 
     /**
@@ -1731,14 +1732,14 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 绑定lifecycle
      */
     public BasePopupWindow attachLifeCycle(Object owner) {
-        return BasePopupSupporterManager.getInstance().attachLifeCycle(this, owner);
+        return BasePopupSupporterManager.getInstance().proxy.attachLifeCycle(this, owner);
     }
 
     /**
      * 解绑lifecycle
      */
     public BasePopupWindow removeLifeCycle(Object owner) {
-        return BasePopupSupporterManager.getInstance().removeLifeCycle(this, owner);
+        return BasePopupSupporterManager.getInstance().proxy.removeLifeCycle(this, owner);
     }
     //------------------------------------------状态控制-----------------------------------------------
 
