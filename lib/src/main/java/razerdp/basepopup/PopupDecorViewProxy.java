@@ -104,7 +104,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             });
         } else {
             setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-            Activity act = PopupUtils.scanForActivity(getContext(), 50);
+            Activity act = PopupUtils.scanForActivity(getContext(), 15);
             if (act == null) return;
             checkAndClearDecorMaskLayout(act);
             addMaskToDecor(act.getWindow());

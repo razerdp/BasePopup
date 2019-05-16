@@ -88,4 +88,9 @@
         android:orderInCategory="112"
         android:title="更新位置"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/id_service"
+        android:orderInCategory="113"
+        android:title="Service弹窗"
+        app:showAsAction="never"/>
 </menu>

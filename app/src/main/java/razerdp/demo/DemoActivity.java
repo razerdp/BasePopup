@@ -38,6 +38,7 @@ import razerdp.demo.fragment.basedemo.InputPopupFrag;
 import razerdp.demo.fragment.basedemo.OffsetPopupFrag;
 import razerdp.demo.fragment.basedemo.OutSideTouchPopupFrag;
 import razerdp.demo.fragment.basedemo.OutsideDismissPopupFrag;
+import razerdp.demo.fragment.basedemo.ServicePopupFrag;
 import razerdp.demo.fragment.basedemo.ShowPopupFrag;
 import razerdp.demo.fragment.basedemo.UpdatePopupFrag;
 import razerdp.demo.fragment.other.SimpleBaseFrag;
@@ -76,6 +77,7 @@ public class DemoActivity extends AppCompatActivity {
         fragMap.put(R.id.id_offset, new OffsetPopupFrag());
         fragMap.put(R.id.id_any_position, new AnyPosPopupFrag());
         fragMap.put(R.id.id_update, new UpdatePopupFrag());
+        fragMap.put(R.id.id_service, new ServicePopupFrag());
     }
 
     private void showGuide() {

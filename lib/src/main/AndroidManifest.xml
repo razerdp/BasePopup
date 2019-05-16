@@ -6,6 +6,6 @@
             android:name="razerdp.basepopup.BasePopupRuntimeTrojanProvider"
             android:authorities="${applicationId}.basepopup-trojan"
             android:exported="false"
-            android:multiprocess="true" />
+            android:multiprocess="false" />
     </application>
 </manifest>

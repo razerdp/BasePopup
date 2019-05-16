@@ -24,7 +24,7 @@ import razerdp.util.log.PopupLog;
 abstract class BasePopupWindowProxy extends PopupWindow {
     private static final String TAG = "BasePopupWindowProxy";
 
-    private static final int MAX_SCAN_ACTIVITY_COUNT = 50;
+    private static final int MAX_SCAN_ACTIVITY_COUNT = 15;
     private BasePopupHelper mHelper;
     private WindowManagerProxy mWindowManagerProxy;
     private boolean oldFocusable = true;

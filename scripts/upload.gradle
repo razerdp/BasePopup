@@ -8,9 +8,6 @@ def gitUrl = 'https://github.com/razerdp/BasePopup.git'
 group = rootProject.ext.group
 version = rootProject.ext.versionName
 
-def modifyPom = {
-    description = 'Project description'
-}
 
 install {
     repositories.mavenInstaller {

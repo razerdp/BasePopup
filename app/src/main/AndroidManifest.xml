@@ -37,6 +37,7 @@
             android:name="razerdp.demo.DemoDialogFragmentActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+        <service android:name="razerdp.demo.services.DemoService"/>
     </application>
 
 </manifest>
