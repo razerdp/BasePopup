@@ -24,6 +24,8 @@ public class PopupUiUtils {
     private static final int LANDSCAPE = 1;
     private volatile static Point[] mRealSizes = new Point[2];
     private static final Point point = new Point();
+    private static Rect navigationBarRect = new Rect();
+
 
     public static int getNavigationBarHeight(Context context) {
         if (!checkHasNavigationBar(context)) return 0;
@@ -47,8 +49,10 @@ public class PopupUiUtils {
      */
     @SuppressLint("NewApi")
     public static boolean checkHasNavigationBar(Context context) {
+        navigationBarRect.setEmpty();
         Activity act = PopupUtils.scanForActivity(context, 15);
         if (act == null) return false;
+        Configuration conf = context.getResources().getConfiguration();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             Window window = act.getWindow();
             if (window == null) return false;
@@ -56,14 +60,27 @@ public class PopupUiUtils {
             display.getRealSize(point);
 
             View decorView = window.getDecorView();
-            Configuration conf = context.getResources().getConfiguration();
             if (Configuration.ORIENTATION_LANDSCAPE == conf.orientation) {
                 View contentView = decorView.findViewById(android.R.id.content);
-                return (point.x != contentView.getWidth());
+                boolean result = point.x != contentView.getWidth();
+                if (result) {
+                    if (decorView.getLeft() > 0) {
+                        //on left
+                        navigationBarRect.set(1, 0, 0, 0);
+                    } else {
+                        //on right
+                        navigationBarRect.set(0, 0, 1, 0);
+                    }
+                }
+                return result;
             } else {
-                Rect rect = new Rect();
-                decorView.getWindowVisibleDisplayFrame(rect);
-                return (rect.bottom != point.y);
+                decorView.getWindowVisibleDisplayFrame(navigationBarRect);
+                boolean result = navigationBarRect.bottom != point.y;
+                navigationBarRect.setEmpty();
+                if (result) {
+                    navigationBarRect.set(0, 0, 0, 1);
+                }
+                return result;
             }
         } else {
             ViewGroup decorView = (ViewGroup) act.getWindow().getDecorView();
@@ -80,6 +97,25 @@ public class PopupUiUtils {
                 if (!TextUtils.isEmpty(resourceEntryName) && child.getId() != View.NO_ID && child.isShown()) {
                     if (TextUtils.equals("navigationbarbackground", resourceEntryName.toLowerCase()) ||
                             TextUtils.equals("immersion_navigation_bar_view", resourceEntryName.toLowerCase())) {
+                        if (conf.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                            //横屏
+                            if (child.getWidth() > child.getHeight()) {
+                                //bottom
+                                navigationBarRect.set(0, 0, 0, 1);
+                                //navigation never on top
+                            } else {
+                                //left or right
+                                if (child.getLeft() == 0) {
+                                    navigationBarRect.set(1, 0, 0, 0);
+                                } else {
+                                    navigationBarRect.set(0, 0, 1, 0);
+                                }
+                            }
+                        } else {
+                            //bottom
+                            navigationBarRect.set(0, 0, 0, 1);
+                            //navigation never on top
+                        }
                         return true;
                     }
                 }
@@ -91,39 +127,65 @@ public class PopupUiUtils {
     public static int getScreenHeightCompat(Context context) {
         int orientation = context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? PORTRAIT : LANDSCAPE;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            return context.getResources().getDisplayMetrics().heightPixels + (orientation == PORTRAIT ? (!checkHasNavigationBar(context) ? getNavigationBarHeightInternal(context) : 0) : 0);
+            //如果没有navigation，则需要加上，因为displayMetrics不包含navigation
+            return context.getResources().getDisplayMetrics().heightPixels + (orientation == PORTRAIT ? getFixedPortratiNavigationBarHeight(context) : 0);
         } else {
             if (mRealSizes[orientation] == null) {
                 WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
                 if (windowManager == null) {
-                    return context.getResources().getDisplayMetrics().heightPixels + (orientation == PORTRAIT ? (!checkHasNavigationBar(context) ? getNavigationBarHeightInternal(context) : 0) : 0);
+                    return context.getResources().getDisplayMetrics().heightPixels + (orientation == PORTRAIT ? getFixedPortratiNavigationBarHeight(context) : 0);
                 }
                 Display display = windowManager.getDefaultDisplay();
                 Point point = new Point();
                 display.getRealSize(point);
                 mRealSizes[orientation] = point;
             }
-            return mRealSizes[orientation].y - (orientation == PORTRAIT ? getNavigationBarHeight(context) : 0);
+            //如果包含navigation，则减去，因为realsizes包含navigation
+            int offset = checkHasNavigationBar(context) ? navigationBarRect.bottom != 0 ? getNavigationBarHeightInternal(context) : 0 : 0;
+            return mRealSizes[orientation].y - offset;
         }
     }
 
     public static int getScreenWidthCompat(Context context) {
         int orientation = context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ? PORTRAIT : LANDSCAPE;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            return context.getResources().getDisplayMetrics().widthPixels + (orientation == LANDSCAPE ? (!checkHasNavigationBar(context) ? getNavigationBarHeightInternal(context) : 0) : 0);
+            //如果没有navigation，则需要加上，因为displayMetrics不包含navigation
+            return context.getResources().getDisplayMetrics().widthPixels + (orientation == LANDSCAPE ? getFixedLandScapeNavigationBarHeight(context) : 0);
         } else {
             if (mRealSizes[orientation] == null) {
                 WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
                 if (windowManager == null) {
-                    return context.getResources().getDisplayMetrics().widthPixels + (orientation == LANDSCAPE ? (!checkHasNavigationBar(context) ? getNavigationBarHeightInternal(context) : 0) : 0);
+                    return context.getResources().getDisplayMetrics().widthPixels + (orientation == LANDSCAPE ? getFixedLandScapeNavigationBarHeight(context) : 0);
                 }
                 Display display = windowManager.getDefaultDisplay();
                 Point point = new Point();
                 display.getRealSize(point);
                 mRealSizes[orientation] = point;
             }
-            return mRealSizes[orientation].x - (orientation == LANDSCAPE ? getNavigationBarHeight(context) : 0);
+            //如果包含navigation，则减去，因为realsizes包含navigation
+            int offset = checkHasNavigationBar(context) ? navigationBarRect.right != 0 ? getNavigationBarHeightInternal(context) : 0 : 0;
+            return mRealSizes[orientation].x - offset;
         }
+    }
+
+    private static int getFixedPortratiNavigationBarHeight(Context context) {
+        //只有navigation在下面，才返回
+        if (!checkHasNavigationBar(context)) {
+            if (navigationBarRect.bottom != 0) {
+                return getNavigationBarHeightInternal(context);
+            }
+        }
+        return 0;
+    }
+
+    private static int getFixedLandScapeNavigationBarHeight(Context context) {
+        //只有navigation在右边，才返回
+        if (!checkHasNavigationBar(context)) {
+            if (navigationBarRect.right != 0) {
+                return getNavigationBarHeightInternal(context);
+            }
+        }
+        return 0;
     }
 
     public static int getScreenOrientation(Context context) {
