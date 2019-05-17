@@ -23,6 +23,7 @@ public final class BasePopupSupporterManager {
 
     BasePopupSupporterProxy proxy;
     private WeakReference<Activity> mTopActivity;
+    private int account = 0;
 
 
     class BasePopupSupporterProxy implements BasePopupSupporter {
@@ -112,6 +113,11 @@ public final class BasePopupSupporterManager {
         return mTopActivity == null ? null : mTopActivity.get();
     }
 
+    public boolean isAppOnBackground() {
+        PopupLog.i("isAppOnBackground", account <= 0);
+        return account <= 0;
+    }
+
     private void regLifeCallback(Application context) {
         context.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
@@ -121,7 +127,7 @@ public final class BasePopupSupporterManager {
 
             @Override
             public void onActivityStarted(Activity activity) {
-
+                account++;
             }
 
             @Override
@@ -136,7 +142,7 @@ public final class BasePopupSupporterManager {
 
             @Override
             public void onActivityStopped(Activity activity) {
-
+                account--;
             }
 
             @Override

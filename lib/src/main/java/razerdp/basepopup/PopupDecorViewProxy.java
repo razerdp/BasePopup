@@ -228,6 +228,17 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     }
 
     private void measureWithIntercept(int widthMeasureSpec, int heightMeasureSpec) {
+        //fixed this https://github.com/razerdp/BasePopup/issues/188
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+            int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+            int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+            int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+            if (widthSize < heightSize) {
+                widthMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, heightMode);
+                heightMeasureSpec = MeasureSpec.makeMeasureSpec(widthSize, widthMode);
+            }
+        }
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
@@ -918,14 +929,16 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (mHelper.getBlurOption() != null && mHelper.getBlurOption().getBlurView() != null) {
-            mHelper.getBlurOption().getBlurView().post(new Runnable() {
-                @Override
-                public void run() {
-                    updateLayout();
-                }
-            });
+        View v = this;
+        if (getContext() instanceof Activity) {
+            v = ((Activity) getContext()).getWindow().getDecorView();
         }
+        v.post(new Runnable() {
+            @Override
+            public void run() {
+                updateLayout();
+            }
+        });
     }
 
     //-----------------------------------------keyboard-----------------------------------------
@@ -933,15 +946,15 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     private int offset;
     private int originY;
     private ValueAnimator valueAnimator;
+    private boolean lastVisibleState;
 
     @Override
     public void onKeyboardChange(int keyboardHeight, boolean isVisible) {
         if (mHelper.getSoftInputMode() == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN ||
                 mHelper.getSoftInputMode() == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE) {
             View focusView = findFocus();
-            if (focusView == null) return;
+            if (focusView == null || lastVisibleState == isVisible) return;
             focusView.getGlobalVisibleRect(viewRect);
-
             final LayoutParams p = getLayoutParams();
 
             int y = mHelper.isOutSideTouchable() ?
@@ -998,6 +1011,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                         .start();
                 PopupLog.i("onKeyboardChange", isVisible, keyboardHeight, offset);
             }
+            lastVisibleState = isVisible;
         }
     }
 
