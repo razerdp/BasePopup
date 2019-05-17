@@ -1344,7 +1344,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @return 返回对应的context。如果为空，则返回{@code null}
      */
     public Activity getContext() {
-        return mContext == null ? null : PopupUtils.scanForActivity(mContext.get(),15);
+        return mContext == null ? null : PopupUtils.scanForActivity(mContext.get(), 15);
     }
 
     /**
