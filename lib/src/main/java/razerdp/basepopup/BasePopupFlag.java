@@ -6,35 +6,35 @@ package razerdp.basepopup;
  * Description：
  */
 public interface BasePopupFlag {
+
     /**
      * 2.2.0开始，定义flag~因为太多boolean了，不好管理
      * <p>
      * | -------- | -------- | -------- | -------- |
-     * --- EVENT_SHIFT
-     * 1     OUT_SIDE_DISMISS
-     * 1      OUT_SIDE_TOUCHABLE
-     * 1       BACKPRESS_ENABLE
-     * ------ DISPLAY_SHIFT
-     * 1        FULL_SCREEN
-     * 1         ALIGN_BACKGROUND
-     * 1          CLIP_CHILDREN
-     * 1           CLIP_TO_SCREEN
-     * ---------- CONTROL_SHIFT
-     * 1            FADE_ENABLE
-     * 1             AUTO_LOCATED
-     * 1              AS_DROP_DOWN
-     * 1               AUTO_INPUT_METHOD
-     * 1                ALIGN_BACKGROUND
-     * 1                 hold
-     * 1                  hold
-     * 1                   hold
-     * ------------------ QUICK_POPUP_CONFIG
-     * 1                    BLUR_BACKGROUND
-     * 1                     KEEP_SIZE
-     * <p>
-     * ------------------------------------ INNER_USAGE_SHIFT
-     * 1                                       CUSTOM_WIDTH
-     * 1                                        CUSTOM_HEIGHT
+     *                                           --- EVENT_SHIFT
+     *                                           1     OUT_SIDE_DISMISS
+     *                                          1      OUT_SIDE_TOUCHABLE
+     *                                         1       BACKPRESS_ENABLE
+     *                                        ------ DISPLAY_SHIFT
+     *                                        1        FULL_SCREEN
+     *                                       1         ALIGN_BACKGROUND
+     *                                      1          CLIP_CHILDREN
+     *                                     1           CLIP_TO_SCREEN
+     *                                    ---------- CONTROL_SHIFT
+     *                                    1            FADE_ENABLE
+     *                                   1             AUTO_LOCATED
+     *                                  1              AS_DROP_DOWN
+     *                                 1               AUTO_INPUT_METHOD
+     *                                1                ALIGN_BACKGROUND
+     *                               1                 hold
+     *                              1                  hold
+     *                             1                   hold
+     *                            ------------------ QUICK_POPUP_CONFIG
+     *                            1                    BLUR_BACKGROUND
+     *
+     *          ------------------------------------ INNER_USAGE_SHIFT
+     *         1                                       CUSTOM_WIDTH
+     *        1                                        CUSTOM_HEIGHT
      */
 
     //事件控制 3 bit

@@ -182,7 +182,7 @@ abstract class BasePopupWindowProxy extends PopupWindow {
             WindowManager windowManager = PopupReflectionHelper.getInstance().getPopupWindowManager(popupWindow);
             if (windowManager == null) return;
             mWindowManagerProxy = new WindowManagerProxy(windowManager);
-            PopupReflectionHelper.getInstance().setPopupWindowManager(popupWindow, mWindowManagerProxy);
+            PopupReflectionHelper.getInstance().preInject(popupWindow, mWindowManagerProxy);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -198,6 +198,10 @@ abstract class BasePopupWindowProxy extends PopupWindow {
             mWindowManagerProxy = new WindowManagerProxy(windowManager);
             fieldWindowManager.set(popupWindow, mWindowManagerProxy);
             PopupLog.i(TAG, "尝试代理WindowManager成功");
+
+            Field fieldScroll = PopupWindow.class.getDeclaredField("mOnScrollChangedListener");
+            fieldScroll.setAccessible(true);
+            fieldScroll.set(popupWindow, null);
         } catch (NoSuchFieldException e) {
             if (Build.VERSION.SDK_INT >= 27) {
                 troToProxyWindowManagerMethodOverP(popupWindow);
