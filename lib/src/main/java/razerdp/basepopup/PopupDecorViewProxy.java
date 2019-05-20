@@ -220,6 +220,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         mFlag.flag &= ~Flag.FLAG_REST_WIDTH_NOT_ENOUGH;
         mFlag.flag &= ~Flag.FLAG_REST_HEIGHT_NOT_ENOUGH;
+        PopupLog.i("onMeasure", MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
         if (!mHelper.isOutSideTouchable()) {
             measureWithIntercept(widthMeasureSpec, heightMeasureSpec);
         } else {
@@ -228,17 +229,25 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     }
 
     private void measureWithIntercept(int widthMeasureSpec, int heightMeasureSpec) {
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
         //fixed this https://github.com/razerdp/BasePopup/issues/188
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-            int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-            int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-            int heightSize = MeasureSpec.getSize(heightMeasureSpec);
             if (widthSize < heightSize) {
                 widthMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, heightMode);
                 heightMeasureSpec = MeasureSpec.makeMeasureSpec(widthSize, widthMode);
             }
+        } else {
+            if (widthSize > heightSize) {
+                widthMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, heightMode);
+                heightMeasureSpec = MeasureSpec.makeMeasureSpec(widthSize, widthMode);
+            }
         }
+        PopupLog.i("measureWithIntercept", MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
+
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
@@ -408,6 +417,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        PopupLog.i("onLayout", changed, l, t, r, b);
         if (!mHelper.isOutSideTouchable()) {
             layoutWithIntercept(l, t, r, b);
         } else {

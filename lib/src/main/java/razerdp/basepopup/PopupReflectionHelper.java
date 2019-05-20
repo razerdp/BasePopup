@@ -45,7 +45,7 @@ final class PopupReflectionHelper {
         return PopupReflectionHelperHolder.instance;
     }
 
-    public WindowManager getPopupWindowManager(PopupWindow popupWindow) throws Exception {
+     WindowManager getPopupWindowManager(PopupWindow popupWindow) throws Exception {
         if (popupWindow == null) return null;
         Field fieldWindowManager = PopupWindow.class.getDeclaredField("mWindowManager");
         fieldWindowManager.setAccessible(true);
@@ -53,12 +53,18 @@ final class PopupReflectionHelper {
         return windowManager;
     }
 
-    public void setPopupWindowManager(PopupWindow popupWindow, WindowManager windowManager) throws Exception {
+    void preInject(PopupWindow popupWindow, WindowManager windowManager) throws Exception {
         if (popupWindow == null || windowManager == null) return;
         Field fieldWindowManager = PopupWindow.class.getDeclaredField("mWindowManager");
         fieldWindowManager.setAccessible(true);
         fieldWindowManager.set(popupWindow, windowManager);
+
+        Field fieldScroll = PopupWindow.class.getDeclaredField("mOnScrollChangedListener");
+        fieldScroll.setAccessible(true);
+        fieldScroll.set(popupWindow, null);
     }
+
+
 
     @SuppressLint("PrivateApi")
     public View.OnSystemUiVisibilityChangeListener getSystemUiVisibilityChangeListener(View targetView) throws Exception {
