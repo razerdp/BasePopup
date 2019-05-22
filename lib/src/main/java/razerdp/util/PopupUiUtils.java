@@ -25,6 +25,7 @@ public class PopupUiUtils {
     private volatile static Point[] mRealSizes = new Point[2];
     private static final Point point = new Point();
     private static Rect navigationBarRect = new Rect();
+    private static int statusBarHeight;
 
 
     public static int getNavigationBarHeight(Context context) {
@@ -191,5 +192,21 @@ public class PopupUiUtils {
     public static int getScreenOrientation(Context context) {
         if (context == null) return Configuration.ORIENTATION_PORTRAIT;
         return context.getResources().getConfiguration().orientation;
+    }
+
+    public static int getStatusBarHeight(Context context) {
+        checkStatusBarHeight(context);
+        return statusBarHeight;
+    }
+
+    private static void checkStatusBarHeight(Context context) {
+        if (statusBarHeight != 0 || context == null) return;
+        int result = 0;
+        //获取状态栏高度的资源id
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId);
+        }
+        statusBarHeight = result;
     }
 }
