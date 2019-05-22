@@ -790,9 +790,9 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     }
 
     @Override
-    public void onKeyboardChange(int keyboardHeight, boolean isVisible) {
+    public void onKeyboardChange(int keyboardTop, int keyboardHeight, boolean isVisible,boolean fullScreen) {
         if (mKeyboardStateChangeListener != null) {
-            mKeyboardStateChangeListener.onKeyboardChange(keyboardHeight, isVisible);
+            mKeyboardStateChangeListener.onKeyboardChange(keyboardTop,keyboardHeight, isVisible,fullScreen);
         }
     }
 

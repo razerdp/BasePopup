@@ -5,6 +5,6 @@ package razerdp.basepopup;
  */
 interface PopupKeyboardStateChangeListener {
 
-    void onKeyboardChange(int keyboardHeight, boolean isVisible);
+    void onKeyboardChange(int keyboardTop, int keyboardHeight, boolean isVisible, boolean fullScreen);
 
 }

@@ -566,7 +566,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 childTop = childTop + childTopMargin - childBottomMargin;
 
                 if (mHelper.isAutoLocatePopup() && mHelper.isClipToScreen()) {
-                    int tBottom = childTop + offsetY + (mHelper.isFullScreen() ? 0 : -getStatusBarHeight());
+                    int tBottom = childTop + offsetY + (mHelper.isFullScreen() ? 0 : -PopupUiUtils.getStatusBarHeight(getContext()));
                     int restHeight;
                     switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
                         case Gravity.TOP:
@@ -606,7 +606,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 }
 
                 int left = childLeft + offsetX;
-                int top = childTop + offsetY + (mHelper.isFullScreen() ? 0 : -getStatusBarHeight());
+                int top = childTop + offsetY + (mHelper.isFullScreen() ? 0 : -PopupUiUtils.getStatusBarHeight(getContext()));
                 int right = left + width;
                 int bottom = top + height;
 
@@ -734,7 +734,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 "\n}");
 
         if (mHelper.isAutoLocatePopup() && mHelper.isClipToScreen()) {
-            int tBottom = offsetY + (mHelper.isFullScreen() ? 0 : -getStatusBarHeight());
+            int tBottom = offsetY + (mHelper.isFullScreen() ? 0 : -PopupUiUtils.getStatusBarHeight(getContext()));
             int restHeight;
             switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
                 case Gravity.TOP:
@@ -851,21 +851,6 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         return screenHeight;
     }
 
-    private int getStatusBarHeight() {
-        checkStatusBarHeight(getContext());
-        return statusBarHeight;
-    }
-
-    private void checkStatusBarHeight(Context context) {
-        if (statusBarHeight != 0 || context == null) return;
-        int result = 0;
-        //获取状态栏高度的资源id
-        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = context.getResources().getDimensionPixelSize(resourceId);
-        }
-        statusBarHeight = result;
-    }
 
     @Override
     protected void onDetachedFromWindow() {
@@ -959,21 +944,26 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     private boolean lastVisibleState;
 
     @Override
-    public void onKeyboardChange(int keyboardHeight, boolean isVisible) {
+    public void onKeyboardChange(int keyboardTop, int keyboardHeight, boolean isVisible, boolean fullScreen) {
+        //横屏不需要适配
+        if (PopupUiUtils.getScreenOrientation(getContext()) == Configuration.ORIENTATION_LANDSCAPE)
+            return;
         if (mHelper.getSoftInputMode() == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN ||
                 mHelper.getSoftInputMode() == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE) {
             View focusView = findFocus();
             if (focusView == null || lastVisibleState == isVisible) return;
             focusView.getGlobalVisibleRect(viewRect);
-            final LayoutParams p = getLayoutParams();
 
+            final LayoutParams p = getLayoutParams();
             int y = mHelper.isOutSideTouchable() ?
                     (p instanceof WindowManager.LayoutParams) ? ((WindowManager.LayoutParams) p).y : mTarget.getTop()
                     : 0;
+            //因为计算keyboardtop的时候有考虑到statusbar，这里需要跟计算逻辑保持同步
+            if (!fullScreen) {
+                y -= PopupUiUtils.getStatusBarHeight(getContext());
+            }
 
-            if (isVisible) {
-                //键盘顶部
-                int keyboardTop = getScreenHeight() - keyboardHeight - PopupUiUtils.getNavigationBarHeight(getContext());
+            if (isVisible && keyboardTop > 0) {
                 //decor的底部（区分outsideTouchable）
                 int decorBottom = y + mTarget.getBottom();
                 int targetBottomOffset = decorBottom - keyboardTop;

@@ -219,7 +219,6 @@ import android.util.Pair;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -903,13 +902,15 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         Activity activity = getContext();
         if (activity == null) return;
-        View decorView = ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
-        mGlobalLayoutListenerWrapper = new GlobalLayoutListenerWrapper(decorView, new OnKeyboardStateChangeListener() {
-            @Override
-            public void onKeyboardChange(int keyboardHeight, boolean isVisible) {
-                mHelper.onKeyboardChange(keyboardHeight, isVisible);
-            }
-        });
+
+        mGlobalLayoutListenerWrapper = new GlobalLayoutListenerWrapper(((ViewGroup) activity.getWindow().getDecorView()).getChildAt(0),
+                (activity.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0,
+                new OnKeyboardStateChangeListener() {
+                    @Override
+                    public void onKeyboardChange(int keyboardTop, int keyboardHeight, boolean isVisible, boolean fullScreen) {
+                        mHelper.onKeyboardChange(keyboardTop, keyboardHeight, isVisible, fullScreen);
+                    }
+                });
         mGlobalLayoutListenerWrapper.addSelf();
     }
 
@@ -952,7 +953,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         if (available) {
             View rootView = act.getWindow().getDecorView();
-            if (rootView == null) return;
             rootView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -2161,7 +2161,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     interface OnKeyboardStateChangeListener {
-        void onKeyboardChange(int keyboardHeight, boolean isVisible);
+        void onKeyboardChange(int keyboardTop, int keyboardHeight, boolean isVisible, boolean fullScreen);
     }
 
     //------------------------------------------InnerClass-----------------------------------------------
@@ -2173,10 +2173,12 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         Rect rect = new Rect();
         boolean preVisible = false;
         private volatile boolean isAttached;
+        private boolean fullScreen;
 
-        GlobalLayoutListenerWrapper(View target, OnKeyboardStateChangeListener listener) {
+        GlobalLayoutListenerWrapper(View target, boolean fullScreen, OnKeyboardStateChangeListener listener) {
             this.target = new WeakReference<>(target);
-            mListener = listener;
+            this.fullScreen = fullScreen;
+            this.mListener = listener;
             isAttached = false;
         }
 
@@ -2208,10 +2210,16 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             if (mTarget == null) return;
             rect.setEmpty();
             mTarget.getWindowVisibleDisplayFrame(rect);
+            if (!fullScreen) {
+                rect.offset(0, -PopupUiUtils.getStatusBarHeight(mTarget.getContext()));
+            }
+
             int displayHeight = rect.height();
             int windowHeight = mTarget.getHeight();
             int keyboardHeight = windowHeight - displayHeight;
-            boolean isVisible = keyboardHeight > windowHeight * .15f;
+            boolean isVisible = keyboardHeight > windowHeight * .25f;
+            int keyboardTop = isVisible ? rect.bottom : -1;
+
 
             if (isVisible == preVisible) {
                 //二次检查
@@ -2221,7 +2229,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             }
 
             if (mListener != null) {
-                mListener.onKeyboardChange(keyboardHeight, isVisible);
+                mListener.onKeyboardChange(keyboardTop, keyboardHeight, isVisible, fullScreen);
             }
 
             preVisible = isVisible;
