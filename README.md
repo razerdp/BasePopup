@@ -28,7 +28,7 @@
 				</a>
 				<br></br>
 				<a href = "https://github.com/razerdp/BasePopup/blob/master/LICENSE_996">
-                	<img src="https://img.shields.io/badge/license-NPL%20(The%20996%20Prohibited%20License)-blue.svg"/>		
+                	<img src="https://img.shields.io/badge/license-Anti%20996-blue.svg?style=flat-square"/>
                 </a>
 			</td>
 			<td align="center">
