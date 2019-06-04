@@ -179,19 +179,22 @@ BasePopup并非一个 **“一句话完成需求”** 的库，从起名带有 *
 
 添加依赖到Gradle（请把<b>{$latestVersion}</b>替换成上面的Jcenter标签所示版本）
 
+**请注意，如果您依赖了androidX支持组件，请不要依赖另外两个支持组件，否则会冲突**
+
 ```xml
 	dependencies {
 
 	        //BasePopup主体库
 	        implementation 'com.github.razerdp:BasePopup:{$latestVersion}'
 
-	        //BasePopup support支持库
+            //以下可选
+	        //BasePopup support支持库（如支持DialogFragment里弹Popup时的层序支持）
 	        implementation 'com.github.razerdp:BasePopup-compat-support:{$latestVersion}'
 
-	        //BasePopup lifecycle支持库
+	        //BasePopup lifecycle支持库（如自动适配Activity/Fragment生命期dismiss/回收等）
 	        implementation 'com.github.razerdp:BasePopup-compat-lifecycle:{$latestVersion}'
 
-	        //BasePopup androidx支持库
+	        //BasePopup androidx支持库（针对以上两个支持的androidX版本）
 	        implementation 'com.github.razerdp:BasePopup-compat-androidx:{$latestVersion}'
 	        
 	        //candy渠道
