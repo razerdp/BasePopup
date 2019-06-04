@@ -151,6 +151,7 @@
     - Candy版本：一般新功能、issue修复都会发布到Candy版本，Candy版本发布比较频繁，但通常会拥有新的功能，如果您喜欢试验新功能同时对稳定性要求不高，请使用Candy版本。
     - **Release和Candy两个版本互相切换可能会导致Build失败，这时候您Clean一下Project即可**
   - **如果您是以前1.x版本的用户，现在想更新到2.x，请在更新前查阅：[1.x迁移到2.x帮助文档](https://github.com/razerdp/BasePopup/blob/master/1.x%E8%BF%81%E7%A7%BB2.x%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3.md)**
+  - 从16年[**第一次**](https://github.com/razerdp/BasePopup/commit/c92b7088270d5757269d9b79213627a4a0392d31)提交到现在，本人技术也一直在进步，BasePopup也会一直迭代更新，所以，请谨慎选择版本哦~一不小心就颠覆了之前的实现。
 
 
 >Android P已经适配，感谢[@Guolei1130](https://github.com/Guolei1130)收集的方法。<br><br>文章地址：[android_p_no_sdkapi_support](https://github.com/Guolei1130/android_p_no_sdkapi_support)<br><br>本库一开始采用360的方法，但不得不走Native，为了个Popup不得不引入so感觉很不值得，在看到这篇文章后，才想起UnSafe类，因此本库采用方法5。<br><br>如果以后UnSafe类移除掉的话，再考虑Native方法。<br><br><b>最后再一次感谢大牛提供的方法~</b>
@@ -187,7 +188,7 @@ BasePopup并非一个 **“一句话完成需求”** 的库，从起名带有 *
 	        //BasePopup主体库
 	        implementation 'com.github.razerdp:BasePopup:{$latestVersion}'
 
-            //以下可选
+                //以下可选
 	        //BasePopup support支持库（如支持DialogFragment里弹Popup时的层序支持）
 	        implementation 'com.github.razerdp:BasePopup-compat-support:{$latestVersion}'
 
