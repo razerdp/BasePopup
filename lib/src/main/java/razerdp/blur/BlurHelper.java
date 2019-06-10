@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Looper;
 import android.renderscript.Allocation;
@@ -150,8 +151,11 @@ public class BlurHelper {
         Matrix matrix = new Matrix();
         matrix.preScale(scaledRatio, scaledRatio);
         c.setMatrix(matrix);
-        if (v.getBackground() == null) {
+        Drawable bgDrawable = v.getBackground();
+        if (bgDrawable == null) {
             c.drawColor(Color.parseColor("#FAFAFA"));
+        } else {
+            bgDrawable.draw(c);
         }
         if (fullScreen) {
             if (statusBarHeight > 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && v.getContext() instanceof Activity) {
