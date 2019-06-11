@@ -435,6 +435,8 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
       * fixed [**#188**](https://github.com/razerdp/BasePopup/issues/188)(not perfect)
     * **【Candy】190522**
       * 修改并优化键盘判断逻辑
+    * **【Candy】190611**
+      * 优化全屏状态下点击范围的判定，fixed [**#200**](https://github.com/razerdp/BasePopup/issues/200)
 
 
 * **【Release】2.2.0**(2019/05/15)
