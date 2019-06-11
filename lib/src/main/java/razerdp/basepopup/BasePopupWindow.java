@@ -210,12 +210,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -461,32 +461,37 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         if (mContentView != null && !(mContentView instanceof AdapterView) && mContentView instanceof ViewGroup) {
             ViewGroup vp = ((ViewGroup) mContentView);
             final int childCount = vp.getChildCount();
-            final List<Pair<WeakReference<View>, Rect>> protectViews = new ArrayList<>(childCount);
+            final List<WeakReference<View>> protectViews = new ArrayList<>(childCount);
             for (int i = 0; i < childCount; i++) {
                 View child = vp.getChildAt(i);
                 if (child.getVisibility() != View.VISIBLE) continue;
-                protectViews.add(Pair.create(new WeakReference<View>(child), new Rect()));
+                protectViews.add(new WeakReference<View>(child));
             }
             mContentView.setOnTouchListener(new View.OnTouchListener() {
+                RectF childBounds = new RectF();
+
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
                             return isAllowDismissWhenTouchOutside();
                         case MotionEvent.ACTION_UP:
+                            childBounds.setEmpty();
                             if (isAllowDismissWhenTouchOutside()) {
                                 v.performClick();
                                 int x = (int) event.getX();
                                 int y = (int) event.getY();
                                 boolean interceptDismiss = false;
-                                for (Pair<WeakReference<View>, Rect> protectView : protectViews) {
-                                    if (protectView.first == null || protectView.first.get() == null || protectView.second == null) {
+                                for (WeakReference<View> protectView : protectViews) {
+                                    if (protectView == null || protectView.get() == null || !protectView.get().isShown()) {
                                         continue;
                                     }
-                                    View ignoreTarget = protectView.first.get();
-                                    Rect bounds = protectView.second;
-                                    ignoreTarget.getGlobalVisibleRect(bounds);
-                                    if (bounds.contains(x, y)) {
+                                    View ignoreTarget = protectView.get();
+                                    childBounds.set(ignoreTarget.getLeft(),
+                                            ignoreTarget.getTop(),
+                                            ignoreTarget.getRight(),
+                                            ignoreTarget.getBottom());
+                                    if (childBounds.contains(x, y)) {
                                         interceptDismiss = true;
                                         break;
                                     }
