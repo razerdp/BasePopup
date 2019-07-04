@@ -1804,10 +1804,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     @Override
     public boolean callDismissAtOnce() {
-        long duration = -1;
+        long duration = mHelper.getDismissAnimationDuration();
         if (mHelper.getDismissAnimation() != null && mDisplayAnimateView != null) {
             if (!isExitAnimatePlaying) {
-                duration = mHelper.getDismissAnimation().getDuration();
                 mHelper.getDismissAnimation().cancel();
                 mDisplayAnimateView.startAnimation(mHelper.getDismissAnimation());
                 callDismissAnimationStart();
@@ -1815,7 +1814,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             }
         } else if (mHelper.getDismissAnimator() != null) {
             if (!isExitAnimatePlaying) {
-                duration = mHelper.getDismissAnimator().getDuration();
                 mHelper.getDismissAnimator().start();
                 callDismissAnimationStart();
                 isExitAnimatePlaying = true;
@@ -1827,8 +1825,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 isExitAnimatePlaying = false;
                 mPopupWindow.callSuperDismiss();
             }
-        }, Math.max(mHelper.getDismissAnimationDuration(), duration));
-        mHelper.onDismiss(duration > -1);
+        }, Math.max(duration, 0));
+        mHelper.onDismiss(duration > 0);
         //如果有动画，则不立刻执行dismiss
         return duration <= 0;
     }
