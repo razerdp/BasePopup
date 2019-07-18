@@ -1,7 +1,7 @@
 [**Chinese**](./README.md) | **English**
 
-<p align="center"><img src="./img/logo.png" alt="Logo图片似乎加载不出来" height="360"/></p>
-<h2 align="center">BasePopup - Android下打造通用便捷的PopupWindow</h2>
+<p align="center"><img src="./img/logo.png" alt="Logo load failed" height="360"/></p>
+<h2 align="center">BasePopup - A powerful and convenient PopupWindow library for Android</h2>
 <div align="center">
 <table>
         <tr>
@@ -43,7 +43,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td rowspan="3" align="center">Compat组件</td>
+			<td rowspan="3" align="center">Compat library</td>
 			<td align="center"></td>
 			<td align="center">support</td>
 			<td align="center">lifecycle</td>
