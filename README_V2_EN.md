@@ -1,10 +1,9 @@
 [**Chinese**](./README.md) | **English**
 
-<p align="center"><img src="./img/logo.png" alt="Logo load failed" height="360"/></p>
-<h2 align="center">BasePopup - A powerful and convenient PopupWindow library for Android</h2>
+<p align="center"><img src="./img/logo.png" alt="Logo图片似乎加载不出来" height="360"/></p>
+<h2 align="center">BasePopup - Android下打造通用便捷的PopupWindow</h2>
 <div align="center">
 <table>
-    <thead>
         <tr>
             <th>Release</th>
             <th>Candy</th>
@@ -12,41 +11,84 @@
 			<th>Api</th>
 			<th>Author</th>
         </tr>
-    </thead>
-    <tbody>
         <tr>
-            <td>
+            <td align="center">
 				<a href ="https://bintray.com/razerdp/maven/BasePopup/_latestVersion">
 					<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg"/>
 				</a>
 			</td>
-			<td>
+			<td align="center">
 				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion">
 					<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg"/>
 				</a>
 			</td>
-			<td>
+			<td align="center">
 				<a href = "https://github.com/razerdp/BasePopup/blob/master/LICENSE">
-					<img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"/>		
+					<img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"/>
 				</a>
 				<br></br>
 				<a href = "https://github.com/razerdp/BasePopup/blob/master/LICENSE_996">
-                	<img src="https://img.shields.io/badge/license-NPL%20(The%20996%20Prohibited%20License)-blue.svg"/>		
+                	<img src="https://img.shields.io/badge/license-Anti%20996-blue.svg?style=flat-square"/>
                 </a>
 			</td>
-			<td>
+			<td align="center">
 				<a href="https://img.shields.io/badge/Api-14%2B-green.svg">
 					<img src="https://img.shields.io/badge/Api-16%2B-green.svg"/>
 				</a>
 			</td>
-			<td>
+			<td align="center">
 				<a href = "https://github.com/razerdp">
 					<img src="https://img.shields.io/badge/Author-razerdp-blue.svg"/>
 				</a>
 			</td>
 		</tr>
-    </tbody>
+		<tr>
+			<td rowspan="3" align="center">Compat组件</td>
+			<td align="center"></td>
+			<td align="center">support</td>
+			<td align="center">lifecycle</td>
+			<td align="center">androidx</td>
+			<tr>
+			<td align="center">Release</td>
+			<td align="center">
+				<a href = "https://bintray.com/razerdp/maven/BasePopup-compat-support/_latestVersion">
+                	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup-compat-support/images/download.svg"/>
+                </a>
+            </td>
+			<td align="center">
+				<a href = "https://bintray.com/razerdp/maven/BasePopup-compat-lifecycle/_latestVersion">
+                	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup-compat-lifecycle/images/download.svg"/>
+                </a>
+			</td>
+			<td align="center">
+				<a href = "https://bintray.com/razerdp/maven/BasePopup-compat-androidx/_latestVersion">
+                	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup-compat-androidx/images/download.svg"/>
+                </a>
+			</td>
+			</tr>
+			<tr>
+			<td align="center">Candy</td>
+			<td align="center">
+				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy-compat-support/_latestVersion">
+                	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy-compat-support/images/download.svg"/>
+                </a>
+			</td>
+			<td align="center">
+				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy-compat-lifecycle/_latestVersion">
+                	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy-compat-lifecycle/images/download.svg"/>
+                </a>
+			</td>
+			<td align="center">
+				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy-compat-androidx/_latestVersion">
+                	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy-compat-androidx/images/download.svg"/>
+                </a>
+			</td>
+		</tr>
+
 </table>
+
+
+
 </div>
 
 ---
@@ -125,12 +167,29 @@ See more:[Wiki#Usage](https://github.com/razerdp/BasePopup/wiki/%E4%BD%BF%E7%94%
 
 Add dependencies to Gradle (Please replace <b>{$latestVersion}</b> with the version shown in the Jcenter tab above)
 
+**Attention!，If you use the androidX support library,please don't dependence the other two support library, otherwise it will conflict**
+
 ```xml
 	dependencies {
+
+	        //BasePopup main library
 	        implementation 'com.github.razerdp:BasePopup:{$latestVersion}'
 
-	        //candy version
-	        //implementation 'com.github.razerdp:BasePopup_Candy:{$latestVersion}'
+                //Optional below
+	        //BasePopup support lib for android.support（For PopupWindow show above the DialogFragment）
+	        implementation 'com.github.razerdp:BasePopup-compat-support:{$latestVersion}'
+
+	        //BasePopup support lib for lifecycle（auto dismiss and release on activity or fragment destroy）
+	        implementation 'com.github.razerdp:BasePopup-compat-lifecycle:{$latestVersion}'
+
+	        //BasePopup support lib for androidx（for the above two supported function in androidX versions）
+	        implementation 'com.github.razerdp:BasePopup-compat-androidx:{$latestVersion}'
+
+	        //candy version (preview version,frequent updates version)
+		//implementation 'com.github.razerdp:BasePopup_Candy:{$latestVersion}'
+		//implementation 'com.github.razerdp:BasePopup_Candy-compat-support:{$latestVersion}'
+		//implementation 'com.github.razerdp:BasePopup_Candy-compat-lifecycle:{$latestVersion}'
+		//implementation 'com.github.razerdp:BasePopup_Candy-compat-androidx:{$latestVersion}'
 	}
 ```
 <br>
@@ -141,11 +200,13 @@ Add dependencies to Gradle (Please replace <b>{$latestVersion}</b> with the vers
 
 **Support blur background from 1.9.0-alpha（Just call：`setBlurBackgroundEnable(boolean)`）**
 
-**RenderScript minimum support api 17 (lower case will use fastblur),you need to configure the following code in gradle**
+**RenderScript minimum support api 18 (lower case will use fastblur),you need to configure the following code in gradle**
+
+**We recommend that you set the renderscriptTargetApi to the lowest API level that provides all the features you are using**
 
 ```xml
 defaultConfig {
-        renderscriptTargetApi 25
+        renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
     }
 ```
@@ -320,76 +381,61 @@ See more in wiki (continuous improvement)
 
 ### Update log ([Historical update](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
-* **【Release】2.1.9**(2019/03/07)
-  * Please see candy updateLog on under
+* **【Candy】2.2.2**
+    * **【Candy】190704**
+      * Fix the time issue of AnimatorSet fix [**#203**](https://github.com/razerdp/BasePopup/issues/203)
 
-* **【Candy】2.1.9**
-  * **【Candy】2.1.9-prerelease**(2019/03/07)
-    * Support layout in cutouts for Android P，fixed [**#154**](https://github.com/razerdp/BasePopup/issues/154)
-  * **【Candy】2.1.9-beta3**(2019/03/1)
-    * fixed [**#152**](https://github.com/razerdp/BasePopup/issues/152)
-  * **【Candy】2.1.9-beta1**(2019/02/28)
-    * optimized code,fix override AnimationListener for dismissAnimation
-  * **【Candy】2.1.9-beta**(2019/2/26)
-    * add oom catcher for BlurHelper
-  * **【Candy】2.1.9-alpha4**(2019/2/21)
-    * optimized background blur
-  * **【Candy】2.1.9-alpha3**(2019/2/21)
-    * fixed alpha2
-  * **【Candy】2.1.9-alpha2**(2019/2/19)
-    * Removed from lib's AndroidManifest,fixed [**#149**](https://github.com/razerdp/BasePopup/issues/149)
-  * **【Candy】2.1.9-alpha1**(2019/02/18)
-    * Adapted DialogFragment，fixed [**#145**](https://github.com/razerdp/BasePopup/issues/145)
+* **【Release】2.2.1**(2019/06/24)
+  * Support for showing popupwindow in Service or non-ActivityContext
+  * Refactoring PopupUiUtils to optimize the screen width and height algorithm
+    * fixed [**#186**](https://github.com/razerdp/BasePopup/issues/186)、[**#167**](https://github.com/razerdp/BasePopup/issues/167)
+    * fixed [**#188**](https://github.com/razerdp/BasePopup/issues/188)(not perfect)
+  * Modify and optimize keyboard displacement logic
+  * Optimize the determination of the click range in full screen state,fixed [**#200**](https://github.com/razerdp/BasePopup/issues/200)
 
-* **【Release】2.1.8**(2019/01/26)
-  * This version update adds a lot of new features.
-  * Update details:
-    * Adapted to use [**ImmersionBar**](https://github.com/gyf-dev/ImmersionBar)
-    * Repair of horizontal screen incompatibility problems
-    * Fix the problem that the constructor width is not valid
-    * **Support for background masks without intercepting events. That black technology has changed to a more friendly way!**
-    * Fix the problem that the virtual button is displayed together when the popup is displayed.
-      * fixed  [**#141**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/141)
-      * fixed  [**#120**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/59)
-    * QuickPopupConfig adds `dismissOnOutSideTouch()` method
-    * Optimize QuickPopupBuilder, see more in[**Wiki**](https://github.com/razerdp/BasePopup/wiki/QuickPopupBuilder)
-    * Optimize for problems with [**#138**](https://github.com/razerdp/BasePopup/issues/138)
-    * Fix the call order of `setAlignBackgroundGravity()` and `setAlignBackground()`
-
-* **【Candy】2.1.8**
-  * **【Candy】2.1.8-prerelease2**(2019/01/24)
-    * Adapted to use [**ImmersionBar**](https://github.com/gyf-dev/ImmersionBar)
-  * **【Candy】2.1.8-prerelease**(2019/01/23)
-    * Repair of horizontal screen incompatibility problems
-  * **【Candy】2.1.8-beta7**(2019/01/22)
-    * Beta3 and beta4 and beta5 and beta6 were deleted~
-    * Fix beta2's problem with focusable, remove useless code
-    * Fix the problem that the constructor width is not valid
-    * **Support for background masks without intercepting events. That black technology has changed to a more friendly way!**
-  * **【Candy】2.1.8-beta2**(2019/01/22)
-    * Fix the problem that the virtual button is displayed together when the popup is displayed.**This function is currently tested, please be sure to feedback to candy if you have any questions.**
-      * fixed  [**#141**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/141)
-    * QuickPopup adds `dismissOnOutSideTouch()` method
-  * **【Candy】2.1.8-beta1**(2019/01/21)
-    * Fix the problem that the virtual button is displayed together when the popup is displayed.**This function is currently tested, please be sure to feedback to candy if you have any questions.**
-      * fixed  [**#120**](https://github.com/razerdp/BasePopup/issues/120)、[**#59**](https://github.com/razerdp/BasePopup/issues/59)
-  * **【Candy】2.1.8-alpha2**(2019/01/18)
-    * Optimize QuickPopupBuilder, see more in[**Wiki**](https://github.com/razerdp/BasePopup/wiki/QuickPopupBuilder)
-  * **【Candy】2.1.8-alpha**(2019/01/17)
-    * Optimize for problems with [**#138**](https://github.com/razerdp/BasePopup/issues/138)
-    * Fix the call order of `setAlignBackgroundGravity()` and `setAlignBackground()`
-
-* **【Release】2.1.7**(2019/01/16)
-  * Fixed an issue where `onAnchorTop()` or `onAnchorBottom()` was called multiple times during `setAutoLocatePopup(true)`
-  * Fixing 'setAllowInterceptTouchEvent(false)`, the problem of not being able to locate anchorView due to default restrictions
-  * Optimize the soft keyboard default offset calculation method
-  * Optimize keyboard height calculation method
-  * Thanks to [**@ParfoisMeng**] (https://github.com/ParfoisMeng) for finding the soft keyboard offset problem and submitting [**PR#130**] (https://github.com/razerdp/ BasePopup/pull/130)
-
-* **【Candy】2.1.7-beta**(2019/01/10~2019/01/13)
-  * Fixing 'setAllowInterceptTouchEvent(false)`, the problem of not being able to locate anchorView due to default restrictions
-  * Optimize the soft keyboard default offset calculation method
-  * Optimize keyboard height calculation method
+* **【Release】2.2.0**(2019/05/15)
+  * The release version 2.2.0 was upgraded, this version is a refactored version~
+  * Optimize input method alignment logic
+  * **Refactoring blur implementation:**
+    * After testing, the 720p mobile phone has a full-screen blur time average between **6ms~16ms**
+    * Increase the blurriness of the default parameters
+    * Blur progressive time follows BasePopup's animation time
+    * Fix the situation of blur invalidation
+  * **Measurement/Layout:**
+    * Reconstruction measurement implementation：
+      * Now in the case of `clipToScreen`, PopupDecor will be re-measured according to the remaining space to ensure the complete display of Popup. If you need to keep the original measured value, please call `keepSize(true)`
+      * Refactor layout implementation, optimized for **outSideTouch**
+      * Adapt screen rotation,fix [#180](https://github.com/razerdp/BasePopup/issues/180)
+      * Use a flag instead of a variety of boolean
+      * Reduce redundant code
+  * **Optimization:**
+    * Add the GravityMode parameter, now allows you to configure the reference mode of `PopupGravity`~
+      * **RELATIVE_TO_ANCHOR**：Default mode，Use Anchor as a reference to specify the orientation of PopupWindow displayed in Anchor.
+      * **ALIGN_TO_ANCHOR_SIDE**：Align mode，Specify the edge of the PopupWindow and which side of the Anchor is aligned with the side of the Anchor.
+    * Add the `minWidth()`/`minHeight()` apis
+    * Add the `maxWidth()`/`maxHeight()` apis.
+    * Fix measurement differences for `match_parent` and `wrap_content`
+    * Deprecated some apis：
+      * ~~setAllowDismissWhenTouchOutside~~ -> **setOutSideDismiss**
+      * ~~setAllowInterceptTouchEvent~~ -> **setOutSideTouchable**
+    * Add `setBackgroundView(View)` api，Now the background control of BasePopup can be customized by you~ Of course, the background animation control method of PopupWindow still takes effect.
+  * **Function split:**
+    * Now BasePopup will split the package.
+    * The source project will only adapt to the native Android without any dependencies.
+    * If you need other adaptations, please rely on the following modules or modules:
+      * If you need support for the `support` library, such as DialogFragment support, please implementation
+        * `implementation 'com.github.razerdp:BasePopup-compat-support:{$latestVersion}'`
+      * If you need support for the `lifecycle` library, such as automatic release or dismiss in destroy, etc., please implementation
+        * `implementation 'com.github.razerdp:BasePopup-compat-lifecycle:{$latestVersion}'`
+      * If you need support for the `androidX` library, please implementation
+        * `implementation 'com.github.razerdp:BasePopup-compat-androidx:{$latestVersion}'`
+      * **Attention!，If you use the androidX support library,please don't dependence the other two support library, otherwise it will conflict**
+  * **Bug fixed：**
+    * fix [#171](https://github.com/razerdp/BasePopup/issues/171)、[#181](https://github.com/razerdp/BasePopup/issues/181)、[#182](https://github.com/razerdp/BasePopup/issues/182)、[#183](https://github.com/razerdp/BasePopup/issues/183)
+    * fix [#180](https://github.com/razerdp/BasePopup/issues/180)
+    * fixed [#164](https://github.com/razerdp/BasePopup/issues/164)
+  * **Other：**
+    * Add 996 license
 
 <br>
 
