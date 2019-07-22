@@ -7,7 +7,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.1'
+        classpath 'com.android.tools.build:gradle:3.4.2'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
 
@@ -34,7 +34,7 @@ ext {
     minSdkVersion = 16
     targetSdkVersion = 28
     versionCode = 64
-    versionName = '2.2.2.190704'
+    versionName = '2.2.2.190722'
 
     candy = true
     group = 'com.github.razerdp'

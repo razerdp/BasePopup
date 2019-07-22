@@ -234,20 +234,6 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
-        //fixed this https://github.com/razerdp/BasePopup/issues/188
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if (widthSize < heightSize) {
-                widthMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, heightMode);
-                heightMeasureSpec = MeasureSpec.makeMeasureSpec(widthSize, widthMode);
-            }
-        } else {
-            if (widthSize > heightSize) {
-                widthMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, heightMode);
-                heightMeasureSpec = MeasureSpec.makeMeasureSpec(widthSize, widthMode);
-            }
-        }
-        PopupLog.i("measureWithIntercept", MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
-
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
