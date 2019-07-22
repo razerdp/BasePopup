@@ -429,6 +429,9 @@ QuickPopupBuilder支持链式调用生成一个基于QuickPopup的PopupWindow，
 * **【Candy】2.2.2**
     * **【Candy】190704**
       * 修复AnimatorSet的时间问题 fix [**#203**](https://github.com/razerdp/BasePopup/issues/203)
+    * **【Candy】190722**
+      * 回滚[#188](https://github.com/razerdp/BasePopup/issues/188)修复
+      * 经检查，[#188](https://github.com/razerdp/BasePopup/issues/188)修复带来的问题比较严重，建议升级到该版本
 
 * **【Release】2.2.1**(2019/06/24)
   * 支持Service或者非ActivityContext里弹窗

@@ -384,6 +384,9 @@ See more in wiki (continuous improvement)
 * **【Candy】2.2.2**
     * **【Candy】190704**
       * Fix the time issue of AnimatorSet fix [**#203**](https://github.com/razerdp/BasePopup/issues/203)
+    * **【Candy】190722**
+      * Rollback to [#188](https://github.com/razerdp/BasePopup/issues/188)
+      * After checking, [#188] (https://github.com/razerdp/BasePopup/issues/188) fixes the problem, it is recommended to upgrade to this version.
 
 * **【Release】2.2.1**(2019/06/24)
   * Support for showing popupwindow in Service or non-ActivityContext
