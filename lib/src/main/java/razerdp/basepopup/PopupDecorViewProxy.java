@@ -229,17 +229,12 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     }
 
     private void measureWithIntercept(int widthMeasureSpec, int heightMeasureSpec) {
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
             //蒙层给最大值
             if (child == mMaskLayout) {
-                measureChild(child, MeasureSpec.makeMeasureSpec(getScreenWidth(), MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(getScreenHeight(), MeasureSpec.EXACTLY));
+                measureChild(child, getMaskWidthSpec(), getMaskHeightSpec());
             } else {
                 measureWrappedDecorView(child, widthMeasureSpec, heightMeasureSpec);
             }
@@ -258,7 +253,11 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             if (child == mTarget) {
                 measureWrappedDecorView(mTarget, widthMeasureSpec, heightMeasureSpec);
             } else {
-                measureChild(child, widthMeasureSpec, heightMeasureSpec);
+                if (child==mMaskLayout){
+                    measureChild(child, getMaskWidthSpec(), getMaskHeightSpec());
+                }else {
+                    measureChild(child, widthMeasureSpec, heightMeasureSpec);
+                }
             }
 
             maxWidth = Math.max(maxWidth, child.getMeasuredWidth());
@@ -399,6 +398,14 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         heightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, heightMode);
 
         mTarget.measure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    private int getMaskWidthSpec() {
+        return mHelper.maskWidth > 0 ? MeasureSpec.makeMeasureSpec(mHelper.maskWidth, MeasureSpec.EXACTLY) : MeasureSpec.makeMeasureSpec(getScreenWidth(), MeasureSpec.EXACTLY);
+    }
+
+    private int getMaskHeightSpec() {
+        return mHelper.maskHeight > 0 ? MeasureSpec.makeMeasureSpec(mHelper.maskHeight, MeasureSpec.EXACTLY) : MeasureSpec.makeMeasureSpec(getScreenHeight(), MeasureSpec.EXACTLY);
     }
 
     @Override
