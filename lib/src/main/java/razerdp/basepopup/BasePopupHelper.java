@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -98,6 +99,8 @@ final class BasePopupHelper implements PopupKeyboardStateChangeListener, BasePop
     //背景View
     View mBackgroundView;
 
+    EditText mAutoShowInputEdittext;
+
     PopupKeyboardStateChangeListener mKeyboardStateChangeListener;
     PopupWindowEventInterceptor mEventInterceptor;
 
@@ -105,7 +108,7 @@ final class BasePopupHelper implements PopupKeyboardStateChangeListener, BasePop
     ViewGroup.MarginLayoutParams mParseFromXmlParams;
     Point mTempOffset = new Point();
 
-    int maxWidth, maxHeight, minWidth, minHeight;
+    int maxWidth, maxHeight, minWidth, minHeight, maskWidth, maskHeight;
 
 
     InnerShowInfo mShowInfo;
@@ -135,7 +138,7 @@ final class BasePopupHelper implements PopupKeyboardStateChangeListener, BasePop
         eventObserverMap.remove(who);
     }
 
-    void callEvent(Message msg) {
+    void sendEvent(Message msg) {
         if (msg == null) return;
         if (msg.what < 0) return;
         for (Map.Entry<Object, BasePopupEvent.EventObserver> entry : eventObserverMap.entrySet()) {
@@ -173,6 +176,7 @@ final class BasePopupHelper implements PopupKeyboardStateChangeListener, BasePop
                 tempLayout = null;
                 return result;
             }
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -802,7 +806,12 @@ final class BasePopupHelper implements PopupKeyboardStateChangeListener, BasePop
             startShowAnimate(popupWindow.mDisplayAnimateView.getWidth(), popupWindow.mDisplayAnimateView.getHeight());
         }
         if (isAutoShowInputMethod()) {
-            InputMethodUtils.showInputMethod(popupWindow.getContext());
+            if (mAutoShowInputEdittext != null) {
+                mAutoShowInputEdittext.requestFocus();
+                InputMethodUtils.showInputMethod(mAutoShowInputEdittext, 350);
+            } else {
+                InputMethodUtils.showInputMethod(popupWindow.getContentView(), 350);
+            }
         }
         handleShow();
     }
@@ -818,8 +827,10 @@ final class BasePopupHelper implements PopupKeyboardStateChangeListener, BasePop
         if (isAutoShowInputMethod()) {
             InputMethodUtils.close(popupWindow.getContext());
         }
+        Message msg = BasePopupEvent.getMessage(BasePopupEvent.EVENT_DISMISS);
         if (animateDismiss) {
             startDismissAnimate(popupWindow.mDisplayAnimateView.getWidth(), popupWindow.mDisplayAnimateView.getHeight());
+            msg.arg1 = 1;
             popupWindow.mDisplayAnimateView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -828,8 +839,10 @@ final class BasePopupHelper implements PopupKeyboardStateChangeListener, BasePop
                 }
             }, Math.max(dismissDuration, 0));
         } else {
+            msg.arg1 = 0;
             popupWindow.originalDismiss();
         }
+        sendEvent(msg);
     }
 
     void forceDismiss() {

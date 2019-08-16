@@ -351,7 +351,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     //重试次数
     private int retryCounter;
-    private EditText mAutoShowInputEdittext;
 
     private GlobalLayoutListenerWrapper mGlobalLayoutListenerWrapper;
     private LinkedViewLayoutChangeListenerWrapper mLinkedViewLayoutChangeListenerWrapper;
@@ -853,7 +852,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         if (mGlobalLayoutListenerWrapper != null) {
             mGlobalLayoutListenerWrapper.remove();
         }
-        mHelper.handleDismiss();
     }
 
     private void removeLinkedLayoutListener() {
@@ -929,13 +927,22 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     /**
      * <p>
+     * PopupWindow在展示的时候自动打开输入法
+     * </p>
+     */
+    public BasePopupWindow setAutoShowInputMethod(boolean autoShow) {
+        mHelper.autoShowInputMethod(mPopupWindow, autoShow);
+        return this;
+    }
+
+    /**
+     * <p>
      * PopupWindow在展示的时候自动打开输入法，在传入参数时请务必传入{@link EditText}
      * </p>
      */
     public BasePopupWindow setAutoShowInputMethod(EditText editText, boolean autoShow) {
-        mHelper.autoShowInputMethod(mPopupWindow, autoShow);
-        mAutoShowInputEdittext = editText;
-        return this;
+        mHelper.mAutoShowInputEdittext = editText;
+        return setAutoLocatePopup(autoShow);
     }
 
     /**
@@ -1144,7 +1151,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
     }
 
-    //------------------------------------------Getter/Setter-----------------------------------------------
+    //region ------------------------------------------Getter/Setter-----------------------------------------------
 
     /**
      * PopupWindow是否处于展示状态
@@ -1651,6 +1658,27 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return this;
     }
 
+
+    /**
+     * 设置蒙层宽度
+     *
+     * @param width 蒙层宽度
+     */
+    public BasePopupWindow setMaskLayoutWidth(int width) {
+        mHelper.maskWidth = width;
+        return this;
+    }
+
+    /**
+     * 设置蒙层高度
+     *
+     * @param height 蒙层高度
+     */
+    public BasePopupWindow setMaskLayoutHeight(int height) {
+        mHelper.maskHeight = height;
+        return this;
+    }
+
     /**
      * 绑定lifecycle
      */
@@ -1664,8 +1692,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public BasePopupWindow removeLifeCycle(Object owner) {
         return BasePopupSupporterManager.getInstance().proxy.removeLifeCycle(this, owner);
     }
-    //------------------------------------------状态控制-----------------------------------------------
 
+    //endregion
+
+    //region ------------------------------------------状态控制-----------------------------------------------
 
     /**
      * 添加BasePopupWindow事件拦截器
@@ -1681,6 +1711,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     void originalDismiss() {
         try {
+            mHelper.handleDismiss();
             mPopupWindow.originalDismiss();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1789,6 +1820,72 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return result;
     }
 
+    //endregion
+
+    //region ------------------------------------------callback-----------------------------------------------
+
+    /**
+     * 在anchorView上方显示，autoLocatePopup为true时适用
+     */
+    public void onAnchorTop() {
+
+    }
+
+    /**
+     * 在anchorView下方显示，autoLocatePopup为true时适用
+     */
+    public void onAnchorBottom() {
+
+    }
+
+    /**
+     * 在anchorView上方显示，autoLocatePopup为true时适用
+     *
+     * @param mPopupView {@link #onCreateContentView()}返回的View
+     * @param anchorView {@link #showPopupWindow(View)}传入的View
+     * @see #onAnchorTop()
+     * @deprecated 因为contentView和anchorView应由用户自行保存决定，此处不再返回
+     */
+    @Deprecated
+    public void onAnchorTop(View mPopupView, View anchorView) {
+
+    }
+
+    /**
+     * 在anchorView下方显示，autoLocatePopup为true时适用
+     *
+     * @param mPopupView {@link #onCreateContentView()}返回的View
+     * @param anchorView {@link #showPopupWindow(View)}传入的View
+     * @see #onAnchorBottom()
+     * @deprecated 因为contentView和anchorView应由用户自行保存决定，此处不再返回
+     */
+    @Deprecated
+    public void onAnchorBottom(View mPopupView, View anchorView) {
+
+    }
+
+    @Override
+    public void onDismiss() {
+        if (mHelper.getOnDismissListener() != null) {
+            mHelper.getOnDismissListener().onDismiss();
+        }
+        isExitAnimatePlaying = false;
+    }
+
+    //endregion
+
+    //region ------------------------------------------tools-----------------------------------------------
+
+    protected float dipToPx(float dip) {
+        if (getContext() == null) return dip;
+        return dip * getContext().getResources().getDisplayMetrics().density + 0.5f;
+    }
+
+    public static void setDebugMode(boolean debugMode) {
+        DEBUG = debugMode;
+        PopupLog.setOpenLog(debugMode);
+    }
+
     /**
      * 生成TranslateAnimation
      *
@@ -1882,72 +1979,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return PopupUiUtils.getScreenWidthCompat(getContext());
     }
 
+    //endregion
 
-    //------------------------------------------callback-----------------------------------------------
-
-    /**
-     * 在anchorView上方显示，autoLocatePopup为true时适用
-     */
-    public void onAnchorTop() {
-
-    }
-
-    /**
-     * 在anchorView下方显示，autoLocatePopup为true时适用
-     */
-    public void onAnchorBottom() {
-
-    }
-
-    /**
-     * 在anchorView上方显示，autoLocatePopup为true时适用
-     *
-     * @param mPopupView {@link #onCreateContentView()}返回的View
-     * @param anchorView {@link #showPopupWindow(View)}传入的View
-     * @see #onAnchorTop()
-     * @deprecated 因为contentView和anchorView应由用户自行保存决定，此处不再返回
-     */
-    @Deprecated
-    public void onAnchorTop(View mPopupView, View anchorView) {
-
-    }
-
-    /**
-     * 在anchorView下方显示，autoLocatePopup为true时适用
-     *
-     * @param mPopupView {@link #onCreateContentView()}返回的View
-     * @param anchorView {@link #showPopupWindow(View)}传入的View
-     * @see #onAnchorBottom()
-     * @deprecated 因为contentView和anchorView应由用户自行保存决定，此处不再返回
-     */
-    @Deprecated
-    public void onAnchorBottom(View mPopupView, View anchorView) {
-
-    }
-
-    @Override
-    public void onDismiss() {
-        if (mHelper.getOnDismissListener() != null) {
-            mHelper.getOnDismissListener().onDismiss();
-        }
-        isExitAnimatePlaying = false;
-    }
-
-
-    //------------------------------------------tools-----------------------------------------------
-
-    protected float dipToPx(float dip) {
-        if (getContext() == null) return dip;
-        return dip * getContext().getResources().getDisplayMetrics().density + 0.5f;
-    }
-
-    public static void setDebugMode(boolean debugMode) {
-        DEBUG = debugMode;
-        PopupLog.setOpenLog(debugMode);
-    }
-
-
-    //------------------------------------------Interface-----------------------------------------------
+    //region------------------------------------------Interface-----------------------------------------------
     public interface OnBeforeShowCallback {
         /**
          * <p>
@@ -2002,7 +2036,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         void onKeyboardChange(int keyboardTop, int keyboardHeight, boolean isVisible, boolean fullScreen);
     }
 
-    //------------------------------------------InnerClass-----------------------------------------------
+    //endregion
+
+    //region ------------------------------------------InnerClass-----------------------------------------------
     private static class GlobalLayoutListenerWrapper implements ViewTreeObserver.OnGlobalLayoutListener {
 
         private WeakReference<View> target;
@@ -2171,4 +2207,5 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         int height;
     }
 
+    //endregion
 }
