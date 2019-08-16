@@ -11,7 +11,6 @@ import android.widget.TextView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.fragment.other.SimpleBaseFrag;
-import razerdp.demo.popup.AutoLocatedRecyclerViewPopup;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.demo.utils.MultiSpanUtil;
 import razerdp.demo.utils.UIHelper;

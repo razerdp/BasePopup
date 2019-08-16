@@ -137,7 +137,9 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             }
             return;
         }
-        ((ViewGroup) decorView).addView(mMaskLayout, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        ((ViewGroup) decorView).addView(mMaskLayout,
+                mHelper.maskWidth > 0 ? mHelper.maskWidth : LayoutParams.MATCH_PARENT,
+                mHelper.maskHeight > 0 ? mHelper.maskHeight : LayoutParams.MATCH_PARENT);
     }
 
     public void addPopupDecorView(View target, WindowManager.LayoutParams params) {
@@ -253,9 +255,9 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             if (child == mTarget) {
                 measureWrappedDecorView(mTarget, widthMeasureSpec, heightMeasureSpec);
             } else {
-                if (child==mMaskLayout){
+                if (child == mMaskLayout) {
                     measureChild(child, getMaskWidthSpec(), getMaskHeightSpec());
-                }else {
+                } else {
                     measureChild(child, widthMeasureSpec, heightMeasureSpec);
                 }
             }

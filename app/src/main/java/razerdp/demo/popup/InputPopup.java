@@ -39,16 +39,6 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener 
         return mInputEdittext;
     }
 
-    @Override
-    protected Animation onCreateShowAnimation() {
-        return null;
-    }
-
-    @Override
-    protected Animation onCreateDismissAnimation() {
-        return null;
-    }
-
     private void bindEvent() {
         mCancelButton.setOnClickListener(this);
         mCompeleteButton.setOnClickListener(this);
