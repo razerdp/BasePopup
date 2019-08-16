@@ -1,18 +1,19 @@
 package razerdp.basepopup;
 
 import android.animation.Animator;
-import android.animation.AnimatorSet;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
@@ -20,18 +21,26 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import java.lang.ref.WeakReference;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import razerdp.blur.PopupBlurOption;
 import razerdp.interceptor.PopupWindowEventInterceptor;
 import razerdp.library.R;
+import razerdp.util.InputMethodUtils;
+import razerdp.util.PopupUtils;
 
 /**
  * Created by 大灯泡 on 2017/12/12.
  * <p>
- * popupoption
+ * PopupHelper，这货与Popup强引用哦~
  */
-final class BasePopupHelper implements PopupTouchController, PopupWindowActionListener, PopupWindowLocationListener,
-        PopupKeyboardStateChangeListener, BasePopupFlag {
+@SuppressWarnings("all")
+final class BasePopupHelper implements PopupKeyboardStateChangeListener, BasePopupFlag {
+
+    BasePopupWindow popupWindow;
+
+    WeakHashMap<Object, BasePopupEvent.EventObserver> eventObserverMap;
 
     enum ShowMode {
         RELATIVE_TO_ANCHOR,
@@ -40,66 +49,68 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
     }
 
     private static final int CONTENT_VIEW_ID = R.id.base_popup_content_root;
+
     static final int DEFAULT_WIDTH = ViewGroup.LayoutParams.WRAP_CONTENT;
     static final int DEFAULT_HEIGHT = ViewGroup.LayoutParams.WRAP_CONTENT;
 
-    private ShowMode mShowMode = ShowMode.SCREEN;
+    ShowMode mShowMode = ShowMode.SCREEN;
 
-    private int contentRootId = CONTENT_VIEW_ID;
+    int contentRootId = CONTENT_VIEW_ID;
 
-    private int flag = IDLE;
+    int flag = IDLE;
 
-    private static int showCount;
+    static int showCount;
 
     //animate
-    private Animation mShowAnimation;
-    private Animator mShowAnimator;
-    private Animation mDismissAnimation;
-    private Animator mDismissAnimator;
+    Animation mShowAnimation;
+    Animator mShowAnimator;
+    Animation mDismissAnimation;
+    Animator mDismissAnimator;
+
+    long showDuration;
+    long dismissDuration;
 
     //callback
-    private BasePopupWindow.OnDismissListener mOnDismissListener;
-    private BasePopupWindow.OnBeforeShowCallback mOnBeforeShowCallback;
+    BasePopupWindow.OnDismissListener mOnDismissListener;
+    BasePopupWindow.OnBeforeShowCallback mOnBeforeShowCallback;
 
     //option
-    private BasePopupWindow.GravityMode gravityMode = BasePopupWindow.GravityMode.RELATIVE_TO_ANCHOR;
-    private int popupGravity = Gravity.NO_GRAVITY;
-    private int offsetX;
-    private int offsetY;
-    private int preMeasureWidth;
-    private int preMeasureHeight;
+    BasePopupWindow.GravityMode gravityMode = BasePopupWindow.GravityMode.RELATIVE_TO_ANCHOR;
+    int popupGravity = Gravity.NO_GRAVITY;
+    int offsetX;
+    int offsetY;
+    int preMeasureWidth;
+    int preMeasureHeight;
 
-    private int popupViewWidth;
-    private int popupViewHeight;
+    int popupViewWidth;
+    int popupViewHeight;
     //锚点view的location
-    private int[] mAnchorViewLocation;
-    private int mAnchorViewHeight;
-    private int mAnchorViewWidth;
+    int[] mAnchorViewLocation;
+    int mAnchorViewHeight;
+    int mAnchorViewWidth;
 
     //模糊option(为空的话则不模糊）
-    private PopupBlurOption mBlurOption;
+    PopupBlurOption mBlurOption;
     //背景颜色
-    private Drawable mBackgroundDrawable = new ColorDrawable(BasePopupWindow.DEFAULT_BACKGROUND_COLOR);
+    Drawable mBackgroundDrawable = new ColorDrawable(BasePopupWindow.DEFAULT_BACKGROUND_COLOR);
     //背景对齐方向
-    private int alignBackgroundGravity = Gravity.TOP;
+    int alignBackgroundGravity = Gravity.TOP;
     //背景View
-    private View mBackgroundView;
+    View mBackgroundView;
 
-    private PopupTouchController mTouchControllerDelegate;
-    private PopupWindowActionListener mActionListener;
-    private PopupWindowLocationListener mLocationListener;
-    private PopupKeyboardStateChangeListener mKeyboardStateChangeListener;
-    private PopupWindowEventInterceptor mEventInterceptor;
+    PopupKeyboardStateChangeListener mKeyboardStateChangeListener;
+    PopupWindowEventInterceptor mEventInterceptor;
 
-    private int mSoftInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
-    private ViewGroup.MarginLayoutParams mParseFromXmlParams;
-    private Point mTempOffset = new Point();
+    int mSoftInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
+    ViewGroup.MarginLayoutParams mParseFromXmlParams;
+    Point mTempOffset = new Point();
 
-    private int maxWidth, maxHeight, minWidth, minHeight;
+    int maxWidth, maxHeight, minWidth, minHeight;
 
-    private InnerShowInfo mShowInfo;
 
-    private static class InnerShowInfo {
+    InnerShowInfo mShowInfo;
+
+    static class InnerShowInfo {
         WeakReference<View> mAnchorView;
         boolean positionMode;
 
@@ -110,27 +121,31 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
 
     }
 
-    BasePopupHelper(PopupTouchController controller) {
+    BasePopupHelper(BasePopupWindow popupWindow) {
         mAnchorViewLocation = new int[2];
-        this.mTouchControllerDelegate = controller;
+        this.popupWindow = popupWindow;
+        this.eventObserverMap = new WeakHashMap<>();
     }
 
-    BasePopupHelper registerActionListener(PopupWindowActionListener actionListener) {
-        this.mActionListener = actionListener;
-        return this;
+    void observerEvent(Object who, BasePopupEvent.EventObserver observer) {
+        eventObserverMap.put(who, observer);
     }
 
-    BasePopupHelper registerLocationLisener(PopupWindowLocationListener locationListener) {
-        this.mLocationListener = locationListener;
-        return this;
+    void removeEventObserver(Object who) {
+        eventObserverMap.remove(who);
     }
 
-    BasePopupHelper registerKeyboardStateChangeListener(PopupKeyboardStateChangeListener mKeyboardStateChangeListener) {
-        this.mKeyboardStateChangeListener = mKeyboardStateChangeListener;
-        return this;
+    void callEvent(Message msg) {
+        if (msg == null) return;
+        if (msg.what < 0) return;
+        for (Map.Entry<Object, BasePopupEvent.EventObserver> entry : eventObserverMap.entrySet()) {
+            if (entry.getValue() != null) {
+                entry.getValue().onEvent(msg);
+            }
+        }
     }
 
-    public View inflate(Context context, int layoutId) {
+    View inflate(Context context, int layoutId) {
         try {
             FrameLayout tempLayout = new FrameLayout(context);
             View result = LayoutInflater.from(context).inflate(layoutId, tempLayout, false);
@@ -164,7 +179,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return null;
     }
 
-    private void checkAndSetGravity(ViewGroup.LayoutParams p) {
+    void checkAndSetGravity(ViewGroup.LayoutParams p) {
         if (p == null) return;
         if (p instanceof LinearLayout.LayoutParams) {
             setPopupGravity(gravityMode, ((LinearLayout.LayoutParams) p).gravity);
@@ -173,61 +188,148 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         }
     }
 
-    Animation getShowAnimation() {
+    //region Animation
+
+    void startShowAnimate(int width, int height) {
+        if (getShowAnimation(width, height) == null) {
+            getShowAnimator(width, height);
+        }
+        if (mShowAnimation != null) {
+            mShowAnimation.cancel();
+            popupWindow.mDisplayAnimateView.startAnimation(mShowAnimation);
+        } else if (mShowAnimator != null) {
+            mShowAnimator.cancel();
+            mShowAnimator.start();
+        }
+    }
+
+    void startDismissAnimate(int width, int height) {
+        if (getDismissAnimation(width, height) == null) {
+            getDismissAnimator(width, height);
+        }
+        if (mDismissAnimation != null) {
+            mDismissAnimation.cancel();
+            popupWindow.mDisplayAnimateView.startAnimation(mDismissAnimation);
+            if (mOnDismissListener != null) {
+                mOnDismissListener.onDismissAnimationStart();
+            }
+            setFlag(CUSTOM_ON_ANIMATE_DISMISS, true);
+        } else if (mDismissAnimator != null) {
+            mDismissAnimator.cancel();
+            mDismissAnimator.start();
+            if (mOnDismissListener != null) {
+                mOnDismissListener.onDismissAnimationStart();
+            }
+            setFlag(CUSTOM_ON_ANIMATE_DISMISS, true);
+        }
+    }
+
+    Animation getShowAnimation(int width, int height) {
+        if (mShowAnimation == null) {
+            mShowAnimation = popupWindow.onCreateShowAnimation(width, height);
+            if (mShowAnimation != null) {
+                showDuration = PopupUtils.getAnimationDuration(mShowAnimation, 0);
+                setToBlur(mBlurOption);
+            }
+        }
         return mShowAnimation;
     }
 
-    BasePopupHelper setShowAnimation(Animation showAnimation) {
-        if (mShowAnimation == showAnimation) return this;
+    Animator getShowAnimator(int width, int height) {
+        if (mShowAnimator == null) {
+            mShowAnimator = popupWindow.onCreateShowAnimator(width, height);
+            if (mShowAnimator != null) {
+                showDuration = PopupUtils.getAnimatorDuration(mShowAnimator, 0);
+                setToBlur(mBlurOption);
+            }
+        }
+        return mShowAnimator;
+    }
+
+    Animation getDismissAnimation(int width, int height) {
+        if (mDismissAnimation == null) {
+            mDismissAnimation = popupWindow.onCreateDismissAnimation(width, height);
+            if (mDismissAnimation != null) {
+                dismissDuration = PopupUtils.getAnimationDuration(mDismissAnimation, 0);
+                setToBlur(mBlurOption);
+            }
+        }
+        return mDismissAnimation;
+    }
+
+    Animator getDismissAnimator(int width, int height) {
+        if (mDismissAnimator == null) {
+            mDismissAnimator = popupWindow.onCreateDismissAnimator(width, height);
+            if (mDismissAnimator != null) {
+                dismissDuration = PopupUtils.getAnimatorDuration(mDismissAnimator, 0);
+                setToBlur(mBlurOption);
+            }
+        }
+        return mDismissAnimator;
+    }
+
+
+    void setToBlur(PopupBlurOption option) {
+        this.mBlurOption = option;
+        if (option != null) {
+            if (option.getBlurInDuration() <= 0) {
+                if (showDuration > 0) {
+                    option.setBlurInDuration(showDuration);
+                }
+            }
+            if (option.getBlurOutDuration() <= 0) {
+                if (dismissDuration > 0) {
+                    option.setBlurOutDuration(dismissDuration);
+                }
+            }
+        }
+    }
+
+
+    void setShowAnimation(Animation showAnimation) {
+        if (mShowAnimation == showAnimation) return;
         if (mShowAnimation != null) {
             mShowAnimation.cancel();
         }
         mShowAnimation = showAnimation;
-        applyBlur(mBlurOption);
-        return this;
+        showDuration = PopupUtils.getAnimationDuration(mShowAnimation, 0);
+        setToBlur(mBlurOption);
     }
 
-    Animator getShowAnimator() {
-        return mShowAnimator;
-    }
-
-    BasePopupHelper setShowAnimator(Animator showAnimator) {
-        if (mShowAnimator == showAnimator) return this;
+    /**
+     * animation优先级更高
+     */
+    void setShowAnimator(Animator showAnimator) {
+        if (mShowAnimation != null || mShowAnimator == showAnimator) return;
         if (mShowAnimator != null) {
             mShowAnimator.cancel();
         }
         mShowAnimator = showAnimator;
-        applyBlur(mBlurOption);
-        return this;
+        showDuration = PopupUtils.getAnimatorDuration(mShowAnimator, 0);
+        setToBlur(mBlurOption);
     }
 
-    Animation getDismissAnimation() {
-        return mDismissAnimation;
-    }
-
-    BasePopupHelper setDismissAnimation(Animation dismissAnimation) {
-        if (mDismissAnimation == dismissAnimation) return this;
+    void setDismissAnimation(Animation dismissAnimation) {
+        if (mDismissAnimation == dismissAnimation) return;
         if (mDismissAnimation != null) {
             mDismissAnimation.cancel();
         }
         mDismissAnimation = dismissAnimation;
-        applyBlur(mBlurOption);
-        return this;
+        dismissDuration = PopupUtils.getAnimationDuration(mDismissAnimation, 0);
+        setToBlur(mBlurOption);
     }
 
-    Animator getDismissAnimator() {
-        return mDismissAnimator;
-    }
-
-    BasePopupHelper setDismissAnimator(Animator dismissAnimator) {
-        if (mDismissAnimator == dismissAnimator) return this;
+    void setDismissAnimator(Animator dismissAnimator) {
+        if (mDismissAnimation != null || mDismissAnimator == dismissAnimator) return;
         if (mDismissAnimator != null) {
             mDismissAnimator.cancel();
         }
         mDismissAnimator = dismissAnimator;
-        applyBlur(mBlurOption);
-        return this;
+        dismissDuration = PopupUtils.getAnimatorDuration(mDismissAnimator, 0);
+        setToBlur(mBlurOption);
     }
+
+    //endregion
 
     boolean isCustomMeasure() {
         return (flag & (CUSTOM_WIDTH | CUSTOM_HEIGHT)) != 0;
@@ -341,7 +443,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return this;
     }
 
-    public BasePopupHelper setClipChildren(boolean clipChildren) {
+    BasePopupHelper setClipChildren(boolean clipChildren) {
         setFlag(CLIP_CHILDREN, clipChildren);
         return this;
     }
@@ -432,11 +534,6 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return this;
     }
 
-    BasePopupHelper setEventInterceptor(PopupWindowEventInterceptor mInterceptor) {
-        this.mEventInterceptor = mInterceptor;
-        return this;
-    }
-
     BasePopupHelper getAnchorLocation(View v) {
         if (v == null) return this;
         v.getLocationOnScreen(mAnchorViewLocation);
@@ -445,11 +542,11 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return this;
     }
 
-    public Point getTempOffset() {
+    Point getTempOffset() {
         return mTempOffset;
     }
 
-    public Point getTempOffset(int x, int y) {
+    Point getTempOffset(int x, int y) {
         mTempOffset.set(x, y);
         return mTempOffset;
     }
@@ -497,61 +594,6 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         return mBlurOption;
     }
 
-    BasePopupHelper applyBlur(PopupBlurOption option) {
-        this.mBlurOption = option;
-        if (option != null) {
-            if (option.getBlurInDuration() <= 0) {
-                long duration = getShowAnimationDuration();
-                if (duration > 0) {
-                    option.setBlurInDuration(duration);
-                }
-            }
-            if (option.getBlurOutDuration() <= 0) {
-                long duration = getDismissAnimationDuration();
-                if (duration > 0) {
-                    option.setBlurOutDuration(duration);
-                }
-            }
-        }
-        return this;
-    }
-
-    long getShowAnimationDuration() {
-        long duration = 0;
-        if (mShowAnimation != null) {
-            duration = mShowAnimation.getDuration();
-        } else if (mShowAnimator != null) {
-            duration = getDurationFromAnimator(mShowAnimator);
-        }
-        return duration < 0 ? 500 : duration;
-    }
-
-    long getDismissAnimationDuration() {
-        long duration = 0;
-        if (mDismissAnimation != null) {
-            duration = mDismissAnimation.getDuration();
-        } else if (mDismissAnimator != null) {
-            duration = getDurationFromAnimator(mDismissAnimator);
-        }
-        return duration < 0 ? 500 : duration;
-    }
-
-    private long getDurationFromAnimator(Animator animator) {
-        if (animator == null) return -1;
-        long duration = 0;
-        if (animator instanceof AnimatorSet) {
-            AnimatorSet set = ((AnimatorSet) animator);
-            duration = set.getDuration();
-            if (duration < 0) {
-                for (Animator childAnimation : set.getChildAnimations()) {
-                    duration = Math.max(duration, childAnimation.getDuration());
-                }
-            }
-        } else {
-            duration = animator.getDuration();
-        }
-        return duration;
-    }
 
     Drawable getPopupBackground() {
         return mBackgroundDrawable;
@@ -715,7 +757,7 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         }
     }
 
-    private void setFlag(int flag, boolean added) {
+    void setFlag(int flag, boolean added) {
         if (!added) {
             this.flag &= ~flag;
         } else {
@@ -726,81 +768,100 @@ final class BasePopupHelper implements PopupTouchController, PopupWindowActionLi
         }
     }
 
-    @Override
-    public boolean onBeforeDismiss() {
-        return mTouchControllerDelegate.onBeforeDismiss();
+    boolean onDispatchKeyEvent(KeyEvent event) {
+        return popupWindow.onDispatchKeyEvent(event);
     }
 
-    @Override
-    public boolean callDismissAtOnce() {
-        return mTouchControllerDelegate.callDismissAtOnce();
+    boolean onInterceptTouchEvent(MotionEvent event) {
+        return popupWindow.onInterceptTouchEvent(event);
     }
 
-    @Override
-    public boolean onDispatchKeyEvent(KeyEvent event) {
-        return mTouchControllerDelegate.onDispatchKeyEvent(event);
+    boolean onTouchEvent(MotionEvent event) {
+        return popupWindow.onTouchEvent(event);
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
-        return mTouchControllerDelegate.onInterceptTouchEvent(event);
+    boolean onBackPressed() {
+        return popupWindow.onBackPressed();
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return mTouchControllerDelegate.onTouchEvent(event);
+    boolean onOutSideTouch() {
+        return popupWindow.onOutSideTouch();
     }
 
-    @Override
-    public boolean onBackPressed() {
-        return mTouchControllerDelegate.onBackPressed();
+    void show() {
+        if ((flag & CUSTOM_ON_UPDATE) != 0) return;
+        if (mShowAnimation == null || mShowAnimator == null) {
+            popupWindow.mDisplayAnimateView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    startShowAnimate(popupWindow.mDisplayAnimateView.getWidth(), popupWindow.mDisplayAnimateView.getHeight());
+                    popupWindow.mDisplayAnimateView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            });
+        } else {
+            startShowAnimate(popupWindow.mDisplayAnimateView.getWidth(), popupWindow.mDisplayAnimateView.getHeight());
+        }
+        if (isAutoShowInputMethod()) {
+            InputMethodUtils.showInputMethod(popupWindow.getContext());
+        }
+        handleShow();
     }
 
-    @Override
-    public boolean onOutSideTouch() {
-        return mTouchControllerDelegate.onOutSideTouch();
-    }
 
-    @Override
-    public void onShow(boolean hasAnimate) {
-        if (mActionListener != null) {
-            mActionListener.onShow(hasAnimate);
+    void dismiss(boolean animateDismiss) {
+        if (mOnDismissListener != null && !mOnDismissListener.onBeforeDismiss()) {
+            return;
+        }
+        if (popupWindow.mDisplayAnimateView == null || animateDismiss && (flag & CUSTOM_ON_ANIMATE_DISMISS) != 0) {
+            return;
+        }
+        if (isAutoShowInputMethod()) {
+            InputMethodUtils.close(popupWindow.getContext());
+        }
+        if (animateDismiss) {
+            startDismissAnimate(popupWindow.mDisplayAnimateView.getWidth(), popupWindow.mDisplayAnimateView.getHeight());
+            popupWindow.mDisplayAnimateView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    flag &= ~CUSTOM_ON_ANIMATE_DISMISS;
+                    popupWindow.originalDismiss();
+                }
+            }, Math.max(dismissDuration, 0));
+        } else {
+            popupWindow.originalDismiss();
         }
     }
 
-    @Override
-    public void onDismiss(boolean hasAnimate) {
-        if (mActionListener != null) {
-            mActionListener.onDismiss(hasAnimate);
-        }
+    void forceDismiss() {
+        if (mDismissAnimation != null) mDismissAnimation.cancel();
+        if (mDismissAnimator != null) mDismissAnimator.cancel();
+        InputMethodUtils.close(popupWindow.getContext());
+        flag &= ~CUSTOM_ON_ANIMATE_DISMISS;
+        popupWindow.originalDismiss();
+    }
+
+    void onAnchorTop() {
+    }
+
+    void onAnchorBottom() {
     }
 
     @Override
-    public void onAnchorTop() {
-        if (mLocationListener != null) {
-            mLocationListener.onAnchorTop();
-        }
-    }
-
-    @Override
-    public void onAnchorBottom() {
-        if (mLocationListener != null) {
-            mLocationListener.onAnchorBottom();
-        }
-    }
-
-    @Override
-    public void onKeyboardChange(int keyboardTop, int keyboardHeight, boolean isVisible,boolean fullScreen) {
+    public void onKeyboardChange(int keyboardTop, int keyboardHeight, boolean isVisible, boolean fullScreen) {
         if (mKeyboardStateChangeListener != null) {
-            mKeyboardStateChangeListener.onKeyboardChange(keyboardTop,keyboardHeight, isVisible,fullScreen);
+            mKeyboardStateChangeListener.onKeyboardChange(keyboardTop, keyboardHeight, isVisible, fullScreen);
         }
     }
 
-    @Override
-    public boolean onUpdate() {
+    void update(View v, boolean positionMode) {
+        if (!popupWindow.isShowing() || popupWindow.mContentView == null) return;
+        prepare(v, positionMode);
+        popupWindow.update();
+    }
+
+    void onUpdate() {
         if (mShowInfo != null) {
             prepare(mShowInfo.mAnchorView == null ? null : mShowInfo.mAnchorView.get(), mShowInfo.positionMode);
         }
-        return false;
     }
 }

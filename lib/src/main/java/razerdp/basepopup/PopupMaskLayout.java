@@ -2,6 +2,7 @@ package razerdp.basepopup;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -20,10 +21,11 @@ import razerdp.util.log.PopupLog;
  * <p>
  * 蒙层
  */
-class PopupMaskLayout extends FrameLayout {
+class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserver {
 
     private BlurImageView mBlurImageView;
     private BackgroundViewHolder mBackgroundViewHolder;
+    private BasePopupHelper mPopupHelper;
 
     private PopupMaskLayout(Context context) {
         this(context, null);
@@ -51,11 +53,13 @@ class PopupMaskLayout extends FrameLayout {
     }
 
     private void init(Context context, BasePopupHelper mHelper) {
+        this.mPopupHelper = mHelper;
         setLayoutAnimation(null);
         if (mHelper == null) {
             setBackgroundColor(Color.TRANSPARENT);
             return;
         }
+        mHelper.observerEvent(this, this);
         if (mHelper.isAllowToBlur()) {
             mBlurImageView = new BlurImageView(context);
             mBlurImageView.applyBlurOption(mHelper.getBlurOption());
@@ -71,22 +75,6 @@ class PopupMaskLayout extends FrameLayout {
         if (mBackgroundViewHolder != null) {
             mBackgroundViewHolder.addInLayout();
         }
-        mHelper.registerActionListener(new PopupWindowActionListener() {
-            @Override
-            public void onShow(boolean hasAnimate) {
-
-            }
-
-            @Override
-            public void onDismiss(boolean hasAnimate) {
-                handleDismiss(hasAnimate ? -2 : 0);
-            }
-
-            @Override
-            public boolean onUpdate() {
-                return false;
-            }
-        });
     }
 
 
@@ -166,6 +154,17 @@ class PopupMaskLayout extends FrameLayout {
             mBlurImageView.destroy();
             mBlurImageView = null;
         }
+        if (mPopupHelper != null) {
+            mPopupHelper.removeEventObserver(this);
+            mPopupHelper = null;
+        }
+    }
+
+    @Override
+    public void onEvent(Message msg) {
+        if (msg.what == BasePopupEvent.EVENT_DISMISS) {
+            handleDismiss(msg.arg1 == 1 ? -2 : 0);
+        }
     }
 
 
@@ -181,7 +180,7 @@ class PopupMaskLayout extends FrameLayout {
                 if (mHelper.isPopupFadeEnable()) {
                     Animation fadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.basepopup_fade_in);
                     if (fadeIn != null) {
-                        long fadeInTime = mHelper.getShowAnimationDuration() - 200;
+                        long fadeInTime = mHelper.showDuration - 200;
                         fadeIn.setDuration(Math.max(fadeIn.getDuration(), fadeInTime));
                         fadeIn.setFillAfter(true);
                         mBackgroundView.startAnimation(fadeIn);
@@ -214,7 +213,7 @@ class PopupMaskLayout extends FrameLayout {
                 if (mBackgroundView != null && mHelper != null && mHelper.isPopupFadeEnable()) {
                     Animation fadeOut = AnimationUtils.loadAnimation(getContext(), R.anim.basepopup_fade_out);
                     if (fadeOut != null) {
-                        long fadeDismissTime = mHelper.getDismissAnimationDuration() - 200;
+                        long fadeDismissTime = mHelper.dismissDuration - 200;
                         fadeOut.setDuration(Math.max(fadeOut.getDuration(), fadeDismissTime));
                         fadeOut.setFillAfter(true);
                         mBackgroundView.startAnimation(fadeOut);

@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.Display;
@@ -208,5 +209,15 @@ public class PopupUiUtils {
             result = context.getResources().getDimensionPixelSize(resourceId);
         }
         statusBarHeight = result;
+    }
+
+
+    public static void setBackground(View v, Drawable background) {
+        if (v == null) return;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            v.setBackground(background);
+        } else {
+            v.setBackgroundDrawable(background);
+        }
     }
 }

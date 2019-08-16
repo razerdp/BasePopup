@@ -94,7 +94,7 @@ final class PopupCompatManager {
 
 
         protected void onBeforeShowExec(BasePopupWindowProxy popupWindowProxy, Activity act) {
-            if (needListenUiVisibilityChange(act)) {
+            if (needObserverUiVisibilityChange(act)) {
                 popupWindowProxy.handleFullScreenFocusable();
             }
         }
@@ -132,7 +132,7 @@ final class PopupCompatManager {
         }
     }
 
-    private static boolean needListenUiVisibilityChange(Activity act) {
+    private static boolean needObserverUiVisibilityChange(Activity act) {
         if (act == null) return false;
         try {
             View decorView = act.getWindow().getDecorView();
