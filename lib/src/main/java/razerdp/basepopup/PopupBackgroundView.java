@@ -8,6 +8,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import razerdp.library.R;
+import razerdp.util.PopupUiUtils;
 import razerdp.util.PopupUtils;
 
 /**
@@ -43,15 +44,11 @@ class PopupBackgroundView extends View {
         }
         this.mHelper = mHelper;
         setVisibility(VISIBLE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            setBackground(mHelper.getPopupBackground());
-        } else {
-            setBackgroundDrawable(mHelper.getPopupBackground());
-        }
+        PopupUiUtils.setBackground(this, mHelper.getPopupBackground());
         if (mHelper.isPopupFadeEnable()) {
             Animation fadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.basepopup_fade_in);
             if (fadeIn != null) {
-                long fadeInTime = mHelper.getShowAnimationDuration() - 200;
+                long fadeInTime = mHelper.showDuration - 200;
                 fadeIn.setDuration(Math.max(fadeIn.getDuration(), fadeInTime));
                 fadeIn.setFillAfter(true);
                 startAnimation(fadeIn);
@@ -67,7 +64,7 @@ class PopupBackgroundView extends View {
         if (mHelper != null && mHelper.isPopupFadeEnable()) {
             Animation fadeOut = AnimationUtils.loadAnimation(getContext(), R.anim.basepopup_fade_out);
             if (fadeOut != null) {
-                long fadeDismissTime = mHelper.getDismissAnimationDuration() - 200;
+                long fadeDismissTime = mHelper.dismissDuration - 200;
                 fadeOut.setDuration(Math.max(fadeOut.getDuration(), fadeDismissTime));
                 fadeOut.setFillAfter(true);
                 startAnimation(fadeOut);
@@ -75,8 +72,8 @@ class PopupBackgroundView extends View {
         }
     }
 
-    public void update(){
-        if (mHelper!=null){
+    public void update() {
+        if (mHelper != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 setBackground(mHelper.getPopupBackground());
             } else {

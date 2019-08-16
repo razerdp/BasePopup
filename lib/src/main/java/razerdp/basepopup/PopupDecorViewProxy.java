@@ -68,7 +68,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     private void init(BasePopupHelper helper, WindowManagerProxy managerProxy) {
         mWindowManagerProxy = managerProxy;
         mHelper = helper;
-        mHelper.registerKeyboardStateChangeListener(this);
+        mHelper.mKeyboardStateChangeListener = this;
         setClipChildren(mHelper.isClipChildren());
         mMaskLayout = PopupMaskLayout.create(getContext(), mHelper);
         mFlag.flag = Flag.IDLE;
@@ -846,7 +846,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 ((ViewGroup) mMaskLayout.getParent()).removeViewInLayout(mMaskLayout);
             }
         }
-        mHelper.registerKeyboardStateChangeListener(null);
+        mHelper.mKeyboardStateChangeListener = null;
         if (mCheckAndCallAutoAnchorLocate != null) {
             removeCallbacks(mCheckAndCallAutoAnchorLocate);
             mCheckAndCallAutoAnchorLocate = null;
@@ -993,7 +993,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 mTarget.animate().cancel();
                 mTarget.animate()
                         .translationY(-offset)
-                        .setDuration(300)
+                        .setDuration(200)
                         .start();
                 PopupLog.i("onKeyboardChange", isVisible, keyboardHeight, offset);
             }
