@@ -41,7 +41,6 @@ public class DemoDialogFragmentActivity extends AppCompatActivity {
     public static class TestDialogFragment extends DialogFragment implements DialogInterface.OnKeyListener {
         @Override
         public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             super.onActivityCreated(savedInstanceState);
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(0x00000000));
             getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
@@ -68,6 +67,7 @@ public class DemoDialogFragmentActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     new SlideFromBottomPopup(getContext())
+                            .inject(TestDialogFragment.this)
                             .showPopupWindow();
                 }
             });

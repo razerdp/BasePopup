@@ -735,7 +735,12 @@ final class BasePopupHelper implements PopupKeyboardStateChangeListener, BasePop
 
     //-----------------------------------------controller-----------------------------------------
     void prepare(View v, boolean positionMode) {
-        mShowInfo = new InnerShowInfo(v, positionMode);
+        if (mShowInfo == null) {
+            mShowInfo = new InnerShowInfo(v, positionMode);
+        } else {
+            mShowInfo.mAnchorView = new WeakReference<>(v);
+            mShowInfo.positionMode = positionMode;
+        }
         if (positionMode) {
             setShowMode(BasePopupHelper.ShowMode.POSITION);
         } else {
@@ -869,7 +874,7 @@ final class BasePopupHelper implements PopupKeyboardStateChangeListener, BasePop
     void update(View v, boolean positionMode) {
         if (!popupWindow.isShowing() || popupWindow.mContentView == null) return;
         prepare(v, positionMode);
-        popupWindow.update();
+        popupWindow.mPopupWindow.update();
     }
 
     void onUpdate() {

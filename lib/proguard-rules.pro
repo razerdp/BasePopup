@@ -9,7 +9,7 @@
 
 # Add any project specific keep options here:
 
-# If your project uses WebView with JS, uncomment the following
+# If your project uses WebView inject JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
@@ -30,7 +30,7 @@
 # keep Lifecycle State and Event enums values
 -keepclassmembers class android.arch.lifecycle.Lifecycle$State { *; }
 -keepclassmembers class android.arch.lifecycle.Lifecycle$Event { *; }
-# keep methods annotated with @OnLifecycleEvent even if they seem to be unused
+# keep methods annotated inject @OnLifecycleEvent even if they seem to be unused
 # (Mostly for LiveData.LifecycleBoundObserver.onStateChange(), but who knows)
 -keepclassmembers class * {
     @android.arch.lifecycle.OnLifecycleEvent *;

@@ -40,7 +40,6 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     private int childRightMargin;
     private int childBottomMargin;
 
-    private static int statusBarHeight;
     private CheckAndCallAutoAnchorLocate mCheckAndCallAutoAnchorLocate;
     private WindowManagerProxy mWindowManagerProxy;
 
