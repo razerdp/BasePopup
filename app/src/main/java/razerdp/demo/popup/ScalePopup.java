@@ -46,7 +46,7 @@ public class ScalePopup extends BasePopupWindow implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.tx_1:
                 ToastUtils.ToastMessage(getContext(), "click tx_1");
-//                QuickPopupBuilder.with(getContext())
+//                QuickPopupBuilder.inject(getContext())
 //                        .contentView(R.layout.popup_menu)
 //                        .config(new QuickPopupConfig()
 //                                .gravity(Gravity.CENTER))

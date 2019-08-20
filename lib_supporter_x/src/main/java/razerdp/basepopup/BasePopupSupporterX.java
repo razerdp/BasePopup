@@ -1,18 +1,16 @@
 package razerdp.basepopup;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.view.View;
 
+import java.lang.ref.WeakReference;
+
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.OnLifecycleEvent;
-
-import java.lang.ref.WeakReference;
-import java.util.List;
 
 /**
  * Created by 大灯泡 on 2019/5/13
@@ -22,25 +20,21 @@ import java.util.List;
 public class BasePopupSupporterX implements BasePopupSupporter {
     @Override
     public View findDecorView(BasePopupWindow basePopupWindow, Activity activity) {
-        View result = null;
-        if (activity instanceof FragmentActivity) {
-            try {
-                FragmentActivity supportAct = (FragmentActivity) activity;
-                List<Fragment> fragments = supportAct.getSupportFragmentManager().getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof DialogFragment) {
-                        DialogFragment d = ((DialogFragment) fragment);
-                        if (d.getDialog() != null && d.getDialog().isShowing() && !d.isRemoving()) {
-                            result = d.getView();
-                            break;
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (basePopupWindow.mAttached == null) return null;
+        Object object = basePopupWindow.mAttached.get();
+        if (object instanceof DialogFragment) {
+            DialogFragment d = ((DialogFragment) object);
+            if (d.getDialog() != null && d.getDialog().isShowing() && !d.isRemoving()) {
+                return d.getView();
             }
         }
-        return result;
+        if (object instanceof Dialog) {
+            Dialog d = (Dialog) object;
+            if (d.isShowing() && d.getWindow() != null) {
+                return d.getWindow().getDecorView();
+            }
+        }
+        return null;
     }
 
     @Override
