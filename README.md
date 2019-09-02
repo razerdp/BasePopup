@@ -150,7 +150,7 @@
 ### 快速入门
 ---
 
-请参考文档：[**BasePopup手册**](https://www.kancloud.cn/razerdp/basepopup)
+请参考文档：[**BasePopup手册**](https://www.kancloud.cn/razerdp/basepopup/content)
 
 <br>
 
