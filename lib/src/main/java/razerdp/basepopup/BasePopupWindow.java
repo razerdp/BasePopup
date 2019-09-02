@@ -778,6 +778,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             mHelper.show();
             //传递了view
             if (v != null) {
+                if (v.getWindowToken() == null) {
+                    throw new IllegalArgumentException("PopupWindow弹出必须依赖拥有WindowToken的View，比如Activity下的View，如果是在PopupWindow中的View没有WindowToken，则无法弹出");
+                }
                 if (mHelper.isShowAsDropDown()) {
                     mPopupWindow.showAsDropDownProxy(v, 0, 0, getPopupGravity());
                 } else {
