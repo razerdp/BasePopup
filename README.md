@@ -250,7 +250,7 @@
 
 |支付宝 |
 | ---- |
-| ![](https://github.com/razerdp/BasePopup/blob/master/img/alipay.jpg) |
+| ![](https://github.com/razerdp/BasePopup/blob/master/img/alipay.png) |
 
 <br>
 
