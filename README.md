@@ -248,15 +248,17 @@
 
 ### 打赏（看在我那么努力维护的份上。。。给个零食呗~）
 
-| 微信 |支付宝 | 
-| ---- | ---- | 
-| ![](https://github.com/razerdp/FriendCircle/blob/master/wechat.png)      | ![](https://github.com/razerdp/FriendCircle/blob/master/alipay.png) |
+|支付宝 |
+| ---- |
+| ![](https://github.com/razerdp/BasePopup/blob/master/img/alipay.jpg) |
 
 <br>
 
 ### 交流群
 
 因QQ没时间管理，因此解散，同时开通微信群，主要用于交流和BasePopup的反馈，为了保证微信群的质量，因此只有打赏了之后才能进群~
+
+**因近期发现无法回复付款方，因此如果您已经微信支付打赏并需要进群，请重新再扫一遍支付宝并支付，我会退款给您并联系您~**
 
 
 <br>
