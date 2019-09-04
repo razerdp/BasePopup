@@ -16,7 +16,7 @@ import android.view.animation.Animation;
 
 import java.util.List;
 
-import razerdp.basepopup.BasePopupSupporterManager;
+import razerdp.basepopup.BasePopupComponentManager;
 
 /**
  * Created by 大灯泡 on 2018/8/15.
@@ -50,7 +50,8 @@ public class PopupUtils {
     }
 
 
-    public static Activity scanForActivity(Context from, final int limit) {
+    public static Activity getActivity(Context from) {
+        final int limit = 20;
         Context result = from;
         if (result instanceof Activity) {
             return (Activity) result;
@@ -62,12 +63,12 @@ public class PopupUtils {
             }
             if (tryCount > limit) {
                 //break endless loop
-                return BasePopupSupporterManager.getInstance().getTopActivity();
+                return BasePopupComponentManager.getInstance().getTopActivity();
             }
             result = ((ContextWrapper) result).getBaseContext();
             tryCount++;
         }
-        return BasePopupSupporterManager.getInstance().getTopActivity();
+        return BasePopupComponentManager.getInstance().getTopActivity();
     }
 
     public static float range(float value, float min, float max) {

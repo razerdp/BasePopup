@@ -302,6 +302,7 @@ import razerdp.util.log.PopupLog;
  * <ul>
  * <li>2018/05/14 ： 2.0版本重构</li>
  * <li>2018/11/29 ： 2.1版本二次重构</li>
+ * <li>2019/09 ： 2.2.2版本三次重构</li>
  * </ul>
  * </p>
  * 頂頂頂頂頂頂頂　頂頂頂頂頂頂頂頂頂頂頂
@@ -809,7 +810,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private View findDecorView(Activity activity) {
         View result = onFindDecorView(activity);
         if (result == null) {
-            result = BasePopupSupporterManager.getInstance().proxy.findDecorView(this, activity);
+            result = BasePopupComponentManager.getInstance().proxy.findDecorView(this, activity);
         }
         return result == null ? activity.findViewById(android.R.id.content) : result;
     }
@@ -1286,7 +1287,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @return 返回对应的context。如果为空，则返回{@code null}
      */
     public Activity getContext() {
-        return mContext == null ? null : PopupUtils.scanForActivity(mContext.get(), 15);
+        return mContext == null ? null : PopupUtils.getActivity(mContext.get());
     }
 
     /**
@@ -1695,14 +1696,14 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 绑定lifecycle
      */
     public BasePopupWindow attachLifeCycle(Object owner) {
-        return BasePopupSupporterManager.getInstance().proxy.attachLifeCycle(this, owner);
+        return BasePopupComponentManager.getInstance().proxy.attachLifeCycle(this, owner);
     }
 
     /**
      * 解绑lifecycle
      */
     public BasePopupWindow removeLifeCycle(Object owner) {
-        return BasePopupSupporterManager.getInstance().proxy.removeLifeCycle(this, owner);
+        return BasePopupComponentManager.getInstance().proxy.removeLifeCycle(this, owner);
     }
 
     //endregion
@@ -1981,14 +1982,14 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 获取屏幕高度(px)
      */
     public int getScreenHeight() {
-        return PopupUiUtils.getScreenHeightCompat(getContext());
+        return PopupUiUtils.getScreenHeightCompat();
     }
 
     /**
      * 获取屏幕宽度(px)
      */
     public int getScreenWidth() {
-        return PopupUiUtils.getScreenWidthCompat(getContext());
+        return PopupUiUtils.getScreenWidthCompat();
     }
 
     //endregion
@@ -2097,7 +2098,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             rect.setEmpty();
             mTarget.getWindowVisibleDisplayFrame(rect);
             if (!fullScreen) {
-                rect.offset(0, -PopupUiUtils.getStatusBarHeight(mTarget.getContext()));
+                rect.offset(0, -PopupUiUtils.getStatusBarHeight());
             }
 
             int displayHeight = rect.height();

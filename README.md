@@ -176,6 +176,9 @@
     * **【Candy】190816**
       * 考虑到很多用户提出全面屏会有蒙层无法填充的问题，因此增加`setMaskLayoutWidth`和`setMaskLayoutHeight`方法，该方法允许您自定义蒙层的高度
       * 开始重构BasePopupWindow，本次重构将会解决遗留问题同时缩减冗余代码，并提高代码可读性
+    * **【Candy】190904**
+      * 重构屏幕宽高获取逻辑
+      * 修改supporter名字为component
 
 * **【Release】2.2.1**(2019/06/24)
   * 支持Service或者非ActivityContext里弹窗

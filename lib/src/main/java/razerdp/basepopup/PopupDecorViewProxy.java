@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -103,14 +104,14 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             });
         } else {
             setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-            Activity act = PopupUtils.scanForActivity(getContext(), 15);
+            Activity act = PopupUtils.getActivity(getContext());
             if (act == null) return;
-            checkAndClearDecorMaskLayout(act);
+            clearDecorMaskLayout(act);
             addMaskToDecor(act.getWindow());
         }
     }
 
-    private void checkAndClearDecorMaskLayout(Activity act) {
+    private void clearDecorMaskLayout(Activity act) {
         if (act == null || act.getWindow() == null) {
             return;
         }
@@ -240,7 +241,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 measureWrappedDecorView(child, widthMeasureSpec, heightMeasureSpec);
             }
         }
-        setMeasuredDimension(getScreenWidth(), getScreenHeight());
+        setMeasuredDimension(getAvaliableWidth(), getAvaliableHeight());
     }
 
     private void measureWithOutIntercept(int widthMeasureSpec, int heightMeasureSpec) {
@@ -299,12 +300,12 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 case Gravity.RIGHT:
                     restWidth = isAlignAnchorMode ?
                             mHelper.getAnchorX() + mHelper.getAnchorWidth() :
-                            getScreenWidth() - (mHelper.getAnchorX() + mHelper.getAnchorWidth());
+                            getAvaliableWidth() - (mHelper.getAnchorX() + mHelper.getAnchorWidth());
                     break;
                 case Gravity.LEFT:
                 default:
                     restWidth = isAlignAnchorMode ?
-                            getScreenWidth() - mHelper.getAnchorX() :
+                            getAvaliableWidth() - mHelper.getAnchorX() :
                             mHelper.getAnchorX();
                     break;
             }
@@ -341,7 +342,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
             switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
                 case Gravity.TOP:
                     restHeight = isAlignAnchorMode ?
-                            getScreenHeight() - mHelper.getAnchorY() :
+                            getAvaliableHeight() - mHelper.getAnchorY() :
                             mHelper.getAnchorY();
 
 
@@ -350,15 +351,15 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                                     || (restHeight <= (heightSize >> 2)))) {
                         //剩余空间不足测量高度1/4，同时是autoLocated，则测量其反方向(align模式下不需要)
                         restHeight = isAlignAnchorMode ?
-                                getScreenHeight() - mHelper.getAnchorY() :
-                                getScreenHeight() - (mHelper.getAnchorY() + mHelper.getAnchorHeight());
+                                getAvaliableHeight() - mHelper.getAnchorY() :
+                                getAvaliableHeight() - (mHelper.getAnchorY() + mHelper.getAnchorHeight());
                     }
                     break;
                 case Gravity.BOTTOM:
                 default:
                     restHeight = isAlignAnchorMode ?
                             mHelper.getAnchorY() + mHelper.getAnchorHeight() :
-                            getScreenHeight() - (mHelper.getAnchorY() + mHelper.getAnchorHeight());
+                            getAvaliableHeight() - (mHelper.getAnchorY() + mHelper.getAnchorHeight());
 
                     if (mHelper.isAutoLocatePopup() &&
                             ((mHelper.getMinHeight() > 0 && restHeight < mHelper.getMinHeight())
@@ -402,11 +403,11 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     }
 
     private int getMaskWidthSpec() {
-        return mHelper.maskWidth > 0 ? MeasureSpec.makeMeasureSpec(mHelper.maskWidth, MeasureSpec.EXACTLY) : MeasureSpec.makeMeasureSpec(getScreenWidth(), MeasureSpec.EXACTLY);
+        return mHelper.maskWidth > 0 ? MeasureSpec.makeMeasureSpec(mHelper.maskWidth, MeasureSpec.EXACTLY) : MeasureSpec.makeMeasureSpec(getAvaliableWidth(), MeasureSpec.EXACTLY);
     }
 
     private int getMaskHeightSpec() {
-        return mHelper.maskHeight > 0 ? MeasureSpec.makeMeasureSpec(mHelper.maskHeight, MeasureSpec.EXACTLY) : MeasureSpec.makeMeasureSpec(getScreenHeight(), MeasureSpec.EXACTLY);
+        return mHelper.maskHeight > 0 ? MeasureSpec.makeMeasureSpec(mHelper.maskHeight, MeasureSpec.EXACTLY) : MeasureSpec.makeMeasureSpec(getAvaliableHeight(), MeasureSpec.EXACTLY);
     }
 
     @Override
@@ -560,7 +561,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 childTop = childTop + childTopMargin - childBottomMargin;
 
                 if (mHelper.isAutoLocatePopup() && mHelper.isClipToScreen()) {
-                    int tBottom = childTop + offsetY + (mHelper.isFullScreen() ? 0 : -PopupUiUtils.getStatusBarHeight(getContext()));
+                    int tBottom = childTop + offsetY + (mHelper.isFullScreen() ? 0 : -PopupUiUtils.getStatusBarHeight());
                     int restHeight;
                     switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
                         case Gravity.TOP:
@@ -600,7 +601,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 }
 
                 int left = childLeft + offsetX;
-                int top = childTop + offsetY + (mHelper.isFullScreen() ? 0 : -PopupUiUtils.getStatusBarHeight(getContext()));
+                int top = childTop + offsetY + (mHelper.isFullScreen() ? 0 : -PopupUiUtils.getStatusBarHeight());
                 int right = left + width;
                 int bottom = top + height;
 
@@ -683,12 +684,12 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 if (mHelper.isShowAsDropDown()) {
                     offsetX += isAlignAnchorMode ? mHelper.getAnchorX() + mHelper.getAnchorWidth() - getMeasuredWidth() : mHelper.getAnchorX() + mHelper.getAnchorWidth();
                 } else {
-                    offsetX += getScreenWidth() - getMeasuredWidth();
+                    offsetX += getAvaliableWidth() - getMeasuredWidth();
                 }
                 break;
             case Gravity.CENTER_HORIZONTAL:
                 offsetX += mHelper.isShowAsDropDown() ? mHelper.getAnchorX() + ((mHelper.getAnchorWidth() - getMeasuredWidth()) >> 1)
-                        : (getScreenWidth() - getMeasuredWidth()) >> 1;
+                        : (getAvaliableWidth() - getMeasuredWidth()) >> 1;
                 break;
             default:
                 break;
@@ -705,11 +706,11 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 if (mHelper.isShowAsDropDown()) {
                     offsetY += isAlignAnchorMode ? mHelper.getAnchorY() + mHelper.getAnchorHeight() - getMeasuredHeight() : mHelper.getAnchorY() + mHelper.getAnchorHeight();
                 } else {
-                    offsetY += getScreenHeight() - getMeasuredHeight();
+                    offsetY += getAvaliableHeight() - getMeasuredHeight();
                 }
                 break;
             case Gravity.CENTER_VERTICAL:
-                offsetY += mHelper.isShowAsDropDown() ? mHelper.getAnchorY() + ((mHelper.getAnchorHeight() - getMeasuredHeight()) >> 1) : (getScreenHeight() - getMeasuredHeight()) >> 1;
+                offsetY += mHelper.isShowAsDropDown() ? mHelper.getAnchorY() + ((mHelper.getAnchorHeight() - getMeasuredHeight()) >> 1) : (getAvaliableHeight() - getMeasuredHeight()) >> 1;
                 break;
             default:
                 break;
@@ -717,8 +718,8 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         offsetY = offsetY + childTopMargin - childBottomMargin;
 
         PopupLog.i("fitWindowParams  ::  " +
-                "{\n\t\tscreenWidth = " + getScreenWidth() +
-                "\n\t\tscreenHeight = " + getScreenHeight() +
+                "{\n\t\tscreenWidth = " + getAvaliableWidth() +
+                "\n\t\tscreenHeight = " + getAvaliableHeight() +
                 "\n\t\tanchorX = " + mHelper.getAnchorX() +
                 "\n\t\tanchorY = " + mHelper.getAnchorY() +
                 "\n\t\tviewWidth = " + getMeasuredWidth() +
@@ -728,12 +729,12 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 "\n}");
 
         if (mHelper.isAutoLocatePopup() && mHelper.isClipToScreen()) {
-            int tBottom = offsetY + (mHelper.isFullScreen() ? 0 : -PopupUiUtils.getStatusBarHeight(getContext()));
+            int tBottom = offsetY + (mHelper.isFullScreen() ? 0 : -PopupUiUtils.getStatusBarHeight());
             int restHeight;
             switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
                 case Gravity.TOP:
                     restHeight = isAlignAnchorMode ?
-                            getScreenHeight() - mHelper.getAnchorY() :
+                            getAvaliableHeight() - mHelper.getAnchorY() :
                             mHelper.getAnchorY();
                     if (getMeasuredHeight() > restHeight) {
                         //需要移位
@@ -745,7 +746,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                 default:
                     restHeight = isAlignAnchorMode ?
                             mHelper.getAnchorY() + mHelper.getAnchorHeight() :
-                            getScreenHeight() - (mHelper.getAnchorY() + mHelper.getAnchorHeight());
+                            getAvaliableHeight() - (mHelper.getAnchorY() + mHelper.getAnchorHeight());
 
                     if (getMeasuredHeight() > restHeight) {
                         //需要移位
@@ -833,16 +834,26 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
         return super.onTouchEvent(event);
     }
 
-    int getScreenWidth() {
-        int screenWidth = PopupUiUtils.getScreenWidthCompat(getContext());
-        PopupLog.i("autoSize  width = " + screenWidth);
-        return screenWidth;
+    int getAvaliableWidth() {
+        int result = PopupUiUtils.getScreenWidthCompat();
+        if (PopupUiUtils.hasNavigationBar(mHelper.popupWindow.getContext()) &&
+                PopupUiUtils.getScreenRotation() == Surface.ROTATION_90) {
+            result -= PopupUiUtils.getNavigationBarHeight();
+            PopupLog.i("右旋转+nav");
+        }
+        PopupLog.i(result);
+        return result;
     }
 
-    int getScreenHeight() {
-        int screenHeight = PopupUiUtils.getScreenHeightCompat(getContext());
-        PopupLog.i("autoSize  height = " + screenHeight);
-        return screenHeight;
+    int getAvaliableHeight() {
+        int result = PopupUiUtils.getScreenHeightCompat();
+        if (PopupUiUtils.hasNavigationBar(mHelper.popupWindow.getContext()) &&
+                PopupUiUtils.getScreenRotation() == Surface.ROTATION_0) {
+            result -= PopupUiUtils.getNavigationBarHeight();
+            PopupLog.i("非旋转+nav");
+        }
+        PopupLog.i(result);
+        return result;
     }
 
 
@@ -940,7 +951,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     @Override
     public void onKeyboardChange(int keyboardTop, int keyboardHeight, boolean isVisible, boolean fullScreen) {
         //横屏不需要适配
-        if (PopupUiUtils.getScreenOrientation(getContext()) == Configuration.ORIENTATION_LANDSCAPE)
+        if (PopupUiUtils.getScreenOrientation() == Configuration.ORIENTATION_LANDSCAPE)
             return;
         if (mHelper.getSoftInputMode() == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN ||
                 mHelper.getSoftInputMode() == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE) {
@@ -954,7 +965,7 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
                     : 0;
             //因为计算keyboardtop的时候有考虑到statusbar，这里需要跟计算逻辑保持同步
             if (!fullScreen) {
-                y -= PopupUiUtils.getStatusBarHeight(getContext());
+                y -= PopupUiUtils.getStatusBarHeight();
             }
 
             if (isVisible && keyboardTop > 0) {
