@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -30,48 +29,12 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     private boolean oldFocusable = true;
     private boolean isHandledFullScreen;
 
-    public BasePopupWindowProxy(Context context, BasePopupHelper helper) {
-        super(context);
-        this.mHelper = helper;
-        init(context);
-    }
-
-    public BasePopupWindowProxy(Context context, AttributeSet attrs, BasePopupHelper helper) {
-        super(context, attrs);
-        this.mHelper = helper;
-        init(context);
-    }
-
-    public BasePopupWindowProxy(Context context, AttributeSet attrs, int defStyleAttr, BasePopupHelper helper) {
-        super(context, attrs, defStyleAttr);
-        this.mHelper = helper;
-        init(context);
-    }
-
-    public BasePopupWindowProxy(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes, BasePopupHelper helper) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        this.mHelper = helper;
-        init(context);
-    }
-
-    public BasePopupWindowProxy(View contentView, BasePopupHelper helper) {
-        super(contentView);
-        this.mHelper = helper;
-        init(contentView.getContext());
-    }
-
-
-    public BasePopupWindowProxy(View contentView, int width, int height, BasePopupHelper helper) {
+    BasePopupWindowProxy(View contentView, int width, int height, BasePopupHelper helper) {
         super(contentView, width, height);
         this.mHelper = helper;
         init(contentView.getContext());
     }
 
-    public BasePopupWindowProxy(View contentView, int width, int height, boolean focusable, BasePopupHelper helper) {
-        super(contentView, width, height, focusable);
-        this.mHelper = helper;
-        init(contentView.getContext());
-    }
 
     void attachPopupHelper(BasePopupHelper mHelper) {
         if (mWindowManagerProxy == null) {
@@ -131,7 +94,7 @@ abstract class BasePopupWindowProxy extends PopupWindow {
      * @author: razerdp optimize on 2018/4/25
      */
     Activity scanForActivity(Context from) {
-        return PopupUtils.scanForActivity(from, MAX_SCAN_ACTIVITY_COUNT);
+        return PopupUtils.getActivity(from);
     }
 
 
