@@ -332,6 +332,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public static final int FLAG_KEYBOARD_ALIGN_TO_VIEW = BasePopupFlag.KEYBOARD_ALIGN_TO_VIEW;
     public static final int FLAG_KEYBOARD_ALIGN_TO_ROOT = BasePopupFlag.KEYBOARD_ALIGN_TO_ROOT;
     public static final int FLAG_KEYBOARD_IGNORE_OVER = BasePopupFlag.KEYBOARD_IGNORE_OVER_KEYBOARD;
+    public static final int FLAG_KEYBOARD_ANIMATE_ALIGN = BasePopupFlag.KEYBOARD_ANIMATE_ALIGN;
+
 
     public enum GravityMode {
         RELATIVE_TO_ANCHOR,
@@ -924,6 +926,45 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     /**
      * <p>
+     * 设置PopupWindow适配输入法的适配模式
+     * </p>
+     *
+     * @param flag <ul>
+     *             <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_ROOT}，键盘适配作用于整个popup content view</li>
+     *             <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_VIEW}，键盘适配作用于指定的view，需要传入viewid</li>
+     *             <li>{@link BasePopupWindow#FLAG_KEYBOARD_IGNORE_OVER}，键盘适配仅作用于无法完整显示的情况</li>
+     *             <li>{@link BasePopupWindow#FLAG_KEYBOARD_ANIMATE_ALIGN}，键盘是否动画适配</li>
+     *             </ul>
+     */
+    public BasePopupWindow setAdjustInputMode(int flag) {
+        return setAdjustInputMode(0, flag);
+    }
+
+    /**
+     * <p>
+     * 设置PopupWindow适配输入法的适配模式
+     * </p>
+     *
+     * @param viewId keyboard对齐的View id
+     * @param flag   <ul>
+     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_ROOT}，键盘适配作用于整个popup content view</li>
+     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_VIEW}，键盘适配作用于指定的view，需要传入viewid</li>
+     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_IGNORE_OVER}，键盘适配仅作用于无法完整显示的情况</li>
+     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_ANIMATE_ALIGN}，键盘是否动画适配</li>
+     *               </ul>
+     */
+    public BasePopupWindow setAdjustInputMode(int viewId, int flag) {
+        mHelper.keybaordAlignViewId = viewId;
+        mHelper.setFlag(FLAG_KEYBOARD_ALIGN_TO_ROOT
+                | FLAG_KEYBOARD_ALIGN_TO_VIEW
+                | FLAG_KEYBOARD_IGNORE_OVER
+                | FLAG_KEYBOARD_ANIMATE_ALIGN, false);
+        mHelper.setFlag(flag, true);
+        return this;
+    }
+
+    /**
+     * <p>
      * PopupWindow在展示的时候自动打开输入法
      * </p>
      */
@@ -939,7 +980,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public BasePopupWindow setAutoShowInputMethod(EditText editText, boolean autoShow) {
         mHelper.mAutoShowInputEdittext = editText;
-        return setAutoLocatePopup(autoShow);
+        return setAutoShowInputMethod(autoShow);
     }
 
     /**

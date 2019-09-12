@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -31,6 +30,7 @@ public class InputPopup extends BasePopupWindow implements View.OnClickListener 
 
         setClipChildren(false);
         setAutoShowInputMethod(mInputEdittext, true);
+        setAdjustInputMode(FLAG_KEYBOARD_ALIGN_TO_ROOT | FLAG_KEYBOARD_ANIMATE_ALIGN);
         setPopupGravity(Gravity.CENTER);
         bindEvent();
     }

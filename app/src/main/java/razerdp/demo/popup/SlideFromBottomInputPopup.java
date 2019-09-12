@@ -27,6 +27,7 @@ public class SlideFromBottomInputPopup extends BasePopupWindow {
             }
         });
         setAutoShowInputMethod(mEditText, true);
+        setAdjustInputMode(FLAG_KEYBOARD_ALIGN_TO_ROOT | FLAG_KEYBOARD_ANIMATE_ALIGN);
         setPopupGravity(Gravity.BOTTOM);
     }
 
