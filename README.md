@@ -179,6 +179,9 @@
     * **【Candy】190904**
       * 重构屏幕宽高获取逻辑
       * 修改supporter名字为component
+    * **【Candy】190912**
+      * 重构键盘逻辑，现在键盘对齐支持选择模式了~
+      * 相关文档请查阅文档 [**键盘（输入法）**](https://www.kancloud.cn/razerdp/basepopup/1277045)
 
 * **【Release】2.2.1**(2019/06/24)
   * 支持Service或者非ActivityContext里弹窗

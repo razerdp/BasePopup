@@ -982,6 +982,7 @@ final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.On
             }
 
             if (mHelper.isOutSideTouchable()) {
+                if ((mFlag.flag & Flag.FLAG_WINDOW_PARAMS_FIT_REQUEST) != 0) return;
                 //移动window
                 final WindowManager.LayoutParams p = PopupUtils.cast(getLayoutParams(), WindowManager.LayoutParams.class);
                 if (p != null) {
@@ -1001,7 +1002,7 @@ final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.On
             }
             if (isVisible) {
                 lastKeyboardBounds.set(keyboardBounds);
-            }else {
+            } else {
                 lastKeyboardBounds.setEmpty();
             }
         }
@@ -1014,8 +1015,13 @@ final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.On
         if (valueAnimator != null) {
             valueAnimator.cancel();
         }
-        valueAnimator = ValueAnimator.ofInt(isVisible ? p.y + offset : originY);
-        valueAnimator.setDuration(200);
+        if (isVisible) {
+            valueAnimator = ValueAnimator.ofInt(p.y, p.y + offset);
+            valueAnimator.setDuration(300);
+        } else {
+            valueAnimator = ValueAnimator.ofInt(p.y, originY);
+            valueAnimator.setDuration(200);
+        }
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -1029,7 +1035,7 @@ final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.On
     private void animateTranslate(View target, boolean isVisible, int offset) {
         target.animate().cancel();
         if (isVisible) {
-            target.animate().translationYBy(offset).setDuration(200).start();
+            target.animate().translationYBy(offset).setDuration(300).start();
         } else {
             target.animate().translationY(0).setDuration(200).start();
         }
