@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.github.razerdp</groupId>
+
+    <parent>
+        <groupId>com.github.razerdp</groupId>
+        <artifactId>BasePopup</artifactId>
+        <version>2.2.1</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
     <artifactId>BasePopup</artifactId>
-    <version>2.2.0</version>
-    <packaging>aar</packaging>
     <name>BasePopup</name>
+
+    <modules>
+        <module>lib</module>
+        <module>lib_supporter</module>
+        <module>lib_supporter_lifecycle</module>
+        <module>lib_supporter_x</module>
+        <module>app</module>
+    </modules>
+
     <description>Android下打造通用便捷的PopupWindow</description>
     <url>https://github.com/razerdp/BasePopup</url>
     <licenses>
