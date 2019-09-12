@@ -5,13 +5,12 @@
 
     <parent>
         <groupId>com.github.razerdp</groupId>
-        <artifactId>parent</artifactId>
+        <artifactId>BasePopup-compat-support</artifactId>
         <version>2.2.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>BasePopup-compat-support</artifactId>
-    <packaging>pom</packaging>
     <name>BasePopup-compat-support</name>
 
     <description>Android下打造通用便捷的PopupWindow</description>
