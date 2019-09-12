@@ -119,4 +119,17 @@ public class PopupUtils {
         }
     }
 
+    public static <I, O> O cast(I input, Class<O> outClass, O... defaultValue) {
+        if (input != null && outClass.isAssignableFrom(input.getClass())) {
+            try {
+                return outClass.cast(input);
+            } catch (ClassCastException e) {
+            }
+        }
+        if (defaultValue != null && defaultValue.length > 0) {
+            return defaultValue[0];
+        }
+        return null;
+
+    }
 }

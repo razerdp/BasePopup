@@ -3,7 +3,6 @@ package razerdp.util;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
@@ -82,38 +81,49 @@ public class InputMethodUtils {
         }
     }
 
-    public static void observerKeyboardVisibleChange(final View decorView, final OnKeyboardStateChangeListener listener) {
-        if (decorView == null || listener == null) return;
-        decorView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            int preKeyboardHeight = -1;
+    public static ViewTreeObserver.OnGlobalLayoutListener observerKeyboardWithView(final View target) {
+        if (target == null) return null;
+        Activity act = PopupUtils.getActivity(target.getContext());
+        if (act == null) return null;
+        return observerKeyboardChange(act, new OnKeyboardChangeListener() {
+            private int[] location = {0, 0};
+
+            @Override
+            public void onKeyboardChange(Rect keyboardBounds, boolean isVisible) {
+                if (isVisible) {
+                    target.getLocationOnScreen(location);
+                    int offset = keyboardBounds.top - (location[1] + target.getHeight());
+                    target.setTranslationY(target.getTranslationY() + offset);
+                } else {
+                    target.animate().translationY(0).setDuration(300).setStartDelay(100).start();
+                }
+            }
+        });
+    }
+
+    public static ViewTreeObserver.OnGlobalLayoutListener observerKeyboardChange(Activity act, final OnKeyboardChangeListener onKeyboardChangeListener) {
+        if (act == null || onKeyboardChangeListener == null) return null;
+        final View decor = act.getWindow().getDecorView();
+        ViewTreeObserver.OnGlobalLayoutListener layoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
             Rect rect = new Rect();
-            boolean preVisible = false;
+            Rect keyboardRect = new Rect();
 
             @Override
             public void onGlobalLayout() {
-                rect.setEmpty();
-                decorView.getWindowVisibleDisplayFrame(rect);
-                int displayHeight = rect.height();
-                int windowHeight = decorView.getHeight();
-                int keyboardHeight = windowHeight - displayHeight;
-                if (preKeyboardHeight != keyboardHeight) {
-                    //判定可见区域与原来的window区域占比是否小于0.75,小于意味着键盘弹出来了。
-                    boolean isVisible = (displayHeight * 1.0f / windowHeight * 1.0f) < 0.75f;
-                    if (isVisible != preVisible) {
-                        listener.onKeyboardChange(keyboardHeight, isVisible);
-                        preVisible = isVisible;
-                    }
-                }
-                preKeyboardHeight = keyboardHeight;
+                decor.getWindowVisibleDisplayFrame(rect);
+                int screenHeight = decor.getRootView().getHeight();
+                keyboardRect.set(rect.left, rect.bottom, rect.right, screenHeight);
+                boolean isVisible = keyboardRect.height() > 0;
+                onKeyboardChangeListener.onKeyboardChange(keyboardRect, isVisible);
 
             }
-        });
-
+        };
+        decor.getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
+        return layoutListener;
     }
 
-
     //=============================================================interface
-    public interface OnKeyboardStateChangeListener {
-        void onKeyboardChange(int keyboardHeight, boolean isVisible);
+    public interface OnKeyboardChangeListener {
+        void onKeyboardChange(Rect keyboardBounds, boolean isVisible);
     }
 }
