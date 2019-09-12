@@ -229,7 +229,7 @@ import android.widget.PopupWindow;
 import java.lang.ref.WeakReference;
 
 import razerdp.blur.PopupBlurOption;
-import razerdp.interceptor.PopupWindowEventInterceptor;
+import razerdp.util.InputMethodUtils;
 import razerdp.util.PopupUiUtils;
 import razerdp.util.PopupUtils;
 import razerdp.util.SimpleAnimationUtils;
@@ -329,6 +329,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public static int DEFAULT_BACKGROUND_COLOR = Color.parseColor("#8f000000");
     public static boolean DEBUG = false;
 
+    public static final int FLAG_KEYBOARD_ALIGN_TO_VIEW = BasePopupFlag.KEYBOARD_ALIGN_TO_VIEW;
+    public static final int FLAG_KEYBOARD_ALIGN_TO_ROOT = BasePopupFlag.KEYBOARD_ALIGN_TO_ROOT;
+    public static final int FLAG_KEYBOARD_IGNORE_OVER = BasePopupFlag.KEYBOARD_IGNORE_OVER_KEYBOARD;
+
     public enum GravityMode {
         RELATIVE_TO_ANCHOR,
         ALIGN_TO_ANCHOR_SIDE
@@ -340,7 +344,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     private BasePopupHelper mHelper;
     private WeakReference<Context> mContext;
-    private PopupWindowEventInterceptor mEventInterceptor;
 
     //元素定义
     PopupWindowProxy mPopupWindow;
@@ -355,7 +358,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     //重试次数
     private int retryCounter;
 
-    private GlobalLayoutListenerWrapper mGlobalLayoutListenerWrapper;
+    private ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener;
     private LinkedViewLayoutChangeListenerWrapper mLinkedViewLayoutChangeListenerWrapper;
     private WeakReference<View> mLinkedViewRef;
     private DelayInitCached mDelayInitCached;
@@ -443,12 +446,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     private void preMeasurePopupView(int w, int h) {
         if (mContentView != null) {
-            boolean breakPreMeasure = mEventInterceptor != null && mEventInterceptor.onPreMeasurePopupView(this, mContentView, w, h);
-            if (!breakPreMeasure) {
-                int measureWidth = View.MeasureSpec.makeMeasureSpec(w, w == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
-                int measureHeight = View.MeasureSpec.makeMeasureSpec(h, h == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
-                mContentView.measure(measureWidth, measureHeight);
-            }
+            int measureWidth = View.MeasureSpec.makeMeasureSpec(w, w == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
+            int measureHeight = View.MeasureSpec.makeMeasureSpec(h, h == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
+            mContentView.measure(measureWidth, measureHeight);
             mHelper.setPreMeasureWidth(mContentView.getMeasuredWidth())
                     .setPreMeasureHeight(mContentView.getMeasuredHeight());
             mContentView.setFocusableInTouchMode(true);
@@ -766,14 +766,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private void tryToShowPopup(View v, boolean positionMode) {
         addListener();
         mHelper.prepare(v, positionMode);
-        if (mEventInterceptor != null && mEventInterceptor.onTryToShowPopup(this,
-                mPopupWindow,
-                v,
-                mHelper.getPopupGravity(),
-                mHelper.getOffsetX(),
-                mHelper.getOffsetY())) {
-            return;
-        }
         try {
             if (isShowing()) return;
             mHelper.show();
@@ -829,21 +821,18 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     private void addGlobalListener() {
-        if (mGlobalLayoutListenerWrapper != null && mGlobalLayoutListenerWrapper.isAttached()) {
+        if (mGlobalLayoutListener != null) {
             return;
         }
+
         Activity activity = getContext();
         if (activity == null) return;
-
-        mGlobalLayoutListenerWrapper = new GlobalLayoutListenerWrapper(((ViewGroup) activity.getWindow().getDecorView()).getChildAt(0),
-                (activity.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0,
-                new OnKeyboardStateChangeListener() {
-                    @Override
-                    public void onKeyboardChange(int keyboardTop, int keyboardHeight, boolean isVisible, boolean fullScreen) {
-                        mHelper.onKeyboardChange(keyboardTop, keyboardHeight, isVisible, fullScreen);
-                    }
-                });
-        mGlobalLayoutListenerWrapper.addSelf();
+        mGlobalLayoutListener = InputMethodUtils.observerKeyboardChange(activity, new InputMethodUtils.OnKeyboardChangeListener() {
+            @Override
+            public void onKeyboardChange(Rect keyboardBounds, boolean isVisible) {
+                mHelper.onKeyboardChange(keyboardBounds, isVisible);
+            }
+        });
     }
 
     private void addLinkedLayoutListener() {
@@ -854,8 +843,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     private void removeGlobalListener() {
-        if (mGlobalLayoutListenerWrapper != null) {
-            mGlobalLayoutListenerWrapper.remove();
+        if (mGlobalLayoutListener != null) {
+            Activity activity = getContext();
+            if (activity == null) return;
+            activity.getWindow().getDecorView().getViewTreeObserver().removeOnGlobalLayoutListener(mGlobalLayoutListener);
+            mGlobalLayoutListener = null;
         }
     }
 
@@ -1710,18 +1702,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     //region ------------------------------------------状态控制-----------------------------------------------
 
-    /**
-     * 添加BasePopupWindow事件拦截器
-     *
-     * @param eventInterceptor
-     */
-    public <P extends BasePopupWindow> BasePopupWindow setEventInterceptor(PopupWindowEventInterceptor<P> eventInterceptor) {
-        mEventInterceptor = eventInterceptor;
-        mHelper.mEventInterceptor = eventInterceptor;
-        return this;
-    }
-
-
     void originalDismiss() {
         try {
             mHelper.handleDismiss();
@@ -2052,79 +2032,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     //endregion
 
     //region ------------------------------------------InnerClass-----------------------------------------------
-    private static class GlobalLayoutListenerWrapper implements ViewTreeObserver.OnGlobalLayoutListener {
-
-        private WeakReference<View> target;
-        private OnKeyboardStateChangeListener mListener;
-        int preKeyboardHeight = -1;
-        Rect rect = new Rect();
-        boolean preVisible = false;
-        private volatile boolean isAttached;
-        private boolean fullScreen;
-
-        GlobalLayoutListenerWrapper(View target, boolean fullScreen, OnKeyboardStateChangeListener listener) {
-            this.target = new WeakReference<>(target);
-            this.fullScreen = fullScreen;
-            this.mListener = listener;
-            isAttached = false;
-        }
-
-        boolean isAttached() {
-            return isAttached;
-        }
-
-        void addSelf() {
-            if (getTarget() != null && !isAttached) {
-                getTarget().getViewTreeObserver().addOnGlobalLayoutListener(this);
-                isAttached = true;
-            }
-        }
-
-        void remove() {
-            if (getTarget() != null && isAttached) {
-                getTarget().getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                isAttached = false;
-            }
-        }
-
-        View getTarget() {
-            return target == null ? null : target.get();
-        }
-
-        @Override
-        public void onGlobalLayout() {
-            View mTarget = getTarget();
-            if (mTarget == null) return;
-            rect.setEmpty();
-            mTarget.getWindowVisibleDisplayFrame(rect);
-            if (!fullScreen) {
-                rect.offset(0, -PopupUiUtils.getStatusBarHeight());
-            }
-
-            int displayHeight = rect.height();
-            int windowHeight = mTarget.getHeight();
-            int keyboardHeight = windowHeight - displayHeight;
-            boolean isVisible = keyboardHeight > windowHeight * .25f;
-            int keyboardTop = isVisible ? rect.bottom : -1;
-
-
-            if (isVisible == preVisible) {
-                //二次检查
-                if (preKeyboardHeight == keyboardHeight) {
-                    return;
-                }
-            }
-
-            if (mListener != null) {
-                mListener.onKeyboardChange(keyboardTop, keyboardHeight, isVisible, fullScreen);
-            }
-
-            preVisible = isVisible;
-            preKeyboardHeight = keyboardHeight;
-
-        }
-
-    }
 
     private class LinkedViewLayoutChangeListenerWrapper implements ViewTreeObserver.OnPreDrawListener {
 

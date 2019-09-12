@@ -3,6 +3,7 @@ package razerdp.basepopup;
 import android.animation.Animator;
 import android.content.Context;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -26,7 +27,6 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import razerdp.blur.PopupBlurOption;
-import razerdp.interceptor.PopupWindowEventInterceptor;
 import razerdp.library.R;
 import razerdp.util.InputMethodUtils;
 import razerdp.util.PopupUtils;
@@ -37,7 +37,7 @@ import razerdp.util.PopupUtils;
  * PopupHelper，这货与Popup强引用哦~
  */
 @SuppressWarnings("all")
-final class BasePopupHelper implements PopupKeyboardStateChangeListener, BasePopupFlag {
+final class BasePopupHelper implements InputMethodUtils.OnKeyboardChangeListener, BasePopupFlag {
 
     BasePopupWindow popupWindow;
 
@@ -101,14 +101,15 @@ final class BasePopupHelper implements PopupKeyboardStateChangeListener, BasePop
 
     EditText mAutoShowInputEdittext;
 
-    PopupKeyboardStateChangeListener mKeyboardStateChangeListener;
-    PopupWindowEventInterceptor mEventInterceptor;
+    InputMethodUtils.OnKeyboardChangeListener mKeyboardStateChangeListener;
 
     int mSoftInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
     ViewGroup.MarginLayoutParams mParseFromXmlParams;
     Point mTempOffset = new Point();
 
     int maxWidth, maxHeight, minWidth, minHeight, maskWidth, maskHeight;
+
+    int keyboardAlignTargetViewId;
 
 
     InnerShowInfo mShowInfo;
@@ -649,9 +650,6 @@ final class BasePopupHelper implements PopupKeyboardStateChangeListener, BasePop
         return showCount;
     }
 
-    PopupWindowEventInterceptor getEventInterceptor() {
-        return mEventInterceptor;
-    }
 
     BasePopupHelper setContentRootId(View contentRoot) {
         if (contentRoot == null) return this;
@@ -865,9 +863,9 @@ final class BasePopupHelper implements PopupKeyboardStateChangeListener, BasePop
     }
 
     @Override
-    public void onKeyboardChange(int keyboardTop, int keyboardHeight, boolean isVisible, boolean fullScreen) {
+    public void onKeyboardChange(Rect keyboardBounds, boolean isVisible) {
         if (mKeyboardStateChangeListener != null) {
-            mKeyboardStateChangeListener.onKeyboardChange(keyboardTop, keyboardHeight, isVisible, fullScreen);
+            mKeyboardStateChangeListener.onKeyboardChange(keyboardBounds, isVisible);
         }
     }
 

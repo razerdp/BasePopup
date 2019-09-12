@@ -7,36 +7,6 @@ package razerdp.basepopup;
  */
 public interface BasePopupFlag {
 
-    /**
-     * 2.2.0开始，定义flag~因为太多boolean了，不好管理
-     * <p>
-     * | -------- | -------- | -------- | -------- |
-     * --- EVENT_SHIFT
-     * 1     OUT_SIDE_DISMISS
-     * 1      OUT_SIDE_TOUCHABLE
-     * 1       BACKPRESS_ENABLE
-     * ------ DISPLAY_SHIFT
-     * 1        FULL_SCREEN
-     * 1         ALIGN_BACKGROUND
-     * 1          CLIP_CHILDREN
-     * 1           CLIP_TO_SCREEN
-     * ---------- CONTROL_SHIFT
-     * 1            FADE_ENABLE
-     * 1             AUTO_LOCATED
-     * 1              AS_DROP_DOWN
-     * 1               AUTO_INPUT_METHOD
-     * 1                ALIGN_BACKGROUND
-     * 1                 hold
-     * 1                  hold
-     * 1                   hold
-     * ------------------ QUICK_POPUP_CONFIG
-     * 1                    BLUR_BACKGROUND
-     * <p>
-     * ------------------------------------ INNER_USAGE_SHIFT
-     * 1                                       CUSTOM_WIDTH
-     * 1                                        CUSTOM_HEIGHT
-     */
-
     //事件控制 3 bit
     int EVENT_SHIFT = 0;
     int OUT_SIDE_DISMISS = 0x1 << EVENT_SHIFT;//001，点击外部消失
@@ -62,6 +32,12 @@ public interface BasePopupFlag {
     int QUICK_POPUP_CONFIG_SHIFT = 11;
     int BLUR_BACKGROUND = 0x1 << QUICK_POPUP_CONFIG_SHIFT;//blur background
 
+    int KEYBOARD_CONTROL_SHIFT = 13;
+    int KEYBOARD_ALIGN_TO_VIEW = 0x1 << KEYBOARD_CONTROL_SHIFT;
+    int KEYBOARD_ALIGN_TO_ROOT = 0x2 << KEYBOARD_CONTROL_SHIFT;
+    int KEYBOARD_IGNORE_OVER_KEYBOARD = 0x3 << KEYBOARD_CONTROL_SHIFT;
+    int KEYBOARD_ANIMATE_ALIGN = 0x4 << KEYBOARD_CONTROL_SHIFT;
+
     //内部使用 高8位
     int INNER_USAGE_SHIFT = 24;
     int CUSTOM_WIDTH = 0x1 << INNER_USAGE_SHIFT;
@@ -70,6 +46,14 @@ public interface BasePopupFlag {
     int CUSTOM_ON_ANIMATE_DISMISS = 0x8 << INNER_USAGE_SHIFT;
 
 
-    int IDLE = OUT_SIDE_DISMISS | BACKPRESS_ENABLE | FULL_SCREEN | CLIP_CHILDREN | CLIP_TO_SCREEN | FADE_ENABLE;
+    int IDLE = OUT_SIDE_DISMISS
+            | BACKPRESS_ENABLE
+            | FULL_SCREEN
+            | CLIP_CHILDREN
+            | CLIP_TO_SCREEN
+            | FADE_ENABLE
+            | KEYBOARD_ALIGN_TO_ROOT
+            | KEYBOARD_IGNORE_OVER_KEYBOARD
+            | KEYBOARD_ANIMATE_ALIGN;
 
 }

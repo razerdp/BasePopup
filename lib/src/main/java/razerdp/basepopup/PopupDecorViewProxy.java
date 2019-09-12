@@ -19,6 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import razerdp.util.InputMethodUtils;
 import razerdp.util.PopupUiUtils;
 import razerdp.util.PopupUtils;
 import razerdp.util.log.PopupLog;
@@ -28,7 +29,7 @@ import razerdp.util.log.PopupLog;
  * <p>
  * 旨在用来拦截keyevent、以及蒙层
  */
-final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateChangeListener {
+final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.OnKeyboardChangeListener {
     private static final String TAG = "PopupDecorViewProxy";
     //模糊层
     private PopupMaskLayout mMaskLayout;
@@ -43,7 +44,8 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
 
     private CheckAndCallAutoAnchorLocate mCheckAndCallAutoAnchorLocate;
     private WindowManagerProxy mWindowManagerProxy;
-
+    private int[] location = new int[2];
+    private int originY;
     private Flag mFlag = new Flag();
 
     private PopupDecorViewProxy(Context context) {
@@ -942,84 +944,87 @@ final class PopupDecorViewProxy extends ViewGroup implements PopupKeyboardStateC
     }
 
     //-----------------------------------------keyboard-----------------------------------------
-    private Rect viewRect = new Rect();
-    private int offset;
-    private int originY;
-    private ValueAnimator valueAnimator;
-    private boolean lastVisibleState;
 
     @Override
-    public void onKeyboardChange(int keyboardTop, int keyboardHeight, boolean isVisible, boolean fullScreen) {
+    public void onKeyboardChange(Rect keyboardBounds, boolean isVisible) {
+        int offset = 0;
         //横屏不需要适配
         if (PopupUiUtils.getScreenOrientation() == Configuration.ORIENTATION_LANDSCAPE)
             return;
         if (mHelper.getSoftInputMode() == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN ||
                 mHelper.getSoftInputMode() == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE) {
-            View focusView = findFocus();
-            if (focusView == null || lastVisibleState == isVisible) return;
-            focusView.getGlobalVisibleRect(viewRect);
+            View anchor = null;
 
-            final LayoutParams p = getLayoutParams();
-            int y = mHelper.isOutSideTouchable() ?
-                    (p instanceof WindowManager.LayoutParams) ? ((WindowManager.LayoutParams) p).y : mTarget.getTop()
-                    : 0;
-            //因为计算keyboardtop的时候有考虑到statusbar，这里需要跟计算逻辑保持同步
-            if (!fullScreen) {
-                y -= PopupUiUtils.getStatusBarHeight();
-            }
-
-            if (isVisible && keyboardTop > 0) {
-                //decor的底部（区分outsideTouchable）
-                int decorBottom = y + mTarget.getBottom();
-                int targetBottomOffset = decorBottom - keyboardTop;
-                //是否对齐到decor底部
-                boolean alignToDecorView = targetBottomOffset > 0 && (y + viewRect.top) >= targetBottomOffset;
-
-                if (alignToDecorView) {
-                    offset = targetBottomOffset;
-                } else {
-                    if (viewRect.bottom > keyboardTop) {
-                        offset = viewRect.bottom - keyboardTop;
-                    }
-                }
-            } else {
-                offset = 0;
-            }
-
-            if (mHelper.getEventInterceptor() != null) {
-                int customOffset = mHelper.getEventInterceptor().onKeyboardChangeResult(keyboardHeight, isVisible, offset);
-                if (customOffset != 0) {
-                    offset = customOffset;
+            if ((mHelper.flag & BasePopupFlag.KEYBOARD_ALIGN_TO_VIEW) != 0) {
+                if (mHelper.keyboardAlignTargetViewId != 0) {
+                    anchor = mTarget.findViewById(mHelper.keyboardAlignTargetViewId);
                 }
             }
+
+            if ((mHelper.flag & BasePopupFlag.KEYBOARD_ALIGN_TO_ROOT) != 0 || anchor == null) {
+                anchor = mTarget;
+            }
+
+            boolean animate = (mHelper.flag & BasePopupFlag.KEYBOARD_ANIMATE_ALIGN) != 0;
+
+            anchor.getLocationOnScreen(location);
+            int bottom = location[1] + anchor.getHeight();
+
+            if (isVisible && keyboardBounds.height() > 0) {
+                offset = keyboardBounds.top - bottom;
+                if (bottom <= keyboardBounds.top && (mHelper.flag & BasePopupFlag.KEYBOARD_IGNORE_OVER_KEYBOARD) != 0) {
+                    offset = 0;
+                }
+            }
+
             if (mHelper.isOutSideTouchable()) {
-                if (valueAnimator != null) {
-                    valueAnimator.cancel();
-                }
-                valueAnimator = ValueAnimator.ofInt(y, (isVisible ? y - offset : originY));
-                valueAnimator.setDuration(300);
-                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        if (p instanceof WindowManager.LayoutParams) {
-                            ((WindowManager.LayoutParams) p).y = (int) animation.getAnimatedValue();
-                            mWindowManagerProxy.updateViewLayoutOriginal(PopupDecorViewProxy.this, p);
-                        }
+                //移动window
+                final WindowManager.LayoutParams p = PopupUtils.cast(getLayoutParams(), WindowManager.LayoutParams.class);
+                if (p != null) {
+                    if (animate) {
+                        animateTranslateWithOutside(p, isVisible, offset);
+                    } else {
+                        p.y = isVisible ? p.y - offset : originY;
+                        mWindowManagerProxy.updateViewLayoutOriginal(this, p);
                     }
-                });
-                valueAnimator.start();
+                }
             } else {
-                mTarget.animate().cancel();
-                mTarget.animate()
-                        .translationY(-offset)
-                        .setDuration(200)
-                        .start();
-                PopupLog.i("onKeyboardChange", isVisible, keyboardHeight, offset);
+                if (animate) {
+                    animateTranslate(mTarget, isVisible, offset);
+                } else {
+                    mTarget.setTranslationY(isVisible ? mTarget.getTranslationY() + offset : 0);
+                }
             }
-            lastVisibleState = isVisible;
         }
     }
 
+
+    ValueAnimator valueAnimator;
+
+    private void animateTranslateWithOutside(final WindowManager.LayoutParams p, boolean isVisible, int offset) {
+        if (valueAnimator != null) {
+            valueAnimator.cancel();
+        }
+        valueAnimator = ValueAnimator.ofInt(isVisible ? p.y + offset : originY);
+        valueAnimator.setDuration(200);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                p.y = (int) animation.getAnimatedValue();
+                mWindowManagerProxy.updateViewLayoutOriginal(PopupDecorViewProxy.this, p);
+            }
+        });
+        valueAnimator.start();
+    }
+
+    private void animateTranslate(View target, boolean isVisible, int offset) {
+        target.animate().cancel();
+        if (isVisible) {
+            target.animate().translationYBy(offset).setDuration(200).start();
+        } else {
+            target.animate().translationY(0).setDuration(200).start();
+        }
+    }
 
     static class Flag {
         static final int IDLE = 0;
