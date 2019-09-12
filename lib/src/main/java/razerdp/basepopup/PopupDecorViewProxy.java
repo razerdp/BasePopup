@@ -47,6 +47,7 @@ final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.On
     private int[] location = new int[2];
     private int originY;
     private Flag mFlag = new Flag();
+    private Rect lastKeyboardBounds = new Rect();
 
     private PopupDecorViewProxy(Context context) {
         this(context, null);
@@ -226,13 +227,13 @@ final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.On
         mFlag.flag &= ~Flag.FLAG_REST_HEIGHT_NOT_ENOUGH;
         PopupLog.i("onMeasure", MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
         if (!mHelper.isOutSideTouchable()) {
-            measureWithIntercept(widthMeasureSpec, heightMeasureSpec);
+            measureNormal(widthMeasureSpec, heightMeasureSpec);
         } else {
-            measureWithOutIntercept(widthMeasureSpec, heightMeasureSpec);
+            measureOutSide(widthMeasureSpec, heightMeasureSpec);
         }
     }
 
-    private void measureWithIntercept(int widthMeasureSpec, int heightMeasureSpec) {
+    private void measureNormal(int widthMeasureSpec, int heightMeasureSpec) {
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
@@ -246,7 +247,7 @@ final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.On
         setMeasuredDimension(getAvaliableWidth(), getAvaliableHeight());
     }
 
-    private void measureWithOutIntercept(int widthMeasureSpec, int heightMeasureSpec) {
+    private void measureOutSide(int widthMeasureSpec, int heightMeasureSpec) {
         int maxWidth = 0;
         int maxHeight = 0;
         int childState = 0;
@@ -416,13 +417,13 @@ final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.On
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         PopupLog.i("onLayout", changed, l, t, r, b);
         if (!mHelper.isOutSideTouchable()) {
-            layoutWithIntercept(l, t, r, b);
+            layoutNormal(l, t, r, b);
         } else {
-            layoutWithOutIntercept(l, t, r, b);
+            layoutOutSide(l, t, r, b);
         }
     }
 
-    private void layoutWithOutIntercept(int l, int t, int r, int b) {
+    private void layoutOutSide(int l, int t, int r, int b) {
         if ((mFlag.flag & Flag.FLAG_WINDOW_PARAMS_FIT_REQUEST) != 0 && getLayoutParams() instanceof WindowManager.LayoutParams) {
             mWindowManagerProxy.updateViewLayout(this, getLayoutParams());
         }
@@ -449,7 +450,7 @@ final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.On
     }
 
     @SuppressLint("RtlHardcoded")
-    private void layoutWithIntercept(int l, int t, int r, int b) {
+    private void layoutNormal(int l, int t, int r, int b) {
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
@@ -956,8 +957,8 @@ final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.On
             View anchor = null;
 
             if ((mHelper.flag & BasePopupFlag.KEYBOARD_ALIGN_TO_VIEW) != 0) {
-                if (mHelper.keyboardAlignTargetViewId != 0) {
-                    anchor = mTarget.findViewById(mHelper.keyboardAlignTargetViewId);
+                if (mHelper.keybaordAlignViewId != 0) {
+                    anchor = mTarget.findViewById(mHelper.keybaordAlignViewId);
                 }
             }
 
@@ -972,9 +973,12 @@ final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.On
 
             if (isVisible && keyboardBounds.height() > 0) {
                 offset = keyboardBounds.top - bottom;
-                if (bottom <= keyboardBounds.top && (mHelper.flag & BasePopupFlag.KEYBOARD_IGNORE_OVER_KEYBOARD) != 0) {
+                if (bottom <= keyboardBounds.top
+                        && (mHelper.flag & BasePopupFlag.KEYBOARD_IGNORE_OVER_KEYBOARD) != 0
+                        && lastKeyboardBounds.isEmpty()) {
                     offset = 0;
                 }
+
             }
 
             if (mHelper.isOutSideTouchable()) {
@@ -994,6 +998,11 @@ final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.On
                 } else {
                     mTarget.setTranslationY(isVisible ? mTarget.getTranslationY() + offset : 0);
                 }
+            }
+            if (isVisible) {
+                lastKeyboardBounds.set(keyboardBounds);
+            }else {
+                lastKeyboardBounds.setEmpty();
             }
         }
     }

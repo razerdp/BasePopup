@@ -109,7 +109,7 @@ final class BasePopupHelper implements InputMethodUtils.OnKeyboardChangeListener
 
     int maxWidth, maxHeight, minWidth, minHeight, maskWidth, maskHeight;
 
-    int keyboardAlignTargetViewId;
+    int keybaordAlignViewId;
 
 
     InnerShowInfo mShowInfo;
