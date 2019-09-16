@@ -101,6 +101,7 @@
  - [文章分享](https://github.com/razerdp/Article/blob/master/%E4%BA%B2%EF%BC%8C%E8%BF%98%E5%9C%A8%E4%B8%BAPopupWindow%E7%83%A6%E6%81%BC%E5%90%97.md)
  - [注意事项](#注意事项)
    - [WARN](#WARN)
+ - [环境依赖](#环境依赖)
  - [快速入门](#快速入门)
  - [Api（请看Wiki）](#api请看wiki)
  - [更新日志](#更新日志-历史更新)
@@ -141,22 +142,31 @@
   - **如果您是以前1.x版本的用户，现在想更新到2.x，请在更新前查阅：[1.x迁移到2.x帮助文档](https://github.com/razerdp/BasePopup/blob/master/1.x%E8%BF%81%E7%A7%BB2.x%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3.md)**
   - 从16年[**第一次**](https://github.com/razerdp/BasePopup/commit/c92b7088270d5757269d9b79213627a4a0392d31)提交到现在，本人技术也一直在进步，BasePopup也会一直迭代更新，所以，请谨慎选择版本哦~一不小心就颠覆了之前的实现。
 
-
->Android P已经适配，感谢[@Guolei1130](https://github.com/Guolei1130)收集的方法。<br><br>文章地址：[android_p_no_sdkapi_support](https://github.com/Guolei1130/android_p_no_sdkapi_support)<br><br>本库一开始采用360的方法，但不得不走Native，为了个Popup不得不引入so感觉很不值得，在看到这篇文章后，才想起UnSafe类，因此本库采用方法5。<br><br>如果以后UnSafe类移除掉的话，再考虑Native方法。<br><br><b>最后再一次感谢大牛提供的方法~</b>
-
 <br>
 <br>
+
+### 环境依赖
+
+请把下述 **{$latestVersion}** 替换为上面表格中对应的版本
+ - **Release：**
+   - 基础库（必选）：**`implementation 'com.github.razerdp:BasePopup:{$latestVersion}'`**
+   - support支持库（可选）：**`implementation 'com.github.razerdp:BasePopup-compat-support:{$latestVersion}'`**
+   - lifecycle支持库（可选）：**`implementation 'com.github.razerdp:BasePopup-compat-lifecycle:{$latestVersion}'`**
+   - androidx支持库（可选，**不可跟别的支持库同时存在**）：**`implementation 'com.github.razerdp:BasePopup-compat-androidx:{$latestVersion}'`**
+
+ - **Candy**
+    - 基础库（必选）：**`implementation 'com.github.razerdp:BasePopup_Candy:{$latestVersion}'`**
+    - support支持库（可选）：**`implementation 'com.github.razerdp:BasePopup_Candy-compat-support:{$latestVersion}'`**
+    - lifecycle支持库（可选）：**`implementation 'com.github.razerdp:BasePopup_Candy-compat-lifecycle:{$latestVersion}'`**
+    - androidx支持库（可选，**不可跟别的支持库同时存在**）：**`implementation 'com.github.razerdp:BasePopup_Candy-compat-androidx:{$latestVersion}'`**
 
 ### 快速入门
----
 
 请参考文档：[**BasePopup手册**](https://www.kancloud.cn/razerdp/basepopup/content)
 
 <br>
 
 ### Api（请看Wiki，后续迁移至文档）
-
-请看wiki（陆续完善中）
 
 **Link👉**[WIKI](https://github.com/razerdp/BasePopup/wiki)
 
@@ -271,108 +281,7 @@
 
 ### 常见问题
 
-### 更多常见问题请看[**WIKI#常见问题**](https://github.com/razerdp/BasePopup/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)
-
-#### Q：如何取消默认的背景颜色
-
-A：调用[**setBackgroundColor**](https://github.com/razerdp/BasePopup/wiki/API#setbackgroundcolorint-color)(Color.TRANSPARENT)或者[**setBackground**](https://github.com/razerdp/BasePopup/wiki/API#setbackgroundint-drawableids)(0)
-
-<br>
-
-***
-
-<br>
-
-#### Q：如何在dismiss()时不执行退出动画
-
-A：调用dismiss(false)或者dismissWithOutAnimate()
-
-<br>
-
-***
-
-<br>
-
-#### Q：点击popupwindow背景部分不想让popupwindow隐藏怎么办
-
-A：设置[**setOutSideDismiss**](https://github.com/razerdp/BasePopup/wiki/API#setoutsidedismissboolean-outsidedismiss)(false)
-
-<br>
-
-***
-
-<br>
-
-#### ~~Q：Service里无法弹出~~【自2.2.1版本开始支持非ActivityContext里弹出】
-
-~~A：PopupWindow需要windowToken，因此ApplicationContext或者Service里面是无法弹出的，建议通过发出事件通知栈顶Activity来弹出~~
-
-<br>
-
-***
-
-<br>
-
-#### Q：为什么PopupWindow里面的EditText无法粘贴
-
->ISSUE REF：[**#140**](https://github.com/razerdp/BasePopup/issues/140)
-
->Google Issue Tracker：[**#36984016**](https://issuetracker.google.com/issues/36984016)
-
-A：PopupWindow内的View是无法获取WindowToken的，而粘贴功能也是一个PopupWindow，它的显示必定需要WindowToken，因此无法粘贴。
-
-<br>
-
-***
-
-<br>
-
-#### Q：如何不让PopupWindow的蒙层覆盖状态栏
-
-A：设置[**setPopupWindowFullScreen**](https://github.com/razerdp/BasePopup/wiki/API#setpopupwindowfullscreenboolean-isfullscreen)(false)
-
-<br>
-
-***
-
-<br>
-
-#### Q：如何点击back键不关闭pop
-
-A：设置[**setBackPressEnable**](https://github.com/razerdp/BasePopup/wiki/API#setBackPressEnableboolean-backPressEnable)(false)
-
-<br>
-
-***
-
-<br>
-
-#### Q：如何在BasePopup里使用ButterKnife
-
-A：您可以在构造器中进行绑定：
-
-```java
-   public DemoPopup(Context context) {
-        super(context);
-        ButterKnife.bind(this,getContentView());
-    }
-```
-
-<br>
-
-***
-
-<br>
-
-#### Q：为什么BasePopup的宽度不对或者留有一条缝隙
-
-A：请务必留意您是否使用了头条类等修改Density的适配方案，BasePopup只遵循官方的测量方法并没有额外的添加别的测量方式，因此如果因为第三方修改导致的适配问题，本库概不负责<br><br>
-如果您用的是[**AndroidAutoSize**](https://github.com/JessYanCoding/AndroidAutoSize)，请尝试[issue#13](https://github.com/JessYanCoding/AndroidAutoSize/issues/13)的解决方案：<br><br>
->在任何情况下本来适配正常的布局突然出现适配失效，适配异常等问题，只要重写 Activity 的 getResources() 方法即可，如果是 Dialog、PopupWindow 等控件出现适配失效或适配异常，同样在每次 show() 之前调用 AutoSize#autoConvertDensity() 即可
-
-<br>
-
-***
+请查阅[**手册：常见问题**](https://www.kancloud.cn/razerdp/basepopup/1277047)
 
 <br>
 
