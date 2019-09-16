@@ -29,9 +29,9 @@ public final class BasePopupComponentManager {
 
     class BasePopupComponentProxy implements BasePopupComponent {
         private List<BasePopupComponent> IMPL;
-        private static final String IMPL_SUPPORT = "razerdp.basepopup.BasePopupSupporterSupport";
-        private static final String IMPL_LIFECYCLE = "razerdp.basepopup.BasePopupSupporterLifeCycle";
-        private static final String IMPL_X = "razerdp.basepopup.BasePopupSupporterX";
+        private static final String IMPL_SUPPORT = "razerdp.basepopup.BasePopupComponentSupport";
+        private static final String IMPL_LIFECYCLE = "razerdp.basepopup.BasePopupComponentLifeCycle";
+        private static final String IMPL_X = "razerdp.basepopup.BasePopupComponentX";
 
 
         BasePopupComponentProxy(Context context) {
