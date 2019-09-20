@@ -93,6 +93,7 @@ public class FillViewUtil {
         }
     }
 
+
     public static void clear(ViewGroup target) {
         if (target == null) return;
         final int childCount = target.getChildCount();
@@ -118,6 +119,11 @@ public class FillViewUtil {
             pool.clearPool();
         }
         target.removeAllViews();
+    }
+
+    public static FillViewHolder getHolder(View itemView) {
+        if (itemView == null) return null;
+        return (FillViewHolder) itemView.getTag(R.id.tag_fill_view);
     }
 
     public static abstract class FillViewHolder<T> {
