@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <razerdp.demo.widget.TitleBarView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title_text="BasePopup简介" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_padding"
+                    android:text="关于BasePopup"
+                    android:textColor="@color/text_black1"
+                    android:textSize="@dimen/text_large"
+                    android:textStyle="bold" />
+
+                <View style="@style/divider" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingMultiplier="1.5"
+                    android:padding="@dimen/default_padding"
+                    android:text="@string/guide"
+                    android:textColor="@color/text_black2"
+                    android:textSize="@dimen/text_small" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_padding"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_padding"
+                    android:text="BasePopup的特性"
+                    android:textColor="@color/text_black1"
+                    android:textSize="@dimen/text_large"
+                    android:textStyle="bold" />
+
+                <View style="@style/divider" />
+
+                <TextView
+                    android:id="@+id/tv_feature"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingMultiplier="1.5"
+                    android:padding="@dimen/default_padding"
+                    android:textColor="@color/text_black2"
+                    android:textSize="@dimen/text_small" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_padding"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_padding"
+                    android:text="环境依赖"
+                    android:textColor="@color/text_black1"
+                    android:textSize="@dimen/text_large"
+                    android:textStyle="bold" />
+
+                <View style="@style/divider" />
+
+                <TextView
+                    android:id="@+id/tv_dependence"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingMultiplier="1.5"
+                    android:padding="@dimen/default_padding"
+                    android:textColor="@color/text_black2"
+                    android:textSize="@dimen/text_small" />
+
+                <View style="@style/divider" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_padding"
+                    android:text="请把下述 {$latestVersion} 替换为图标对应的版本"
+                    android:textColor="@color/text_black2"
+                    android:textSize="@dimen/text_small"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_padding"
+                    android:text="• Release："
+                    android:textColor="@color/text_black1"
+                    android:textSize="@dimen/text_normal"
+                    android:textStyle="bold" />
+
+
+                <LinearLayout
+                    android:id="@+id/layout_dependence_release"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_padding"
+                    android:background="@drawable/bg_stroke"
+                    android:orientation="vertical"
+                    android:padding="@dimen/default_padding" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_padding"
+                    android:text="• Candy："
+                    android:textColor="@color/text_black1"
+                    android:textSize="@dimen/text_normal"
+                    android:textStyle="bold" />
+
+
+                <LinearLayout
+                    android:id="@+id/layout_dependence_candy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_padding"
+                    android:background="@drawable/bg_stroke"
+                    android:orientation="vertical"
+                    android:padding="@dimen/default_padding" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_padding"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_padding"
+                    android:text="支持作者"
+                    android:textColor="@color/text_black1"
+                    android:textSize="@dimen/text_large"
+                    android:textStyle="bold" />
+
+                <View style="@style/divider" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingMultiplier="1.5"
+                    android:padding="@dimen/default_padding"
+                    android:text="看在我那么努力维护的份上。。。给个零食呗"
+                    android:textColor="@color/text_black2"
+                    android:textSize="@dimen/text_small" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/alipay" />
+
+                <View
+                    style="@style/divider"
+                    android:layout_margin="@dimen/default_padding" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:padding="@dimen/default_padding"
+                    android:text="最后感谢您的支持，如果喜欢的话，不妨把BasePopup推荐给同样受PopupWindow困扰的朋友哦~"
+                    android:textColor="@color/text_black2"
+                    android:textSize="@dimen/text_small"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

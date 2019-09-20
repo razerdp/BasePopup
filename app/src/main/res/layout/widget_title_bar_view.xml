@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@id/title_bar_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_titlebar"
+    android:orientation="vertical">
+
+    <razerdp.demo.widget.StatusBarViewPlaceHolder
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:id="@id/title_bar_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingRight="@dimen/default_padding"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_large"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:text="BasePopup" />
+
+        <ImageView
+            android:id="@id/title_bar_icon_left"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/common_selector_dark"
+            android:padding="@dimen/default_padding"
+            android:scaleType="center"
+            android:src="@drawable/ic_back"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@id/title_bar_text_left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toRightOf="@id/title_bar_icon_left"
+            app:layout_goneMarginLeft="@dimen/default_padding"
+            tools:text="BasePopup"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:id="@id/title_bar_icon_right"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/common_selector_dark"
+            android:scaleType="center"
+            android:visibility="gone"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@id/title_bar_text_right"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintRight_toLeftOf="@id/title_bar_icon_right"
+            app:layout_goneMarginRight="@dimen/default_padding"
+            tools:text="BasePopup"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

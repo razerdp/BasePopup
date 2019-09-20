@@ -192,6 +192,8 @@
     * **【Candy】190912**
       * 重构键盘逻辑，现在键盘对齐支持选择模式了~
       * 相关文档请查阅文档 [**键盘（输入法）**](https://www.kancloud.cn/razerdp/basepopup/1277045)
+    * **2019/09/20**
+      * Demo大翻新
 
 * **【Release】2.2.1**(2019/06/24)
   * 支持Service或者非ActivityContext里弹窗

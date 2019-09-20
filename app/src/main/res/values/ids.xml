@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="recycler_view_tag" type="id"/>
+    <item name="statusbar_placeholder" type="id" />
+
+    <!--titlebar-->
+    <item name="title_bar_view" type="id" />
+
+    <item name="title_bar_layout_left" type="id" />
+    <item name="title_bar_layout_right" type="id" />
+    <item name="title_bar_text_left" type="id" />
+    <item name="title_bar_text_right" type="id" />
+    <item name="title_bar_icon_left" type="id" />
+    <item name="title_bar_icon_right" type="id" />
+    <item name="title_bar_title" type="id" />
+    <item name="title_bar_root" type="id" />
+
+    <item name="tag_fill_view" type="id" />
+    <item name="tag_fill_view_recycler_bin" type="id" />
 </resources>

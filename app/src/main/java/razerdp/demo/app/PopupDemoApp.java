@@ -3,7 +3,6 @@ package razerdp.demo.app;
 import android.app.Application;
 import android.content.Context;
 
-import com.squareup.leakcanary.LeakCanary;
 
 import razerdp.basepopup.BasePopupWindow;
 
@@ -20,9 +19,5 @@ public class PopupDemoApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return;
-        }
-        LeakCanary.install(this);
     }
 }

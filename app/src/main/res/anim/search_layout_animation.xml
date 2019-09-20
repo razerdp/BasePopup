@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layoutAnimation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:animation="@anim/search_layout_animation_detail"
+    android:animationOrder="normal"
+    android:delay="0.3">
+</layoutAnimation>

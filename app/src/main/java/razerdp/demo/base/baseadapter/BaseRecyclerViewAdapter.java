@@ -1,21 +1,22 @@
 package razerdp.demo.base.baseadapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Space;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
-import razerdp.basepopup.R;
 import razerdp.demo.utils.ToolUtil;
+import razerdp.util.log.PopupLog;
 
 /**
- * Created by 大灯泡 on 2017/4/18.
+ * Created by 大灯泡 on 2019/4/10.
  * <p>
  * 请注意，adapter内部持有datas，与外部不是同一个对象
  */
@@ -24,206 +25,251 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Ba
 
     private static final String TAG = "BaseRecyclerViewAdapter";
     protected Context context;
-    protected List<T> datas;
+    protected List<T> mDatas;
     protected LayoutInflater mInflater;
+    protected int headerViewCount;
+    protected int footerViewCount;
 
-    private OnBaseRecyclerViewItemClickListener<T, BaseRecyclerViewHolder<T>> onRecyclerViewItemClickListener;
-    private OnBaseRecyclerViewLongItemClickListener<T, BaseRecyclerViewHolder<T>> onRecyclerViewLongItemClickListener;
+    private OnItemClickListener<T> mOnItemClickListener;
+    private OnItemLongClickListener<T> mOnItemLongClickListener;
 
     public BaseRecyclerViewAdapter(@NonNull Context context) {
         this(context, new ArrayList<T>());
     }
 
-    public BaseRecyclerViewAdapter(@NonNull Context context, @NonNull List<T> datas) {
+    public BaseRecyclerViewAdapter(@NonNull Context context, @NonNull List<T> mDatas) {
         this.context = context;
-        this.datas = new ArrayList<>();
-        if (datas != null) {
-            this.datas.addAll(datas);
+        this.mDatas = new ArrayList<>();
+        if (mDatas != null) {
+            this.mDatas.addAll(mDatas);
         }
         mInflater = LayoutInflater.from(context);
     }
 
     @Override
+    public void onAttachedToRecyclerView(@NonNull final RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        PopupLog.i(TAG, "onAttachedToRecyclerView");
+        if (recyclerView.getAdapter() instanceof HeaderViewWrapperAdapter) {
+            headerViewCount = ((HeaderViewWrapperAdapter) recyclerView.getAdapter()).getHeadersCount();
+            footerViewCount = ((HeaderViewWrapperAdapter) recyclerView.getAdapter()).getFootersCount();
+        }
+    }
+
+    @Override
     public int getItemViewType(int position) {
-        return getViewType(position, datas.get(position));
+        return getViewType(position, mDatas.get(position));
     }
 
     @Override
     public BaseRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         BaseRecyclerViewHolder holder = null;
-        if (getLayoutResId(viewType) != 0) {
-            View rootView = mInflater.inflate(getLayoutResId(viewType), parent, false);
-            holder = getViewHolder(parent, rootView, viewType);
-        } else {
-            holder = getViewHolder(parent, null, viewType);
+        int layout = getLayoutResId(viewType);
+        if (layout != 0) {
+            holder = getViewHolder(parent,
+                    mInflater.inflate(layout, parent, false),
+                    viewType);
+            setupClickEvent(holder);
+            return holder;
         }
-        setUpItemEvent(holder);
-        return holder;
+        return createEmptyHolder();
+    }
+
+    protected void setupClickEvent(final BaseRecyclerViewHolder holder) {
+        if (holder == null) return;
+        if (mOnItemClickListener != null) {
+            holder.itemView.setClickable(true);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = holder.getAdapterPosition();
+                    pos -= headerViewCount;
+                    if (pos < 0) return;
+                    mOnItemClickListener.onItemClick(v, pos, mDatas.get(pos));
+                }
+            });
+        }
+        if (mOnItemLongClickListener != null) {
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int pos = holder.getAdapterPosition();
+                    pos -= headerViewCount;
+                    if (pos < 0) return false;
+                    return mOnItemLongClickListener.onItemLongClick(v, pos, mDatas.get(pos));
+                }
+            });
+        }
     }
 
     @Override
     public void onBindViewHolder(BaseRecyclerViewHolder holder, int position) {
-        T data = datas.get(position);
-        holder.itemView.setTag(R.id.recycler_view_tag, data);
-        holder.onBindData(data, position);
+        T data = mDatas.get(position);
+        holder.bindData(data, position);
         onBindData(holder, data, position);
     }
 
-    private void setUpItemEvent(final BaseRecyclerViewHolder holder) {
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onRecyclerViewItemClickListener != null) {
-                    //这个获取位置的方法，防止添加删除导致位置不变
-                    int layoutPosition = holder.getAdapterPosition();
-                    try {
-                        onRecyclerViewItemClickListener.onItemClick(holder, holder.itemView, layoutPosition, datas
-                                .get(layoutPosition));
-                    } catch (ClassCastException e) {
-                        onRecyclerViewItemClickListener.onItemClick(holder.itemView, layoutPosition, datas
-                                .get(layoutPosition));
-                    }
-                }
-            }
-        });
-        //longclick
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (onRecyclerViewLongItemClickListener != null) {
-                    int layoutPosition = holder.getAdapterPosition();
-                    try {
-                        return onRecyclerViewLongItemClickListener.onItemLongClick(holder, holder.itemView, layoutPosition, datas
-                                .get(layoutPosition));
-                    } catch (ClassCastException e) {
-                        return onRecyclerViewLongItemClickListener.onItemLongClick(holder.itemView, layoutPosition, datas
-                                .get(layoutPosition));
-                    }
-                } else {
-                    return true;
-                }
-            }
-        });
+    @Override
+    public void onViewRecycled(@NonNull BaseRecyclerViewHolder<T> holder) {
+        super.onViewRecycled(holder);
+        holder.recycle();
     }
 
     @Override
     public int getItemCount() {
-        return datas == null ? 0 : datas.size();
+        return mDatas == null ? 0 : mDatas.size();
     }
 
     public void updateData(List<T> datas) {
-        if (this.datas != null && this.datas != datas) {
-            this.datas.clear();
-            this.datas.addAll(datas);
+        updateData(-1, datas);
+    }
+
+    /**
+     * @param position 当position为-1时，添加到list的末尾
+     * @param datas
+     */
+    public void updateData(int position, List<T> datas) {
+        if (!ToolUtil.isEmpty(datas)) {
+            if (position == -1) {
+                mDatas.clear();
+                mDatas.addAll(datas);
+            } else {
+                mDatas.addAll(position, datas);
+            }
         } else {
-            this.datas = datas;
+            //清空
+            mDatas.clear();
         }
         notifyDataSetChanged();
     }
 
+
     public void clearData() {
-        if (this.datas != null) {
-            this.datas.clear();
+        if (this.mDatas != null) {
+            this.mDatas.clear();
             notifyDataSetChanged();
         }
     }
 
     public void addMore(List<T> datas) {
-        if (!ToolUtil.isListEmpty(datas)) {
-            this.datas.addAll(datas);
-            notifyDataSetChanged();
+        if (!ToolUtil.isEmpty(datas)) {
+            int lastDataSize = this.mDatas.size();
+            this.mDatas.addAll(datas);
+            notifyItemRangeChanged(lastDataSize, datas.size());
         }
     }
 
     public void remove(T data) {
         if (data != null) {
-            int pos = this.datas.indexOf(data);
-            this.datas.remove(data);
-            if (pos != -1) {
+            int pos = mDatas.indexOf(data);
+            if (pos < 0) return;
+            if (mDatas.remove(data)) {
                 notifyItemRemoved(pos);
-            } else {
-                notifyDataSetChanged();
             }
         }
     }
 
 
     public void remove(int position) {
-        if (position != -1) {
-            try {
-                this.datas.remove(position);
-                notifyItemRemoved(position);
-            } catch (Exception e) {
-                e.printStackTrace();
-                notifyDataSetChanged();
-            }
-        }
+        if (!ToolUtil.indexInList(mDatas, position)) return;
+        mDatas.remove(position);
+        notifyItemRemoved(position);
     }
 
     public List<T> getDatas() {
-        return datas;
+        return mDatas;
     }
 
     public void addData(int pos, @NonNull T data) {
-        if (datas != null) {
-            datas.add(pos, data);
+        if (mDatas != null) {
+            if (pos >= mDatas.size()) {
+                mDatas.add(data);
+            } else {
+                mDatas.add(pos, data);
+            }
             notifyItemInserted(pos);
         }
     }
 
     public void addData(@NonNull T data) {
-        if (datas != null) {
-            datas.add(data);
-            notifyItemInserted(datas.size() - 1);
+        if (mDatas != null) {
+            mDatas.add(data);
+            notifyItemInserted(mDatas.size() - 1);
         }
     }
 
-    public void deleteData(int pos) {
-        if (datas != null && datas.size() > pos) {
-            datas.remove(pos);
-            notifyItemRemoved(pos);
-        }
+    public void addData(@NonNull List<T> data) {
+        addData(-1, data);
     }
 
-    public T findData(int pos) {
-        if (pos < 0 || pos > datas.size()) {
-            Log.e(TAG, "这个position他喵咪的太强大了，我hold不住");
-            return null;
+    public void addData(int pos, @NonNull List<T> data) {
+        if (mDatas != null) {
+            int curPos = mDatas.size();
+            if (pos < 0) {
+                mDatas.addAll(data);
+            } else {
+                mDatas.addAll(pos, data);
+            }
+            notifyItemRangeInserted(curPos, data.size());
         }
-        return datas.get(pos);
     }
 
     protected abstract int getViewType(int position, @NonNull T data);
 
     protected abstract int getLayoutResId(int viewType);
 
-    protected abstract BaseRecyclerViewHolder getViewHolder(ViewGroup parent, View rootView, int viewType);
+    protected abstract BaseRecyclerViewHolder getViewHolder(ViewGroup parent, View itemView, int viewType);
 
     protected void onBindData(BaseRecyclerViewHolder<T> holder, T data, int position) {
 
     }
 
-    public OnBaseRecyclerViewItemClickListener getOnRecyclerViewItemClickListener() {
-        return onRecyclerViewItemClickListener;
+    public BaseRecyclerViewAdapter<T> setOnItemClickListener(OnItemClickListener<T> onItemClickListener) {
+        mOnItemClickListener = onItemClickListener;
+        return this;
     }
 
-    public void setOnRecyclerViewItemClickListener(OnBaseRecyclerViewItemClickListener onRecyclerViewItemClickListener) {
-        this.onRecyclerViewItemClickListener = onRecyclerViewItemClickListener;
+    public BaseRecyclerViewAdapter<T> setOnItemLongClickListener(OnItemLongClickListener<T> onItemLongClickListener) {
+        mOnItemLongClickListener = onItemLongClickListener;
+        return this;
     }
 
-    public void setOnRecyclerViewItemClickListener(OnRecyclerViewItemClickListener<T> onRecyclerViewItemClickListener) {
-        this.onRecyclerViewItemClickListener = onRecyclerViewItemClickListener;
+    public int getHeaderViewCount() {
+        return headerViewCount;
     }
 
-    public OnBaseRecyclerViewLongItemClickListener getOnRecyclerViewLongItemClickListener() {
-        return onRecyclerViewLongItemClickListener;
+    public BaseRecyclerViewAdapter<T> setHeaderViewCount(int headerViewCount) {
+        this.headerViewCount = headerViewCount;
+        return this;
     }
 
-    public void setOnRecyclerViewLongItemClickListener(OnBaseRecyclerViewLongItemClickListener onRecyclerViewLongItemClickListener) {
-        this.onRecyclerViewLongItemClickListener = onRecyclerViewLongItemClickListener;
+    public int getFooterViewCount() {
+        return footerViewCount;
     }
 
-    public void setOnRecyclerViewLongItemClickListener(OnRecyclerViewLongItemClickListener<T> onRecyclerViewLongItemClickListener) {
-        this.onRecyclerViewLongItemClickListener = onRecyclerViewLongItemClickListener;
+    public BaseRecyclerViewAdapter<T> setFooterViewCount(int footerViewCount) {
+        this.footerViewCount = footerViewCount;
+        return this;
+    }
+
+    public final Context getContext() {
+        return context;
+    }
+
+
+    protected BaseRecyclerViewHolder createEmptyHolder() {
+        return new EmptyHolder(new Space(getContext()));
+    }
+
+    private class EmptyHolder extends BaseRecyclerViewHolder {
+
+        EmptyHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void onBindData(Object data, int position) {
+
+        }
     }
 }

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_stroke"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/tv_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_black2"
+            android:textSize="@dimen/text_small"
+            tools:text="基础库（必选）：" />
+
+
+        <ImageView
+            android:id="@+id/iv_version"
+            android:layout_width="90dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="8dp" />
+    </LinearLayout>
+
+    <View
+        style="@style/divider"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/tv_dependence"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:background="#F2F3F5"
+        android:padding="8dp"
+        android:textColor="@color/text_black1"
+        android:textSize="@dimen/text_small"
+        android:textStyle="bold" />
+</LinearLayout>

@@ -1,7 +1,13 @@
 package razerdp.demo.utils;
 
-import android.support.annotation.StringRes;
 import android.text.TextUtils;
+
+import androidx.annotation.ArrayRes;
+import androidx.annotation.StringRes;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import razerdp.demo.app.AppContext;
 
@@ -65,4 +71,61 @@ public class StringUtil {
         return AppContext.getAppContext().getResources().getString(strId, objs);
     }
 
+    public static String[] getStringArray(@ArrayRes int strId) {
+        if (strId == 0) return null;
+        return AppContext.getAppContext().getResources().getStringArray(strId);
+    }
+
+    public static double toDouble(String value) {
+        if (TextUtils.isEmpty(value)) return 0;
+        try {
+            BigDecimal b = new BigDecimal(value);
+            return b.doubleValue();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public static long toLong(String value) {
+        if (TextUtils.isEmpty(value)) return 0;
+        try {
+            BigDecimal b = new BigDecimal(value);
+            return b.longValue();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public static int toInt(String value) {
+        if (TextUtils.isEmpty(value)) return 0;
+        try {
+            BigDecimal b = new BigDecimal(value);
+            return b.intValue();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public static float toFloat(String value) {
+        try {
+            BigDecimal b = new BigDecimal(value);
+            return b.floatValue();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0.0f;
+        }
+    }
+
+    public static String join(String from, String join) {
+        if (TextUtils.isEmpty(from)) return from;
+        char[] c = from.toCharArray();
+        List<String> tempList = new ArrayList<>();
+        for (char c1 : c) {
+            tempList.add(String.valueOf(c1));
+        }
+        return TextUtils.join(join, tempList);
+    }
 }

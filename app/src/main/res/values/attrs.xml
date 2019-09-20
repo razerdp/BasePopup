@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="StatusBarViewPlaceHolder">
+        <attr name="android:background" />
+    </declare-styleable>
+    <declare-styleable name="DPImageView">
+        <attr name="biv_border_width" format="dimension" />
+        <attr name="biv_border_color" format="color" />
+        <attr name="biv_border_overlay" format="boolean" />
+        <attr name="biv_shape">
+            <enum name="oval" value="1" />
+            <enum name="rect" value="2" />
+        </attr>
+        <attr name="biv_corner_radius" format="dimension" />
+        <attr name="biv_corner_topLeftRadius" format="dimension" />
+        <attr name="biv_corner_topRightRadius" format="dimension" />
+        <attr name="biv_corner_bottomLeftRadius" format="dimension" />
+        <attr name="biv_corner_bottomRightRadius" format="dimension" />
+        <attr name="biv_border_ignore_padding" format="boolean" />
+
+    </declare-styleable>
+
+    <declare-styleable name="DPTextView">
+        <attr name="android:background" />
+        <attr name="android:textColor" />
+        <attr name="android:lineSpacingExtra" />
+        <attr name="android:lineSpacingMultiplier" />
+        <attr name="textPressedColor" format="color" />
+        <attr name="textDisableColor" format="color" />
+        <attr name="strokeMode" format="boolean" />
+        <attr name="pressWithStrokeMode" format="boolean" />
+        <attr name="stroke_Width" format="dimension" />
+        <attr name="strokeColor" format="color" />
+        <attr name="backgroundColor" format="color" />
+        <attr name="backgroundPressedColor" format="color" />
+        <attr name="backgroundDisableColor" format="color" />
+        <attr name="corner_radius" format="dimension" />
+        <attr name="corner_topLeftRadius" format="dimension" />
+        <attr name="corner_topRightRadius" format="dimension" />
+        <attr name="corner_bottomLeftRadius" format="dimension" />
+        <attr name="corner_bottomRightRadius" format="dimension" />
+        <attr name="shadow" format="boolean" />
+
+        <attr name="drawableWidth" format="dimension" />
+        <attr name="drawableHeight" format="dimension" />
+        <attr name="drawableScale" format="float" />
+        <attr name="urlRegion" format="boolean" />
+        <attr name="type">
+            <enum name="oval" value="1" />
+            <enum name="rect" value="2" />
+        </attr>
+    </declare-styleable>
+</resources>

@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">BasePopup</string>
     <string name="action_settings">Settings</string>
+
+
+    <string name="guide">在Android众多弹窗中，论坑的数量，PopupWindow毫无疑问遥遥领先。\nPopupWindow很多时候真的是让人又爱又恨，爱的是它的定制自由，恨的是它的表现不同。\n本人从实习时接触到PopupWindow，就已经感到PopupWindow的强大之处，但因为坑实在太多，因此一直都是 “想用，但不敢用”，然而一直避免也无法解决问题，因此BasePopup的创作由此开始。\n从2016年第一版开始，到现在2019年，期间经历过数次重构，吸取了不少经验，自19年上半年也就是2.0版本开始，BasePopup开始正式宣传（其实也就投稿过一次而已。。。），同时也是从2.0版本开始确定了BasePopup的整体框架与方向。\nBasePopup并不是做一个【一句Api就完成功能】的库，相反，BasePopup并不包含任何具体的实现，它提供的，仅仅是画布以及画笔颜料，而这幅画会呈现出如何的画面，则交由您来实现创作。\n未来的路还很长，随着技术的提升，复盘，重构也会一直都会进行。\n当BasePopup走到10.x的时候，又会是怎样的一番景象呢？\n我们，拭目以待\n我们，一路前行\n</string>
 </resources>
