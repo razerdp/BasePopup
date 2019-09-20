@@ -52,6 +52,8 @@
             </intent-filter>
         </activity>
         <activity android:name="razerdp.demo.ui.GuideActivity" />
+        <activity android:name="razerdp.demo.ui.CommonUsageActivity" />
+
         <service android:name="razerdp.demo.services.DemoService" />
     </application>
 

@@ -20,6 +20,7 @@ import razerdp.demo.base.baseadapter.OnItemClickListener;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.model.DemoMainItem;
 import razerdp.demo.ui.ActivityLauncher;
+import razerdp.demo.ui.CommonUsageActivity;
 import razerdp.demo.ui.GuideActivity;
 import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.UIHelper;
@@ -63,6 +64,7 @@ public class DemoActivity extends BaseActivity {
     private List<DemoMainItem> generateItem() {
         List<DemoMainItem> result = new ArrayList<>();
         result.add(new DemoMainItem(GuideActivity.class, "简介", GuideActivity.DESC, null));
+        result.add(new DemoMainItem(CommonUsageActivity.class, "常见案例", CommonUsageActivity.DESC, "入门必备"));
         return result;
     }
 

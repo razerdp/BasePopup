@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_game_live_tag"
-            android:paddingLeft="8dp"
+            android:paddingLeft="@dimen/default_padding"
             android:paddingRight="@dimen/default_padding"
             android:text="BasePopup"
             android:textColor="@color/white"

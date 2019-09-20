@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@color/white"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="BasePopup"
+        android:textColor="@color/text_black3"
+        android:textSize="@dimen/text_large" />
+
+    <View style="@style/divider" />
+
+    <TextView
+        android:id="@+id/tv_item_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/common_selector"
+        android:gravity="center"
+        android:padding="@dimen/default_padding"
+        android:text="item_1"
+        android:textColor="@color/text_black2"
+        android:textSize="@dimen/text_normal" />
+
+    <View style="@style/divider" />
+
+    <TextView
+        android:id="@+id/tv_item_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/common_selector"
+        android:gravity="center"
+        android:padding="@dimen/default_padding"
+        android:text="item_2"
+        android:textColor="@color/text_black2"
+        android:textSize="@dimen/text_normal" />
+
+    <View style="@style/divider" />
+
+    <TextView
+        android:id="@+id/tv_item_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/common_selector"
+        android:gravity="center"
+        android:padding="@dimen/default_padding"
+        android:text="item_3"
+        android:textColor="@color/text_black2"
+        android:textSize="@dimen/text_normal" />
+</LinearLayout>

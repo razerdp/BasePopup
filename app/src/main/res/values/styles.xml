@@ -23,9 +23,9 @@
     </style>
 
 
-    <style name="WhiteCheckBox" parent="Theme.AppCompat.Light">
-        <item name="colorControlNormal">@color/white</item>
-        <item name="colorControlActivated">@color/white</item>
+    <style name="MyCheckBox" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/text_black2_20</item>
+        <item name="colorControlActivated">@color/color_link</item>
     </style>
 
     <style name="animation_translucent_translate" parent="@android:style/Animation">
