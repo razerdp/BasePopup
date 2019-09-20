@@ -5,12 +5,11 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
 import razerdp.basepopup.R;
@@ -64,7 +63,7 @@ public class DemoActivity extends BaseActivity {
     private List<DemoMainItem> generateItem() {
         List<DemoMainItem> result = new ArrayList<>();
         result.add(new DemoMainItem(GuideActivity.class, "简介", GuideActivity.DESC, null));
-        result.add(new DemoMainItem(CommonUsageActivity.class, "常见案例", CommonUsageActivity.DESC, "入门必备"));
+        result.add(new DemoMainItem(CommonUsageActivity.class, "常见例子", CommonUsageActivity.DESC, "入门必备"));
         return result;
     }
 

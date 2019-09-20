@@ -1,6 +1,5 @@
 package razerdp.demo.model.common;
 
-import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 
@@ -44,8 +43,7 @@ public class CommonAnimateInfo extends DemoCommonUsageInfo {
     public void toOption(View v) {
         if (popupAnimateOption == null) {
             popupAnimateOption = new PopupAnimateOption(v.getContext());
-            popupAnimateOption.attachInfo(this);
-            popupAnimateOption.setPopupGravity(Gravity.BOTTOM);
+            popupAnimateOption.setInfo(this);
         }
         popupAnimateOption.showPopupWindow(v);
 

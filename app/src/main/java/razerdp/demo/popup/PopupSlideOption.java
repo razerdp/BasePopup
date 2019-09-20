@@ -3,20 +3,17 @@ package razerdp.demo.popup;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.CompoundButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.OnClick;
-import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.OnItemClickListener;
@@ -33,7 +30,7 @@ import razerdp.demo.widget.decoration.SpaceOption;
  * <p>
  * Description：slide相关的配置
  */
-public class PopupSlideOption extends BasePopupWindow {
+public class PopupSlideOption extends BaseOptionPopup<CommonSlideInfo> {
     @BindView(R.id.rv_content)
     RecyclerView rvContent;
     @BindView(R.id.check_anchor)
@@ -43,13 +40,10 @@ public class PopupSlideOption extends BasePopupWindow {
     @BindView(R.id.tv_go)
     DPTextView tvGo;
 
-    CommonSlideInfo info;
-
     SimpleRecyclerViewAdapter<Info> mAdapter;
 
     public PopupSlideOption(Context context) {
         super(context);
-        ButterKnifeUtil.bind(this, getContentView());
 
         List<Info> infos = new ArrayList<>();
         infos.add(new Info(Gravity.LEFT, "Gravity.Left"));
@@ -80,22 +74,6 @@ public class PopupSlideOption extends BasePopupWindow {
         return createPopupById(R.layout.popup_option_slide);
     }
 
-    public void attachOption(CommonSlideInfo info) {
-        this.info = info;
-    }
-
-    @Override
-    protected Animation onCreateShowAnimation() {
-        return getTranslateVerticalAnimation(-1f, 0f, 450);
-    }
-
-
-    @Override
-    protected Animation onCreateDismissAnimation() {
-        return getTranslateVerticalAnimation(0f, -1f, 450);
-    }
-
-
     @OnClick(R.id.tv_go)
     void apply() {
         int gravity = Gravity.NO_GRAVITY;
@@ -104,9 +82,9 @@ public class PopupSlideOption extends BasePopupWindow {
                 gravity |= data.gravity;
             }
         }
-        info.gravity = gravity;
-        info.withAnchor = anchorCheck.isChecked();
-        info.blur = blurCheck.isChecked();
+        mInfo.gravity = gravity;
+        mInfo.withAnchor = anchorCheck.isChecked();
+        mInfo.blur = blurCheck.isChecked();
         dismiss();
     }
 
