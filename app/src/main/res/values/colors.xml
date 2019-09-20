@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3356d9</color>
-    <color name="colorPrimaryDark">#1C40B8</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimaryLight">#32323C</color>
+    <color name="colorPrimary">#2A2B33</color>
+    <color name="colorPrimaryDark">#24242B</color>
+    <color name="colorAccent">#6B7887</color>
 
 
     <color name="popup_bg">#8f000000</color>
-    <color name="line_bg">#CDCDCD</color>
+    <color name="line_bg">#E1E3E6</color>
     <color name="comment_popup_bg">#292929</color>
     <color name="comment_popup_tx_bg">#c7c7c7</color>
 
@@ -14,9 +15,30 @@
     <color name="menu_bg">#2b2b2b</color>
     <color name="menu_click_bg">#515151</color>
 
-    <color name="color_black1">#333333</color>
-    <color name="color_black2">#666666</color>
-    <color name="color_black3">#999999</color>
-    <color name="disable">#CCCCCC</color>
+    <color name="black_20">#33000000</color>
+    <color name="black_30">#4D000000</color>
+    <color name="black_50">#80000000</color>
+    <color name="black_60">#99000000</color>
+    <color name="black_70">#B3000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="white_30">#4DFFFFFF</color>
+    <color name="white_50">#80FFFFFF</color>
+    <color name="white_70">#B3FFFFFF</color>
+
+    <color name="text_black1">#FF34364A</color>
+    <color name="text_black2">#CC2D3340</color>
+    <color name="text_black3">#8034364A</color>
+    <color name="color_loading">#F2F3F5</color>
+
+    <color name="text_black1_20">#3334364A</color>
+    <color name="text_black2_20">#332D3340</color>
+    <color name="text_black2_60">#992D3340</color>
+    <color name="text_black2_80">#CC2D3340</color>
+    <color name="transparent">#00000000</color>
+    <color name="press_color">#F6F6F6</color>
+    <color name="press_color_light">#22EAEAEA</color>
+    <color name="disable">#4DC52A28</color>
+    <color name="common_window_background">#e6edf0</color>
+    <color name="color_link">#3D7FFB</color>
 
 </resources>

@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/parent"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                tools:context="razerdp.demo.DemoActivity"
-                tools:showIn="@layout/activity_demo">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="本页面仅为基础设置的demo\n更多例子请点击右上角->更多demo里面查看"
-        android:textColor="@color/color_black1"
-        android:textSize="16sp"/>
-
-    <FrameLayout
-        android:id="@+id/popup_fragment"
+    <razerdp.demo.widget.TitleBarView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        app:mode="mode_none"
+        app:title_text="BasePopup" />
 
-</RelativeLayout>
+    <razerdp.demo.widget.DPRecyclerView
+        android:id="@+id/rv_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

@@ -1,51 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimaryDark" />
-            <corners android:radius="50dp" />
-        </shape>
-    </item>
-    <item android:state_selected="true">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimaryDark" />
-            <corners android:radius="50dp" />
-        </shape>
-    </item>
-    <item android:state_focused="true">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimaryDark" />
-            <corners android:radius="50dp" />
-        </shape>
-    </item>
-    <item android:state_pressed="false">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimary" />
-            <corners android:radius="50dp" />
-        </shape>
-    </item>
-    <item android:state_selected="false">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimary" />
-            <corners android:radius="50dp" />
-        </shape>
-    </item>
-    <item android:state_focused="false">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimary" />
-            <corners android:radius="50dp" />
-        </shape>
-    </item>
-    <item android:state_enabled="false">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/disable" />
-            <corners android:radius="50dp" />
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimary" />
-            <corners android:radius="50dp" />
-        </shape>
-    </item>
+    <item android:drawable="@color/press_color" android:state_pressed="true" />
+    <item android:drawable="@color/press_color" android:state_selected="true" />
+    <item android:drawable="@color/press_color" android:state_focused="true" />
+    <item android:drawable="@color/transparent" android:state_pressed="false" />
+    <item android:drawable="@color/transparent" android:state_selected="false" />
+    <item android:drawable="@color/transparent" android:state_focused="false" />
+    <item android:drawable="@color/disable" android:state_enabled="false" />
+    <item android:drawable="@color/transparent" />
 </selector>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="TitleBarView">
+        <attr name="android:background"/>
+        <attr name="left_icon" format="reference"/>
+        <attr name="right_icon" format="reference"/>
+        <attr name="left_text" format="string"/>
+        <attr name="right_text" format="string"/>
+        <attr name="mode" format="enum">
+            <enum name="mode_left" value="16"/>
+            <enum name="mode_right" value="17"/>
+            <enum name="mode_both" value="18"/>
+            <enum name="mode_none" value="19"/>
+        </attr>
+        <attr name="title_text_color" format="color"/>
+        <attr name="title_text_size" format="dimension"/>
+        <attr name="title_text" format="string"/>
+        <attr name="left_text_color" format="color"/>
+        <attr name="right_text_color" format="color"/>
+        <attr name="left_text_size" format="dimension"/>
+        <attr name="right_text_size" format="dimension"/>
+    </declare-styleable>
+</resources>

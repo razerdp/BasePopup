@@ -1,23 +1,25 @@
 package razerdp.demo.base.baseadapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+
 import java.util.List;
 
 /**
- * Created by 大灯泡 on 2017/4/19.
+ * Created by 大灯泡 on 2019/4/10.
  */
 
 public abstract class BaseListAdapter<T, V extends BaseListViewHolder> extends BaseAdapter {
     protected List<T> datas;
     protected LayoutInflater mInflater;
     protected Context mContext;
+    private OnItemClickListener mOnItemClickListener;
 
     public BaseListAdapter(Context context, @Nullable List<T> datas) {
         mContext = context;
@@ -61,8 +63,8 @@ public abstract class BaseListAdapter<T, V extends BaseListViewHolder> extends B
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        BaseListViewHolder holder = null;
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        V holder = null;
         final int itemType = getItemViewType(position);
         if (convertView == null) {
             convertView = mInflater.inflate(getLayoutRes(itemType), parent, false);
@@ -70,9 +72,17 @@ public abstract class BaseListAdapter<T, V extends BaseListViewHolder> extends B
             holder.onInFlate(convertView);
             convertView.setTag(holder);
         } else {
-            holder = (BaseListViewHolder) convertView.getTag();
+            holder = (V) convertView.getTag();
         }
         onBindView(position, getItem(position), holder);
+        if (mOnItemClickListener != null) {
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnItemClickListener.onItemClick(position, getItem(position));
+                }
+            });
+        }
         return convertView;
     }
 
@@ -82,7 +92,15 @@ public abstract class BaseListAdapter<T, V extends BaseListViewHolder> extends B
 
     public abstract int getLayoutRes(int viewType);
 
-    public abstract BaseListViewHolder initViewHolder(int viewType);
+    public abstract V initViewHolder(int viewType);
 
-    public abstract void onBindView(int position, T data, BaseListViewHolder holder);
+    public abstract void onBindView(int position, T data, V holder);
+
+    public <T> void setOnItemClickListener(OnItemClickListener<T> onItemClickListener) {
+        mOnItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener<T> {
+        void onItemClick(int position, T data);
+    }
 }
