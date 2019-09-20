@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<razerdp.demo.widget.SquareLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="50dp"
+    android:background="@drawable/bg_round_white_8dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="动画展示"
+        android:textColor="@color/text_black2"
+        android:textSize="@dimen/text_large" />
+
+
+</razerdp.demo.widget.SquareLayout>

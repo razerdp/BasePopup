@@ -74,7 +74,7 @@
             android:gravity="center"
             android:padding="@dimen/default_padding"
             android:text="前往查看"
-            android:textColor="#FF3D7FFB"
+            android:textColor="@color/color_blue"
             android:textSize="@dimen/text_small"
             app:backgroundPressedColor="@color/press_color"
             app:corner_bottomLeftRadius="8dp"
@@ -82,6 +82,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider"
-            app:textPressedColor="#71A0F3" />
+            app:textPressedColor="@color/color_blue_pressed" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

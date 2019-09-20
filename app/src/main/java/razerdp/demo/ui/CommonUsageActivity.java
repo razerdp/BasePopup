@@ -21,6 +21,7 @@ import razerdp.demo.base.baseadapter.MultiType;
 import razerdp.demo.base.baseadapter.OnItemClickListener;
 import razerdp.demo.model.DemoCommonUsageInfo;
 import razerdp.demo.model.DemoCommonUsageTitle;
+import razerdp.demo.model.common.CommonAnimateInfo;
 import razerdp.demo.model.common.CommonSlideInfo;
 import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.DescBuilder;
@@ -90,6 +91,8 @@ public class CommonUsageActivity extends BaseActivity {
         List<MultiType> result = new ArrayList<>();
         result.add(new DemoCommonUsageTitle("位置类"));
         result.add(new CommonSlideInfo());
+        result.add(new DemoCommonUsageTitle("动画类"));
+        result.add(new CommonAnimateInfo());
         return result;
     }
 

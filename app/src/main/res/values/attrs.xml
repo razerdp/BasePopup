@@ -58,4 +58,8 @@
             <enum name="measureHeight" value="3" />
         </attr>
     </declare-styleable>
+    <declare-styleable name="FlowLayout">
+        <attr name="fv_lineSpacing" format="dimension" />
+        <attr name="fv_itemSpacing" format="dimension" />
+    </declare-styleable>
 </resources>

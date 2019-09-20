@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_padding"
+                android:text="选择动画"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_normal" />
+
+            <View style="@style/divider" />
+
+            <LinearLayout
+                android:id="@+id/layout_select_show"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/common_selector"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_padding"
+                    android:text="请选择展示动画："
+                    android:textColor="@color/text_black2"
+                    android:textSize="@dimen/text_small" />
+
+                <TextView
+                    android:id="@+id/tv_show"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="请选择动画（默认无动画）"
+                    android:textColor="@color/text_black1"
+                    android:textColorHint="@color/text_black2_20"
+                    android:textSize="@dimen/text_small"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_select_dismiss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/common_selector"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_padding"
+                    android:text="请选择消失动画："
+                    android:textColor="@color/text_black2"
+                    android:textSize="@dimen/text_small" />
+
+                <TextView
+                    android:id="@+id/tv_dismiss"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="请选择动画（默认无动画）"
+                    android:textColor="@color/text_black1"
+                    android:textColorHint="@color/text_black2_20"
+                    android:textSize="@dimen/text_small"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/check_clipchildren"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/default_padding"
+                    android:layout_marginTop="@dimen/default_padding"
+                    android:layout_weight="1"
+                    android:text="是否ClipChildren"
+                    android:textColor="@color/text_black2"
+                    android:textSize="@dimen/text_small"
+                    android:theme="@style/MyCheckBox" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/check_blur"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/default_padding"
+                    android:layout_marginTop="@dimen/default_padding"
+                    android:layout_weight="1"
+                    android:text="背景模糊"
+                    android:textColor="@color/text_black2"
+                    android:textSize="@dimen/text_small"
+                    android:theme="@style/MyCheckBox" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+    <razerdp.demo.widget.DPTextView
+        android:id="@+id/tv_go"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/default_padding"
+        android:text="确定"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_small"
+        app:backgroundColor="@color/color_link"
+        app:textPressedColor="@color/white_70" />
+
+
+</LinearLayout>
