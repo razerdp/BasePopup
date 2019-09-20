@@ -5,12 +5,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
 import razerdp.basepopup.R;
@@ -22,6 +21,8 @@ import razerdp.demo.base.baseadapter.OnItemClickListener;
 import razerdp.demo.model.DemoCommonUsageInfo;
 import razerdp.demo.model.DemoCommonUsageTitle;
 import razerdp.demo.model.common.CommonAnimateInfo;
+import razerdp.demo.model.common.CommonAnyPosInfo;
+import razerdp.demo.model.common.CommonBackgroundInfo;
 import razerdp.demo.model.common.CommonSlideInfo;
 import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.DescBuilder;
@@ -47,6 +48,8 @@ public class CommonUsageActivity extends BaseActivity {
             .build();
     @BindView(R.id.rv_content)
     DPRecyclerView rvContent;
+    @BindView(R.id.tv_any_position)
+    TextView tvAnyPos;
 
     MultiRecyclerViewAdapter mAdapter;
 
@@ -78,6 +81,10 @@ public class CommonUsageActivity extends BaseActivity {
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position, Object data) {
+                if (data instanceof CommonAnyPosInfo) {
+                    ((CommonAnyPosInfo) data).toShow(tvAnyPos);
+                    return;
+                }
                 if (data instanceof DemoCommonUsageInfo) {
                     ((DemoCommonUsageInfo) data).toShow(v);
                 }
@@ -91,8 +98,11 @@ public class CommonUsageActivity extends BaseActivity {
         List<MultiType> result = new ArrayList<>();
         result.add(new DemoCommonUsageTitle("位置类"));
         result.add(new CommonSlideInfo());
+        result.add(new CommonAnyPosInfo());
         result.add(new DemoCommonUsageTitle("动画类"));
         result.add(new CommonAnimateInfo());
+        result.add(new DemoCommonUsageTitle("背景类"));
+        result.add(new CommonBackgroundInfo());
         return result;
     }
 

@@ -10,11 +10,26 @@
         android:layout_height="wrap_content"
         app:title_text="常见例子" />
 
-    <razerdp.demo.widget.DPRecyclerView
-        android:id="@+id/rv_content"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:clipToPadding="false" />
+        android:layout_height="match_parent">
 
+        <razerdp.demo.widget.DPRecyclerView
+            android:id="@+id/rv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:clipToPadding="false" />
+
+        <TextView
+            android:id="@+id/tv_any_position"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="请在任意位置长按~"
+            android:textColor="@color/text_black1"
+            android:visibility="invisible" />
+    </FrameLayout>
 </LinearLayout>

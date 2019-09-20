@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/default_padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_alpha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="透明度：80%"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/progress_alpha"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:max="100"
+                android:progress="80" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <razerdp.demo.widget.DPTextView
+                android:id="@+id/tv_refresh_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/default_padding"
+                android:paddingTop="6dp"
+                android:paddingRight="@dimen/default_padding"
+                android:paddingBottom="6dp"
+                android:text="刷新颜色"
+                app:backgroundColor="@color/color_blue"
+                app:corner_radius="3dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/default_padding"
+                android:paddingRight="@dimen/default_padding">
+
+                <razerdp.demo.widget.SquareFrameLayout
+                    android:id="@+id/view_color_1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:measure_mode="measureWidth"
+                    tools:background="@color/color_blue" />
+
+                <razerdp.demo.widget.SquareFrameLayout
+                    android:id="@+id/view_color_2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/default_padding"
+                    android:layout_weight="1"
+                    app:measure_mode="measureWidth"
+                    tools:background="@color/color_blue" />
+
+                <razerdp.demo.widget.SquareFrameLayout
+                    android:id="@+id/view_color_3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/default_padding"
+                    android:layout_weight="1"
+                    app:measure_mode="measureWidth"
+                    tools:background="@color/color_blue" />
+
+                <razerdp.demo.widget.SquareFrameLayout
+                    android:id="@+id/view_color_4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/default_padding"
+                    android:layout_weight="1"
+                    app:measure_mode="measureWidth"
+                    tools:background="@color/color_blue" />
+
+                <razerdp.demo.widget.SquareFrameLayout
+                    android:id="@+id/view_color_5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/default_padding"
+                    android:layout_weight="1"
+                    app:measure_mode="measureWidth"
+                    tools:background="@color/color_blue" />
+
+                <razerdp.demo.widget.SquareFrameLayout
+                    android:id="@+id/view_color_6"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/default_padding"
+                    android:layout_weight="1"
+                    app:measure_mode="measureWidth"
+                    tools:background="@color/color_blue" />
+
+                <razerdp.demo.widget.SquareFrameLayout
+                    android:id="@+id/view_color_7"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/default_padding"
+                    android:layout_weight="1"
+                    app:measure_mode="measureWidth"
+                    tools:background="@color/color_blue" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/check_nobackground"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="无背景"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small"
+                android:theme="@style/MyCheckBox" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/check_pic_background"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="图片背景"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small"
+                android:theme="@style/MyCheckBox" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/check_blur"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_padding"
+                android:layout_weight="1"
+                android:text="背景模糊"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small"
+                android:theme="@style/MyCheckBox" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <razerdp.demo.widget.DPTextView
+        android:id="@+id/tv_go"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/default_padding"
+        android:text="确定"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_small"
+        app:backgroundColor="@color/color_link"
+        app:textPressedColor="@color/white_70" />
+
+
+</LinearLayout>

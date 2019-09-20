@@ -29,7 +29,7 @@ public class CommonSlideInfo extends DemoCommonUsageInfo {
     PopupSlideSmall mPopupSlideSmall;
 
     public CommonSlideInfo() {
-        title = "边缘展示类";
+        title = "位置控制";
     }
 
     @Override
@@ -105,8 +105,7 @@ public class CommonSlideInfo extends DemoCommonUsageInfo {
     public void toOption(View v) {
         if (mPopupOption == null) {
             mPopupOption = new PopupSlideOption(v.getContext());
-            mPopupOption.setPopupGravity(Gravity.BOTTOM);
-            mPopupOption.attachOption(this);
+            mPopupOption.setInfo(this);
         }
         mPopupOption.showPopupWindow(v);
     }
