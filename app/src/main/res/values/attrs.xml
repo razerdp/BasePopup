@@ -50,4 +50,12 @@
             <enum name="rect" value="2" />
         </attr>
     </declare-styleable>
+    <declare-styleable name="SquareFrameLayout">
+        <attr name="measure_mode" format="enum">
+            <enum name="measureMin" value="0" />
+            <enum name="measureMax" value="1" />
+            <enum name="measureWidth" value="2" />
+            <enum name="measureHeight" value="3" />
+        </attr>
+    </declare-styleable>
 </resources>
