@@ -63,7 +63,7 @@ public class DemoActivity extends BaseActivity {
     private List<DemoMainItem> generateItem() {
         List<DemoMainItem> result = new ArrayList<>();
         result.add(new DemoMainItem(GuideActivity.class, "简介", GuideActivity.DESC, null));
-        result.add(new DemoMainItem(CommonUsageActivity.class, "常见例子", CommonUsageActivity.DESC, "入门必备"));
+        result.add(new DemoMainItem(CommonUsageActivity.class, "快速入门", CommonUsageActivity.DESC, "入门推荐"));
         return result;
     }
 

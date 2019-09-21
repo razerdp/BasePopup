@@ -10,8 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import java.util.ArrayList;
@@ -76,7 +74,7 @@ public class GuideActivity extends BaseActivity {
                 .append(String.format(FORMAT2, "本库为抽象类，对子类几乎没有约束，您完全可以像定制Activity一样来定制您的PopupWindow"))
                 .append(String.format(FORMAT2, "支持Animation、Animator，随意控制您的PopupWindow的动画，再也不用去写蛋疼的xml了"))
                 .append(String.format(FORMAT2, "顺滑的背景定制，支持背景模糊或局部模糊，展开变暗或者修改颜色甚至是贴图，这一切仅仅需要您通过一句Api完成"))
-                .append(String.format(FORMAT2, "不再担心PopupWindow蛋疼的事件拦截，返回键控制、点击外部控制、外部事件响应控制三者分离，妈妈再也不用担心PopupWindow各种心塞的事件问题了"))
+                .append(String.format(FORMAT2, "不再担心PopupWindow蛋疼的事件拦截，返回键控制、点击外部控制、外部事件响应控制三者分离"))
                 .append(String.format(FORMAT2, "PopupWindow自动锚定AnchorView，滑动到屏幕外自动跟随AnchorView消失，不需要复杂的逻辑设置，只需要通过Link方法告诉BasePopup"))
                 .append(String.format(FORMAT2, "简单的PopupWindow不想新建一个类，希望拥有链式调用？没问题，QuickPopupBuilder为此而生，相信你会越用越爱~"));
 
