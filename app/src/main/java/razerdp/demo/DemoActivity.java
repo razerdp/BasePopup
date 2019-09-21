@@ -1,9 +1,13 @@
 package razerdp.demo;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+
+import com.azhon.appupdate.config.UpdateConfiguration;
+import com.azhon.appupdate.manager.DownloadManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +21,16 @@ import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.OnItemClickListener;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
+import razerdp.demo.base.interfaces.SimpleCallback;
 import razerdp.demo.model.DemoMainItem;
 import razerdp.demo.ui.ActivityLauncher;
 import razerdp.demo.ui.CommonUsageActivity;
 import razerdp.demo.ui.GuideActivity;
+import razerdp.demo.update.UpdateRequest;
+import razerdp.demo.update.entity.UpdateInfo;
 import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.UIHelper;
+import razerdp.demo.utils.VersionUtil;
 import razerdp.demo.utils.ViewUtil;
 import razerdp.demo.widget.DPRecyclerView;
 import razerdp.demo.widget.DPTextView;
@@ -58,6 +66,46 @@ public class DemoActivity extends BaseActivity {
         });
         rvContent.setAdapter(mAdapter);
 
+        checkForUpdate();
+
+    }
+
+    private void checkForUpdate() {
+        new UpdateRequest().checkUpdate(new SimpleCallback<UpdateInfo>() {
+            @Override
+            public void onCall(UpdateInfo data) {
+                if (data != null) {
+                    int code = data.getBuild();
+                    int currentCode = VersionUtil.getAppVersionCode();
+                    if (code <= currentCode) {
+                        UIHelper.toast("当前已经是最新版");
+                    } else {
+                        toUpdate(data);
+                    }
+                } else {
+                    UIHelper.toast("当前已经是最新版");
+                }
+            }
+        });
+    }
+
+    private void toUpdate(UpdateInfo data) {
+        int code = data.getBuild();
+        UpdateConfiguration configuration = new UpdateConfiguration()
+                .setEnableLog(true)
+                .setJumpInstallPage(true)
+                .setDialogImage(R.drawable.ic_dialog)
+                .setDialogButtonColor(UIHelper.getColor(R.color.color_blue))
+                .setDialogButtonTextColor(Color.WHITE);
+        DownloadManager manager = DownloadManager.getInstance(DemoActivity.this);
+        manager.setApkName(String.format("basepopup_v_%s.apk", code))
+                .setApkUrl(data.getInstallUrl())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setConfiguration(configuration)
+                .setApkVersionCode(code)
+                .setApkVersionName(data.getVersion())
+                .setApkDescription(data.getChangelog())
+                .download();
     }
 
     private List<DemoMainItem> generateItem() {
