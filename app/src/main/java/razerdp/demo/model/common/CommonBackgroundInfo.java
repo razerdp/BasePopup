@@ -6,7 +6,7 @@ import android.view.View;
 
 import razerdp.demo.model.DemoCommonUsageInfo;
 import razerdp.demo.popup.DemoPopup;
-import razerdp.demo.popup.PopupBackgroundOption;
+import razerdp.demo.popup.options.PopupBackgroundOption;
 
 /**
  * Created by 大灯泡 on 2019/9/20.

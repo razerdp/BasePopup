@@ -5,7 +5,7 @@ import android.view.animation.Animation;
 
 import razerdp.demo.model.DemoCommonUsageInfo;
 import razerdp.demo.popup.PopupAnimate;
-import razerdp.demo.popup.PopupAnimateOption;
+import razerdp.demo.popup.options.PopupAnimateOption;
 
 /**
  * Created by 大灯泡 on 2019/9/20

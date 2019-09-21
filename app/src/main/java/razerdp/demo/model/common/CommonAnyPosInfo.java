@@ -8,7 +8,7 @@ import android.view.View;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.demo.model.DemoCommonUsageInfo;
 import razerdp.demo.popup.DemoPopup;
-import razerdp.demo.popup.PopupAnyPosOption;
+import razerdp.demo.popup.options.PopupAnyPosOption;
 
 /**
  * Created by 大灯泡 on 2019/9/20.

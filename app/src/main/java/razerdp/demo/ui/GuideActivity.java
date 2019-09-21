@@ -65,7 +65,6 @@ public class GuideActivity extends BaseActivity {
     protected void onInitView(View decorView) {
         setFeature();
         setDependence();
-
     }
 
     private void setFeature() {

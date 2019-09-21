@@ -11,8 +11,10 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:paddingBottom="8dp"
-        android:textColor="@color/text_black2"
+        android:textColor="@color/text_black1"
         android:textSize="@dimen/text_large"
+        android:textStyle="bold"
+        android:layout_marginLeft="@dimen/default_padding"
         tools:text="测试标题" />
 
     <View
