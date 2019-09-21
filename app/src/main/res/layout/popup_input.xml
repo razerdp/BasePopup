@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@color/white"
+    android:elevation="12dp"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/default_padding"
+    android:paddingTop="10dp"
+    android:paddingRight="@dimen/default_padding"
+    android:paddingBottom="10dp">
+
+    <razerdp.demo.widget.DPTextView
+        android:id="@+id/tv_send"
+        android:layout_width="55dp"
+        android:layout_height="30dp"
+        android:alpha=".9"
+        android:gravity="center"
+        android:text="发送"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_small"
+        app:backgroundColor="@color/color_blue"
+        app:corner_radius="2dp"
+        app:layout_constraintBottom_toBottomOf="@id/ed_input"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <EditText
+        android:id="@+id/ed_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_padding"
+        android:layout_marginRight="@dimen/default_padding"
+        android:background="@drawable/bg_comment_input"
+        android:hint="请输入内容"
+        android:lineSpacingMultiplier="1.2"
+        android:maxHeight="150dp"
+        android:minHeight="30dp"
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingTop="8dp"
+        android:paddingRight="@dimen/default_padding"
+        android:paddingBottom="8dp"
+        android:textColor="@color/text_black1"
+        android:textColorHint="@color/text_black1_20"
+        android:textSize="@dimen/text_small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/tv_send"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

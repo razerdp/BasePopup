@@ -98,7 +98,6 @@
  - [特性](#特性)
  - [文章分享](https://github.com/razerdp/Article/blob/master/%E4%BA%B2%EF%BC%8C%E8%BF%98%E5%9C%A8%E4%B8%BAPopupWindow%E7%83%A6%E6%81%BC%E5%90%97.md)
  - [注意事项](#注意事项)
-   - [WARN](#WARN)
  - [环境依赖](#环境依赖)
  - [快速入门](#快速入门)
  - [Api（请看Wiki）](#api请看wiki)
@@ -127,8 +126,6 @@
 
 ### 注意事项
 
-#### WARN
- 
   - **请务必仔细阅读本README,每个版本升级请务必查阅更新日志，这可以为您减少不必要弯路**
   - **请注意引用版本的问题，Release版本是稳定版，Candy是预览版。**
     - Release版本：一般在Candy版本反复验证修复后发布到Release，如果您对稳定性要求较高，请使用Release版本。
@@ -190,6 +187,8 @@
       * 相关文档请查阅文档 [**键盘（输入法）**](https://www.kancloud.cn/razerdp/basepopup/1277045)
     * **2019/09/20**
       * Demo大翻新
+    * **2019/09/22**
+      * 增加输入法Demo
 
 * **【Release】2.2.1**(2019/06/24)
   * 支持Service或者非ActivityContext里弹窗
@@ -254,6 +253,7 @@
 | - | - |
 | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_1.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_2.gif) |
 | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_3.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_4.gif) |
+| ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_5.gif) | Coming soon |
 
 <br>
 

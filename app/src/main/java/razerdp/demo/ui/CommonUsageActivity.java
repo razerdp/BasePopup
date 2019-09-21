@@ -22,7 +22,9 @@ import razerdp.demo.model.DemoCommonUsageInfo;
 import razerdp.demo.model.DemoCommonUsageTitle;
 import razerdp.demo.model.common.CommonAnimateInfo;
 import razerdp.demo.model.common.CommonAnyPosInfo;
+import razerdp.demo.model.common.CommonBackgroundAlignInfo;
 import razerdp.demo.model.common.CommonBackgroundInfo;
+import razerdp.demo.model.common.CommonInputInfo;
 import razerdp.demo.model.common.CommonSlideInfo;
 import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.DescBuilder;
@@ -103,6 +105,10 @@ public class CommonUsageActivity extends BaseActivity {
         result.add(new CommonAnimateInfo());
         result.add(new DemoCommonUsageTitle("背景类"));
         result.add(new CommonBackgroundInfo());
+        result.add(new CommonBackgroundAlignInfo());
+        result.add(new DemoCommonUsageTitle("输入法"));
+        result.add(new CommonInputInfo());
+
         return result;
     }
 

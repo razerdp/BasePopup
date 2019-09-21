@@ -1,4 +1,4 @@
-package razerdp.demo.popup;
+package razerdp.demo.popup.options;
 
 import android.content.Context;
 import android.view.View;
@@ -7,11 +7,10 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.OnClick;
 import razerdp.basepopup.BasePopupWindow;
@@ -28,7 +27,7 @@ import razerdp.demo.widget.FlowLayout;
  * <p>
  * Description：选择动画
  */
-public class PopupSelectDismissAnimate extends BasePopupWindow {
+public class PopupSelectShowAnimate extends BasePopupWindow {
 
 
     @BindView(R.id.layout_animation)
@@ -40,7 +39,7 @@ public class PopupSelectDismissAnimate extends BasePopupWindow {
 
     List<Info> animations = new ArrayList<>();
 
-    public PopupSelectDismissAnimate(Context context) {
+    public PopupSelectShowAnimate(Context context) {
         super(context);
         ButterKnifeUtil.bind(this, getContentView());
         setMaxHeight(UIHelper.getScreenHeight() >> 1);
@@ -50,95 +49,93 @@ public class PopupSelectDismissAnimate extends BasePopupWindow {
 
     private void generateAnimation() {
         Info info = new Info();
-        info.name = "AlphaOut";
-        info.animation = getDefaultAlphaAnimation(false);
+        info.name = "AlphaIn";
+        info.animation = getDefaultAlphaAnimation(true);
         animations.add(info);
 
         info = new Info();
-        info.name = "ScaleOut";
-        info.animation = getDefaultScaleAnimation(false);
+        info.name = "ScaleIn";
+        info.animation = getDefaultScaleAnimation(true);
         animations.add(info);
 
         info = new Info();
-        info.name = "ScaleOutFromLeft";
-        info.animation = createScaleAnimation(1f, 0f, 1f, 1f, 0f, 0.5f);
+        info.name = "ScaleInFromLeft";
+        info.animation = createScaleAnimation(0f, 1f, 1f, 1f, 0f, 0.5f);
         animations.add(info);
 
         info = new Info();
-        info.name = "ScaleOutFromTop";
-        info.animation = createScaleAnimation(1f, 1f, 1f, 0f, 0.5f, 0f);
+        info.name = "ScaleInFromTop";
+        info.animation = createScaleAnimation(1f, 1f, 0f, 1f, 0.5f, 0f);
         animations.add(info);
 
         info = new Info();
-        info.name = "ScaleOutFromRight";
-        info.animation = createScaleAnimation(1f, 0f, 1f, 1f, 1f, 0.5f);
+        info.name = "ScaleInFromRight";
+        info.animation = createScaleAnimation(0f, 1f, 1f, 1f, 1f, 0.5f);
         animations.add(info);
 
         info = new Info();
-        info.name = "ScaleOutFromBottom";
-        info.animation = createScaleAnimation(1f, 1f, 1f, 0f, 0.5f, 1f);
-        animations.add(info);
-
-
-        info = new Info();
-        info.name = "ScaleOutFromLeftTop";
-        info.animation = createScaleAnimation(1, 0f, 1f, 0f, 0f, 0f);
+        info.name = "ScaleInFromBottom";
+        info.animation = createScaleAnimation(1f, 1f, 0f, 1f, 0.5f, 1f);
         animations.add(info);
 
         info = new Info();
-        info.name = "ScaleOutFromLeftBottom";
-        info.animation = createScaleAnimation(1f, 0f, 1f, 0f, 0f, 1f);
+        info.name = "ScaleInFromLeftTop";
+        info.animation = createScaleAnimation(0f, 1f, 0f, 1f, 0f, 0f);
         animations.add(info);
 
         info = new Info();
-        info.name = "ScaleOutFromRightTop";
-        info.animation = createScaleAnimation(1f, 0f, 1f, 0f, 1f, 0f);
+        info.name = "ScaleInFromLeftBottom";
+        info.animation = createScaleAnimation(0f, 1f, 0f, 1f, 0f, 1f);
         animations.add(info);
 
         info = new Info();
-        info.name = "ScaleOutFromRightBottom";
-        info.animation = createScaleAnimation(1f, 0f, 1f, 0f, 1f, 1f);
+        info.name = "ScaleInFromRightTop";
+        info.animation = createScaleAnimation(0f, 1f, 0f, 1f, 1f, 0f);
         animations.add(info);
 
+        info = new Info();
+        info.name = "ScaleInFromRightBottom";
+        info.animation = createScaleAnimation(0f, 1f, 0f, 1f, 1f, 1f);
+        animations.add(info);
 
         info = new Info();
         info.name = "TranslateFromTop";
-        info.animation = getTranslateVerticalAnimation(0f, -1f, 500);
+        info.animation = getTranslateVerticalAnimation(-1f, 0f, 500);
         animations.add(info);
 
         info = new Info();
         info.name = "TranslateFromLeft";
-        info.animation = getHorizontalAnimation(0f, -1f, 500);
+        info.animation = getHorizontalAnimation(-1f, 0f, 500);
         animations.add(info);
 
         info = new Info();
         info.name = "TranslateFromRight";
-        info.animation = getHorizontalAnimation(0f, -1f, 500);
+        info.animation = getHorizontalAnimation(1f, 0f, 500);
         animations.add(info);
 
         info = new Info();
         info.name = "TranslateFromBottom";
-        info.animation = getTranslateVerticalAnimation(0f, 1f, 500);
+        info.animation = getTranslateVerticalAnimation(1f, 0f, 500);
         animations.add(info);
 
         info = new Info();
         info.name = "TranslateFromLeftTop";
-        info.animation = createTranslateAnimation(0f, -1f, 0f, -1f);
+        info.animation = createTranslateAnimation(-1f, 0f, -1f, 0f);
         animations.add(info);
 
         info = new Info();
         info.name = "TranslateFromLeftBottom";
-        info.animation = createTranslateAnimation(0f, -1f, 0f, 1f);
+        info.animation = createTranslateAnimation(-1f, 0f, 1f, 0f);
         animations.add(info);
 
         info = new Info();
         info.name = "TranslateFromRightTop";
-        info.animation = createTranslateAnimation(0f, 1f, 0f, -1f);
+        info.animation = createTranslateAnimation(1f, 0f, -1f, 0f);
         animations.add(info);
 
         info = new Info();
         info.name = "TranslateFromRightBottom";
-        info.animation = createTranslateAnimation(0f, 1f, 0f, 1f);
+        info.animation = createTranslateAnimation(1f, 0f, 1f, 0f);
         animations.add(info);
     }
 
@@ -258,7 +255,7 @@ public class PopupSelectDismissAnimate extends BasePopupWindow {
         }
     }
 
-    public PopupSelectDismissAnimate setOnSelectedResultListener(OnSelectedResultListener mListener) {
+    public PopupSelectShowAnimate setOnSelectedResultListener(OnSelectedResultListener mListener) {
         this.mListener = mListener;
         return this;
     }

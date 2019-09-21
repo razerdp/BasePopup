@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/default_padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/check_left"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Gravity.Left"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small"
+                android:theme="@style/MyCheckBox" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/check_top"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Gravity.Top"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small"
+                android:theme="@style/MyCheckBox" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/check_right"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Gravity.Right"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small"
+                android:theme="@style/MyCheckBox" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/check_bottom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Gravity.Bottom"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small"
+                android:theme="@style/MyCheckBox" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/check_alignbackground"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="对齐背景蒙层"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small"
+                android:theme="@style/MyCheckBox" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/check_blur"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="背景模糊"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small"
+                android:theme="@style/MyCheckBox" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <razerdp.demo.widget.DPTextView
+        android:id="@+id/tv_go"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/default_padding"
+        android:text="确定"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_small"
+        app:backgroundColor="@color/color_link"
+        app:textPressedColor="@color/white_70" />
+
+
+</LinearLayout>
