@@ -22,10 +22,21 @@ android {
     }
 
     buildTypes {
+        debug {
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file('local.properties').newDataInputStream())
+            String token = properties.getProperty("api_token")
+            resValue("string", "token", token == null ? "" : token)
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+        preDexLibraries = true
+        maxProcessCount = 4
     }
 }
 
@@ -52,4 +63,13 @@ dependencies {
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     implementation 'com.caverock:androidsvg:1.2.1'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    //net
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.10.0'
+    //gson
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    implementation 'com.azhon:appupdateX:2.4.0'
 }
