@@ -15,9 +15,9 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:resizeableActivity="true"
-        android:usesCleartextTraffic="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
         <!-- 全面屏 -->
         <meta-data
@@ -54,6 +54,13 @@
         </activity>
         <activity android:name="razerdp.demo.ui.GuideActivity" />
         <activity android:name="razerdp.demo.ui.CommonUsageActivity" />
+        <activity
+            android:name="razerdp.demo.ui.photobrowser.PhotoBrowserActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/PhotoBrowser"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity android:name="razerdp.demo.ui.issuestest.home.IssueHomeActivity" />
+        <activity android:name="razerdp.demo.ui.issuestest.Issue210TestActivity" />
 
         <service android:name="razerdp.demo.services.DemoService" />
 

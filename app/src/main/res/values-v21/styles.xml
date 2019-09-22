@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="PhotoBrowser" parent="AppTheme">
+        <item name="android:windowContentTransitions">true</item>
+
+        <!-- This is the color of the Status bar -->
+        <item name="colorPrimaryDark">@color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/photo_enter</item>
+        <item name="android:windowSharedElementExitTransition">@transition/photo_exit</item>
+    </style>
+
+</resources>

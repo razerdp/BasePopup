@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <razerdp.demo.widget.TitleBarView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title_text="Issue #210" />
+
+    <TextView
+        android:id="@+id/tv_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#2b54ce"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.3"
+        android:padding="@dimen/default_padding"
+        android:text="模拟issue#210顶部bar\nPopupWindow将会显示在本控件底部"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_normal" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/check_outside_touch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="setOutSideTouchable"
+            android:textColor="@color/text_black2"
+            android:theme="@style/MyCheckBox" />
+    </FrameLayout>
+
+</LinearLayout>
