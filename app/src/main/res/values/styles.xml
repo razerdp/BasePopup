@@ -60,4 +60,6 @@
         <item name="android:layout_height">12dp</item>
         <item name="android:background">@color/common_window_background</item>
     </style>
+
+    <style name="PhotoBrowser" parent="AppTheme" />
 </resources>

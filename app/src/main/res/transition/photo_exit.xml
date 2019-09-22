@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
+    <changeBounds />
+    <changeTransform />
+    <changeClipBounds />
+    <transition class="razerdp.demo.ui.transition.ImageViewTransition" />
+    <!--    <changeImageTransform />-->
+</transitionSet>

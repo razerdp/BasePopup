@@ -9,8 +9,14 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -18,17 +24,12 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import razerdp.basepopup.R;
 import razerdp.demo.base.StatusBarHelper;
 import razerdp.demo.base.interfaces.ClearMemoryObject;
+import razerdp.demo.event.LiveDataBus;
 import razerdp.demo.utils.StringUtil;
 import razerdp.demo.utils.ToolUtil;
 import razerdp.demo.widget.StatusBarViewPlaceHolder;
@@ -67,7 +68,11 @@ public abstract class BaseActivity<T extends BaseActivity.IntentData>
         }
     }
 
-
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        super.onActivityReenter(resultCode, data);
+        LiveDataBus.INSTANCE.getActivityReenterLiveData().send(Pair.create(resultCode, data));
+    }
     protected void onStartCreate(Bundle savedInstanceState) {
 
     }

@@ -3,6 +3,7 @@
 buildscript {
     repositories {
         maven { url "https://maven.google.com" }
+        maven { url "https://jitpack.io" }
         jcenter()
         google()
     }
@@ -19,6 +20,7 @@ buildscript {
 allprojects {
     repositories {
         maven { url "https://maven.google.com" }
+        maven { url "https://jitpack.io" }
         jcenter()
         google()
     }
@@ -33,7 +35,7 @@ ext {
     compileSdkVersion = 28
     minSdkVersion = 16
     targetSdkVersion = 28
-    versionCode = 71
+    versionCode = 72
     versionName = '2.2.2.190916'
 
     candy = true
