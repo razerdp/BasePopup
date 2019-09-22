@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="FLAG_KEYBOARD_ALIGN_TO_ROOT\n（输入法适配于整个PopupContentView）"
+            android:text="FLAG_KEYBOARD_ALIGN_TO_ROOT\n（输入法对齐到整个PopupContentView）"
             android:textColor="@color/text_black2"
             android:textSize="@dimen/text_small"
             android:theme="@style/MyCheckBox" />
@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="FLAG_KEYBOARD_ALIGN_TO_VIEW\n（输入法适配于指定的View，需要传入ViewId）"
+            android:text="FLAG_KEYBOARD_ALIGN_TO_VIEW\n（输入法对齐到指定的View，需要传入ViewId）"
             android:textColor="@color/text_black2"
             android:textSize="@dimen/text_small"
             android:theme="@style/MyCheckBox" />
