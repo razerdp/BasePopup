@@ -98,9 +98,9 @@
  - [Feature](#Feature)
  - [Precautions](#Precautions)
  - [Download](#Download)
- - [Quick start](#Quick start)
+ - [Quick start](#quick-start)
  - [Api(Wiki)](#api)
- - [ChangeLog](#ChangeLog-Historical update)
+ - [ChangeLog](#changelog-historical-update)
    - [Historical update](./UpdateLog.md)
  - [Preview](#Preview)
  - [QA](#QA)
@@ -172,8 +172,8 @@ Reference document(CN)：[**BasePopup manual**](https://www.kancloud.cn/razerdp/
     * **【Candy】190704**
       * Fix time issues with AnimatorSet [**#203**](https://github.com/razerdp/BasePopup/issues/203)
     * **【Candy】190722**
-      * Rollback [#188] (https://github.com/razerdp/BasePopup/issues/188)
-      * After checking, [#188] (https://github.com/razerdp/BasePopup/issues/188) brings more serious problems, it is recommended to upgrade to this version.
+      * Rollback [#188](https://github.com/razerdp/BasePopup/issues/188)
+      * After checking, [#188](https://github.com/razerdp/BasePopup/issues/188) brings more serious problems, it is recommended to upgrade to this version.
     * **【Candy】190816**
       * Considering that many users suggest that the full screen will not fill the mask, so add the `setMaskLayoutWidth` and `setMaskLayoutHeight` methods, which allow you to customize the height of the mask.
       * Start refactoring BasePopupWindow, this refactoring will solve the remaining problems while reducing redundant code and improve code readability
@@ -248,7 +248,7 @@ Reference document(CN)：[**BasePopup manual**](https://www.kancloud.cn/razerdp/
 
 <br>
 
-#### For more examples, please download Demo: [**Demo**] (https://fir.im/pfc9)
+#### For more examples, please download Demo: [**Demo**](https://fir.im/pfc9)
 
 <br>
 
@@ -262,7 +262,7 @@ Reference document(CN)：[**BasePopup manual**](https://www.kancloud.cn/razerdp/
 
 ### QA
 
-Please refer to [** Basepopup manual: Frequently QA**](https://www.kancloud.cn/razerdp/basepopup/1277047)
+Please refer to [**Basepopup manual: Frequently QA**](https://www.kancloud.cn/razerdp/basepopup/1277047)
 
 <br>
 
