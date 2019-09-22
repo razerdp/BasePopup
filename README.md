@@ -189,6 +189,8 @@
       * Demo大翻新
     * **2019/09/22**
       * 增加输入法Demo
+      * Demo支持更新
+      * Demo增加issue修复测试用例
 
 * **【Release】2.2.1**(2019/06/24)
   * 支持Service或者非ActivityContext里弹窗
