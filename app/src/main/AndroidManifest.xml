@@ -61,6 +61,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name="razerdp.demo.ui.issuestest.home.IssueHomeActivity" />
         <activity android:name="razerdp.demo.ui.issuestest.Issue210TestActivity" />
+        <activity android:name="razerdp.demo.ui.UpdateLogActivity" />
 
         <service android:name="razerdp.demo.services.DemoService" />
 
