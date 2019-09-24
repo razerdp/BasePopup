@@ -137,7 +137,11 @@ final class WindowManagerProxy implements WindowManager {
     }
 
     public void updateViewLayoutOriginal(View view, ViewGroup.LayoutParams params) {
-        mWindowManager.updateViewLayout(view, params);
+        try {
+            mWindowManager.updateViewLayout(view, params);
+        } catch (Exception e) {
+
+        }
     }
 
     public void updateFocus(boolean focus) {
