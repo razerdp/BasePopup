@@ -291,43 +291,6 @@ final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.On
         int gravity = mHelper.getPopupGravity();
         boolean isAlignAnchorMode = mHelper.getGravityMode() == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE;
 
-        //当且仅当clipScreen同时有锚点的情况下需要进行剩余空间测量
-        boolean needCheckRest = mHelper.isClipToScreen() && mHelper.isShowAsDropDown();
-
-        if (needCheckRest) {
-            int restWidth = widthSize;
-
-            //暂时对宽度不做autoLocated，因为触碰边缘会回弹
-
-         /*   switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
-                case Gravity.RIGHT:
-                    restWidth = isAlignAnchorMode ?
-                            mHelper.getAnchorX() + mHelper.getAnchorWidth() :
-                            getAvaliableWidth() - (mHelper.getAnchorX() + mHelper.getAnchorWidth());
-                    break;
-                case Gravity.LEFT:
-                default:
-                    restWidth = isAlignAnchorMode ?
-                            getAvaliableWidth() - mHelper.getAnchorX() :
-                            mHelper.getAnchorX();
-                    break;
-            }
-
-            restWidth = restWidth - childLeftMargin - childRightMargin;
-
-            if (restWidth <= 0) {
-                Log.e(TAG, "BasePopup 可用展示空间小于或等于0，宽度将按原测量值设定，不进行调整适配");
-                restWidth = widthSize;
-                mFlag.flag |= Flag.FLAG_REST_WIDTH_NOT_ENOUGHT;
-            } else {
-                restWidth = PopupUtils.range(restWidth, mHelper.getMinWidth(), restWidth);
-            }*/
-            restWidth = PopupUtils.range(restWidth, mHelper.getMinWidth(), restWidth);
-            if (widthSize > restWidth && !mHelper.isKeepSize()) {
-                widthSize = restWidth;
-                mFlag.flag |= Flag.FLAG_REST_WIDTH_NOT_ENOUGH;
-            }
-        }
 
         if (mHelper.getMinWidth() > 0 && heightSize < mHelper.getMinWidth()) {
             widthSize = mHelper.getMinWidth();
@@ -335,60 +298,6 @@ final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.On
 
         if (mHelper.getMaxWidth() > 0 && widthSize > mHelper.getMaxWidth()) {
             widthSize = mHelper.getMaxWidth();
-        }
-
-
-        if (needCheckRest) {
-            //剩余可用空间
-            int restHeight;
-
-            switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
-                case Gravity.TOP:
-                    restHeight = isAlignAnchorMode ?
-                            getAvaliableHeight() - mHelper.getAnchorY() :
-                            mHelper.getAnchorY();
-
-
-                    if (mHelper.isAutoLocatePopup() &&
-                            ((mHelper.getMinHeight() > 0 && restHeight < mHelper.getMinHeight())
-                                    || (restHeight <= (heightSize >> 2)))) {
-                        //剩余空间不足测量高度1/4，同时是autoLocated，则测量其反方向(align模式下不需要)
-                        restHeight = isAlignAnchorMode ?
-                                getAvaliableHeight() - mHelper.getAnchorY() :
-                                getAvaliableHeight() - (mHelper.getAnchorY() + mHelper.getAnchorHeight());
-                    }
-                    break;
-                case Gravity.BOTTOM:
-                default:
-                    restHeight = isAlignAnchorMode ?
-                            mHelper.getAnchorY() + mHelper.getAnchorHeight() :
-                            getAvaliableHeight() - (mHelper.getAnchorY() + mHelper.getAnchorHeight());
-
-                    if (mHelper.isAutoLocatePopup() &&
-                            ((mHelper.getMinHeight() > 0 && restHeight < mHelper.getMinHeight())
-                                    || (restHeight <= (heightSize >> 2)))) {
-                        //剩余空间不足测量高度1/4，同时是autoLocated，则测量其反方向(align模式下不需要)
-                        restHeight = isAlignAnchorMode ?
-                                mHelper.getAnchorY() + mHelper.getAnchorHeight() :
-                                mHelper.getAnchorY();
-                    }
-                    break;
-            }
-
-            restHeight = restHeight - childTopMargin - childBottomMargin;
-
-            if (restHeight <= 0) {
-                Log.e(TAG, "BasePopup 可用展示空间小于或等于0，高度将按原测量值设定，不进行调整适配");
-                restHeight = heightSize;
-                mFlag.flag |= Flag.FLAG_REST_HEIGHT_NOT_ENOUGH;
-            } else {
-                restHeight = PopupUtils.range(restHeight, mHelper.getMinHeight(), restHeight);
-            }
-
-            if (heightSize > restHeight && !mHelper.isKeepSize()) {
-                heightSize = restHeight;
-                mFlag.flag |= Flag.FLAG_REST_HEIGHT_NOT_ENOUGH;
-            }
         }
 
         if (mHelper.getMinHeight() > 0 && heightSize < mHelper.getMinHeight()) {
@@ -949,62 +858,62 @@ final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.On
     @Override
     public void onKeyboardChange(Rect keyboardBounds, boolean isVisible) {
         int offset = 0;
-        //横屏不需要适配
-        if (PopupUiUtils.getScreenOrientation() == Configuration.ORIENTATION_LANDSCAPE)
-            return;
-        if (mHelper.getSoftInputMode() == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN ||
-                mHelper.getSoftInputMode() == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE) {
-            View anchor = null;
+        boolean forceAdjust = (mHelper.flag & BasePopupFlag.KEYBOARD_FORCE_ADJUST) != 0;
+        boolean process = forceAdjust || ((PopupUiUtils.getScreenOrientation() != Configuration.ORIENTATION_LANDSCAPE)
+                && (mHelper.getSoftInputMode() == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN ||
+                mHelper.getSoftInputMode() == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE));
 
-            if ((mHelper.flag & BasePopupFlag.KEYBOARD_ALIGN_TO_VIEW) != 0) {
-                if (mHelper.keybaordAlignViewId != 0) {
-                    anchor = mTarget.findViewById(mHelper.keybaordAlignViewId);
-                }
+        if (!process) return;
+        View anchor = null;
+
+        if ((mHelper.flag & BasePopupFlag.KEYBOARD_ALIGN_TO_VIEW) != 0) {
+            if (mHelper.keybaordAlignViewId != 0) {
+                anchor = mTarget.findViewById(mHelper.keybaordAlignViewId);
+            }
+        }
+
+        if ((mHelper.flag & BasePopupFlag.KEYBOARD_ALIGN_TO_ROOT) != 0 || anchor == null) {
+            anchor = mTarget;
+        }
+
+        boolean animate = (mHelper.flag & BasePopupFlag.KEYBOARD_ANIMATE_ALIGN) != 0;
+
+        anchor.getLocationOnScreen(location);
+        int bottom = location[1] + anchor.getHeight();
+
+        if (isVisible && keyboardBounds.height() > 0) {
+            offset = keyboardBounds.top - bottom;
+            if (bottom <= keyboardBounds.top
+                    && (mHelper.flag & BasePopupFlag.KEYBOARD_IGNORE_OVER_KEYBOARD) != 0
+                    && lastKeyboardBounds.isEmpty()) {
+                offset = 0;
             }
 
-            if ((mHelper.flag & BasePopupFlag.KEYBOARD_ALIGN_TO_ROOT) != 0 || anchor == null) {
-                anchor = mTarget;
-            }
+        }
 
-            boolean animate = (mHelper.flag & BasePopupFlag.KEYBOARD_ANIMATE_ALIGN) != 0;
-
-            anchor.getLocationOnScreen(location);
-            int bottom = location[1] + anchor.getHeight();
-
-            if (isVisible && keyboardBounds.height() > 0) {
-                offset = keyboardBounds.top - bottom;
-                if (bottom <= keyboardBounds.top
-                        && (mHelper.flag & BasePopupFlag.KEYBOARD_IGNORE_OVER_KEYBOARD) != 0
-                        && lastKeyboardBounds.isEmpty()) {
-                    offset = 0;
-                }
-
-            }
-
-            if (mHelper.isOutSideTouchable()) {
-                if ((mFlag.flag & Flag.FLAG_WINDOW_PARAMS_FIT_REQUEST) != 0) return;
-                //移动window
-                final WindowManager.LayoutParams p = PopupUtils.cast(getLayoutParams(), WindowManager.LayoutParams.class);
-                if (p != null) {
-                    if (animate) {
-                        animateTranslateWithOutside(p, isVisible, offset);
-                    } else {
-                        p.y = isVisible ? p.y - offset : originY;
-                        mWindowManagerProxy.updateViewLayoutOriginal(this, p);
-                    }
-                }
-            } else {
+        if (mHelper.isOutSideTouchable()) {
+            if ((mFlag.flag & Flag.FLAG_WINDOW_PARAMS_FIT_REQUEST) != 0) return;
+            //移动window
+            final WindowManager.LayoutParams p = PopupUtils.cast(getLayoutParams(), WindowManager.LayoutParams.class);
+            if (p != null) {
                 if (animate) {
-                    animateTranslate(mTarget, isVisible, offset);
+                    animateTranslateWithOutside(p, isVisible, offset);
                 } else {
-                    mTarget.setTranslationY(isVisible ? mTarget.getTranslationY() + offset : 0);
+                    p.y = isVisible ? p.y - offset : originY;
+                    mWindowManagerProxy.updateViewLayoutOriginal(this, p);
                 }
             }
-            if (isVisible) {
-                lastKeyboardBounds.set(keyboardBounds);
+        } else {
+            if (animate) {
+                animateTranslate(mTarget, isVisible, offset);
             } else {
-                lastKeyboardBounds.setEmpty();
+                mTarget.setTranslationY(isVisible ? mTarget.getTranslationY() + offset : 0);
             }
+        }
+        if (isVisible) {
+            lastKeyboardBounds.set(keyboardBounds);
+        } else {
+            lastKeyboardBounds.setEmpty();
         }
     }
 

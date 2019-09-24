@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.animation.Animation;
 
 import androidx.appcompat.widget.AppCompatCheckBox;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import razerdp.basepopup.BasePopupWindow;
@@ -26,6 +27,8 @@ public class PopupInputOption extends BaseOptionPopup<CommonInputInfo> {
     AppCompatCheckBox mCheckAjustInput;
     @BindView(R.id.check_auto_open)
     AppCompatCheckBox mCheckAutoOpen;
+    @BindView(R.id.check_force)
+    AppCompatCheckBox mCheckForce;
     @BindView(R.id.tv_go)
     DPTextView mTvGo;
 
@@ -60,6 +63,9 @@ public class PopupInputOption extends BaseOptionPopup<CommonInputInfo> {
         }
         if (mCheckAlignToView.isChecked()) {
             alignMode |= BasePopupWindow.FLAG_KEYBOARD_ALIGN_TO_VIEW;
+        }
+        if (mCheckForce.isChecked()) {
+            alignMode |= BasePopupWindow.FLAG_KEYBOARD_FORCE_ADJUST;
         }
         mInfo.alignMode = alignMode;
         mInfo.adjust = mCheckAjustInput.isChecked();

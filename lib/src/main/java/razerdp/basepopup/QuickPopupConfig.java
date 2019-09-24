@@ -48,6 +48,9 @@ public class QuickPopupConfig implements BasePopupFlag {
 
     protected View mLinkedView;
 
+    protected int maskLayoutWidth;
+    protected int maskLayoutHeight;
+
 
     HashMap<Integer, Pair<View.OnClickListener, Boolean>> mListenersHolderMap;
 
@@ -232,6 +235,17 @@ public class QuickPopupConfig implements BasePopupFlag {
         setFlag(KEEP_SIZE, keep);
         return this;
     }
+
+    public QuickPopupConfig maskLayoutHeight(int maskLayoutHeight) {
+        this.maskLayoutHeight = maskLayoutHeight;
+        return this;
+    }
+
+    public QuickPopupConfig maskLayoutWidth(int maskLayoutWidth) {
+        this.maskLayoutWidth = maskLayoutWidth;
+        return this;
+    }
+
     //-----------------------------------------getter-----------------------------------------
 
     public Animation getShowAnimation() {
@@ -312,6 +326,13 @@ public class QuickPopupConfig implements BasePopupFlag {
         return maxHeight;
     }
 
+    public int getMaskLayoutWidth() {
+        return maskLayoutWidth;
+    }
+
+    public int getMaskLayoutHeight() {
+        return maskLayoutHeight;
+    }
 
     private void setFlag(int flag, boolean added) {
         if (!added) {

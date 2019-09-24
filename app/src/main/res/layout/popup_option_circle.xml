@@ -16,81 +16,40 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/default_padding"
-            android:text="适配模式选择"
+            android:text="朋友圈模式选择"
             android:textColor="@color/text_black2"
             android:textSize="@dimen/text_normal" />
 
         <View style="@style/divider" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/check_align_to_root"
+            android:id="@+id/check_outsidetouch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="FLAG_KEYBOARD_ALIGN_TO_ROOT\n（输入法对齐到整个PopupContentView）"
+            android:text="outSideTouchAble"
             android:textColor="@color/text_black2"
             android:textSize="@dimen/text_small"
             android:theme="@style/MyCheckBox" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/check_align_to_view"
+            android:id="@+id/check_blur"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="FLAG_KEYBOARD_ALIGN_TO_VIEW\n（输入法对齐到指定的View，需要传入ViewId）"
+            android:text="背景模糊"
             android:textColor="@color/text_black2"
             android:textSize="@dimen/text_small"
             android:theme="@style/MyCheckBox" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/check_align_animate"
+            android:id="@+id/check_link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:checked="true"
-            android:text="FLAG_KEYBOARD_ANIMATE_ALIGN\n（输入法适配是否执行动画）"
+            android:text="连接anchorView（跟随Anchor滑动自动更新BasePopup）"
             android:textColor="@color/text_black2"
             android:textSize="@dimen/text_small"
             android:theme="@style/MyCheckBox" />
-
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/check_force"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="FLAG_KEYBOARD_FORCE_ADJUST\n（强制适配输入法，默认横屏不适配）"
-            android:textColor="@color/text_black2"
-            android:textSize="@dimen/text_small"
-            android:theme="@style/MyCheckBox" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
-
-            <androidx.appcompat.widget.AppCompatCheckBox
-                android:id="@+id/check_ajust_input"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="true"
-                android:text="适配输入法"
-                android:textColor="@color/text_black2"
-                android:textSize="@dimen/text_small"
-                android:theme="@style/MyCheckBox" />
-
-            <androidx.appcompat.widget.AppCompatCheckBox
-                android:id="@+id/check_auto_open"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="true"
-                android:text="自动打开输入法"
-                android:textColor="@color/text_black2"
-                android:textSize="@dimen/text_small"
-                android:theme="@style/MyCheckBox" />
-        </LinearLayout>
 
     </LinearLayout>
 

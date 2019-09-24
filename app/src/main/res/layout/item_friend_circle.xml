@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <razerdp.demo.widget.DPImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginLeft="@dimen/default_padding"
+            app:biv_shape="oval" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="@dimen/default_padding"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/tv_nick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textColor="@color/text_black1"
+                android:textSize="@dimen/text_large"
+                android:textStyle="bold"
+                tools:text="BasePopup" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/tv_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/text_black2"
+                    android:textSize="@dimen/text_normal"
+                    tools:text="啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦" />
+
+                <razerdp.demo.widget.recyclerviewbox.RecyclerViewBox
+                    android:id="@+id/rv_box"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_padding"
+                    android:layout_marginRight="48dp"
+                    android:orientation="horizontal" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:padding="@dimen/default_padding"
+        android:src="@drawable/ic_comment_show" />
+
+
+    <View style="@style/divider_small_window_color" />
+
+</LinearLayout>

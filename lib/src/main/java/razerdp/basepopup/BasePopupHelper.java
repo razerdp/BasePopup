@@ -633,6 +633,11 @@ final class BasePopupHelper implements InputMethodUtils.OnKeyboardChangeListener
         return this;
     }
 
+    BasePopupHelper setForceAdjustKeyboard(boolean adjust){
+        setFlag(KEYBOARD_FORCE_ADJUST,adjust);
+        return this;
+    }
+
     boolean isAllowToBlur() {
         return mBlurOption != null && mBlurOption.isAllowToBlur();
     }

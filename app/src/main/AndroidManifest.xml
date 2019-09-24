@@ -62,6 +62,7 @@
         <activity android:name="razerdp.demo.ui.issuestest.home.IssueHomeActivity" />
         <activity android:name="razerdp.demo.ui.issuestest.Issue210TestActivity" />
         <activity android:name="razerdp.demo.ui.UpdateLogActivity" />
+        <activity android:name="razerdp.demo.ui.friendcircle.FriendCircleActivity" />
 
         <service android:name="razerdp.demo.services.DemoService" />
 

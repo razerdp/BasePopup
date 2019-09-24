@@ -333,7 +333,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public static final int FLAG_KEYBOARD_ALIGN_TO_ROOT = BasePopupFlag.KEYBOARD_ALIGN_TO_ROOT;
     public static final int FLAG_KEYBOARD_IGNORE_OVER = BasePopupFlag.KEYBOARD_IGNORE_OVER_KEYBOARD;
     public static final int FLAG_KEYBOARD_ANIMATE_ALIGN = BasePopupFlag.KEYBOARD_ANIMATE_ALIGN;
-
+    public static final int FLAG_KEYBOARD_FORCE_ADJUST = BasePopupFlag.KEYBOARD_FORCE_ADJUST;
 
     public enum GravityMode {
         RELATIVE_TO_ANCHOR,
@@ -930,10 +930,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </p>
      *
      * @param flag <ul>
-     *             <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_ROOT}，键盘适配作用于整个popup content view</li>
-     *             <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_VIEW}，键盘适配作用于指定的view，需要传入viewid</li>
+     *             <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_ROOT}，键盘适配对齐到整个popup content view</li>
+     *             <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_VIEW}，键盘适配对齐到指定的view，需要传入viewid</li>
      *             <li>{@link BasePopupWindow#FLAG_KEYBOARD_IGNORE_OVER}，键盘适配仅作用于无法完整显示的情况</li>
      *             <li>{@link BasePopupWindow#FLAG_KEYBOARD_ANIMATE_ALIGN}，键盘是否动画适配</li>
+     *             <li>{@link BasePopupWindow#FLAG_KEYBOARD_FORCE_ADJUST}，是否强制适配输入法</li>
      *             </ul>
      */
     public BasePopupWindow setAdjustInputMode(int flag) {
@@ -947,10 +948,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *
      * @param viewId keyboard对齐的View id
      * @param flag   <ul>
-     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_ROOT}，键盘适配作用于整个popup content view</li>
-     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_VIEW}，键盘适配作用于指定的view，需要传入viewid</li>
+     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_ROOT}，键盘适配对齐到整个popup content view</li>
+     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_VIEW}，键盘适配对齐到指定的view，需要传入viewid</li>
      *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_IGNORE_OVER}，键盘适配仅作用于无法完整显示的情况</li>
      *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_ANIMATE_ALIGN}，键盘是否动画适配</li>
+     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_FORCE_ADJUST}，是否强制适配输入法</li>
      *               </ul>
      */
     public BasePopupWindow setAdjustInputMode(int viewId, int flag) {
