@@ -8,6 +8,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+
 import butterknife.BindView;
 import razerdp.basepopup.R;
 import razerdp.demo.base.UpdateLogHelper;
@@ -17,6 +20,9 @@ import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.model.updatelog.UpdateLogInfo;
 import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.DescBuilder;
+import razerdp.demo.utils.rx.RxHelper;
+import razerdp.demo.utils.rx.RxTaskCall;
+import razerdp.demo.widget.DPTextView;
 
 /**
  * Created by 大灯泡 on 2019/9/23.
@@ -26,6 +32,8 @@ public class UpdateLogActivity extends BaseActivity {
             .append("更新日志")
             .build();
 
+    @BindView(R.id.tv_loading)
+    DPTextView loading;
     @BindView(R.id.rv_content)
     RecyclerView mRvContent;
 
@@ -43,11 +51,27 @@ public class UpdateLogActivity extends BaseActivity {
 
     @Override
     protected void onInitView(View decorView) {
-        mAdapter = new SimpleRecyclerViewAdapter<>(this, UpdateLogHelper.getUpdateLogs());
-        mAdapter.setHolder(InnerViewHolder.class);
-        mRvContent.setLayoutManager(new LinearLayoutManager(this));
-        mRvContent.setItemAnimator(null);
-        mRvContent.setAdapter(mAdapter);
+        loading.setVisibility(View.VISIBLE);
+        loading.setLoadingText("正在加载...", 2000);
+        RxHelper.runOnBackground(new RxTaskCall<List<UpdateLogInfo>>() {
+            @Override
+            public List<UpdateLogInfo> doInBackground() {
+                return UpdateLogHelper.getUpdateLogs();
+            }
+
+            @Override
+            public void onResult(List<UpdateLogInfo> result) {
+                loading.setText(null);
+                loading.setVisibility(View.GONE);
+                mRvContent.setVisibility(View.VISIBLE);
+                mAdapter = new SimpleRecyclerViewAdapter<>(self(), result);
+                mAdapter.setHolder(InnerViewHolder.class);
+                mRvContent.setLayoutManager(new LinearLayoutManager(self()));
+                mRvContent.setItemAnimator(null);
+                mRvContent.setAdapter(mAdapter);
+            }
+        });
+
 
     }
 
