@@ -35,7 +35,7 @@ ext {
     compileSdkVersion = 28
     minSdkVersion = 16
     targetSdkVersion = 28
-    versionCode = 75
+    versionCode = 76
     versionName = '2.2.2.190916'
 
     candy = true

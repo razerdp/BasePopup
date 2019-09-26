@@ -23,6 +23,7 @@ import razerdp.demo.base.imageloader.ImageLoaderManager;
 import razerdp.demo.model.issue.IssueInfo;
 import razerdp.demo.ui.ActivityLauncher;
 import razerdp.demo.ui.issuestest.Issue210TestActivity;
+import razerdp.demo.ui.issuestest.Issue226TestActivity;
 import razerdp.demo.ui.photobrowser.PhotoBrowserProcessor;
 import razerdp.demo.utils.ActivityUtil;
 import razerdp.demo.utils.ButterKnifeUtil;
@@ -69,7 +70,21 @@ public class IssueHomeActivity extends BaseActivity {
 
     private List<IssueInfo> generateItem() {
         List<IssueInfo> result = new ArrayList<>();
+        add_210(result);
+        add_226(result);
+        Collections.sort(result, new Comparator<IssueInfo>() {
+            @Override
+            public int compare(IssueInfo o1, IssueInfo o2) {
+                int issue = StringUtil.toInt(o1.issue);
+                int issue2 = StringUtil.toInt(o2.issue);
+                return Integer.compare(issue, issue2);
+            }
+        });
 
+        return result;
+    }
+
+    private void add_210(List<IssueInfo> result) {
         IssueInfo issue210 = new IssueInfo();
         issue210.setActivityClass(Issue210TestActivity.class)
                 .setIssue("210")
@@ -83,17 +98,19 @@ public class IssueHomeActivity extends BaseActivity {
                 .appendPic("https://user-images.githubusercontent.com/11664870/61995674-070bcf00-b0be-11e9-996c-253955d32969.png");
 
         result.add(issue210);
+    }
 
-        Collections.sort(result, new Comparator<IssueInfo>() {
-            @Override
-            public int compare(IssueInfo o1, IssueInfo o2) {
-                int issue = StringUtil.toInt(o1.issue);
-                int issue2 = StringUtil.toInt(o2.issue);
-                return Integer.compare(issue, issue2);
-            }
-        });
-
-        return result;
+    private void add_226(List<IssueInfo> result) {
+        IssueInfo issue210 = new IssueInfo();
+        issue210.setActivityClass(Issue226TestActivity.class)
+                .setIssue("226")
+                .setTitle("横屏下，键盘不会顶起Popup")
+                .setDesc(DescBuilder.get()
+                        .append("系统版本：华为P9（8.0），Vivo Y67A（6.0）")
+                        .append("库版本：release 2.2.1")
+                        .append("问题描述/重现步骤：把Demo里面的Activity设置为横屏，更多具体例子-从底部上滑的输入法。")
+                        .build());
+        result.add(issue210);
     }
 
 

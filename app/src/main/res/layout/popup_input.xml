@@ -33,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/default_padding"
         android:layout_marginRight="@dimen/default_padding"
+        android:imeOptions="flagNoExtractUi"
         android:background="@drawable/bg_comment_input"
         android:hint="请输入内容"
         android:lineSpacingMultiplier="1.2"
