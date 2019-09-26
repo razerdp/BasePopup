@@ -1,6 +1,7 @@
 package razerdp.demo.ui;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import razerdp.demo.model.common.CommonAnimateInfo;
 import razerdp.demo.model.common.CommonAnyPosInfo;
 import razerdp.demo.model.common.CommonBackgroundAlignInfo;
 import razerdp.demo.model.common.CommonBackgroundInfo;
+import razerdp.demo.model.common.CommonBottomSheetDialogInfo;
 import razerdp.demo.model.common.CommonFriendCircleInfo;
 import razerdp.demo.model.common.CommonInputInfo;
 import razerdp.demo.model.common.CommonSlideInfo;
@@ -110,6 +112,8 @@ public class CommonUsageActivity extends BaseActivity {
         result.add(new CommonBackgroundAlignInfo());
         result.add(new DemoCommonUsageTitle("输入法"));
         result.add(new CommonInputInfo());
+        result.add(new DemoCommonUsageTitle("兼容性测试"));
+        result.add(new CommonBottomSheetDialogInfo());
 
         return result;
     }
@@ -161,7 +165,7 @@ public class CommonUsageActivity extends BaseActivity {
         @Override
         public void onBindData(DemoCommonUsageInfo data, int position) {
             tvFun.setText(data.title);
-
+            tvOption.setText(TextUtils.isEmpty(data.option) ? "配置" : data.option);
         }
 
         @OnClick(R.id.iv_tips)

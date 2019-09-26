@@ -394,6 +394,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param delayInit 如果是true，请务必在您初始化后调用{@link #delayInit()}
      */
     public BasePopupWindow(Context context, int width, int height, boolean delayInit) {
+        BasePopupComponentManager.getInstance().init(context);
         mContext = new WeakReference<Context>(context);
         if (!delayInit) {
             initView(width, height);

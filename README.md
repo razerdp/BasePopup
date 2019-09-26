@@ -45,8 +45,8 @@
 		<tr>
 			<td rowspan="3" align="center">Compat组件</td>
 			<td align="center"></td>
-			<td align="center">support</td>
-			<td align="center">lifecycle</td>
+			<td align="center">support（已终止迭代）</td>
+			<td align="center">lifecycle（已终止迭代）</td>
 			<td align="center">androidx</td>
 			<tr>
 			<td align="center">Release</td>
@@ -138,7 +138,10 @@
 
 ### 环境依赖
 
-请把下述 **{$latestVersion}** 替换为上面表格中对应的版本
+请把下述 **{$latestVersion}** 替换为上面表格中对应的版本。
+
+**自2.2.2版本开始，BasePopup将不再支持support**，同时BasePopup建议您尽早迁移到AndroidX
+
  - **Release：**
    - 基础库（必选）：**`implementation 'com.github.razerdp:BasePopup:{$latestVersion}'`**
    - support支持库（可选）：**`implementation 'com.github.razerdp:BasePopup-compat-support:{$latestVersion}'`**
@@ -191,6 +194,8 @@
       * 增加输入法Demo
       * Demo支持更新
       * Demo增加issue修复测试用例
+    * **2019/09/26**
+      * 取消对support的支持
 
 * **【Release】2.2.1**(2019/06/24)
   * 支持Service或者非ActivityContext里弹窗

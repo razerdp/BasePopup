@@ -45,8 +45,8 @@
 		<tr>
 			<td rowspan="3" align="center">Compat library</td>
 			<td align="center"></td>
-			<td align="center">support</td>
-			<td align="center">lifecycle</td>
+			<td align="center">support(Deprecated)</td>
+			<td align="center">lifecycle(Deprecated)</td>
 			<td align="center">androidx</td>
 			<tr>
 			<td align="center">Release</td>
@@ -135,7 +135,9 @@
 
 ### Download
 
-Please replace <b>{$latestVersion}</b> with the version shown in the Jcenter tab above
+Please replace <b>{$latestVersion}</b> with the version shown in the Jcenter tab above.
+
+**Based on version 2.2.2, BasePopup will no longer support for SupportLibrary**, and BasePopup recommends that you migrate to AndroidX as soon as possible.
 
  - **Release：**
    - BasePopup main library(**Required**)：**`implementation 'com.github.razerdp:BasePopup:{$latestVersion}'`**

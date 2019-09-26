@@ -1,10 +1,8 @@
 package razerdp.demo.model;
 
-import android.os.Bundle;
 import android.view.View;
 
 import razerdp.demo.base.baseadapter.MultiType;
-import razerdp.demo.utils.UnSafeUtil;
 
 /**
  * Created by 大灯泡 on 2019/9/20
@@ -14,6 +12,7 @@ import razerdp.demo.utils.UnSafeUtil;
 public abstract class DemoCommonUsageInfo implements MultiType {
     public String title;
     public String desc;
+    public String option;
 
     public DemoCommonUsageInfo() {
     }

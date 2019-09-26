@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:padding="@dimen/default_padding"
         tools:text="动画展示"
         android:textColor="@color/text_black2"
         android:textSize="@dimen/text_large" />

@@ -1,4 +1,1 @@
-include ':app', ':lib', ':lib_supporter', ':lib_supporter_x', ':lib_supporter_lifecycle'
-
-//def submoduleProject = project(':lib')
-//submoduleProject.name = 'BasePopup'
+include ':app', ':lib', ':lib_supporter_x'
