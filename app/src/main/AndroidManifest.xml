@@ -63,6 +63,10 @@
         <activity android:name="razerdp.demo.ui.issuestest.Issue210TestActivity" />
         <activity android:name="razerdp.demo.ui.UpdateLogActivity" />
         <activity android:name="razerdp.demo.ui.friendcircle.FriendCircleActivity" />
+        <activity
+            android:name="razerdp.demo.ui.issuestest.Issue226TestActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape" />
 
         <service android:name="razerdp.demo.services.DemoService" />
 
