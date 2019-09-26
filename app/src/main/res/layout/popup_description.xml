@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="32dp"
+    android:background="@drawable/bg_round_white_8dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/default_padding"
+        android:textColor="@color/text_black2"
+        android:textSize="@dimen/text_large"
+        tools:text="标题" />
+
+    <View style="@style/divider" />
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingMultiplier="1.3"
+        android:padding="@dimen/default_padding"
+        android:textColor="@color/text_black2_60"
+        android:textSize="@dimen/text_small"
+        tools:text="描述" />
+
+    <razerdp.demo.widget.DPTextView
+        android:id="@+id/tv_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="确定"
+        app:backgroundColor="@color/common_blue"
+        app:corner_bottomLeftRadius="8dp"
+        app:corner_bottomRightRadius="8dp" />
+
+
+</LinearLayout>

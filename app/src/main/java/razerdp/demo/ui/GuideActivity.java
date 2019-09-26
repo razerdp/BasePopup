@@ -117,10 +117,13 @@ public class GuideActivity extends BaseActivity {
         builder.append("BasePopup区分为Release版本和Candy版本，Candy版本相当于预览版，其更新较为频繁且可能会包含了新的想法和特性，就像糖果一样甜，但也可能会引起蛀牙。")
                 .append('\n')
                 .append(String.format(FORMAT, "如果商业用途，请使用Release版本"))
-                .append(String.format(FORMAT, "如果希望体验新的特性和功能，请使用Candy版本"));
+                .append(String.format(FORMAT, "如果希望体验新的特性和功能，请使用Candy版本"))
+                .append('\n')
+                .append("自2.2.2版本开始，BasePopup将不再支持Support库，同时BasePopup建议您尽早迁移到AndroidX");
         SpanUtil.create(builder)
                 .append("Release").setTextStyle(Typeface.DEFAULT_BOLD).setTextColor(Color.BLACK)
                 .append("Candy").setTextStyle(Typeface.DEFAULT_BOLD).setTextColor(Color.BLACK)
+                .append("自2.2.2版本开始，BasePopup将不再支持Support库，同时BasePopup建议您尽早迁移到AndroidX").setTextColor(Color.RED).setTextStyle(Typeface.DEFAULT_BOLD)
                 .into(tvDependence);
 
         appendReleaseDependence();

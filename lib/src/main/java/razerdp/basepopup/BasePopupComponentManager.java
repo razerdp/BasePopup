@@ -29,20 +29,12 @@ public final class BasePopupComponentManager {
 
     class BasePopupComponentProxy implements BasePopupComponent {
         private List<BasePopupComponent> IMPL;
-        private static final String IMPL_SUPPORT = "razerdp.basepopup.BasePopupComponentSupport";
-        private static final String IMPL_LIFECYCLE = "razerdp.basepopup.BasePopupComponentLifeCycle";
         private static final String IMPL_X = "razerdp.basepopup.BasePopupComponentX";
 
 
         BasePopupComponentProxy(Context context) {
             IMPL = new ArrayList<>();
             try {
-                if (isClassExist(IMPL_SUPPORT)) {
-                    IMPL.add((BasePopupComponent) Class.forName(IMPL_SUPPORT).newInstance());
-                }
-                if (isClassExist(IMPL_LIFECYCLE)) {
-                    IMPL.add((BasePopupComponent) Class.forName(IMPL_LIFECYCLE).newInstance());
-                }
                 if (isClassExist(IMPL_X)) {
                     IMPL.add((BasePopupComponent) Class.forName(IMPL_X).newInstance());
                 }
