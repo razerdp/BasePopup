@@ -960,7 +960,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         mHelper.setFlag(FLAG_KEYBOARD_ALIGN_TO_ROOT
                 | FLAG_KEYBOARD_ALIGN_TO_VIEW
                 | FLAG_KEYBOARD_IGNORE_OVER
-                | FLAG_KEYBOARD_ANIMATE_ALIGN, false);
+                | FLAG_KEYBOARD_ANIMATE_ALIGN
+                | FLAG_KEYBOARD_FORCE_ADJUST, false);
         mHelper.setFlag(flag, true);
         return this;
     }
