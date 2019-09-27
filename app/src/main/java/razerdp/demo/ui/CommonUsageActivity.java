@@ -6,11 +6,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
 import razerdp.basepopup.R;
@@ -27,6 +28,7 @@ import razerdp.demo.model.common.CommonBackgroundAlignInfo;
 import razerdp.demo.model.common.CommonBackgroundInfo;
 import razerdp.demo.model.common.CommonBottomSheetDialogInfo;
 import razerdp.demo.model.common.CommonFriendCircleInfo;
+import razerdp.demo.model.common.CommonGestureNavInfo;
 import razerdp.demo.model.common.CommonInputInfo;
 import razerdp.demo.model.common.CommonSlideInfo;
 import razerdp.demo.utils.ButterKnifeUtil;
@@ -114,6 +116,7 @@ public class CommonUsageActivity extends BaseActivity {
         result.add(new CommonInputInfo());
         result.add(new DemoCommonUsageTitle("兼容性测试"));
         result.add(new CommonBottomSheetDialogInfo());
+        result.add(new CommonGestureNavInfo());
 
         return result;
     }
