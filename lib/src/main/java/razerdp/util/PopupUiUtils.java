@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.SparseArray;
 import android.view.Surface;
 import android.view.View;
@@ -65,7 +66,9 @@ public class PopupUiUtils {
                 resourceEntryName = act.getResources().getResourceEntryName(child.getId());
                 if (NAVIGATION_BAR_NAMES.contains(resourceEntryName.toLowerCase())) {
                     if ((decorView.getSystemUiVisibility() & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0) {
-                        return true;
+                        //如果有手势导航栏，navigationbar始终返回为true，此时需要进一步判断
+                        //如果有手势导航栏，因为一般手势导航栏是很小的一块，因此可以当作木有。。。
+                        return !hasGestureNavigation();
                     }
                 }
             } catch (Exception e) {
@@ -163,5 +166,28 @@ public class PopupUiUtils {
         } else {
             v.setBackgroundDrawable(background);
         }
+    }
+
+
+    //======================
+    private static final String GESTURE_NAV_XVIVO = "navigation_gesture_on";
+    private static final String GESTURE_NAV_XIAOMI = "force_fsg_nav_bar";
+    private static final String GESTURE_NAVA_SAMSUNG = "navigationbar_hide_bar_enabled";
+
+    /**
+     * 是否拥有手势导航栏，蛋疼的一逼，各个ROM都有自己的参数
+     */
+    private static boolean hasGestureNavigation() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) return false;
+        if (RomUtils.isXiaomi()) {
+            return Settings.Global.getInt(BasePopupComponentManager.getApplication().getContentResolver(), GESTURE_NAV_XIAOMI, 0) != 0;
+        }
+        if (RomUtils.isVivo()) {
+            return Settings.Secure.getInt(BasePopupComponentManager.getApplication().getContentResolver(), GESTURE_NAV_XVIVO, 0) != 0;
+        }
+        if (RomUtils.isSamsung()) {
+            return Settings.Global.getInt(BasePopupComponentManager.getApplication().getContentResolver(), GESTURE_NAVA_SAMSUNG, 0) != 0;
+        }
+        return false;
     }
 }

@@ -751,7 +751,6 @@ final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.On
         if (PopupUiUtils.hasNavigationBar(mHelper.popupWindow.getContext()) &&
                 PopupUiUtils.getScreenRotation() == Surface.ROTATION_90) {
             result -= PopupUiUtils.getNavigationBarHeight();
-            PopupLog.i("右旋转+nav");
         }
         PopupLog.i(result);
         return result;
@@ -762,7 +761,6 @@ final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.On
         if (PopupUiUtils.hasNavigationBar(mHelper.popupWindow.getContext()) &&
                 PopupUiUtils.getScreenRotation() == Surface.ROTATION_0) {
             result -= PopupUiUtils.getNavigationBarHeight();
-            PopupLog.i("非旋转+nav");
         }
         PopupLog.i(result);
         return result;
