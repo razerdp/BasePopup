@@ -6,9 +6,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
@@ -22,14 +19,11 @@ import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.base.imageloader.ImageLoaderManager;
 import razerdp.demo.model.issue.IssueInfo;
 import razerdp.demo.ui.ActivityLauncher;
-import razerdp.demo.ui.issuestest.Issue210TestActivity;
-import razerdp.demo.ui.issuestest.Issue226TestActivity;
 import razerdp.demo.ui.photobrowser.PhotoBrowserProcessor;
 import razerdp.demo.utils.ActivityUtil;
 import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.DescBuilder;
 import razerdp.demo.utils.FillViewUtil;
-import razerdp.demo.utils.StringUtil;
 import razerdp.demo.utils.ToolUtil;
 import razerdp.demo.utils.UIHelper;
 import razerdp.demo.widget.DPRecyclerView;
@@ -62,55 +56,10 @@ public class IssueHomeActivity extends BaseActivity {
     @Override
     protected void onInitView(View decorView) {
         rvContent.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new SimpleRecyclerViewAdapter<IssueInfo>(this, generateItem());
+        mAdapter = new SimpleRecyclerViewAdapter<>(this, IssueHelper.addIssues(new ArrayList<>()));
         mAdapter.setHolder(InnerViewHolder.class)
                 .outher(this);
         rvContent.setAdapter(mAdapter);
-    }
-
-    private List<IssueInfo> generateItem() {
-        List<IssueInfo> result = new ArrayList<>();
-        add_210(result);
-        add_226(result);
-        Collections.sort(result, new Comparator<IssueInfo>() {
-            @Override
-            public int compare(IssueInfo o1, IssueInfo o2) {
-                int issue = StringUtil.toInt(o1.issue);
-                int issue2 = StringUtil.toInt(o2.issue);
-                return Integer.compare(issue, issue2);
-            }
-        });
-
-        return result;
-    }
-
-    private void add_210(List<IssueInfo> result) {
-        IssueInfo issue210 = new IssueInfo();
-        issue210.setActivityClass(Issue210TestActivity.class)
-                .setIssue("210")
-                .setTitle("setOutSideTouchable（true）显示不正常")
-                .setDesc(DescBuilder.get()
-                        .append("系统版本：android p")
-                        .append("库版本：release 2.2.1")
-                        .append("问题描述/重现步骤：调用setOutSideTouchable（true）方法，再showPopupWindow（view)时，位置发生偏移，去掉该方法或者setOutSideTouchable（false）则正常显示。")
-                        .build())
-                .appendPic("https://user-images.githubusercontent.com/11664870/61995671-feb39400-b0bd-11e9-8176-81388d0703d5.png")
-                .appendPic("https://user-images.githubusercontent.com/11664870/61995674-070bcf00-b0be-11e9-996c-253955d32969.png");
-
-        result.add(issue210);
-    }
-
-    private void add_226(List<IssueInfo> result) {
-        IssueInfo issue210 = new IssueInfo();
-        issue210.setActivityClass(Issue226TestActivity.class)
-                .setIssue("226")
-                .setTitle("横屏下，键盘不会顶起Popup")
-                .setDesc(DescBuilder.get()
-                        .append("系统版本：华为P9（8.0），Vivo Y67A（6.0）")
-                        .append("库版本：release 2.2.1")
-                        .append("问题描述/重现步骤：把Demo里面的Activity设置为横屏，更多具体例子-从底部上滑的输入法。")
-                        .build());
-        result.add(issue210);
     }
 
 
@@ -130,6 +79,8 @@ public class IssueHomeActivity extends BaseActivity {
         DPTextView mTvToWeb;
         @BindView(R.id.tv_go)
         DPTextView mTvGo;
+        @BindView(R.id.iv_state)
+        ImageView ivState;
 
         public InnerViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -152,6 +103,7 @@ public class IssueHomeActivity extends BaseActivity {
                 mLayoutPic.setVisibility(View.VISIBLE);
                 FillViewUtil.fillView(data.pics, mLayoutPic, R.layout.item_issue_pic, creator);
             }
+            ivState.setImageResource(data.finished ? R.drawable.ic_fixed : R.drawable.ic_wait);
         }
 
         FillViewUtil.OnFillViewsListener<String, InnerPicViewHolder> creator = (itemView, data, position) -> {
