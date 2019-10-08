@@ -60,13 +60,15 @@
             android:theme="@style/PhotoBrowser"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name="razerdp.demo.ui.issuestest.home.IssueHomeActivity" />
-        <activity android:name="razerdp.demo.ui.issuestest.Issue210TestActivity" />
+
         <activity android:name="razerdp.demo.ui.UpdateLogActivity" />
         <activity android:name="razerdp.demo.ui.friendcircle.FriendCircleActivity" />
+        <activity android:name="razerdp.demo.ui.issuestest.Issue210TestActivity" />
         <activity
             android:name="razerdp.demo.ui.issuestest.Issue226TestActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape" />
+        <activity android:name="razerdp.demo.ui.issuestest.Issue230TestActivity" />
 
         <service android:name="razerdp.demo.services.DemoService" />
 

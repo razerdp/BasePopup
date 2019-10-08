@@ -15,6 +15,7 @@ public class IssueInfo {
     public String url;
     public List<String> pics;
     public Class<? extends BaseActivity> activityClass;
+    public boolean finished;
 
     public IssueInfo() {
         pics = new ArrayList<>();
@@ -48,6 +49,11 @@ public class IssueInfo {
 
     public IssueInfo setActivityClass(Class<? extends BaseActivity> activityClass) {
         this.activityClass = activityClass;
+        return this;
+    }
+
+    public IssueInfo setFixed(boolean finished) {
+        this.finished = finished;
         return this;
     }
 }
