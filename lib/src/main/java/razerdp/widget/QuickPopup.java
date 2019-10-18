@@ -67,7 +67,6 @@ public class QuickPopup extends BasePopupWindow {
         setOffsetY(config.getOffsetY());
 
         setClipChildren((config.flag & BasePopupFlag.CLIP_CHILDREN) != 0);
-        setClipToScreen((config.flag & BasePopupFlag.CLIP_TO_SCREEN) != 0);
 
         setOutSideDismiss((config.flag & BasePopupFlag.OUT_SIDE_DISMISS) != 0);
         setOutSideTouchable((config.flag & BasePopupFlag.OUT_SIDE_TOUCHABLE) != 0);
@@ -83,7 +82,6 @@ public class QuickPopup extends BasePopupWindow {
         setMaxWidth(config.getMaxWidth());
         setMinHeight(config.getMinHeight());
         setMaxHeight(config.getMaxHeight());
-        setKeepSize((config.flag & BasePopupFlag.KEEP_SIZE) != 0);
 
         setMaskLayoutWidth(config.getMaskLayoutWidth());
         setMaskLayoutHeight(config.getMaskLayoutHeight());

@@ -1567,24 +1567,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return this;
     }
 
-    /**
-     * 该方法用于指定PopupWindow是否可以突破屏幕
-     * <p>
-     * <br>
-     * <ul>
-     * <li>true：PopupWindow并不能突破屏幕，如果其高宽超出屏幕高宽，则会自动进行位移</li>
-     * <li>false：PopupWindow可以突破屏幕</li>
-     * </ul>
-     * <p>
-     * 如果contentView的宽高大于屏幕宽高，因自动调整，可能会导致{@link #setAutoLocatePopup(boolean)}失效
-     *
-     * @param clipToScreen 默认为true
-     */
-    public BasePopupWindow setClipToScreen(boolean clipToScreen) {
-        mHelper.setClipToScreen(clipToScreen);
-        return this;
-    }
-
     public boolean isAllowDismissWhenTouchOutside() {
         return mHelper.isOutSideDismiss();
     }
@@ -1703,8 +1685,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 在{@link #setClipToScreen(boolean)}为true的情况下，BasePopup会针对剩余高度来调整Popup的大小，因此可能出现实际显示高度过小的情况
      * 该方法可以保持默认测量高度从而阻止BasePopup的自动调整
      */
-    public BasePopupWindow setKeepSize(boolean keepSize) {
-        mHelper.keepSize(keepSize);
+    public BasePopupWindow resize(boolean keepSize) {
+        mHelper.resize(keepSize);
         return this;
     }
 

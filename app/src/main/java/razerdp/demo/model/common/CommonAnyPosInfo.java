@@ -76,7 +76,6 @@ public class CommonAnyPosInfo extends DemoCommonUsageInfo {
             });
         }
         mDemoPopup.setBlurBackgroundEnable(blur)
-                .setClipToScreen(clipScreen)
                 .showPopupWindow((int) x, (int) y);
     }
 

@@ -86,9 +86,7 @@ final class BasePopupHelper implements InputMethodUtils.OnKeyboardChangeListener
     int popupViewWidth;
     int popupViewHeight;
     //锚点view的location
-    int[] mAnchorViewLocation;
-    int mAnchorViewHeight;
-    int mAnchorViewWidth;
+    Rect mAnchorViewBond;
 
     //模糊option(为空的话则不模糊）
     PopupBlurOption mBlurOption;
@@ -126,7 +124,7 @@ final class BasePopupHelper implements InputMethodUtils.OnKeyboardChangeListener
     }
 
     BasePopupHelper(BasePopupWindow popupWindow) {
-        mAnchorViewLocation = new int[2];
+        mAnchorViewBond = new Rect();
         this.popupWindow = popupWindow;
         this.eventObserverMap = new WeakHashMap<>();
     }
@@ -426,10 +424,7 @@ final class BasePopupHelper implements InputMethodUtils.OnKeyboardChangeListener
     }
 
     BasePopupHelper setShowLocation(int x, int y) {
-        mAnchorViewLocation[0] = x;
-        mAnchorViewLocation[1] = y;
-        mAnchorViewWidth = 1;
-        mAnchorViewHeight = 1;
+        mAnchorViewBond.set(x, y, x + 1, y + 1);
         return this;
     }
 
@@ -534,17 +529,16 @@ final class BasePopupHelper implements InputMethodUtils.OnKeyboardChangeListener
         return this;
     }
 
-    BasePopupHelper setClipToScreen(boolean clipToScreen) {
-        setFlag(CLIP_TO_SCREEN, clipToScreen);
+    BasePopupHelper getAnchorLocation(View v) {
+        if (v == null) return this;
+        int[] location = new int[2];
+        v.getLocationOnScreen(location);
+        mAnchorViewBond.set(location[0], location[1], location[0] + v.getWidth(), location[1] + v.getHeight());
         return this;
     }
 
-    BasePopupHelper getAnchorLocation(View v) {
-        if (v == null) return this;
-        v.getLocationOnScreen(mAnchorViewLocation);
-        mAnchorViewWidth = v.getWidth();
-        mAnchorViewHeight = v.getHeight();
-        return this;
+    public Rect getAnchorViewBond() {
+        return mAnchorViewBond;
     }
 
     Point getTempOffset() {
@@ -556,28 +550,8 @@ final class BasePopupHelper implements InputMethodUtils.OnKeyboardChangeListener
         return mTempOffset;
     }
 
-    int getAnchorWidth() {
-        return mAnchorViewWidth;
-    }
-
-    int getAnchorHeight() {
-        return mAnchorViewHeight;
-    }
-
-    int getAnchorX() {
-        return mAnchorViewLocation[0];
-    }
-
-    int getAnchorY() {
-        return mAnchorViewLocation[1];
-    }
-
     boolean isBackPressEnable() {
         return (flag & BACKPRESS_ENABLE) != 0;
-    }
-
-    boolean isClipToScreen() {
-        return (flag & CLIP_TO_SCREEN) != 0;
     }
 
     BasePopupHelper backPressEnable(PopupWindow popupWindow, boolean backPressEnable) {
@@ -633,8 +607,8 @@ final class BasePopupHelper implements InputMethodUtils.OnKeyboardChangeListener
         return this;
     }
 
-    BasePopupHelper setForceAdjustKeyboard(boolean adjust){
-        setFlag(KEYBOARD_FORCE_ADJUST,adjust);
+    BasePopupHelper setForceAdjustKeyboard(boolean adjust) {
+        setFlag(KEYBOARD_FORCE_ADJUST, adjust);
         return this;
     }
 
@@ -727,13 +701,13 @@ final class BasePopupHelper implements InputMethodUtils.OnKeyboardChangeListener
         return this;
     }
 
-    BasePopupHelper keepSize(boolean keep) {
-        setFlag(KEEP_SIZE, keep);
+    BasePopupHelper resize(boolean keep) {
+        setFlag(RESIZE, keep);
         return this;
     }
 
-    boolean isKeepSize() {
-        return (flag & KEEP_SIZE) != 0;
+    boolean isResizeable() {
+        return (flag & RESIZE) != 0;
     }
 
     //-----------------------------------------controller-----------------------------------------
