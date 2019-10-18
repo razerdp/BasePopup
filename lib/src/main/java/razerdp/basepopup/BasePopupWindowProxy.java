@@ -2,6 +2,7 @@ package razerdp.basepopup;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.util.Log;
@@ -176,7 +177,8 @@ abstract class BasePopupWindowProxy extends PopupWindow {
         try {
             if (mHelper != null) {
                 if (mHelper.isOutSideTouchable()) {
-                    super.update(mHelper.getAnchorX(), mHelper.getAnchorY() + mHelper.getAnchorHeight(), mHelper.getPopupViewWidth(), mHelper.getPopupViewHeight(), true);
+                    Rect anchorBound = mHelper.getAnchorViewBond();
+                    super.update(anchorBound.left, anchorBound.bottom, mHelper.getPopupViewWidth(), mHelper.getPopupViewHeight(), true);
                 }
                 if (mWindowManagerProxy != null) {
                     mWindowManagerProxy.update();

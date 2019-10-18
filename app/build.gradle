@@ -30,6 +30,10 @@ android {
         }
         release {
             minifyEnabled false
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file('local.properties').newDataInputStream())
+            String token = properties.getProperty("api_token")
+            resValue("string", "token", token == null ? "" : token)
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -58,10 +62,10 @@ dependencies {
     implementation "com.jakewharton:butterknife:10.1.0"
     annotationProcessor "com.jakewharton:butterknife-compiler:10.1.0"
 
-    implementation('com.github.bumptech.glide:glide:4.9.0') {
+    implementation('com.github.bumptech.glide:glide:4.10.0') {
         exclude group: "android.support"
     }
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
     implementation 'com.caverock:androidsvg:1.2.1'
 
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'
@@ -77,5 +81,5 @@ dependencies {
 
     // rx
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
 }

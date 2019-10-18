@@ -170,11 +170,6 @@ public class QuickPopupConfig implements BasePopupFlag {
         return this;
     }
 
-    public QuickPopupConfig clipToScreen(boolean clipToScreen) {
-        setFlag(CLIP_TO_SCREEN, clipToScreen);
-        return this;
-    }
-
     @Deprecated
     public QuickPopupConfig allowInterceptTouchEvent(boolean allowInterceptTouchEvent) {
         setFlag(OUT_SIDE_TOUCHABLE, !allowInterceptTouchEvent);
@@ -232,7 +227,7 @@ public class QuickPopupConfig implements BasePopupFlag {
     }
 
     public QuickPopupConfig keepSize(boolean keep) {
-        setFlag(KEEP_SIZE, keep);
+        setFlag(RESIZE, keep);
         return this;
     }
 
