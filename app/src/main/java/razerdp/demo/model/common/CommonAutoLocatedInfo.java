@@ -11,8 +11,8 @@ import razerdp.demo.model.DemoCommonUsageInfo;
  */
 public class CommonAutoLocatedInfo extends DemoCommonUsageInfo {
     public CommonAutoLocatedInfo() {
-        title = "边缘镜像";
-
+        title = "自动移位";
+        desc = "当BasePopup四周空间不足的时候自动显示在其镜像位置";
     }
 
     @Override
