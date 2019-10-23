@@ -28,7 +28,7 @@ import java.util.WeakHashMap;
 
 import razerdp.blur.PopupBlurOption;
 import razerdp.library.R;
-import razerdp.util.InputMethodUtils;
+import razerdp.util.KeyboardUtils;
 import razerdp.util.PopupUtils;
 
 /**
@@ -37,7 +37,7 @@ import razerdp.util.PopupUtils;
  * PopupHelper，这货与Popup强引用哦~
  */
 @SuppressWarnings("all")
-final class BasePopupHelper implements InputMethodUtils.OnKeyboardChangeListener, BasePopupFlag {
+final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, BasePopupFlag {
 
     BasePopupWindow popupWindow;
 
@@ -99,7 +99,7 @@ final class BasePopupHelper implements InputMethodUtils.OnKeyboardChangeListener
 
     EditText mAutoShowInputEdittext;
 
-    InputMethodUtils.OnKeyboardChangeListener mKeyboardStateChangeListener;
+    KeyboardUtils.OnKeyboardChangeListener mKeyboardStateChangeListener;
 
     int mSoftInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
     ViewGroup.MarginLayoutParams mParseFromXmlParams;
@@ -790,9 +790,9 @@ final class BasePopupHelper implements InputMethodUtils.OnKeyboardChangeListener
         if (isAutoShowInputMethod()) {
             if (mAutoShowInputEdittext != null) {
                 mAutoShowInputEdittext.requestFocus();
-                InputMethodUtils.showInputMethod(mAutoShowInputEdittext, 350);
+                KeyboardUtils.open(mAutoShowInputEdittext, 350);
             } else {
-                InputMethodUtils.showInputMethod(popupWindow.getContentView(), 350);
+                KeyboardUtils.open(popupWindow.getContentView(), 350);
             }
         }
         handleShow();
@@ -807,7 +807,7 @@ final class BasePopupHelper implements InputMethodUtils.OnKeyboardChangeListener
             return;
         }
         if (isAutoShowInputMethod()) {
-            InputMethodUtils.close(popupWindow.getContext());
+            KeyboardUtils.close(popupWindow.getContext());
         }
         Message msg = BasePopupEvent.getMessage(BasePopupEvent.EVENT_DISMISS);
         if (animateDismiss) {
@@ -830,7 +830,7 @@ final class BasePopupHelper implements InputMethodUtils.OnKeyboardChangeListener
     void forceDismiss() {
         if (mDismissAnimation != null) mDismissAnimation.cancel();
         if (mDismissAnimator != null) mDismissAnimator.cancel();
-        InputMethodUtils.close(popupWindow.getContext());
+        KeyboardUtils.close(popupWindow.getContext());
         flag &= ~CUSTOM_ON_ANIMATE_DISMISS;
         popupWindow.originalDismiss();
     }

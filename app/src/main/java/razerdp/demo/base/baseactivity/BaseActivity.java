@@ -34,7 +34,7 @@ import razerdp.demo.utils.StringUtil;
 import razerdp.demo.utils.ToolUtil;
 import razerdp.demo.widget.StatusBarViewPlaceHolder;
 import razerdp.demo.widget.TitleBarView;
-import razerdp.util.InputMethodUtils;
+import razerdp.util.KeyboardUtils;
 import razerdp.util.log.PopupLog;
 
 public abstract class BaseActivity<T extends BaseActivity.IntentData>
@@ -314,7 +314,7 @@ public abstract class BaseActivity<T extends BaseActivity.IntentData>
 
     @Override
     public void finish() {
-        InputMethodUtils.close(this);
+        KeyboardUtils.close(this);
         super.finish();
     }
 

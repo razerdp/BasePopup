@@ -21,7 +21,7 @@ import razerdp.demo.base.interfaces.ClearMemoryObject;
 import razerdp.demo.utils.StringUtil;
 import razerdp.demo.widget.StatusBarViewPlaceHolder;
 import razerdp.demo.widget.TitleBarView;
-import razerdp.util.InputMethodUtils;
+import razerdp.util.KeyboardUtils;
 import razerdp.util.log.PopupLog;
 
 /**
@@ -106,7 +106,7 @@ public abstract class BaseFragment extends Fragment
     }
 
     protected boolean onBackPressed() {
-        InputMethodUtils.close(getActivity());
+        KeyboardUtils.close(getActivity());
         try {
             if (getFragmentManager() != null && getFragmentManager().getBackStackEntryCount() > 0) {
                 getFragmentManager().popBackStack();
@@ -121,7 +121,7 @@ public abstract class BaseFragment extends Fragment
     }
 
     protected void finishActivity() {
-        InputMethodUtils.close(getActivity());
+        KeyboardUtils.close(getActivity());
         try {
             getActivity().finish();
         } catch (Exception e) {
