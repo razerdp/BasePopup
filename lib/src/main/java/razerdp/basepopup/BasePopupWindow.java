@@ -229,7 +229,7 @@ import android.widget.PopupWindow;
 import java.lang.ref.WeakReference;
 
 import razerdp.blur.PopupBlurOption;
-import razerdp.util.InputMethodUtils;
+import razerdp.util.KeyboardUtils;
 import razerdp.util.PopupUiUtils;
 import razerdp.util.PopupUtils;
 import razerdp.util.SimpleAnimationUtils;
@@ -830,7 +830,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
         Activity activity = getContext();
         if (activity == null) return;
-        mGlobalLayoutListener = InputMethodUtils.observerKeyboardChange(activity, new InputMethodUtils.OnKeyboardChangeListener() {
+        mGlobalLayoutListener = KeyboardUtils.observerKeyboardChange(activity, new KeyboardUtils.OnKeyboardChangeListener() {
             @Override
             public void onKeyboardChange(Rect keyboardBounds, boolean isVisible) {
                 mHelper.onKeyboardChange(keyboardBounds, isVisible);

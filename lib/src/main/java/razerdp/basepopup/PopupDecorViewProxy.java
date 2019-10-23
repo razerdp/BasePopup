@@ -19,7 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import razerdp.util.InputMethodUtils;
+import razerdp.util.KeyboardUtils;
 import razerdp.util.PopupUiUtils;
 import razerdp.util.PopupUtils;
 import razerdp.util.log.PopupLog;
@@ -29,7 +29,7 @@ import razerdp.util.log.PopupLog;
  * <p>
  * 旨在用来拦截keyevent、以及蒙层
  */
-final class PopupDecorViewProxy extends ViewGroup implements InputMethodUtils.OnKeyboardChangeListener, ViewTreeObserver.OnGlobalLayoutListener {
+final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKeyboardChangeListener, ViewTreeObserver.OnGlobalLayoutListener {
     private static final String TAG = "PopupDecorViewProxy";
     //模糊层
     private PopupMaskLayout mMaskLayout;

@@ -7,15 +7,17 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 
+import razerdp.basepopup.BasePopupComponentManager;
+
 /**
  * Created by 大灯泡 on 2016/1/14.
  * 显示键盘d工具类
  */
-public class InputMethodUtils {
+public class KeyboardUtils {
     /**
      * 显示软键盘
      */
-    public static void showInputMethod(View view) {
+    public static void open(View view) {
         InputMethodManager imm = (InputMethodManager) view.getContext()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
@@ -26,7 +28,7 @@ public class InputMethodUtils {
     /**
      * 显示软键盘
      */
-    public static void showInputMethod(Context context) {
+    public static void open(Context context) {
         InputMethodManager imm = (InputMethodManager) context
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
@@ -35,14 +37,14 @@ public class InputMethodUtils {
     /**
      * 多少时间后显示软键盘
      */
-    public static void showInputMethod(final View view, long delayMillis) {
+    public static void open(final View view, long delayMillis) {
         if (view == null) return;
         // 显示输入法
         view.postDelayed(new Runnable() {
 
             @Override
             public void run() {
-                InputMethodUtils.showInputMethod(view);
+                KeyboardUtils.open(view);
             }
         }, delayMillis);
     }
@@ -81,6 +83,30 @@ public class InputMethodUtils {
         }
     }
 
+    public static boolean isOpen() {
+        try {
+            InputMethodManager imm = (InputMethodManager) BasePopupComponentManager.getApplication().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                return imm.isActive();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean isOpen(View view) {
+        try {
+            InputMethodManager imm = (InputMethodManager) BasePopupComponentManager.getApplication().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                return imm.isActive(view);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public static ViewTreeObserver.OnGlobalLayoutListener observerKeyboardWithView(final View target) {
         if (target == null) return null;
         Activity act = PopupUtils.getActivity(target.getContext());
@@ -107,15 +133,20 @@ public class InputMethodUtils {
         ViewTreeObserver.OnGlobalLayoutListener layoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
             Rect rect = new Rect();
             Rect keyboardRect = new Rect();
+            boolean lastVisible;
+            int lastHeight;
 
             @Override
             public void onGlobalLayout() {
+                View content = decor.findViewById(android.R.id.content);
                 decor.getWindowVisibleDisplayFrame(rect);
-                int screenHeight = decor.getRootView().getHeight();
+                int screenHeight = content == null ? decor.getHeight() : content.getHeight();
                 keyboardRect.set(rect.left, rect.bottom, rect.right, screenHeight);
-                boolean isVisible = keyboardRect.height() > 0;
+                boolean isVisible = keyboardRect.height() > (screenHeight >> 2) && isOpen();
+                if (isVisible == lastVisible && keyboardRect.height() == lastHeight) return;
+                lastVisible = isVisible;
+                lastHeight = keyboardRect.height();
                 onKeyboardChangeListener.onKeyboardChange(keyboardRect, isVisible);
-
             }
         };
         decor.getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
