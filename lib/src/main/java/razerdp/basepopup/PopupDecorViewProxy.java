@@ -36,7 +36,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     private BasePopupHelper mHelper;
     private View mTarget;
     private Rect mTouchRect = new Rect();
-    private int showingGravity = Gravity.NO_GRAVITY;
+    private int changedGravity = Gravity.NO_GRAVITY;
 
     private int childLeftMargin;
     private int childTopMargin;
@@ -48,6 +48,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     private int originY;
     private Flag mFlag = new Flag();
     private Rect lastKeyboardBounds = new Rect();
+    private boolean isFirstLayoutCompelete = false;
+    private int layoutCount = 0;
 
     private PopupDecorViewProxy(Context context) {
         this(context, null);
@@ -113,7 +115,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             clearDecorMaskLayout(act);
             addMaskToDecor(act.getWindow());
         }
-        showingGravity = Gravity.NO_GRAVITY;
+        changedGravity = Gravity.NO_GRAVITY;
     }
 
     private void clearDecorMaskLayout(Activity act) {
@@ -362,11 +364,16 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         PopupLog.i("onLayout", changed, l, t, r, b);
-        showingGravity = Gravity.NO_GRAVITY;
+        changedGravity = Gravity.NO_GRAVITY;
         if (!mHelper.isOutSideTouchable()) {
             layoutNormal(l, t, r, b);
         } else {
             layoutOutSide(l, t, r, b);
+        }
+        layoutCount++;
+        if (layoutCount >= 2) {
+            isFirstLayoutCompelete = true;
+            layoutCount = 0;
         }
     }
 
@@ -483,7 +490,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 childTop = childTop + childTopMargin - childBottomMargin;
 
                 if (mHelper.isAutoLocatePopup()) {
-                    int tBottom = childTop + offsetY + (mHelper.isFullScreen() ? 0 : -PopupUiUtils.getStatusBarHeight());
+                    int tBottom = childTop + height + offsetY + (mHelper.isFullScreen() ? 0 : -PopupUiUtils.getStatusBarHeight());
                     int restHeight;
                     switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
                         case Gravity.TOP:
@@ -492,7 +499,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                                 //需要移位
                                 offsetY += isAlignAnchorMode ? 0 : anchorBound.bottom - childTop;
                                 //如果自动定位到下方，则可显示的window区域为[anchor底部，屏幕底部]
-                                showingGravity = Gravity.BOTTOM;
+                                changedGravity = Gravity.BOTTOM;
                             }
                             break;
                         case Gravity.BOTTOM:
@@ -503,7 +510,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                                 //需要移位
                                 offsetY -= isAlignAnchorMode ? 0 : tBottom - anchorBound.top;
                                 //如果是自动定位到上方，则可显示的window区域为[0,anchor顶部]
-                                showingGravity = Gravity.TOP;
+                                changedGravity = Gravity.TOP;
                             }
                             break;
                     }
@@ -514,53 +521,38 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 int right = left + width;
                 int bottom = top + height;
 
-                boolean isOverFlowScreen = left < 0 || top < 0 || right > getMeasuredWidth() || bottom > getMeasuredHeight();
+                boolean isOverScreen = left < 0 || top < 0 || right > getMeasuredWidth() || bottom > getMeasuredHeight();
 
-//                if (isOverFlowScreen) {
-//                    int tOffset = 0;
-//
-//                    if (left < windowLeft) {
-//                        tOffset = windowLeft - left;
-//                        if (tOffset <= windowRight - right) {
-//                            left += tOffset;
-//                            right = left + width;
-//                        } else {
-//                            left = windowLeft;
-//                        }
-//                    }
-//
-//                    if (right > windowRight) {
-//                        tOffset = right - windowRight;
-//                        if (tOffset <= left) {
-//                            //只需要移动left即可
-//                            left -= tOffset;
-//                            right = left + width;
-//                        } else {
-//                            right = windowRight;
-//                        }
-//                    }
-//
-//                    if (top < windowTop) {
-//                        tOffset = windowTop - top;
-//                        if (tOffset <= windowBottom - bottom) {
-//                            top += tOffset;
-//                            bottom = top + height;
-//                        } else {
-//                            top = windowTop;
-//                        }
-//                    }
-//
-//                    if (bottom > windowBottom) {
-//                        tOffset = bottom - windowBottom;
-//                        if (windowTop == 0) {
-//                            //如果screenTop没有限制，则可以上移，否则只能移到限定的screenTop下
-//                            top -= tOffset;
-//                            bottom = top + height;
-//                        } else {
-//                            bottom = top + height;
-//                        }
-//                    }
-//                }
+                if (isOverScreen) {
+                    //水平调整
+                    if (left < 0 && right > getMeasuredWidth()) {
+                        left = 0;
+                        right = getMeasuredWidth();
+                    } else {
+                        int horizontalOffset = 0;
+                        if (left < 0) {
+                            horizontalOffset = -left;
+                        } else if (right > getMeasuredWidth()) {
+                            horizontalOffset = Math.min(getMeasuredWidth() - right, 0);
+                        }
+                        left = left + horizontalOffset < 0 ? 0 : left + horizontalOffset;
+                        right = right + horizontalOffset > getMeasuredWidth() ? getMeasuredWidth() : right + horizontalOffset;
+                    }
+                    //垂直调整
+                    if (top < 0 && bottom > getMeasuredHeight()) {
+                        top = 0;
+                        bottom = getMeasuredHeight();
+                    } else {
+                        int verticalOffset = 0;
+                        if (top < 0) {
+                            verticalOffset = -top;
+                        } else if (bottom > getMeasuredHeight()) {
+                            verticalOffset = Math.min(getMeasuredHeight() - bottom, 0);
+                        }
+                        top = top + verticalOffset < 0 ? 0 : top + verticalOffset;
+                        bottom = bottom + verticalOffset > getMeasuredHeight() ? getMeasuredHeight() : bottom + verticalOffset;
+                    }
+                }
                 child.layout(left, top, right, bottom);
                 if (delayLayoutMask) {
                     mMaskLayout.handleAlignBackground(mHelper.getAlignBackgroundGravity(), left, top, right, bottom);
@@ -645,7 +637,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                     if (getMeasuredHeight() > restHeight) {
                         //需要移位
                         offsetY += isAlignAnchorMode ? 0 : anchorBound.top + mHelper.getMinHeight() - offsetY;
-                        showingGravity = Gravity.BOTTOM;
+                        changedGravity = Gravity.BOTTOM;
                     }
                     break;
                 case Gravity.BOTTOM:
@@ -655,7 +647,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                     if (getMeasuredHeight() > restHeight) {
                         //需要移位
                         offsetY -= isAlignAnchorMode ? 0 : tBottom - anchorBound.top;
-                        showingGravity = Gravity.TOP;
+                        changedGravity = Gravity.TOP;
                     }
                     break;
             }
@@ -793,17 +785,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     //layout之后
     @Override
     public void onGlobalLayout() {
-        switch (showingGravity) {
-            case Gravity.TOP:
-                mHelper.onAnchorTop();
-                break;
-            case Gravity.BOTTOM:
-                mHelper.onAnchorBottom();
-                break;
-            case Gravity.LEFT:
-                break;
-            case Gravity.RIGHT:
-                break;
+        if (changedGravity != Gravity.NO_GRAVITY && mHelper.isAutoLocatePopup() && isFirstLayoutCompelete) {
+            mHelper.onAutoLocationChange(mHelper.popupGravity, changedGravity);
         }
     }
 

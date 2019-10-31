@@ -30,6 +30,7 @@ import razerdp.blur.PopupBlurOption;
 import razerdp.library.R;
 import razerdp.util.KeyboardUtils;
 import razerdp.util.PopupUtils;
+import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2017/12/12.
@@ -108,7 +109,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     int maxWidth, maxHeight, minWidth, minHeight, maskWidth, maskHeight;
 
     int keybaordAlignViewId;
-
 
     InnerShowInfo mShowInfo;
 
@@ -833,6 +833,10 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         KeyboardUtils.close(popupWindow.getContext());
         flag &= ~CUSTOM_ON_ANIMATE_DISMISS;
         popupWindow.originalDismiss();
+    }
+
+    void onAutoLocationChange(int oldGravity, int newGravity) {
+        PopupLog.i("onAutoLocationChange", oldGravity, newGravity);
     }
 
     void onAnchorTop() {
