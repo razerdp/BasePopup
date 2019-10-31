@@ -202,6 +202,11 @@
       * 发布新版candy
     * **2019/10/09**
       * 添加issue #230测试用例
+    * **2019/10/31**
+      * 优化autoLocate
+      * 优化超出屏幕的位移问题
+      * 添加setResize()方法
+      * 添加onAutoLocationChange()方法
 
 * **【Release】2.2.1**(2019/06/24)
   * 支持Service或者非ActivityContext里弹窗

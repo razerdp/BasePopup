@@ -84,9 +84,6 @@ final class WindowManagerProxy implements WindowManager {
                 PopupLog.i(TAG, "applyHelper  >>>  不拦截事件");
                 p.flags |= LayoutParams.FLAG_NOT_TOUCH_MODAL;
                 p.flags |= LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
-//                if (!helper.isClipToScreen()) {
-//                    p.flags |= LayoutParams.FLAG_LAYOUT_NO_LIMITS;
-//                }
             }
             if (helper.isFullScreen()) {
                 PopupLog.i(TAG, "applyHelper  >>>  全屏");

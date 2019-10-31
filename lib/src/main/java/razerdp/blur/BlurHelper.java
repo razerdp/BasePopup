@@ -20,7 +20,6 @@ import android.renderscript.ScriptIntrinsicBlur;
 import android.view.View;
 import android.widget.Toast;
 
-import razerdp.basepopup.BasePopupWindow;
 import razerdp.util.log.PopupLog;
 
 /**
@@ -103,7 +102,7 @@ public class BlurHelper {
         Bitmap result = Bitmap.createScaledBitmap(origin, outWidth, outHeight, true);
         origin.recycle();
         long time = (System.currentTimeMillis() - startTime);
-        if (BasePopupWindow.DEBUG) {
+        if (PopupLog.isOpenLog()) {
             toast(context, "模糊用时：【" + time + "ms】");
         }
         PopupLog.i(TAG, "模糊用时：【" + time + "ms】");
@@ -119,7 +118,7 @@ public class BlurHelper {
                 outHeight,
                 true);
         long time = (System.currentTimeMillis() - startTime);
-        if (BasePopupWindow.DEBUG) {
+        if (PopupLog.isOpenLog()) {
             toast(context, "模糊用时：【" + time + "ms】");
         }
         PopupLog.i(TAG, "模糊用时：【" + time + "ms】");

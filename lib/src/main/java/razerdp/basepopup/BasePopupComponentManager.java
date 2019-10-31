@@ -7,10 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 
-import razerdp.util.PopupUtils;
 import razerdp.util.log.PopupLog;
 
 /**
@@ -28,17 +25,15 @@ public final class BasePopupComponentManager {
 
 
     class BasePopupComponentProxy implements BasePopupComponent {
-        private List<BasePopupComponent> IMPL;
+        private BasePopupComponent IMPL;
         private static final String IMPL_X = "razerdp.basepopup.BasePopupComponentX";
 
 
         BasePopupComponentProxy(Context context) {
-            IMPL = new ArrayList<>();
             try {
                 if (isClassExist(IMPL_X)) {
-                    IMPL.add((BasePopupComponent) Class.forName(IMPL_X).newInstance());
+                    IMPL = ((BasePopupComponent) Class.forName(IMPL_X).newInstance());
                 }
-
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InstantiationException e) {
@@ -51,33 +46,23 @@ public final class BasePopupComponentManager {
 
         @Override
         public View findDecorView(BasePopupWindow basePopupWindow, Activity activity) {
-            if (PopupUtils.isListEmpty(IMPL)) return null;
-            for (BasePopupComponent basePopupComponent : IMPL) {
-                View result = basePopupComponent.findDecorView(basePopupWindow, activity);
-                if (result != null) {
-                    return result;
-                }
-            }
-            return null;
+            if (IMPL == null) return null;
+            return IMPL.findDecorView(basePopupWindow, activity);
         }
 
         @Override
         public BasePopupWindow attachLifeCycle(BasePopupWindow basePopupWindow, Object owner) {
-            if (PopupUtils.isListEmpty(IMPL)) return null;
-            for (BasePopupComponent basePopupComponent : IMPL) {
-                if (basePopupWindow.lifeCycleObserver != null) return basePopupWindow;
-                basePopupComponent.attachLifeCycle(basePopupWindow, owner);
-            }
+            if (IMPL == null) return basePopupWindow;
+            if (basePopupWindow.lifeCycleObserver != null) return basePopupWindow;
+            IMPL.attachLifeCycle(basePopupWindow, owner);
             return basePopupWindow;
         }
 
         @Override
         public BasePopupWindow removeLifeCycle(BasePopupWindow basePopupWindow, Object owner) {
-            if (PopupUtils.isListEmpty(IMPL)) return null;
-            for (BasePopupComponent basePopupComponent : IMPL) {
-                if (basePopupWindow.lifeCycleObserver == null) return basePopupWindow;
-                basePopupComponent.removeLifeCycle(basePopupWindow, owner);
-            }
+            if (IMPL == null) return basePopupWindow;
+            if (basePopupWindow.lifeCycleObserver == null) return basePopupWindow;
+            IMPL.removeLifeCycle(basePopupWindow, owner);
             return basePopupWindow;
         }
     }

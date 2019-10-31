@@ -7,9 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
-
-import razerdp.library.BuildConfig;
 
 
 /**
@@ -28,7 +27,7 @@ public class PopupLog {
     }
 
 
-    private static final boolean[] mIsDebugMode = {BuildConfig.DEBUG};
+    private static final AtomicBoolean sLOG = new AtomicBoolean(false);
     private static final String TAG = "BasePopup";
 
     //logcat最大长度为4*1024，此处取4000
@@ -93,8 +92,8 @@ public class PopupLog {
     //region ===============================代码定位===============================
     private static String wrapLogWithMethodLocation(String msg) {
         StackTraceElement element = getCurrentStackTrace();
-        String className = "unknow";
-        String methodName = "unknow";
+        String className = "unknown";
+        String methodName = "unknown";
         int lineNumber = -1;
         if (element != null) {
             className = element.getFileName();
@@ -185,11 +184,11 @@ public class PopupLog {
     //endregion ===============================代码定位===============================
 
     public static void setOpenLog(boolean openLog) {
-        mIsDebugMode[0] = openLog;
+        sLOG.set(openLog);
     }
 
     public static boolean isOpenLog() {
-        return mIsDebugMode[0];
+        return sLOG.get();
     }
 
     //region ===============================log===============================

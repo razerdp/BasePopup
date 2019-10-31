@@ -327,7 +327,6 @@ import razerdp.util.log.PopupLog;
 public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismissListener {
     private static final String TAG = "BasePopupWindow";
     public static int DEFAULT_BACKGROUND_COLOR = Color.parseColor("#8f000000");
-    public static boolean DEBUG = false;
 
     public static final int FLAG_KEYBOARD_ALIGN_TO_VIEW = BasePopupFlag.KEYBOARD_ALIGN_TO_VIEW;
     public static final int FLAG_KEYBOARD_ALIGN_TO_ROOT = BasePopupFlag.KEYBOARD_ALIGN_TO_ROOT;
@@ -1685,7 +1684,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 在{@link #setClipToScreen(boolean)}为true的情况下，BasePopup会针对剩余高度来调整Popup的大小，因此可能出现实际显示高度过小的情况
      * 该方法可以保持默认测量高度从而阻止BasePopup的自动调整
      */
-    public BasePopupWindow resize(boolean keepSize) {
+    public BasePopupWindow setResize(boolean keepSize) {
         mHelper.resize(keepSize);
         return this;
     }
@@ -1715,6 +1714,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 绑定lifecycle
      */
     public BasePopupWindow attachLifeCycle(Object owner) {
+        if (owner == null) return this;
         return BasePopupComponentManager.getInstance().proxy.attachLifeCycle(this, owner);
     }
 
@@ -1722,6 +1722,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 解绑lifecycle
      */
     public BasePopupWindow removeLifeCycle(Object owner) {
+        if (owner == null) return this;
         return BasePopupComponentManager.getInstance().proxy.removeLifeCycle(this, owner);
     }
 
@@ -1902,7 +1903,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     public static void setDebugMode(boolean debugMode) {
-        DEBUG = debugMode;
         PopupLog.setOpenLog(debugMode);
     }
 

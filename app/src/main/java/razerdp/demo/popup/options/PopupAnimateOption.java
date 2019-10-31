@@ -49,6 +49,7 @@ public class PopupAnimateOption extends BaseOptionPopup<CommonAnimateInfo> {
     public PopupAnimateOption(Context context) {
         super(context);
         checkClipchildren.setChecked(true);
+        setAutoLocatePopup(true);
     }
 
 
