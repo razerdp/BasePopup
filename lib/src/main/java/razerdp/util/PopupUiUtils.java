@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import razerdp.basepopup.BasePopupComponentManager;
+import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2018/12/23.
@@ -82,20 +83,27 @@ public class PopupUiUtils {
         checkRealSize();
 
         int rotation = getScreenRotation();
-        switch (rotation) {
-            case Surface.ROTATION_0:
-            case Surface.ROTATION_180:
-                return REAL_SIZE.get(Configuration.ORIENTATION_PORTRAIT).y;
-            case Surface.ROTATION_90:
-            case Surface.ROTATION_270:
-                return REAL_SIZE.get(Configuration.ORIENTATION_LANDSCAPE).y;
+        int result = REAL_SIZE.get(getScreenOrientation()).y;
+        try {
+            switch (rotation) {
+                case Surface.ROTATION_0:
+                case Surface.ROTATION_180:
+                    result = REAL_SIZE.get(Configuration.ORIENTATION_PORTRAIT).y;
+                case Surface.ROTATION_90:
+                case Surface.ROTATION_270:
+                    result = REAL_SIZE.get(Configuration.ORIENTATION_LANDSCAPE).y;
+            }
+        } catch (Exception e) {
+            //部分魔改系统会返回错误的rotation，导致npe产生
+            PopupLog.e(e);
         }
-        return REAL_SIZE.get(Configuration.ORIENTATION_PORTRAIT).y;
+
+        return result;
     }
 
     private static void checkRealSize() {
         Resources resources = BasePopupComponentManager.getApplication().getResources();
-        int orientation = resources.getConfiguration().orientation;
+        int orientation = getScreenOrientation();
         if (REAL_SIZE.get(orientation) != null) return;
         WindowManager windowManager = (WindowManager) BasePopupComponentManager.getApplication().getSystemService(Context.WINDOW_SERVICE);
         Point point = new Point();
@@ -112,15 +120,21 @@ public class PopupUiUtils {
         checkRealSize();
 
         int rotation = getScreenRotation();
-        switch (rotation) {
-            case Surface.ROTATION_0:
-            case Surface.ROTATION_180:
-                return REAL_SIZE.get(Configuration.ORIENTATION_PORTRAIT).x;
-            case Surface.ROTATION_90:
-            case Surface.ROTATION_270:
-                return REAL_SIZE.get(Configuration.ORIENTATION_LANDSCAPE).x;
+        int result = REAL_SIZE.get(getScreenOrientation()).x;
+        try {
+            switch (rotation) {
+                case Surface.ROTATION_0:
+                case Surface.ROTATION_180:
+                    result = REAL_SIZE.get(Configuration.ORIENTATION_PORTRAIT).x;
+                case Surface.ROTATION_90:
+                case Surface.ROTATION_270:
+                    result = REAL_SIZE.get(Configuration.ORIENTATION_LANDSCAPE).x;
+            }
+        } catch (Exception e) {
+            //部分魔改系统会返回错误的rotation，导致npe产生
+            PopupLog.e(e);
         }
-        return REAL_SIZE.get(Configuration.ORIENTATION_PORTRAIT).x;
+        return result;
     }
 
     public static int getScreenOrientation() {
