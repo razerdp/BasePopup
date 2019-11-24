@@ -89,9 +89,11 @@ public class PopupUiUtils {
                 case Surface.ROTATION_0:
                 case Surface.ROTATION_180:
                     result = REAL_SIZE.get(Configuration.ORIENTATION_PORTRAIT).y;
+                    break;
                 case Surface.ROTATION_90:
                 case Surface.ROTATION_270:
                     result = REAL_SIZE.get(Configuration.ORIENTATION_LANDSCAPE).y;
+                    break;
             }
         } catch (Exception e) {
             //部分魔改系统会返回错误的rotation，导致npe产生
@@ -126,9 +128,11 @@ public class PopupUiUtils {
                 case Surface.ROTATION_0:
                 case Surface.ROTATION_180:
                     result = REAL_SIZE.get(Configuration.ORIENTATION_PORTRAIT).x;
+                    break;
                 case Surface.ROTATION_90:
                 case Surface.ROTATION_270:
                     result = REAL_SIZE.get(Configuration.ORIENTATION_LANDSCAPE).x;
+                    break;
             }
         } catch (Exception e) {
             //部分魔改系统会返回错误的rotation，导致npe产生

@@ -7,6 +7,7 @@ import razerdp.demo.model.issue.IssueInfo;
 import razerdp.demo.ui.issuestest.Issue210TestActivity;
 import razerdp.demo.ui.issuestest.Issue226TestActivity;
 import razerdp.demo.ui.issuestest.Issue230TestActivity;
+import razerdp.demo.ui.issuestest.Issue236TestActivity;
 import razerdp.demo.utils.DescBuilder;
 import razerdp.demo.utils.StringUtil;
 
@@ -19,6 +20,7 @@ class IssueHelper {
         add_210(result);
         add_226(result);
         add_230(result);
+        add_236(result);
 
         sort(result);
 
@@ -67,7 +69,7 @@ class IssueHelper {
     private static void add_230(List<IssueInfo> result) {
         IssueInfo issue230 = new IssueInfo();
         issue230.setIssue("230")
-                .setFixed(false)
+                .setFixed(true)
                 .setActivityClass(Issue230TestActivity.class)
                 .setTitle("update不起作用")
                 .setDesc(DescBuilder.get()
@@ -79,5 +81,19 @@ class IssueHelper {
                         .append("popup的布局高度都不会改变")
                         .build());
         result.add(issue230);
+    }
+
+    private static void add_236(List<IssueInfo> result) {
+        IssueInfo issue236 = new IssueInfo();
+        issue236.setIssue("236")
+                .setFixed(false)
+                .setActivityClass(Issue236TestActivity.class)
+                .setTitle("2.2.1 release版本 xml里面的match_parent无效")
+                .setDesc(DescBuilder.get()
+                        .append("系统版本：UNKNOWN")
+                        .append("库版本：release 2.2.1")
+                        .append("2.2.1 release版本。xml里面的match_parent无效，必须在代码里再设置一次setWidht(getScreenWidth())才行。2.2.0没有此问题")
+                        .build());
+        result.add(issue236);
     }
 }

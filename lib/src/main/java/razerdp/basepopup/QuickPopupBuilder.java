@@ -17,10 +17,9 @@ public class QuickPopupBuilder {
 
     private WeakReference<Context> mContextWeakReference;
     private QuickPopupConfig mConfig;
-    private OnConfigApplyListener mOnConfigApplyListener;
 
-    int width = ViewGroup.LayoutParams.WRAP_CONTENT;
-    int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+    private int width = ViewGroup.LayoutParams.WRAP_CONTENT;
+    private int height = ViewGroup.LayoutParams.WRAP_CONTENT;
 
 
     private QuickPopupBuilder(Context context) {
@@ -53,20 +52,12 @@ public class QuickPopupBuilder {
                 .height(ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
-    public QuickPopupBuilder setOnConfigApplyListener(OnConfigApplyListener onConfigApplyListener) {
-        mOnConfigApplyListener = onConfigApplyListener;
-        return this;
+
+    public final QuickPopupConfig getConfig() {
+        return mConfig;
     }
 
-    public final <C extends QuickPopupConfig> C getConfig() {
-        return (C) mConfig;
-    }
-
-    public OnConfigApplyListener getOnConfigApplyListener() {
-        return mOnConfigApplyListener;
-    }
-
-    public <C extends QuickPopupConfig> QuickPopupBuilder config(C quickPopupConfig) {
+    public QuickPopupBuilder config(QuickPopupConfig quickPopupConfig) {
         if (quickPopupConfig == null) return this;
         if (quickPopupConfig != mConfig) {
             quickPopupConfig.contentViewLayoutid(mConfig.contentViewLayoutid);
@@ -76,7 +67,7 @@ public class QuickPopupBuilder {
     }
 
     public QuickPopup build() {
-        return new QuickPopup(getContext(), mConfig, mOnConfigApplyListener, width, height);
+        return new QuickPopup(getContext(), mConfig, width, height);
     }
 
     public QuickPopup show() {
@@ -99,11 +90,6 @@ public class QuickPopupBuilder {
         QuickPopup quickPopup = build();
         quickPopup.showPopupWindow(x, y);
         return quickPopup;
-    }
-
-
-    public interface OnConfigApplyListener {
-        void onConfigApply(QuickPopup basePopup, QuickPopupConfig config);
     }
 
     //-----------------------------------------tools-----------------------------------------

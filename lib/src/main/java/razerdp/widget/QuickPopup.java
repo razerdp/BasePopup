@@ -9,9 +9,8 @@ import android.view.animation.Animation;
 import java.util.HashMap;
 import java.util.Map;
 
+import razerdp.basepopup.BaseLazyPopupWindow;
 import razerdp.basepopup.BasePopupFlag;
-import razerdp.basepopup.BasePopupWindow;
-import razerdp.basepopup.QuickPopupBuilder.OnConfigApplyListener;
 import razerdp.basepopup.QuickPopupConfig;
 
 /**
@@ -19,34 +18,14 @@ import razerdp.basepopup.QuickPopupConfig;
  * <p>
  * 快速popup
  */
-public class QuickPopup extends BasePopupWindow {
+public class QuickPopup extends BaseLazyPopupWindow {
 
     private QuickPopupConfig mConfig;
-    private OnConfigApplyListener mOnConfigApplyListener;
 
-    private QuickPopup(Context context) {
-        super(context);
-    }
-
-    private QuickPopup(Context context, boolean delayInit) {
-        super(context, delayInit);
-    }
-
-    private QuickPopup(Context context, int width, int height) {
-        super(context, width, height);
-    }
-
-    private QuickPopup(Context context, int width, int height, boolean delayInit) {
-        super(context, width, height, delayInit);
-    }
-
-    public QuickPopup(Context context, QuickPopupConfig config, OnConfigApplyListener onConfigApplyListener, int w, int h) {
-        super(context, w, h, true);
+    public QuickPopup(Context context, QuickPopupConfig config, int w, int h) {
+        super(context, w, h);
         mConfig = config;
-        mOnConfigApplyListener = onConfigApplyListener;
-        if (mConfig != null) {
-            delayInit();
-        } else {
+        if (mConfig == null) {
             throw new NullPointerException("QuickPopupConfig must be not null!");
         }
         applyConfigSetting(mConfig);
@@ -85,10 +64,6 @@ public class QuickPopup extends BasePopupWindow {
 
         setMaskLayoutWidth(config.getMaskLayoutWidth());
         setMaskLayoutHeight(config.getMaskLayoutHeight());
-
-        if (mOnConfigApplyListener != null) {
-            mOnConfigApplyListener.onConfigApply(this, config);
-        }
     }
 
     private void applyClick() {
