@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
+import razerdp.basepopup.QuickPopupBuilder;
+import razerdp.basepopup.QuickPopupConfig;
 import razerdp.basepopup.R;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
@@ -56,8 +58,20 @@ public class DemoActivity extends BaseActivity {
 
     @Override
     protected void onInitView(View decorView) {
+
         rvContent.setLayoutManager(new LinearLayoutManager(this));
-        rvContent.addHeaderView(ViewUtil.inflate(this, R.layout.item_main_demo_header, rvContent, false));
+        View header = ViewUtil.inflate(this, R.layout.item_main_demo_header, rvContent, false);
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                QuickPopupBuilder.with(DemoActivity.this)
+                        .contentView(R.layout.popup_demo)
+                        .config(new QuickPopupConfig()
+                                .blurBackground(true))
+                        .show();
+            }
+        });
+        rvContent.addHeaderView(header);
         mAdapter = new SimpleRecyclerViewAdapter<>(this, generateItem());
         mAdapter.setHolder(InnerViewHolder.class);
         mAdapter.setOnItemClickListener(new OnItemClickListener<DemoMainItem>() {

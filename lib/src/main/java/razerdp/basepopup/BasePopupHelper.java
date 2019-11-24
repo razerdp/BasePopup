@@ -182,6 +182,17 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return null;
     }
 
+    void preMeasurePopupView(View mContentView, int w, int h) {
+        if (mContentView != null) {
+            int measureWidth = View.MeasureSpec.makeMeasureSpec(w, w == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
+            int measureHeight = View.MeasureSpec.makeMeasureSpec(h, h == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
+            mContentView.measure(measureWidth, measureHeight);
+            setPreMeasureWidth(mContentView.getMeasuredWidth());
+            setPreMeasureHeight(mContentView.getMeasuredHeight());
+            mContentView.setFocusableInTouchMode(true);
+        }
+    }
+
     void checkAndSetGravity(ViewGroup.LayoutParams p) {
         if (p == null) return;
         if (p instanceof LinearLayout.LayoutParams) {

@@ -69,6 +69,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape" />
         <activity android:name="razerdp.demo.ui.issuestest.Issue230TestActivity" />
+        <activity android:name="razerdp.demo.ui.issuestest.Issue236TestActivity" />
 
         <service android:name="razerdp.demo.services.DemoService" />
 

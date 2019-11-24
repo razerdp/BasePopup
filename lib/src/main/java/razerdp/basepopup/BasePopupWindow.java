@@ -344,7 +344,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public static final int WRAP_CONTENT = ViewGroup.LayoutParams.WRAP_CONTENT;
 
     private BasePopupHelper mHelper;
-    private WeakReference<Context> mContext;
+    WeakReference<Context> mContext;
 
     //元素定义
     PopupWindowProxy mPopupWindow;
@@ -362,60 +362,22 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener;
     private LinkedViewLayoutChangeListenerWrapper mLinkedViewLayoutChangeListenerWrapper;
     private WeakReference<View> mLinkedViewRef;
-    private DelayInitCached mDelayInitCached;
 
     Object lifeCycleObserver;
 
     public BasePopupWindow(Context context) {
-        this(context, false);
-    }
-
-    /**
-     * 支持延迟加载的PopupWindow
-     *
-     * @param context
-     * @param delayInit 如果是true，请务必在您初始化后调用{@link #delayInit()}
-     */
-    public BasePopupWindow(Context context, boolean delayInit) {
-        this(context, BasePopupHelper.DEFAULT_WIDTH, BasePopupHelper.DEFAULT_HEIGHT, delayInit);
+        this(context, BasePopupHelper.DEFAULT_WIDTH, BasePopupHelper.DEFAULT_HEIGHT);
     }
 
     public BasePopupWindow(Context context, int width, int height) {
-        this(context, width, height, false);
-    }
-
-    /**
-     * 支持延迟加载的PopupWindow
-     *
-     * @param context
-     * @param width
-     * @param height
-     * @param delayInit 如果是true，请务必在您初始化后调用{@link #delayInit()}
-     */
-    public BasePopupWindow(Context context, int width, int height, boolean delayInit) {
         BasePopupComponentManager.getInstance().init(context);
         mContext = new WeakReference<Context>(context);
-        if (!delayInit) {
-            initView(width, height);
-        } else {
-            mDelayInitCached = new DelayInitCached();
-            mDelayInitCached.width = width;
-            mDelayInitCached.height = height;
-        }
-    }
-
-    /**
-     * 延迟初始化
-     */
-    public void delayInit() {
-        if (mDelayInitCached == null) return;
-        initView(mDelayInitCached.width, mDelayInitCached.height);
-        mDelayInitCached = null;
-    }
-
-    private void initView(int width, int height) {
-        attachLifeCycle(getContext());
         mHelper = new BasePopupHelper(this);
+        initView(width, height);
+    }
+
+    void initView(int width, int height) {
+        attachLifeCycle(getContext());
         mContentView = onCreateContentView();
         mHelper.setContentRootId(mContentView);
         if (mHelper.getParaseFromXmlParams() == null) {
@@ -437,26 +399,19 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         mPopupWindow = new PopupWindowProxy(mContentView, width, height, mHelper);
         mPopupWindow.setOnDismissListener(this);
         mPopupWindow.attachPopupHelper(mHelper);
-        setOutSideDismiss(true);
         setPopupAnimationStyle(0);
 
         mHelper.setPopupViewWidth(width);
         mHelper.setPopupViewHeight(height);
 
-        preMeasurePopupView(width, height);
+        mHelper.preMeasurePopupView(mContentView, width, height);
+
+        onInit(mContentView);
     }
 
-    private void preMeasurePopupView(int w, int h) {
-        if (mContentView != null) {
-            int measureWidth = View.MeasureSpec.makeMeasureSpec(w, w == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
-            int measureHeight = View.MeasureSpec.makeMeasureSpec(h, h == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
-            mContentView.measure(measureWidth, measureHeight);
-            mHelper.setPreMeasureWidth(mContentView.getMeasuredWidth())
-                    .setPreMeasureHeight(mContentView.getMeasuredHeight());
-            mContentView.setFocusableInTouchMode(true);
-        }
-    }
+    public void onInit(View contentView) {
 
+    }
 
     //------------------------------------------抽象-----------------------------------------------
 
@@ -765,7 +720,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
 
     //------------------------------------------Methods-----------------------------------------------
-    private void tryToShowPopup(View v, boolean positionMode) {
+    void tryToShowPopup(View v, boolean positionMode) {
         addListener();
         mHelper.prepare(v, positionMode);
         try {
@@ -2148,11 +2103,5 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             return true;
         }
     }
-
-    private class DelayInitCached {
-        int width;
-        int height;
-    }
-
     //endregion
 }
