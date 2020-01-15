@@ -1,10 +1,9 @@
 package razerdp.demo.utils.rx;
 
 
-import androidx.annotation.NonNull;
-
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.NonNull;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
 import io.reactivex.Observable;
