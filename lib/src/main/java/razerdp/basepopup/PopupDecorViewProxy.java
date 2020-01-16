@@ -61,17 +61,17 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
     private PopupDecorViewProxy(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        getViewTreeObserver().addOnGlobalLayoutListener(this);
+
     }
 
-    public static PopupDecorViewProxy create(Context context, WindowManagerProxy windowManagerProxy, BasePopupHelper helper) {
-        PopupDecorViewProxy result = new PopupDecorViewProxy(context);
-        result.init(helper, windowManagerProxy);
-        return result;
+    public PopupDecorViewProxy(Context context, WindowManagerProxy windowManagerProxy, BasePopupHelper helper) {
+        this(context);
+        getViewTreeObserver().addOnGlobalLayoutListener(this);
+        init(windowManagerProxy, helper);
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void init(BasePopupHelper helper, WindowManagerProxy managerProxy) {
+    private void init(WindowManagerProxy managerProxy, BasePopupHelper helper) {
         mWindowManagerProxy = managerProxy;
         mHelper = helper;
         mHelper.mKeyboardStateChangeListener = this;

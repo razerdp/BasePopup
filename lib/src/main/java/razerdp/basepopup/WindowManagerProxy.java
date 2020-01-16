@@ -65,7 +65,7 @@ final class WindowManagerProxy implements WindowManager {
 
             applyHelper(params, helper);
             //添加popup主体
-            final PopupDecorViewProxy popupDecorViewProxy = PopupDecorViewProxy.create(view.getContext(), this, helper);
+            final PopupDecorViewProxy popupDecorViewProxy = new PopupDecorViewProxy(view.getContext(), this, helper);
             popupDecorViewProxy.addPopupDecorView(view, (LayoutParams) params);
             mPopupDecorViewProxy = new WeakReference<PopupDecorViewProxy>(popupDecorViewProxy);
             mWindowManager.addView(popupDecorViewProxy, fitLayoutParamsPosition(popupDecorViewProxy, params));
