@@ -13,7 +13,7 @@ import razerdp.util.log.PopupLog;
 /**
  * Created by 大灯泡 on 2019/5/13
  * <p>
- * Description：支持管理器
+ * Description：组件管理器
  */
 public final class BasePopupComponentManager {
 
@@ -78,14 +78,10 @@ public final class BasePopupComponentManager {
     }
 
     void init(Context context) {
-        if (proxy != null) return;
-        if (context instanceof Application) {
-            mApplicationContext = (Application) context;
-            regLifeCallback();
-        } else {
-            mApplicationContext = (Application) context.getApplicationContext();
-            regLifeCallback();
-        }
+        if (proxy != null || mApplicationContext != null) return;
+        Reflection.unseal(context);
+        mApplicationContext = (Application) context.getApplicationContext();
+        regLifeCallback();
         proxy = new BasePopupComponentProxy(context);
     }
 

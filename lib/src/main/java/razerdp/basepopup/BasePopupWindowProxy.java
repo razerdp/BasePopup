@@ -24,7 +24,6 @@ import razerdp.util.log.PopupLog;
 abstract class BasePopupWindowProxy extends PopupWindow {
     private static final String TAG = "BasePopupWindowProxy";
 
-    private static final int MAX_SCAN_ACTIVITY_COUNT = 15;
     private BasePopupHelper mHelper;
     private WindowManagerProxy mWindowManagerProxy;
     private boolean oldFocusable = true;
@@ -33,28 +32,21 @@ abstract class BasePopupWindowProxy extends PopupWindow {
     BasePopupWindowProxy(View contentView, int width, int height, BasePopupHelper helper) {
         super(contentView, width, height);
         this.mHelper = helper;
-        init(contentView.getContext());
+        init();
     }
 
 
-    void attachPopupHelper(BasePopupHelper mHelper) {
-        if (mWindowManagerProxy == null) {
-            tryToProxyWindowManagerMethod(this);
-        }
-        mWindowManagerProxy.attachPopupHelper(mHelper);
-    }
-
-    private void init(Context context) {
+    private void init() {
         setFocusable(true);
         setOutsideTouchable(true);
         setBackgroundDrawable(new ColorDrawable());
-        tryToProxyWindowManagerMethod(this);
+        tryToHookWindowManager();
     }
 
     @Override
     public void setContentView(View contentView) {
         super.setContentView(contentView);
-        tryToProxyWindowManagerMethod(this);
+        tryToHookWindowManager();
     }
 
     void callSuperShowAsDropDown(View anchor, int xoff, int yoff, int gravity) {
@@ -69,7 +61,6 @@ abstract class BasePopupWindowProxy extends PopupWindow {
         } else {
             super.showAsDropDown(anchor, xoff, yoff);
         }
-
     }
 
     void callSuperShowAtLocation(View parent, int gravity, int x, int y) {
@@ -122,55 +113,23 @@ abstract class BasePopupWindowProxy extends PopupWindow {
         PopupCompatManager.clear(this);
     }
 
-
-    /**
-     * 尝试代理掉windowmanager
-     *
-     * @param popupWindow
-     */
-    private void tryToProxyWindowManagerMethod(PopupWindow popupWindow) {
-        if (mHelper == null || mWindowManagerProxy != null) return;
-        PopupLog.i("cur api >> " + Build.VERSION.SDK_INT);
-        troToProxyWindowManagerMethodBeforeP(popupWindow);
-    }
-
-
-    private void troToProxyWindowManagerMethodOverP(PopupWindow popupWindow) {
-        try {
-            WindowManager windowManager = PopupReflectionHelper.getInstance().getPopupWindowManager(popupWindow);
-            if (windowManager == null) return;
-            mWindowManagerProxy = new WindowManagerProxy(windowManager);
-            PopupReflectionHelper.getInstance().preInject(popupWindow, mWindowManagerProxy);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private void troToProxyWindowManagerMethodBeforeP(PopupWindow popupWindow) {
+    private void tryToHookWindowManager() {
+        if (mWindowManagerProxy != null) return;
         try {
             Field fieldWindowManager = PopupWindow.class.getDeclaredField("mWindowManager");
             fieldWindowManager.setAccessible(true);
-            final WindowManager windowManager = (WindowManager) fieldWindowManager.get(popupWindow);
+            final WindowManager windowManager = (WindowManager) fieldWindowManager.get(this);
             if (windowManager == null) return;
             mWindowManagerProxy = new WindowManagerProxy(windowManager);
-            fieldWindowManager.set(popupWindow, mWindowManagerProxy);
-            PopupLog.i(TAG, "尝试代理WindowManager成功");
-
+            mWindowManagerProxy.attachPopupHelper(mHelper);
             Field fieldScroll = PopupWindow.class.getDeclaredField("mOnScrollChangedListener");
             fieldScroll.setAccessible(true);
-            fieldScroll.set(popupWindow, null);
-        } catch (NoSuchFieldException e) {
-            if (Build.VERSION.SDK_INT >= 27) {
-                troToProxyWindowManagerMethodOverP(popupWindow);
-            } else {
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            fieldScroll.set(this, null);
+
+        } catch (Exception ignore) {
+            PopupLog.e(TAG, ignore);
         }
     }
-
 
     @Override
     public void update() {
