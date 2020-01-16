@@ -398,7 +398,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         //默认占满全屏
         mPopupWindow = new PopupWindowProxy(mContentView, width, height, mHelper);
         mPopupWindow.setOnDismissListener(this);
-        mPopupWindow.attachPopupHelper(mHelper);
         setPopupAnimationStyle(0);
 
         mHelper.setPopupViewWidth(width);
