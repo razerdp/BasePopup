@@ -52,16 +52,7 @@ public final class BasePopupComponentManager {
         @Override
         public BasePopupWindow attachLifeCycle(BasePopupWindow basePopupWindow, Object owner) {
             if (IMPL == null) return basePopupWindow;
-            if (basePopupWindow.lifeCycleObserver != null) return basePopupWindow;
             IMPL.attachLifeCycle(basePopupWindow, owner);
-            return basePopupWindow;
-        }
-
-        @Override
-        public BasePopupWindow removeLifeCycle(BasePopupWindow basePopupWindow, Object owner) {
-            if (IMPL == null) return basePopupWindow;
-            if (basePopupWindow.lifeCycleObserver == null) return basePopupWindow;
-            IMPL.removeLifeCycle(basePopupWindow, owner);
             return basePopupWindow;
         }
     }

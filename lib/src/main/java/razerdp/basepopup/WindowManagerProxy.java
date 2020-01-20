@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import java.lang.ref.WeakReference;
-
 import razerdp.util.log.PopupLog;
 
 /**
@@ -20,10 +18,11 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
     private static final String TAG = "WindowManagerProxy";
     private WindowManager mWindowManager;
     private PopupDecorViewProxy mPopupDecorViewProxy;
-    private WeakReference<BasePopupHelper> mPopupHelper;
+    private BasePopupHelper mPopupHelper;
 
-    WindowManagerProxy(WindowManager windowManager) {
+    WindowManagerProxy(WindowManager windowManager, BasePopupHelper helper) {
         mWindowManager = windowManager;
+        mPopupHelper = helper;
     }
 
     @Override
@@ -41,6 +40,7 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
                 if (!popupDecorViewProxy.isAttachedToWindow()) return;
             }
             mWindowManager.removeViewImmediate(popupDecorViewProxy);
+            mPopupDecorViewProxy.clear(true);
             mPopupDecorViewProxy = null;
         } else {
             mWindowManager.removeViewImmediate(view);
@@ -56,14 +56,11 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
              * 此时的params是WindowManager.LayoutParams，需要留意强转问题
              * popup内部有scrollChangeListener，会有params强转为WindowManager.LayoutParams的情况
              */
-            BasePopupHelper helper = getBasePopupHelper();
-
-            applyHelper(params, helper);
-            if (mPopupDecorViewProxy != null && mPopupDecorViewProxy.getParent() != null) return;
+            applyHelper(params, mPopupHelper);
             //添加popup主体
-            mPopupDecorViewProxy = new PopupDecorViewProxy(view.getContext(), this, helper);
+            mPopupDecorViewProxy = new PopupDecorViewProxy(view.getContext(), mPopupHelper);
             mPopupDecorViewProxy.wrapPopupDecorView(view, (LayoutParams) params);
-            mWindowManager.addView(mPopupDecorViewProxy, fitLayoutParamsPosition(mPopupDecorViewProxy, params));
+            mWindowManager.addView(mPopupDecorViewProxy, fitLayoutParamsPosition(params));
         } else {
             mWindowManager.addView(view, params);
         }
@@ -74,11 +71,6 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
             LayoutParams p = (LayoutParams) params;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 p.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT;
-            }
-            if (helper.isOutSideTouchable()) {
-                PopupLog.i(TAG, "applyHelper  >>>  不拦截事件");
-                p.flags |= LayoutParams.FLAG_NOT_TOUCH_MODAL;
-                p.flags |= LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
             }
             if (helper.isFullScreen()) {
                 PopupLog.i(TAG, "applyHelper  >>>  全屏");
@@ -94,25 +86,20 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
         }
     }
 
-    private ViewGroup.LayoutParams fitLayoutParamsPosition(PopupDecorViewProxy viewProxy, ViewGroup.LayoutParams params) {
+    private ViewGroup.LayoutParams fitLayoutParamsPosition(ViewGroup.LayoutParams params) {
         if (params instanceof LayoutParams) {
             LayoutParams p = (LayoutParams) params;
-            BasePopupHelper helper = getBasePopupHelper();
-            if (helper != null) {
-                if (helper.getShowCount() > 1) {
+            if (mPopupHelper != null) {
+                if (mPopupHelper.getShowCount() > 1) {
                     p.type = LayoutParams.TYPE_APPLICATION_SUB_PANEL;
                 }
-                if (!helper.isOutSideTouchable()) {
-                    //偏移交给PopupDecorViewProxy处理，此处固定为0
-                    p.y = 0;
-                    p.x = 0;
-                    p.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                    p.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                } else {
-                    viewProxy.fitWindowParams((LayoutParams) params);
-                }
+                //偏移交给PopupDecorViewProxy处理，此处固定为0
+                p.y = 0;
+                p.x = 0;
+                p.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                p.height = ViewGroup.LayoutParams.MATCH_PARENT;
             }
-            applyHelper(p, helper);
+            applyHelper(p, mPopupHelper);
         }
         return params;
     }
@@ -123,17 +110,9 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
         if (mWindowManager == null || view == null) return;
         if (isPopupInnerDecorView(view) && mPopupDecorViewProxy != null || view == mPopupDecorViewProxy) {
             PopupDecorViewProxy popupDecorViewProxy = mPopupDecorViewProxy;
-            mWindowManager.updateViewLayout(popupDecorViewProxy, fitLayoutParamsPosition(popupDecorViewProxy, params));
+            mWindowManager.updateViewLayout(popupDecorViewProxy, fitLayoutParamsPosition(params));
         } else {
             mWindowManager.updateViewLayout(view, params);
-        }
-    }
-
-    public void updateViewLayoutOriginal(View view, ViewGroup.LayoutParams params) {
-        try {
-            mWindowManager.updateViewLayout(view, params);
-        } catch (Exception e) {
-
         }
     }
 
@@ -178,28 +157,18 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
         return TextUtils.equals(viewSimpleClassName, "PopupDecorView") || TextUtils.equals(viewSimpleClassName, "PopupViewContainer");
     }
 
-
-    private BasePopupHelper getBasePopupHelper() {
-        if (mPopupHelper == null) return null;
-        return mPopupHelper.get();
-    }
-
-    void attachPopupHelper(BasePopupHelper helper) {
-        mPopupHelper = new WeakReference<BasePopupHelper>(helper);
-    }
-
     @Override
     public void clear(boolean destroy) {
         try {
-            removeViewImmediate(mPopupDecorViewProxy);
+            if (mPopupDecorViewProxy != null) {
+                removeViewImmediate(mPopupDecorViewProxy);
+            }
         } catch (Exception ignore) {
         }
+
         if (destroy) {
             mWindowManager = null;
             mPopupDecorViewProxy = null;
-            if (mPopupHelper != null) {
-                mPopupHelper.clear();
-            }
             mPopupHelper = null;
         }
     }
