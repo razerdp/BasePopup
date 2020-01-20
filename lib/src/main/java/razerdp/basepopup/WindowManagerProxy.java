@@ -1,6 +1,5 @@
 package razerdp.basepopup;
 
-import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.Display;
@@ -17,12 +16,11 @@ import razerdp.util.log.PopupLog;
  * <p>
  * 代理掉popup的windowmanager，在addView操作，拦截decorView的操作
  */
-final class WindowManagerProxy implements WindowManager {
+final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
     private static final String TAG = "WindowManagerProxy";
     private WindowManager mWindowManager;
-    private WeakReference<PopupDecorViewProxy> mPopupDecorViewProxy;
+    private PopupDecorViewProxy mPopupDecorViewProxy;
     private WeakReference<BasePopupHelper> mPopupHelper;
-    private static int statusBarHeight;
 
     WindowManagerProxy(WindowManager windowManager) {
         mWindowManager = windowManager;
@@ -37,14 +35,12 @@ final class WindowManagerProxy implements WindowManager {
     public void removeViewImmediate(View view) {
         PopupLog.i(TAG, "WindowManager.removeViewImmediate  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
         if (mWindowManager == null || view == null) return;
-        checkStatusBarHeight(view.getContext());
-        if (isPopupInnerDecorView(view) && getPopupDecorViewProxy() != null) {
-            PopupDecorViewProxy popupDecorViewProxy = getPopupDecorViewProxy();
+        if (isPopupInnerDecorView(view) && mPopupDecorViewProxy != null) {
+            PopupDecorViewProxy popupDecorViewProxy = mPopupDecorViewProxy;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 if (!popupDecorViewProxy.isAttachedToWindow()) return;
             }
             mWindowManager.removeViewImmediate(popupDecorViewProxy);
-            mPopupDecorViewProxy.clear();
             mPopupDecorViewProxy = null;
         } else {
             mWindowManager.removeViewImmediate(view);
@@ -55,7 +51,6 @@ final class WindowManagerProxy implements WindowManager {
     public void addView(View view, ViewGroup.LayoutParams params) {
         PopupLog.i(TAG, "WindowManager.addView  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
         if (mWindowManager == null || view == null) return;
-        checkStatusBarHeight(view.getContext());
         if (isPopupInnerDecorView(view)) {
             /**
              * 此时的params是WindowManager.LayoutParams，需要留意强转问题
@@ -64,11 +59,11 @@ final class WindowManagerProxy implements WindowManager {
             BasePopupHelper helper = getBasePopupHelper();
 
             applyHelper(params, helper);
+            if (mPopupDecorViewProxy != null && mPopupDecorViewProxy.getParent() != null) return;
             //添加popup主体
-            final PopupDecorViewProxy popupDecorViewProxy = new PopupDecorViewProxy(view.getContext(), this, helper);
-            popupDecorViewProxy.addPopupDecorView(view, (LayoutParams) params);
-            mPopupDecorViewProxy = new WeakReference<PopupDecorViewProxy>(popupDecorViewProxy);
-            mWindowManager.addView(popupDecorViewProxy, fitLayoutParamsPosition(popupDecorViewProxy, params));
+            mPopupDecorViewProxy = new PopupDecorViewProxy(view.getContext(), this, helper);
+            mPopupDecorViewProxy.wrapPopupDecorView(view, (LayoutParams) params);
+            mWindowManager.addView(mPopupDecorViewProxy, fitLayoutParamsPosition(mPopupDecorViewProxy, params));
         } else {
             mWindowManager.addView(view, params);
         }
@@ -111,6 +106,8 @@ final class WindowManagerProxy implements WindowManager {
                     //偏移交给PopupDecorViewProxy处理，此处固定为0
                     p.y = 0;
                     p.x = 0;
+                    p.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                    p.height = ViewGroup.LayoutParams.MATCH_PARENT;
                 } else {
                     viewProxy.fitWindowParams((LayoutParams) params);
                 }
@@ -124,9 +121,8 @@ final class WindowManagerProxy implements WindowManager {
     public void updateViewLayout(View view, ViewGroup.LayoutParams params) {
         PopupLog.i(TAG, "WindowManager.updateViewLayout  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
         if (mWindowManager == null || view == null) return;
-        checkStatusBarHeight(view.getContext());
-        if (isPopupInnerDecorView(view) && getPopupDecorViewProxy() != null || view == getPopupDecorViewProxy()) {
-            PopupDecorViewProxy popupDecorViewProxy = getPopupDecorViewProxy();
+        if (isPopupInnerDecorView(view) && mPopupDecorViewProxy != null || view == mPopupDecorViewProxy) {
+            PopupDecorViewProxy popupDecorViewProxy = mPopupDecorViewProxy;
             mWindowManager.updateViewLayout(popupDecorViewProxy, fitLayoutParamsPosition(popupDecorViewProxy, params));
         } else {
             mWindowManager.updateViewLayout(view, params);
@@ -142,8 +138,8 @@ final class WindowManagerProxy implements WindowManager {
     }
 
     public void updateFocus(boolean focus) {
-        if (mWindowManager != null && getPopupDecorViewProxy() != null) {
-            PopupDecorViewProxy popupDecorViewProxy = getPopupDecorViewProxy();
+        if (mWindowManager != null && mPopupDecorViewProxy != null) {
+            PopupDecorViewProxy popupDecorViewProxy = mPopupDecorViewProxy;
             ViewGroup.LayoutParams params = popupDecorViewProxy.getLayoutParams();
             if (params instanceof LayoutParams) {
                 if (focus) {
@@ -158,8 +154,8 @@ final class WindowManagerProxy implements WindowManager {
 
     public void update() {
         if (mWindowManager == null) return;
-        if (getPopupDecorViewProxy() != null) {
-            getPopupDecorViewProxy().updateLayout();
+        if (mPopupDecorViewProxy != null) {
+            mPopupDecorViewProxy.updateLayout();
         }
     }
 
@@ -167,35 +163,19 @@ final class WindowManagerProxy implements WindowManager {
     public void removeView(View view) {
         PopupLog.i(TAG, "WindowManager.removeView  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
         if (mWindowManager == null || view == null) return;
-        checkStatusBarHeight(view.getContext());
-        if (isPopupInnerDecorView(view) && getPopupDecorViewProxy() != null) {
-            PopupDecorViewProxy popupDecorViewProxy = getPopupDecorViewProxy();
-            mWindowManager.removeView(popupDecorViewProxy);
-            mPopupDecorViewProxy.clear();
+        if (isPopupInnerDecorView(view) && mPopupDecorViewProxy != null) {
+            mWindowManager.removeView(mPopupDecorViewProxy);
             mPopupDecorViewProxy = null;
         } else {
             mWindowManager.removeView(view);
         }
     }
 
-    public void clear() {
-        try {
-            removeViewImmediate(mPopupDecorViewProxy.get());
-            mPopupDecorViewProxy.clear();
-        } catch (Exception e) {
-            //no print
-        }
-    }
 
     private boolean isPopupInnerDecorView(View v) {
         if (v == null) return false;
         String viewSimpleClassName = v.getClass().getSimpleName();
         return TextUtils.equals(viewSimpleClassName, "PopupDecorView") || TextUtils.equals(viewSimpleClassName, "PopupViewContainer");
-    }
-
-    private PopupDecorViewProxy getPopupDecorViewProxy() {
-        if (mPopupDecorViewProxy == null) return null;
-        return mPopupDecorViewProxy.get();
     }
 
 
@@ -208,15 +188,19 @@ final class WindowManagerProxy implements WindowManager {
         mPopupHelper = new WeakReference<BasePopupHelper>(helper);
     }
 
-    private void checkStatusBarHeight(Context context) {
-        if (statusBarHeight != 0 || context == null) return;
-        int result = 0;
-        //获取状态栏高度的资源id
-        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = context.getResources().getDimensionPixelSize(resourceId);
+    @Override
+    public void clear(boolean destroy) {
+        try {
+            removeViewImmediate(mPopupDecorViewProxy);
+        } catch (Exception ignore) {
         }
-        statusBarHeight = result;
+        if (destroy) {
+            mWindowManager = null;
+            mPopupDecorViewProxy = null;
+            if (mPopupHelper != null) {
+                mPopupHelper.clear();
+            }
+            mPopupHelper = null;
+        }
     }
-
 }

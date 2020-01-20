@@ -9,7 +9,7 @@ import android.view.View;
  * 延迟初始化的BasePopup，该PopupWindow将会在您调用show方法的时候才会进行初始化
  */
 public abstract class BaseLazyPopupWindow extends BasePopupWindow {
-    private boolean initImmediately;
+    private boolean initImmediately = false;
     private Pair<Integer, Integer> sizeCached;
 
     public BaseLazyPopupWindow(Context context) {

@@ -29,13 +29,12 @@ import razerdp.util.log.PopupLog;
  * <p>
  * 旨在用来拦截keyevent、以及蒙层
  */
-final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKeyboardChangeListener, ViewTreeObserver.OnGlobalLayoutListener {
+final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKeyboardChangeListener, ViewTreeObserver.OnGlobalLayoutListener, ClearMemoryObject {
     private static final String TAG = "PopupDecorViewProxy";
-    //模糊层
+    //蒙层
     private PopupMaskLayout mMaskLayout;
     private BasePopupHelper mHelper;
     private View mTarget;
-    private Rect mTouchRect = new Rect();
     private int changedGravity = Gravity.NO_GRAVITY;
 
     private int childLeftMargin;
@@ -48,7 +47,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     private int originY;
     private Flag mFlag = new Flag();
     private Rect lastKeyboardBounds = new Rect();
-    private boolean isFirstLayoutCompelete = false;
+    private boolean isFirstLayoutComplete = false;
     private int layoutCount = 0;
 
     private PopupDecorViewProxy(Context context) {
@@ -61,10 +60,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
     private PopupDecorViewProxy(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
     }
 
-    public PopupDecorViewProxy(Context context, WindowManagerProxy windowManagerProxy, BasePopupHelper helper) {
+    PopupDecorViewProxy(Context context, WindowManagerProxy windowManagerProxy, BasePopupHelper helper) {
         this(context);
         getViewTreeObserver().addOnGlobalLayoutListener(this);
         init(windowManagerProxy, helper);
@@ -76,49 +74,22 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         mHelper = helper;
         mHelper.mKeyboardStateChangeListener = this;
         setClipChildren(mHelper.isClipChildren());
-        mMaskLayout = PopupMaskLayout.create(getContext(), mHelper);
+        mMaskLayout = new PopupMaskLayout(getContext(), mHelper);
         mFlag.flag = Flag.IDLE;
         if (!mHelper.isOutSideTouchable()) {
             setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             addViewInLayout(mMaskLayout, -1, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-            mMaskLayout.setOnTouchListener(new OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            return mHelper.isOutSideDismiss();
-                        case MotionEvent.ACTION_UP:
-                            if (mHelper.isOutSideDismiss()) {
-                                int x = (int) event.getX();
-                                int y = (int) event.getY();
-                                if (mTarget != null) {
-                                    View contentView = mTarget.findViewById(mHelper.getContentRootId());
-                                    if (contentView == null) {
-                                        mTarget.getGlobalVisibleRect(mTouchRect);
-                                    } else {
-                                        contentView.getGlobalVisibleRect(mTouchRect);
-                                    }
-                                }
-                                if (!mTouchRect.contains(x, y)) {
-                                    mHelper.onOutSideTouch();
-                                }
-                            }
-                            break;
-                    }
-                    return false;
-                }
-            });
         } else {
             setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
             Activity act = PopupUtils.getActivity(getContext());
             if (act == null) return;
-            clearDecorMaskLayout(act);
+            removeDecorMaskLayout(act);
             addMaskToDecor(act.getWindow());
         }
         changedGravity = Gravity.NO_GRAVITY;
     }
 
-    private void clearDecorMaskLayout(Activity act) {
+    private void removeDecorMaskLayout(Activity act) {
         if (act == null || act.getWindow() == null) {
             return;
         }
@@ -144,18 +115,22 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             }
             return;
         }
-        ((ViewGroup) decorView).addView(mMaskLayout,
-                mHelper.maskWidth > 0 ? mHelper.maskWidth : LayoutParams.MATCH_PARENT,
-                mHelper.maskHeight > 0 ? mHelper.maskHeight : LayoutParams.MATCH_PARENT);
+        ((ViewGroup) decorView).addView(mMaskLayout, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     }
 
-    public void addPopupDecorView(View target, WindowManager.LayoutParams params) {
+    public void wrapPopupDecorView(View target, WindowManager.LayoutParams params) {
         if (target == null) {
             throw new NullPointerException("contentView不能为空");
         }
+        if (target.getParent() != null) {
+            return;
+        }
+
+        //限制一个mask一个target，不允许多个target
         if (getChildCount() == 2) {
             removeViewsInLayout(1, 1);
         }
+
         mTarget = target;
         WindowManager.LayoutParams wp = new WindowManager.LayoutParams();
         wp.copyFrom(params);
@@ -186,7 +161,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 }
             }
 
-
             wp.width = mHelper.getPopupViewWidth();
             wp.height = mHelper.getPopupViewHeight();
             childLeftMargin = mHelper.getParaseFromXmlParams().leftMargin;
@@ -198,6 +172,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         addView(target, wp);
     }
 
+    /**
+     * target或许不是contentview
+     */
     private View findContentView(View root) {
         if (root == null) return null;
         if (!(root instanceof ViewGroup)) return root;
@@ -242,7 +219,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             View child = getChildAt(i);
             //蒙层给最大值
             if (child == mMaskLayout) {
-                measureChild(child, getMaskWidthSpec(), getMaskHeightSpec());
+                measureChild(child, widthMeasureSpec, heightMeasureSpec);
             } else {
                 measureWrappedDecorView(child, widthMeasureSpec, heightMeasureSpec);
             }
@@ -261,7 +238,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             if (child == mTarget) {
                 measureWrappedDecorView(mTarget, widthMeasureSpec, heightMeasureSpec);
             } else {
-                measureChild(child, child == mMaskLayout ? getMaskWidthSpec() : widthMeasureSpec, child == mMaskLayout ? getMaskHeightSpec() : heightMeasureSpec);
+                measureChild(child, widthMeasureSpec, heightMeasureSpec);
             }
 
             maxWidth = Math.max(maxWidth, child.getMeasuredWidth());
@@ -291,18 +268,20 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         boolean isAlignAnchorMode = mHelper.getGravityMode() == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE;
 
         //针对关联anchorView和对齐模式的测量（如果允许resize）
-        if (mHelper.isShowAsDropDown() && ((mHelper.flag & BasePopupFlag.RESIZE) != 0)) {
-            Rect anchorBound = mHelper.getAnchorViewBond();
+        if (mHelper.isShowAsDropDown() && mHelper.isResizable()) {
+            Rect anchorBound = mHelper.getAnchorViewBound();
             //剩余空间
+            //etc.如果是相对于锚点，则剩余宽度为屏幕左侧到anchor左侧
             int rl = anchorBound.left;
             int rt = anchorBound.top;
-            int rr = getAvaliableWidth() - anchorBound.right;
-            int rb = getAvaliableHeight() - anchorBound.bottom;
+            int rr = widthSize - anchorBound.right;
+            int rb = heightSize - anchorBound.bottom;
+
             if (isAlignAnchorMode) {
                 //如果是对齐到anchor的边，则需要修正
-                //左边对齐，则最大宽度为anchor的左边到屏幕右边
-                rl = getAvaliableWidth() - anchorBound.left;
-                rt = getAvaliableHeight() - anchorBound.top;
+                //左边对齐，则剩余宽度为anchor的左边到屏幕右边
+                rl = widthSize - anchorBound.left;
+                rt = heightSize - anchorBound.top;
                 rr = anchorBound.right;
                 rb = anchorBound.bottom;
             }
@@ -331,7 +310,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
 
 
-        if (mHelper.getMinWidth() > 0 && heightSize < mHelper.getMinWidth()) {
+        if (mHelper.getMinWidth() > 0 && widthSize < mHelper.getMinWidth()) {
             widthSize = mHelper.getMinWidth();
         }
 
@@ -353,14 +332,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         mTarget.measure(widthMeasureSpec, heightMeasureSpec);
     }
 
-    private int getMaskWidthSpec() {
-        return mHelper.maskWidth > 0 ? MeasureSpec.makeMeasureSpec(mHelper.maskWidth, MeasureSpec.EXACTLY) : MeasureSpec.makeMeasureSpec(getAvaliableWidth(), MeasureSpec.EXACTLY);
-    }
-
-    private int getMaskHeightSpec() {
-        return mHelper.maskHeight > 0 ? MeasureSpec.makeMeasureSpec(mHelper.maskHeight, MeasureSpec.EXACTLY) : MeasureSpec.makeMeasureSpec(getAvaliableHeight(), MeasureSpec.EXACTLY);
-    }
-
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         PopupLog.i("onLayout", changed, l, t, r, b);
@@ -372,7 +343,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
         layoutCount++;
         if (layoutCount >= 2) {
-            isFirstLayoutCompelete = true;
+            isFirstLayoutComplete = true;
             layoutCount = 0;
         }
     }
@@ -425,7 +396,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             if (child == mMaskLayout) {
                 child.layout(childLeft, childTop, childLeft + width, childTop + height);
             } else {
-                Rect anchorBound = mHelper.getAnchorViewBond();
+                Rect anchorBound = mHelper.getAnchorViewBound();
                 boolean isRelativeToAnchor = mHelper.isShowAsDropDown();
                 boolean isAlignAnchorMode = mHelper.getGravityMode() == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE;
 
@@ -458,7 +429,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                         }
                         break;
                 }
-                childLeft = childLeft + childLeftMargin - childRightMargin;
+
+                childLeft += childLeftMargin - childRightMargin;
 
                 switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
                     case Gravity.TOP:
@@ -562,7 +534,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
     }
 
-
     public void fitWindowParams(WindowManager.LayoutParams params) {
         if (getMeasuredWidth() == 0 || getMeasuredHeight() == 0) {
             mFlag.flag |= Flag.FLAG_WINDOW_PARAMS_FIT_REQUEST;
@@ -572,7 +543,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         int offsetY = 0;
         int gravity = mHelper.getPopupGravity();
         boolean isAlignAnchorMode = mHelper.getGravityMode() == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE;
-        Rect anchorBound = mHelper.getAnchorViewBond();
+        Rect anchorBound = mHelper.getAnchorViewBound();
 
         // offset需要自行计算，不采用系统方法了
         switch (mHelper.getPopupGravity() & Gravity.HORIZONTAL_GRAVITY_MASK) {
@@ -754,13 +725,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (mHelper.isOutSideTouchable()) {
-            if (mMaskLayout != null && mMaskLayout.getParent() != null) {
-                ((ViewGroup) mMaskLayout.getParent()).removeViewInLayout(mMaskLayout);
-            }
-        }
-        mHelper.mKeyboardStateChangeListener = null;
-        getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        clear(true);
     }
 
     @Override
@@ -785,7 +750,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     //layout之后
     @Override
     public void onGlobalLayout() {
-        if (changedGravity != Gravity.NO_GRAVITY && mHelper.isAutoLocatePopup() && isFirstLayoutCompelete) {
+        if (changedGravity != Gravity.NO_GRAVITY && mHelper.isAutoLocatePopup() && isFirstLayoutComplete) {
             mHelper.onAutoLocationChange(mHelper.popupGravity, changedGravity);
         }
     }
@@ -900,6 +865,21 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         } else {
             target.animate().translationY(0).setDuration(200).start();
         }
+    }
+
+    @Override
+    public void clear(boolean destroy) {
+        if (mHelper != null) {
+            if (mHelper.isOutSideTouchable()) {
+                if (mMaskLayout != null && mMaskLayout.getParent() != null) {
+                    ((ViewGroup) mMaskLayout.getParent()).removeViewInLayout(mMaskLayout);
+                }
+            }
+            mHelper.mKeyboardStateChangeListener = null;
+        }
+        mHelper = null;
+        getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        mTarget = null;
     }
 
     static class Flag {

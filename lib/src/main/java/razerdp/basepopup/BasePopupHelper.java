@@ -87,7 +87,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     int popupViewWidth;
     int popupViewHeight;
     //锚点view的location
-    Rect mAnchorViewBond;
+    Rect mAnchorViewBound;
 
     //模糊option(为空的话则不模糊）
     PopupBlurOption mBlurOption;
@@ -106,7 +106,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     ViewGroup.MarginLayoutParams mParseFromXmlParams;
     Point mTempOffset = new Point();
 
-    int maxWidth, maxHeight, minWidth, minHeight, maskWidth, maskHeight;
+    int maxWidth, maxHeight, minWidth, minHeight;
 
     int keybaordAlignViewId;
 
@@ -124,7 +124,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     BasePopupHelper(BasePopupWindow popupWindow) {
-        mAnchorViewBond = new Rect();
+        mAnchorViewBound = new Rect();
         this.popupWindow = popupWindow;
         this.eventObserverMap = new WeakHashMap<>();
     }
@@ -429,13 +429,17 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return (flag & AS_DROP_DOWN) != 0;
     }
 
+    boolean isResizable() {
+        return (flag & RESIZE) != 0;
+    }
+
     BasePopupHelper setShowAsDropDown(boolean showAsDropDown) {
         setFlag(AS_DROP_DOWN, showAsDropDown);
         return this;
     }
 
     BasePopupHelper setShowLocation(int x, int y) {
-        mAnchorViewBond.set(x, y, x + 1, y + 1);
+        mAnchorViewBound.set(x, y, x + 1, y + 1);
         return this;
     }
 
@@ -544,12 +548,12 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         if (v == null) return this;
         int[] location = new int[2];
         v.getLocationOnScreen(location);
-        mAnchorViewBond.set(location[0], location[1], location[0] + v.getWidth(), location[1] + v.getHeight());
+        mAnchorViewBound.set(location[0], location[1], location[0] + v.getWidth(), location[1] + v.getHeight());
         return this;
     }
 
-    public Rect getAnchorViewBond() {
-        return mAnchorViewBond;
+    public Rect getAnchorViewBound() {
+        return mAnchorViewBound;
     }
 
     Point getTempOffset() {
@@ -828,12 +832,12 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
                 @Override
                 public void run() {
                     flag &= ~CUSTOM_ON_ANIMATE_DISMISS;
-                    popupWindow.originalDismiss();
+                    popupWindow.superDismiss();
                 }
             }, Math.max(dismissDuration, 0));
         } else {
             msg.arg1 = 0;
-            popupWindow.originalDismiss();
+            popupWindow.superDismiss();
         }
         sendEvent(msg);
     }
@@ -843,7 +847,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         if (mDismissAnimator != null) mDismissAnimator.cancel();
         KeyboardUtils.close(popupWindow.getContext());
         flag &= ~CUSTOM_ON_ANIMATE_DISMISS;
-        popupWindow.originalDismiss();
+        popupWindow.superDismiss();
     }
 
     void onAutoLocationChange(int oldGravity, int newGravity) {

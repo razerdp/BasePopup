@@ -17,11 +17,10 @@ import razerdp.util.log.PopupLog;
  */
 public final class BasePopupComponentManager {
 
-    private static Application mApplicationContext;
+    private static volatile Application mApplicationContext;
 
     BasePopupComponentProxy proxy;
     private WeakReference<Activity> mTopActivity;
-    private int account = 0;
 
 
     class BasePopupComponentProxy implements BasePopupComponent {
@@ -77,7 +76,7 @@ public final class BasePopupComponentManager {
 
     }
 
-    void init(Context context) {
+    synchronized void init(Context context) {
         if (proxy != null || mApplicationContext != null) return;
         Reflection.unseal(context);
         mApplicationContext = (Application) context.getApplicationContext();
@@ -89,11 +88,6 @@ public final class BasePopupComponentManager {
         return mTopActivity == null ? null : mTopActivity.get();
     }
 
-    public boolean isAppOnBackground() {
-        PopupLog.i("isAppOnBackground", account <= 0);
-        return account <= 0;
-    }
-
     private void regLifeCallback() {
         mApplicationContext.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
@@ -103,7 +97,6 @@ public final class BasePopupComponentManager {
 
             @Override
             public void onActivityStarted(Activity activity) {
-                account++;
             }
 
             @Override
@@ -118,7 +111,6 @@ public final class BasePopupComponentManager {
 
             @Override
             public void onActivityStopped(Activity activity) {
-                account--;
             }
 
             @Override

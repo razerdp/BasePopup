@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -14,21 +13,20 @@ import android.widget.FrameLayout;
 import razerdp.blur.BlurImageView;
 import razerdp.library.R;
 import razerdp.util.PopupUtils;
-import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2018/5/9.
  * <p>
  * 蒙层
  */
-class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserver {
+class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserver,ClearMemoryObject {
 
     private BlurImageView mBlurImageView;
     private BackgroundViewHolder mBackgroundViewHolder;
     private BasePopupHelper mPopupHelper;
 
     private PopupMaskLayout(Context context) {
-        this(context, null);
+        super(context);
     }
 
     private PopupMaskLayout(Context context, AttributeSet attrs) {
@@ -39,18 +37,19 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
         super(context, attrs, defStyleAttr);
     }
 
-    public static PopupMaskLayout create(Context context, BasePopupHelper helper) {
-        PopupMaskLayout view = new PopupMaskLayout(context);
-        view.init(context, helper);
-        return view;
+    PopupMaskLayout(Context context, BasePopupHelper helper) {
+        this(context);
+        init(context, helper);
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mPopupHelper.isOutSideDismiss()) {
+                    mPopupHelper.onOutSideTouch();
+                }
+            }
+        });
     }
 
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        boolean dispatch = super.dispatchKeyEvent(event);
-        PopupLog.i("dispatch  >> " + dispatch);
-        return dispatch;
-    }
 
     private void init(Context context, BasePopupHelper mHelper) {
         this.mPopupHelper = mHelper;
@@ -167,6 +166,10 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
         }
     }
 
+    @Override
+    public void clear(boolean destroy) {
+
+    }
 
     final class BackgroundViewHolder {
 

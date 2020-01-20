@@ -61,9 +61,6 @@ public class QuickPopup extends BaseLazyPopupWindow {
         setMaxWidth(config.getMaxWidth());
         setMinHeight(config.getMinHeight());
         setMaxHeight(config.getMaxHeight());
-
-        setMaskLayoutWidth(config.getMaskLayoutWidth());
-        setMaskLayoutHeight(config.getMaskLayoutHeight());
     }
 
     private void applyClick() {
