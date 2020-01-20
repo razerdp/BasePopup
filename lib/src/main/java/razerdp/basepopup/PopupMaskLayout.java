@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -19,7 +20,7 @@ import razerdp.util.PopupUtils;
  * <p>
  * 蒙层
  */
-class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserver,ClearMemoryObject {
+class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserver, ClearMemoryObject {
 
     private BlurImageView mBlurImageView;
     private BackgroundViewHolder mBackgroundViewHolder;
@@ -167,11 +168,27 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
     }
 
     @Override
-    public void clear(boolean destroy) {
-
+    public boolean onTouchEvent(MotionEvent event) {
+        mPopupHelper.dispatchOutSideEvent(event);
+        return super.onTouchEvent(event);
     }
 
-    final class BackgroundViewHolder {
+    @Override
+    public void clear(boolean destroy) {
+        if (mBlurImageView != null) {
+            mBlurImageView.destroy();
+        }
+        if (mBackgroundViewHolder != null) {
+            mBackgroundViewHolder.clear(destroy);
+        }
+        if (destroy) {
+            mPopupHelper = null;
+            mBackgroundViewHolder = null;
+            mBlurImageView = null;
+        }
+    }
+
+    final class BackgroundViewHolder implements ClearMemoryObject {
 
         View mBackgroundView;
         BasePopupHelper mHelper;
@@ -231,6 +248,14 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
                 mBackgroundView = null;
             } else {
                 mBackgroundView = null;
+            }
+        }
+
+        @Override
+        public void clear(boolean destroy) {
+            if (destroy) {
+                mBackgroundView = null;
+                mHelper = null;
             }
         }
     }

@@ -230,7 +230,6 @@ import java.lang.ref.WeakReference;
 
 import razerdp.blur.PopupBlurOption;
 import razerdp.util.KeyboardUtils;
-import razerdp.util.PopupUiUtils;
 import razerdp.util.PopupUtils;
 import razerdp.util.SimpleAnimationUtils;
 import razerdp.util.log.PopupLog;
@@ -343,6 +342,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public static final int MATCH_PARENT = ViewGroup.LayoutParams.MATCH_PARENT;
     public static final int WRAP_CONTENT = ViewGroup.LayoutParams.WRAP_CONTENT;
 
+    private WeakReference<View> mAnchorDecorView;
+
     private BasePopupHelper mHelper;
     WeakReference<Context> mContext;
 
@@ -362,8 +363,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener;
     private LinkedViewLayoutChangeListenerWrapper mLinkedViewLayoutChangeListenerWrapper;
     private WeakReference<View> mLinkedViewRef;
-
-    Object lifeCycleObserver;
 
     public BasePopupWindow(Context context) {
         this(context, BasePopupHelper.DEFAULT_WIDTH, BasePopupHelper.DEFAULT_HEIGHT);
@@ -756,11 +755,24 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     private View findDecorView(Activity activity) {
+        if (mAnchorDecorView != null && mAnchorDecorView.get() != null) {
+            return mAnchorDecorView.get();
+        }
         View result = onFindDecorView(activity);
         if (result == null) {
             result = BasePopupComponentManager.getInstance().proxy.findDecorView(this, activity);
         }
-        return result == null ? activity.findViewById(android.R.id.content) : result;
+        result = result == null ? activity.findViewById(android.R.id.content) : result;
+        if (mAnchorDecorView == null || mAnchorDecorView.get() == null) {
+            mAnchorDecorView = new WeakReference<>(result);
+        }
+        return result;
+    }
+
+    void dispatchOutSideEvent(MotionEvent event) {
+        if (mAnchorDecorView != null && mAnchorDecorView.get() != null && mHelper.isOutSideTouchable()) {
+            mAnchorDecorView.get().dispatchTouchEvent(event);
+        }
     }
 
     /**
@@ -1651,14 +1663,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return BasePopupComponentManager.getInstance().proxy.attachLifeCycle(this, owner);
     }
 
-    /**
-     * 解绑lifecycle
-     */
-    public BasePopupWindow removeLifeCycle(Object owner) {
-        if (owner == null) return this;
-        return BasePopupComponentManager.getInstance().proxy.removeLifeCycle(this, owner);
-    }
-
     //endregion
 
     //region ------------------------------------------状态控制-----------------------------------------------
@@ -1704,6 +1708,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     void forceDismiss() {
         mHelper.forceDismiss();
         removeListener();
+    }
+
+    public void destroy() {
+
     }
 
     private boolean checkPerformShow(View v) {
@@ -1916,20 +1924,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     protected AnimatorSet getDefaultSlideFromBottomAnimationSet() {
         return SimpleAnimationUtils.getDefaultSlideFromBottomAnimationSet(mDisplayAnimateView);
-    }
-
-    /**
-     * 获取屏幕高度(px)
-     */
-    public int getScreenHeight() {
-        return PopupUiUtils.getScreenHeightCompat();
-    }
-
-    /**
-     * 获取屏幕宽度(px)
-     */
-    public int getScreenWidth() {
-        return PopupUiUtils.getScreenWidthCompat();
     }
 
     //endregion

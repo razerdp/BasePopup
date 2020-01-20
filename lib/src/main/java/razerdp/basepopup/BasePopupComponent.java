@@ -15,7 +15,4 @@ public interface BasePopupComponent {
     View findDecorView(BasePopupWindow basePopupWindow, Activity activity);
 
     BasePopupWindow attachLifeCycle(BasePopupWindow basePopupWindow, Object owner);
-
-    BasePopupWindow removeLifeCycle(BasePopupWindow basePopupWindow, Object owner);
-
 }

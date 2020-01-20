@@ -63,8 +63,7 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
             fieldWindowManager.setAccessible(true);
             final WindowManager windowManager = (WindowManager) fieldWindowManager.get(this);
             if (windowManager == null) return;
-            mWindowManagerProxy = new WindowManagerProxy(windowManager);
-            mWindowManagerProxy.attachPopupHelper(mHelper);
+            mWindowManagerProxy = new WindowManagerProxy(windowManager, mHelper);
             fieldWindowManager.set(this, mWindowManagerProxy);
 
             Field fieldScroll = PopupWindow.class.getDeclaredField("mOnScrollChangedListener");

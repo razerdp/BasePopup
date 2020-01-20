@@ -878,4 +878,10 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
             prepare(mShowInfo.mAnchorView == null ? null : mShowInfo.mAnchorView.get(), mShowInfo.positionMode);
         }
     }
+
+    void dispatchOutSideEvent(MotionEvent event) {
+        if (popupWindow != null) {
+            popupWindow.dispatchOutSideEvent(event);
+        }
+    }
 }
