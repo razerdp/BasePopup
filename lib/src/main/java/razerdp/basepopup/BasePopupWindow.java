@@ -731,9 +731,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                     throw new IllegalArgumentException("PopupWindow弹出必须依赖拥有WindowToken的View，比如Activity下的View，如果是在PopupWindow中的View没有WindowToken，则无法弹出");
                 }
                 if (mHelper.isShowAsDropDown()) {
-                    mPopupWindow.showAsDropDownProxy(v, 0, 0, getPopupGravity());
+                    mPopupWindow.showAsDropDown(v, 0, 0, getPopupGravity());
                 } else {
-                    mPopupWindow.showAtLocationProxy(v, getPopupGravity(), 0, 0);
+                    mPopupWindow.showAtLocation(v, getPopupGravity(), 0, 0);
                 }
             } else {
                 //什么都没传递，取顶级view的id
@@ -743,7 +743,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 if (activity == null) {
                     Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
                 } else {
-                    mPopupWindow.showAtLocationProxy(findDecorView(activity),
+                    mPopupWindow.showAtLocation(findDecorView(activity),
                             Gravity.NO_GRAVITY, 0, 0);
                 }
             }
@@ -819,8 +819,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private void retryToShowPopup(final View v, final boolean positionMode) {
         if (retryCounter > MAX_RETRY_SHOW_TIME) return;
         PopupLog.e("捕捉到一个exception，重试show popup", retryCounter);
-        if (mPopupWindow.callSuperIsShowing()) {
-            mPopupWindow.originalDismiss();
+        if (mPopupWindow.isShowing()) {
+            mPopupWindow.superDismiss();
         }
         Activity act = getContext();
         if (!PopupUtils.isActivityAlive(act)) {
@@ -1643,27 +1643,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return this;
     }
 
-
-    /**
-     * 设置蒙层宽度
-     *
-     * @param width 蒙层宽度
-     */
-    public BasePopupWindow setMaskLayoutWidth(int width) {
-        mHelper.maskWidth = width;
-        return this;
-    }
-
-    /**
-     * 设置蒙层高度
-     *
-     * @param height 蒙层高度
-     */
-    public BasePopupWindow setMaskLayoutHeight(int height) {
-        mHelper.maskHeight = height;
-        return this;
-    }
-
     /**
      * 绑定lifecycle
      */
@@ -1684,10 +1663,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     //region ------------------------------------------状态控制-----------------------------------------------
 
-    void originalDismiss() {
+    void superDismiss() {
         try {
             mHelper.handleDismiss();
-            mPopupWindow.originalDismiss();
+            mPopupWindow.superDismiss();
         } catch (Exception e) {
             e.printStackTrace();
         }
