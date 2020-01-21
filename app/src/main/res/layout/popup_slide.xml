@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
@@ -20,8 +20,9 @@
 
     <TextView
         android:id="@+id/tv_item_1"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:background="@drawable/common_selector"
         android:gravity="center"
         android:padding="@dimen/default_padding"
@@ -33,8 +34,9 @@
 
     <TextView
         android:id="@+id/tv_item_2"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:background="@drawable/common_selector"
         android:gravity="center"
         android:padding="@dimen/default_padding"
@@ -46,8 +48,9 @@
 
     <TextView
         android:id="@+id/tv_item_3"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:background="@drawable/common_selector"
         android:gravity="center"
         android:padding="@dimen/default_padding"
