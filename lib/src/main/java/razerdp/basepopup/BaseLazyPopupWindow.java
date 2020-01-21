@@ -13,7 +13,7 @@ public abstract class BaseLazyPopupWindow extends BasePopupWindow {
     private Pair<Integer, Integer> sizeCached;
 
     public BaseLazyPopupWindow(Context context) {
-        this(context, BasePopupHelper.DEFAULT_WIDTH, BasePopupHelper.DEFAULT_HEIGHT);
+        this(context, 0,0);
     }
 
     public BaseLazyPopupWindow(Context context, int width, int height) {
@@ -27,7 +27,7 @@ public abstract class BaseLazyPopupWindow extends BasePopupWindow {
             initView(sizeCached.first, sizeCached.second);
             sizeCached = null;
         } else {
-            initView(BasePopupHelper.DEFAULT_WIDTH, BasePopupHelper.DEFAULT_HEIGHT);
+            initView(0, 0);
         }
     }
 

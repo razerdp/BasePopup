@@ -222,8 +222,8 @@ public class QuickPopupConfig implements BasePopupFlag {
         return this;
     }
 
-    public QuickPopupConfig keepSize(boolean keep) {
-        setFlag(RESIZE, keep);
+    public QuickPopupConfig fitSize(boolean keep) {
+        setFlag(FITSIZE, keep);
         return this;
     }
 

@@ -25,7 +25,7 @@ public interface BasePopupFlag {
     int AS_DROP_DOWN = 0x4 << CONTROL_SHIFT;//关联Anchor
     int AUTO_INPUT_METHOD = 0x8 << CONTROL_SHIFT;//自动弹出输入法
     int ALIGN_BACKGROUND = 0x10 << CONTROL_SHIFT;//对齐蒙层
-    int RESIZE = 0x20 << CONTROL_SHIFT;//允许popup重设大小
+    int FITSIZE = 0x20 << CONTROL_SHIFT;//允许popup重设大小
 
     //quick popup config
     int QUICK_POPUP_CONFIG_SHIFT = 11;
@@ -41,8 +41,6 @@ public interface BasePopupFlag {
 
     //内部使用 高8位
     int INNER_USAGE_SHIFT = 24;
-    int CUSTOM_WIDTH = 0x1 << INNER_USAGE_SHIFT;
-    int CUSTOM_HEIGHT = 0x2 << INNER_USAGE_SHIFT;
     int CUSTOM_ON_UPDATE = 0x4 << INNER_USAGE_SHIFT;
     int CUSTOM_ON_ANIMATE_DISMISS = 0x8 << INNER_USAGE_SHIFT;
 

@@ -365,7 +365,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private WeakReference<View> mLinkedViewRef;
 
     public BasePopupWindow(Context context) {
-        this(context, BasePopupHelper.DEFAULT_WIDTH, BasePopupHelper.DEFAULT_HEIGHT);
+        this(context, 0, 0);
     }
 
     public BasePopupWindow(Context context, int width, int height) {
@@ -379,28 +379,18 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         attachLifeCycle(getContext());
         mContentView = onCreateContentView();
         mHelper.setContentRootId(mContentView);
-        if (mHelper.getParaseFromXmlParams() == null) {
-            Log.e(TAG, "为了更准确的适配您的布局，BasePopupWindow建议您使用createPopupById()进行inflate");
-        }
         mDisplayAnimateView = onCreateAnimateView();
         if (mDisplayAnimateView == null) {
             mDisplayAnimateView = mContentView;
         }
+
         setWidth(width);
         setHeight(height);
 
-        if (mHelper.getParaseFromXmlParams() != null) {
-            width = mHelper.getParaseFromXmlParams().width;
-            height = mHelper.getParaseFromXmlParams().height;
-        }
-
         //默认占满全屏
-        mPopupWindow = new PopupWindowProxy(mContentView, width, height, mHelper);
+        mPopupWindow = new PopupWindowProxy(mContentView, mHelper);
         mPopupWindow.setOnDismissListener(this);
         setPopupAnimationStyle(0);
-
-        mHelper.setPopupViewWidth(width);
-        mHelper.setPopupViewHeight(height);
 
         mHelper.preMeasurePopupView(mContentView, width, height);
 
@@ -1645,13 +1635,12 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     /**
-     * 是否保持测量高度
+     * 是否允许BasePopup自动调整大小
      * <p>
      * 在{@link #setClipToScreen(boolean)}为true的情况下，BasePopup会针对剩余高度来调整Popup的大小，因此可能出现实际显示高度过小的情况
-     * 该方法可以保持默认测量高度从而阻止BasePopup的自动调整
      */
-    public BasePopupWindow setResize(boolean keepSize) {
-        mHelper.resize(keepSize);
+    public BasePopupWindow setFitSize(boolean canResize) {
+        mHelper.resize(canResize);
         return this;
     }
 

@@ -52,9 +52,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     private static final int CONTENT_VIEW_ID = R.id.base_popup_content_root;
 
-    static final int DEFAULT_WIDTH = ViewGroup.LayoutParams.WRAP_CONTENT;
-    static final int DEFAULT_HEIGHT = ViewGroup.LayoutParams.WRAP_CONTENT;
-
     ShowMode mShowMode = ShowMode.SCREEN;
 
     int contentRootId = CONTENT_VIEW_ID;
@@ -84,8 +81,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     int preMeasureWidth;
     int preMeasureHeight;
 
-    int popupViewWidth;
-    int popupViewHeight;
+    int popupViewWidth = 0;
+    int popupViewHeight = 0;
     //锚点view的location
     Rect mAnchorViewBound;
 
@@ -103,7 +100,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     KeyboardUtils.OnKeyboardChangeListener mKeyboardStateChangeListener;
 
     int mSoftInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
-    ViewGroup.MarginLayoutParams mParseFromXmlParams;
+    ViewGroup.MarginLayoutParams layoutParams;
     Point mTempOffset = new Point();
 
     int maxWidth, maxHeight, minWidth, minHeight;
@@ -155,22 +152,16 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
             if (childParams != null) {
                 checkAndSetGravity(childParams);
                 if (childParams instanceof ViewGroup.MarginLayoutParams) {
-                    mParseFromXmlParams = new ViewGroup.MarginLayoutParams((ViewGroup.MarginLayoutParams) childParams);
-                    if ((flag & CUSTOM_WIDTH) != 0) {
-                        mParseFromXmlParams.width = popupViewWidth;
-                    }
-                    if ((flag & CUSTOM_HEIGHT) != 0) {
-                        mParseFromXmlParams.height = popupViewHeight;
-                    }
-                    tempLayout = null;
-                    return result;
+                    layoutParams = new ViewGroup.MarginLayoutParams((ViewGroup.MarginLayoutParams) childParams);
+                } else {
+                    layoutParams = new ViewGroup.MarginLayoutParams(childParams);
                 }
-                mParseFromXmlParams = new ViewGroup.MarginLayoutParams(childParams);
-                if ((flag & CUSTOM_WIDTH) != 0) {
-                    mParseFromXmlParams.width = popupViewWidth;
+
+                if (popupViewWidth != 0 && layoutParams.width != popupViewWidth) {
+                    layoutParams.width = popupViewWidth;
                 }
-                if ((flag & CUSTOM_HEIGHT) != 0) {
-                    mParseFromXmlParams.height = popupViewHeight;
+                if (popupViewHeight != 0 && layoutParams.height != popupViewHeight) {
+                    layoutParams.height = popupViewHeight;
                 }
                 tempLayout = null;
                 return result;
@@ -345,54 +336,24 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     //endregion
 
-    boolean isCustomMeasure() {
-        return (flag & (CUSTOM_WIDTH | CUSTOM_HEIGHT)) != 0;
-    }
-
     int getPopupViewWidth() {
-        if ((flag & CUSTOM_WIDTH) != 0) {
-            return popupViewWidth;
-        } else {
-            if (mParseFromXmlParams != null) {
-                return mParseFromXmlParams.width;
-            }
-        }
-        return popupViewWidth;
+        return getContentViewLayoutParams().width;
     }
 
     BasePopupHelper setPopupViewWidth(int popupViewWidth) {
-        this.popupViewWidth = popupViewWidth;
-        if (popupViewWidth != DEFAULT_WIDTH) {
-            setFlag(CUSTOM_WIDTH, true);
-            if (mParseFromXmlParams != null) {
-                mParseFromXmlParams.width = popupViewWidth;
-            }
-        } else {
-            setFlag(CUSTOM_WIDTH, false);
+        if (popupViewWidth != 0) {
+            getContentViewLayoutParams().width = popupViewWidth;
         }
         return this;
     }
 
     int getPopupViewHeight() {
-        if ((flag & CUSTOM_HEIGHT) != 0) {
-            return popupViewHeight;
-        } else {
-            if (mParseFromXmlParams != null) {
-                return mParseFromXmlParams.height;
-            }
-        }
-        return popupViewHeight;
+        return getContentViewLayoutParams().height;
     }
 
     BasePopupHelper setPopupViewHeight(int popupViewHeight) {
-        this.popupViewHeight = popupViewHeight;
-        if (popupViewHeight != DEFAULT_HEIGHT) {
-            setFlag(CUSTOM_HEIGHT, true);
-            if (mParseFromXmlParams != null) {
-                mParseFromXmlParams.height = popupViewHeight;
-            }
-        } else {
-            setFlag(CUSTOM_HEIGHT, false);
+        if (popupViewHeight != 0) {
+            getContentViewLayoutParams().height = popupViewHeight;
         }
         return this;
     }
@@ -429,8 +390,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return (flag & AS_DROP_DOWN) != 0;
     }
 
-    boolean isResizable() {
-        return (flag & RESIZE) != 0;
+    boolean isFitsizable() {
+        return (flag & FITSIZE) != 0;
     }
 
     BasePopupHelper setShowAsDropDown(boolean showAsDropDown) {
@@ -636,8 +597,16 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return (flag & CLIP_CHILDREN) != 0;
     }
 
-    ViewGroup.MarginLayoutParams getParaseFromXmlParams() {
-        return mParseFromXmlParams;
+    /**
+     * non null
+     */
+    ViewGroup.MarginLayoutParams getContentViewLayoutParams() {
+        if (layoutParams == null) {
+            int w = popupViewWidth == 0 ? ViewGroup.LayoutParams.MATCH_PARENT : popupViewWidth;
+            int h = popupViewHeight == 0 ? ViewGroup.LayoutParams.WRAP_CONTENT : popupViewHeight;
+            layoutParams = new ViewGroup.MarginLayoutParams(w, h);
+        }
+        return layoutParams;
     }
 
     int getShowCount() {
@@ -717,12 +686,12 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     BasePopupHelper resize(boolean keep) {
-        setFlag(RESIZE, keep);
+        setFlag(FITSIZE, keep);
         return this;
     }
 
     boolean isResizeable() {
-        return (flag & RESIZE) != 0;
+        return (flag & FITSIZE) != 0;
     }
 
     //-----------------------------------------controller-----------------------------------------
