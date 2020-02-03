@@ -18,21 +18,20 @@ import razerdp.util.log.PopupLog;
 public final class BasePopupComponentManager {
 
     private static volatile Application mApplicationContext;
-
-    BasePopupComponentProxy proxy;
+    static final BasePopupComponentProxy proxy;
     private WeakReference<Activity> mTopActivity;
 
+    static {
+        proxy = new BasePopupComponentProxy();
+    }
 
-    class BasePopupComponentProxy implements BasePopupComponent {
+    static class BasePopupComponentProxy implements BasePopupComponent {
         private BasePopupComponent IMPL;
         private static final String IMPL_X = "razerdp.basepopup.BasePopupComponentX";
 
-
-        BasePopupComponentProxy(Context context) {
+        BasePopupComponentProxy() {
             try {
-                if (isClassExist(IMPL_X)) {
-                    IMPL = ((BasePopupComponent) Class.forName(IMPL_X).newInstance());
-                }
+                IMPL = ((BasePopupComponent) Class.forName(IMPL_X).newInstance());
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InstantiationException e) {
@@ -40,7 +39,7 @@ public final class BasePopupComponentManager {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-            PopupLog.i(IMPL);
+            PopupLog.i("initComponent", IMPL);
         }
 
         @Override
@@ -51,12 +50,12 @@ public final class BasePopupComponentManager {
 
         @Override
         public BasePopupWindow attachLifeCycle(BasePopupWindow basePopupWindow, Object owner) {
-            if (IMPL == null) return basePopupWindow;
-            IMPL.attachLifeCycle(basePopupWindow, owner);
+            if (IMPL != null) {
+                IMPL.attachLifeCycle(basePopupWindow, owner);
+            }
             return basePopupWindow;
         }
     }
-
 
     private static class SingleTonHolder {
         private static BasePopupComponentManager INSTANCE = new BasePopupComponentManager();
@@ -64,19 +63,22 @@ public final class BasePopupComponentManager {
 
 
     private BasePopupComponentManager() {
-
     }
 
     synchronized void init(Context context) {
-        if (proxy != null || mApplicationContext != null) return;
+        if (mApplicationContext != null) return;
         Reflection.unseal(context);
         mApplicationContext = (Application) context.getApplicationContext();
         regLifeCallback();
-        proxy = new BasePopupComponentProxy(context);
+
     }
 
     public Activity getTopActivity() {
         return mTopActivity == null ? null : mTopActivity.get();
+    }
+
+    public boolean hasComponent() {
+        return proxy.IMPL != null;
     }
 
     private void regLifeCallback() {
@@ -111,7 +113,6 @@ public final class BasePopupComponentManager {
 
             @Override
             public void onActivityDestroyed(Activity activity) {
-
             }
         });
     }
@@ -122,14 +123,5 @@ public final class BasePopupComponentManager {
 
     public static Application getApplication() {
         return mApplicationContext;
-    }
-
-    private boolean isClassExist(String name) {
-        try {
-            Class.forName(name);
-        } catch (Exception ex) {
-            return false;
-        }
-        return true;
     }
 }

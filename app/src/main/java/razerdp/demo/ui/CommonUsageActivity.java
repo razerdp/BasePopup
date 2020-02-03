@@ -6,12 +6,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
 import razerdp.basepopup.R;
@@ -32,6 +31,7 @@ import razerdp.demo.model.common.CommonFriendCircleInfo;
 import razerdp.demo.model.common.CommonGestureNavInfo;
 import razerdp.demo.model.common.CommonInputInfo;
 import razerdp.demo.model.common.CommonSlideInfo;
+import razerdp.demo.model.lifecycle.ShowOnCreateInfo;
 import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.DescBuilder;
 import razerdp.demo.utils.UIHelper;
@@ -114,6 +114,8 @@ public class CommonUsageActivity extends BaseActivity {
         result.add(new DemoCommonUsageTitle("背景类"));
         result.add(new CommonBackgroundInfo());
         result.add(new CommonBackgroundAlignInfo());
+        result.add(new DemoCommonUsageTitle("生命期类"));
+        result.add(new ShowOnCreateInfo());
         result.add(new DemoCommonUsageTitle("输入法"));
         result.add(new CommonInputInfo());
         result.add(new DemoCommonUsageTitle("兼容性测试"));

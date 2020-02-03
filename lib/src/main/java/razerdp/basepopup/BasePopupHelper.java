@@ -336,24 +336,16 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     //endregion
 
-    int getPopupViewWidth() {
-        return getContentViewLayoutParams().width;
-    }
-
     BasePopupHelper setPopupViewWidth(int popupViewWidth) {
         if (popupViewWidth != 0) {
-            getContentViewLayoutParams().width = popupViewWidth;
+            getLayoutParams().width = popupViewWidth;
         }
         return this;
     }
 
-    int getPopupViewHeight() {
-        return getContentViewLayoutParams().height;
-    }
-
     BasePopupHelper setPopupViewHeight(int popupViewHeight) {
         if (popupViewHeight != 0) {
-            getContentViewLayoutParams().height = popupViewHeight;
+            getLayoutParams().height = popupViewHeight;
         }
         return this;
     }
@@ -600,7 +592,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     /**
      * non null
      */
-    ViewGroup.MarginLayoutParams getContentViewLayoutParams() {
+    ViewGroup.MarginLayoutParams getLayoutParams() {
         if (layoutParams == null) {
             int w = popupViewWidth == 0 ? ViewGroup.LayoutParams.MATCH_PARENT : popupViewWidth;
             int h = popupViewHeight == 0 ? ViewGroup.LayoutParams.WRAP_CONTENT : popupViewHeight;
@@ -758,7 +750,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return popupWindow.onOutSideTouch();
     }
 
-    void show() {
+    void onShow() {
         if ((flag & CUSTOM_ON_UPDATE) != 0) return;
         if (mShowAnimation == null || mShowAnimator == null) {
             popupWindow.mDisplayAnimateView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
