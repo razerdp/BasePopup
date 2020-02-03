@@ -4,13 +4,13 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.view.View;
 
+import java.lang.ref.WeakReference;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
-
-import java.lang.ref.WeakReference;
 
 /**
  * Created by 大灯泡 on 2019/5/13
@@ -46,7 +46,7 @@ public class BasePopupComponentX implements BasePopupComponent {
         return basePopupWindow;
     }
 
-    private static class BasePopupLifeCycleHolder implements LifecycleEventObserver {
+    private class BasePopupLifeCycleHolder implements LifecycleEventObserver {
         WeakReference<BasePopupWindow> mBasePopupWindow;
 
         BasePopupLifeCycleHolder(BasePopupWindow target) {
@@ -60,8 +60,8 @@ public class BasePopupComponentX implements BasePopupComponent {
 
         @Override
         public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
+            BasePopupWindow popupWindow = getPopup();
             if (event == Lifecycle.Event.ON_DESTROY) {
-                BasePopupWindow popupWindow = getPopup();
                 if (popupWindow == null) {
                     source.getLifecycle().removeObserver(this);
                     mBasePopupWindow = null;
@@ -70,7 +70,7 @@ public class BasePopupComponentX implements BasePopupComponent {
                 if (popupWindow.isShowing()) {
                     popupWindow.forceDismiss();
                 }
-                popupWindow.destroy();
+                popupWindow.onDestroy();
                 mBasePopupWindow.clear();
                 mBasePopupWindow = null;
                 source.getLifecycle().removeObserver(this);

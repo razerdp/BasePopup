@@ -3,12 +3,10 @@ package razerdp.basepopup;
 import android.app.Activity;
 import android.view.View;
 
-import java.util.List;
-
 /**
  * Created by 大灯泡 on 2019/5/13
  * <p>
- * Description：BasePopup支持，for support and lifecycle and android x
+ * Description：BasePopup component
  */
 public interface BasePopupComponent {
 

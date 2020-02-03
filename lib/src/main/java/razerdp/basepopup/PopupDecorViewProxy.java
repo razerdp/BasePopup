@@ -101,26 +101,39 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         if (contentView != null) {
             LayoutParams lp = contentView.getLayoutParams();
             if (lp == null) {
-                lp = new FrameLayout.LayoutParams(mHelper.getContentViewLayoutParams());
+                lp = new FrameLayout.LayoutParams(mHelper.getLayoutParams());
             } else {
-                lp.width = mHelper.getContentViewLayoutParams().width;
-                lp.height = mHelper.getContentViewLayoutParams().height;
+                lp.width = mHelper.getLayoutParams().width;
+                lp.height = mHelper.getLayoutParams().height;
                 if (lp instanceof MarginLayoutParams) {
-                    ((MarginLayoutParams) lp).leftMargin = mHelper.getContentViewLayoutParams().leftMargin;
-                    ((MarginLayoutParams) lp).topMargin = mHelper.getContentViewLayoutParams().topMargin;
-                    ((MarginLayoutParams) lp).rightMargin = mHelper.getContentViewLayoutParams().rightMargin;
-                    ((MarginLayoutParams) lp).bottomMargin = mHelper.getContentViewLayoutParams().bottomMargin;
+                    ((MarginLayoutParams) lp).leftMargin = mHelper.getLayoutParams().leftMargin;
+                    ((MarginLayoutParams) lp).topMargin = mHelper.getLayoutParams().topMargin;
+                    ((MarginLayoutParams) lp).rightMargin = mHelper.getLayoutParams().rightMargin;
+                    ((MarginLayoutParams) lp).bottomMargin = mHelper.getLayoutParams().bottomMargin;
                 }
+            }
+
+            View parent = (View) contentView.getParent();
+            if (parent != null && parent != target) {
+                //可能被包裹了一个backgroundview
+                ViewGroup.LayoutParams p = parent.getLayoutParams();
+                if (p == null) {
+                    p = new ViewGroup.LayoutParams(lp);
+                } else {
+                    p.width = lp.width;
+                    p.height = lp.height;
+                }
+                parent.setLayoutParams(p);
             }
             contentView.setLayoutParams(lp);
         }
 
-        wp.width = mHelper.getPopupViewWidth();
-        wp.height = mHelper.getPopupViewHeight();
-        childLeftMargin = mHelper.getContentViewLayoutParams().leftMargin;
-        childTopMargin = mHelper.getContentViewLayoutParams().topMargin;
-        childRightMargin = mHelper.getContentViewLayoutParams().rightMargin;
-        childBottomMargin = mHelper.getContentViewLayoutParams().bottomMargin;
+        wp.width = mHelper.getLayoutParams().width;
+        wp.height = mHelper.getLayoutParams().height;
+        childLeftMargin = mHelper.getLayoutParams().leftMargin;
+        childTopMargin = mHelper.getLayoutParams().topMargin;
+        childRightMargin = mHelper.getLayoutParams().rightMargin;
+        childBottomMargin = mHelper.getLayoutParams().bottomMargin;
 
         addView(target, wp);
     }

@@ -81,7 +81,7 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
             if (mHelper != null) {
                 if (mHelper.isOutSideTouchable()) {
                     Rect anchorBound = mHelper.getAnchorViewBound();
-                    super.update(anchorBound.left, anchorBound.bottom, mHelper.getPopupViewWidth(), mHelper.getPopupViewHeight(), true);
+                    super.update(anchorBound.left, anchorBound.bottom, mHelper.getLayoutParams().width, mHelper.getLayoutParams().height, true);
                 }
                 if (mWindowManagerProxy != null) {
                     mWindowManagerProxy.update();

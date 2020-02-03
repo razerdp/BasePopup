@@ -215,12 +215,14 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.EditText;
@@ -232,6 +234,7 @@ import razerdp.blur.PopupBlurOption;
 import razerdp.util.KeyboardUtils;
 import razerdp.util.PopupUtils;
 import razerdp.util.SimpleAnimationUtils;
+import razerdp.util.WindowCallbackWrapper;
 import razerdp.util.log.PopupLog;
 
 /**
@@ -347,6 +350,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private BasePopupHelper mHelper;
     WeakReference<Context> mContext;
 
+    volatile boolean isWindowTokenReady;
+    Pair<View, Boolean> cacheShowInfo;
+    private WindowCallbackWrapper mWindowCallbackWrapper;
     //元素定义
     PopupWindowProxy mPopupWindow;
     //popup视图
@@ -356,9 +362,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     WeakReference<Object> mAttached;
 
     private volatile boolean isExitAnimatePlaying = false;
-
-    //重试次数
-    private int retryCounter;
 
     private ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener;
     private LinkedViewLayoutChangeListenerWrapper mLinkedViewLayoutChangeListenerWrapper;
@@ -575,12 +578,13 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param anchorViewResid anchorView的ViewId
      */
     public void showPopupWindow(int anchorViewResid) {
-        Context context = getContext();
-        if (context instanceof Activity) {
-            View v = ((Activity) context).findViewById(anchorViewResid);
+        Activity act = getContext();
+
+        if (act != null) {
+            View v = act.findViewById(anchorViewResid);
             showPopupWindow(v);
         } else {
-            Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
+            onShowError(new NullPointerException("无法从context处获得WindowToken，请确保您的Context是否为Activity"));
         }
     }
 
@@ -709,15 +713,27 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     //------------------------------------------Methods-----------------------------------------------
     void tryToShowPopup(View v, boolean positionMode) {
+        cacheShowInfo = null;
         addListener();
+        //如果是在onCreate里，先存下来，根据是否有lifecycle决定是否缓存
+        if (!isWindowTokenReady) {
+            cacheShow(v, positionMode);
+            onShowError(new IllegalStateException("宿主窗口尚未准备好，等待准备就绪后弹出"));
+            return;
+        }
+        onLogInternal("宿主窗口已经准备好，执行弹出");
         mHelper.prepare(v, positionMode);
         try {
-            if (isShowing()) return;
-            mHelper.show();
+            if (isShowing()) {
+                onShowError(new IllegalStateException("BasePopup已经显示了"));
+                return;
+            }
+            mHelper.onShow();
             //传递了view
             if (v != null) {
                 if (v.getWindowToken() == null) {
-                    throw new IllegalArgumentException("PopupWindow弹出必须依赖拥有WindowToken的View，比如Activity下的View，如果是在PopupWindow中的View没有WindowToken，则无法弹出");
+                    onShowError(new NullPointerException("PopupWindow弹出的锚点View必须拥有WindowToken，请检查是否传入了PopupWindow中的View,PopupWindow中的View并没有WindowToken。"));
+                    return;
                 }
                 if (mHelper.isShowAsDropDown()) {
                     mPopupWindow.showAsDropDown(v, 0, 0, getPopupGravity());
@@ -726,22 +742,37 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 }
             } else {
                 //什么都没传递，取顶级view的id
-                Context context = getContext();
-                assert context != null : "context is null ! please make sure your activity is not be destroyed";
-                Activity activity = getContext();
-                if (activity == null) {
-                    Log.e(TAG, "can not get token from context,make sure that context is instance of activity");
-                } else {
-                    mPopupWindow.showAtLocation(findDecorView(activity),
-                            Gravity.NO_GRAVITY, 0, 0);
+                Activity act = getContext();
+                if (act == null) {
+                    onShowError(new NullPointerException("无法从context处获得WindowToken，请确保您的Context是否为Activity"));
+                    return;
                 }
+                mPopupWindow.showAtLocation(findDecorView(act),
+                        Gravity.NO_GRAVITY, 0, 0);
             }
-            retryCounter = 0;
+            onLogInternal("弹窗执行成功");
         } catch (Exception e) {
-            retryToShowPopup(v, positionMode);
-            PopupLog.e(TAG, e);
             e.printStackTrace();
+            onShowError(e);
         }
+    }
+
+    protected void onShowError(Exception e) {
+        Log.e(TAG, "onShowError: ", e);
+        onLogInternal(e.getMessage());
+    }
+
+    void cacheShow(View v, boolean positionMode) {
+        cacheShowInfo = Pair.create(v, positionMode);
+    }
+
+    void restoreShow() {
+        isWindowTokenReady = true;
+        if (cacheShowInfo == null) {
+            return;
+        }
+        onLogInternal("重新执行因窗口未准备就绪的弹窗");
+        tryToShowPopup(cacheShowInfo.first, cacheShowInfo.second);
     }
 
     private View findDecorView(Activity activity) {
@@ -774,8 +805,30 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
 
     private void addListener() {
+        wrapWindowCallback();
         addGlobalListener();
         addLinkedLayoutListener();
+    }
+
+    private void wrapWindowCallback() {
+        Activity act = getContext();
+        if (act != null) {
+            Window window = act.getWindow();
+            if (window != null && mWindowCallbackWrapper == null) {
+                mWindowCallbackWrapper = new WindowCallbackWrapper(window.getCallback()) {
+                    @Override
+                    public void onWindowFocusChanged(boolean hasFocus) {
+                        super.onWindowFocusChanged(hasFocus);
+                        onLogInternal("监听到Activity的焦点变化：" + hasFocus);
+                        if (hasFocus) {
+                            restoreShow();
+                        }
+                    }
+                };
+                onLogInternal("代理Activity的WindowCallback：" + mWindowCallbackWrapper + "\n原Activity的WindowCallback：" + mWindowCallbackWrapper.getWrapped());
+                window.setCallback(mWindowCallbackWrapper);
+            }
+        }
     }
 
     private void addGlobalListener() {
@@ -800,6 +853,17 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         mLinkedViewLayoutChangeListenerWrapper.addSelf();
     }
 
+    private void restoreWindowCallback() {
+        Activity act = getContext();
+        if (act != null) {
+            Window window = act.getWindow();
+            if (window != null && mWindowCallbackWrapper != null) {
+                onLogInternal("恢复到原来的Activity#WindowCallback：" + mWindowCallbackWrapper.getWrapped());
+                window.setCallback(mWindowCallbackWrapper.getWrapped());
+            }
+        }
+    }
+
     private void removeGlobalListener() {
         if (mGlobalLayoutListener != null) {
             Activity activity = getContext();
@@ -813,31 +877,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         if (mLinkedViewLayoutChangeListenerWrapper != null) {
             mLinkedViewLayoutChangeListenerWrapper.removeListener();
         }
-    }
-
-    /**
-     * 用于修复popup无法在onCreate里面show的问题
-     */
-    private void retryToShowPopup(final View v, final boolean positionMode) {
-        if (retryCounter > MAX_RETRY_SHOW_TIME) return;
-        PopupLog.e("捕捉到一个exception，重试show popup", retryCounter);
-        if (mPopupWindow.isShowing()) {
-            mPopupWindow.superDismiss();
-        }
-        Activity act = getContext();
-        if (!PopupUtils.isActivityAlive(act)) {
-            PopupLog.e(TAG, "activity不合法，请检查是否已经destroy或者为空");
-            return;
-        }
-        View rootView = act.getWindow().getDecorView();
-        rootView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                retryCounter++;
-                tryToShowPopup(v, positionMode);
-                PopupLog.e(TAG, "show popup失败，正在重试", retryCounter);
-            }
-        }, 350);
     }
 
     /**
@@ -1101,7 +1140,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public BasePopupWindow setBlurBackgroundEnable(boolean blurBackgroundEnable, OnBlurOptionInitListener optionInitListener) {
         Activity activity = getContext();
         if (activity == null) {
-            PopupLog.e(TAG, "无法配置默认模糊脚本，因为context不是activity");
+            onLogInternal("无法配置默认模糊脚本，因为context不是activity");
             return this;
         }
         PopupBlurOption option = null;
@@ -1683,6 +1722,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     void removeListener() {
+        restoreWindowCallback();
         removeGlobalListener();
         removeLinkedLayoutListener();
     }
@@ -1699,8 +1739,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         removeListener();
     }
 
-    public void destroy() {
-
+    public void onDestroy() {
+        onLogInternal("onDestroy");
+        removeListener();
+        mWindowCallbackWrapper = null;
+        cacheShowInfo = null;
     }
 
     private boolean checkPerformShow(View v) {
@@ -1915,6 +1958,12 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return SimpleAnimationUtils.getDefaultSlideFromBottomAnimationSet(mDisplayAnimateView);
     }
 
+    /**
+     * 日志输出口
+     */
+    protected void onLogInternal(String msg) {
+        PopupLog.d(TAG, msg);
+    }
     //endregion
 
     //region------------------------------------------Interface-----------------------------------------------

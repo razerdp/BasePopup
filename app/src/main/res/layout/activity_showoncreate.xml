@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <razerdp.demo.widget.TitleBarView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title_text="在OnCreate中弹出" />
+
+    <ScrollView
+        android:id="@+id/view_scroller"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/tv_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="1.5dp"
+            android:lineSpacingMultiplier="1.5"
+            android:padding="@dimen/default_padding"
+            android:textColor="@color/common_red"
+            android:textSize="@dimen/text_normal"
+            tools:text="12345" />
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btn_show_popup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="重新弹出窗口"
+        android:textColor="@color/text_black1" />
+
+    <Button
+        android:id="@+id/btn_open_own"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="打开新一个窗口"
+        android:textColor="@color/text_black1" />
+</LinearLayout>
