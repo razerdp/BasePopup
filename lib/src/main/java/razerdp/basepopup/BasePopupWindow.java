@@ -375,6 +375,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         BasePopupComponentManager.getInstance().init(context);
         mContext = new WeakReference<Context>(context);
         mHelper = new BasePopupHelper(this);
+        BasePopupComponentManager.getInstance().recordWindow(this);
         initView(width, height);
     }
 
@@ -714,6 +715,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     //------------------------------------------Methods-----------------------------------------------
     void tryToShowPopup(View v, boolean positionMode) {
         cacheShowInfo = null;
+        checkWindowTokenReady();
         addListener();
         //如果是在onCreate里，先存下来，根据是否有lifecycle决定是否缓存
         if (!isWindowTokenReady) {
@@ -755,6 +757,14 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             e.printStackTrace();
             onShowError(e);
         }
+    }
+
+    private void checkWindowTokenReady() {
+        if (isWindowTokenReady) return;
+        Activity act = getContext();
+        Window window = act == null ? null : act.getWindow();
+        if (window == null) return;
+        isWindowTokenReady = window.isActive();
     }
 
     protected void onShowError(Exception e) {
@@ -805,16 +815,17 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
 
     private void addListener() {
-        wrapWindowCallback();
+        addFocusChangeListener();
         addGlobalListener();
         addLinkedLayoutListener();
     }
 
-    private void wrapWindowCallback() {
+    private void addFocusChangeListener() {
+        if (isWindowTokenReady) return;
         Activity act = getContext();
-        if (act != null) {
-            Window window = act.getWindow();
-            if (window != null && mWindowCallbackWrapper == null) {
+        Window window = act == null ? null : act.getWindow();
+        if (window != null) {
+            if (mWindowCallbackWrapper == null) {
                 mWindowCallbackWrapper = new WindowCallbackWrapper(window.getCallback()) {
                     @Override
                     public void onWindowFocusChanged(boolean hasFocus) {
@@ -825,9 +836,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                         }
                     }
                 };
-                onLogInternal("代理Activity的WindowCallback：" + mWindowCallbackWrapper + "\n原Activity的WindowCallback：" + mWindowCallbackWrapper.getWrapped());
-                window.setCallback(mWindowCallbackWrapper);
             }
+            onLogInternal("代理Activity的WindowCallback：" + mWindowCallbackWrapper + "\n原Activity的WindowCallback：" + mWindowCallbackWrapper.getWrapped());
+            window.setCallback(mWindowCallbackWrapper);
         }
     }
 
@@ -855,12 +866,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     private void restoreWindowCallback() {
         Activity act = getContext();
-        if (act != null) {
-            Window window = act.getWindow();
-            if (window != null && mWindowCallbackWrapper != null) {
-                onLogInternal("恢复到原来的Activity#WindowCallback：" + mWindowCallbackWrapper.getWrapped());
-                window.setCallback(mWindowCallbackWrapper.getWrapped());
-            }
+        Window window = act == null ? null : act.getWindow();
+        if (window != null && mWindowCallbackWrapper != null) {
+            onLogInternal("恢复到原来的Activity#WindowCallback：" + mWindowCallbackWrapper.getWrapped());
+            window.setCallback(mWindowCallbackWrapper.getWrapped());
+            mWindowCallbackWrapper = null;
         }
     }
 
@@ -1742,6 +1752,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public void onDestroy() {
         onLogInternal("onDestroy");
         removeListener();
+        if (mHelper != null) {
+            mHelper.clear(true);
+        }
         mWindowCallbackWrapper = null;
         cacheShowInfo = null;
     }

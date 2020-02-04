@@ -38,7 +38,7 @@ import razerdp.util.log.PopupLog;
  * PopupHelper，这货与Popup强引用哦~
  */
 @SuppressWarnings("all")
-final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, BasePopupFlag {
+final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, BasePopupFlag, ClearMemoryObject {
 
     BasePopupWindow popupWindow;
 
@@ -844,5 +844,51 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         if (popupWindow != null) {
             popupWindow.dispatchOutSideEvent(event);
         }
+    }
+
+    @Override
+    public void clear(boolean destroy) {
+        if (eventObserverMap != null) {
+            eventObserverMap.clear();
+        }
+        if (mShowAnimation != null) {
+            mShowAnimation.cancel();
+            mShowAnimation.setAnimationListener(null);
+        }
+        if (mDismissAnimation != null) {
+            mDismissAnimation.cancel();
+            mDismissAnimation.setAnimationListener(null);
+        }
+        if (mShowAnimator != null) {
+            mShowAnimator.cancel();
+            mShowAnimator.removeAllListeners();
+        }
+        if (mDismissAnimator != null) {
+            mDismissAnimator.cancel();
+            mDismissAnimator.removeAllListeners();
+        }
+        if (mBlurOption != null) {
+            mBlurOption.clear();
+        }
+        if (mShowInfo != null) {
+            if (mShowInfo.mAnchorView != null) {
+                mShowInfo.mAnchorView.clear();
+            }
+            mShowInfo.mAnchorView = null;
+        }
+        mShowAnimation = null;
+        mDismissAnimation = null;
+        mShowAnimator = null;
+        mDismissAnimator = null;
+        eventObserverMap = null;
+        popupWindow = null;
+        mOnDismissListener = null;
+        mOnBeforeShowCallback = null;
+        mBlurOption = null;
+        mBackgroundDrawable = null;
+        mBackgroundView = null;
+        mAutoShowInputEdittext = null;
+        mKeyboardStateChangeListener = null;
+        mShowInfo = null;
     }
 }

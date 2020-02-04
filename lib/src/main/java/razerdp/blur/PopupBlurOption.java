@@ -113,4 +113,11 @@ public class PopupBlurOption {
     public boolean isAllowToBlur() {
         return getBlurView() != null;
     }
+
+    public final void clear() {
+        if (mBlurView != null) {
+            mBlurView.clear();
+        }
+        mBlurView = null;
+    }
 }

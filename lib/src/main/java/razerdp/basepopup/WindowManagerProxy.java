@@ -79,9 +79,7 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
                     //允许占用刘海
                     p.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
                 }
-                if (!helper.isOutSideTouchable()) {
-                    p.flags |= LayoutParams.FLAG_LAYOUT_NO_LIMITS;
-                }
+                p.flags |= LayoutParams.FLAG_LAYOUT_NO_LIMITS;
             }
         }
     }

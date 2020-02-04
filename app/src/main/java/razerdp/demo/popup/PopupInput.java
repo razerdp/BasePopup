@@ -27,6 +27,8 @@ public class PopupInput extends BasePopupWindow {
     public PopupInput(Context context) {
         super(context);
         ButterKnifeUtil.bind(this, getContentView());
+//        setOutSideTouchable(true);
+//        setOutSideDismiss(false);
         mTvSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

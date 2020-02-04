@@ -411,7 +411,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 }
 
                 int left = childLeft + offsetX;
-                int top = childTop + offsetY + (mHelper.isFullScreen() ? 0 : -PopupUiUtils.getStatusBarHeight());
+                int top = childTop + offsetY + (mHelper.isFullScreen() ? 0 : PopupUiUtils.getStatusBarHeight());
                 int right = left + width;
                 int bottom = top + height;
 

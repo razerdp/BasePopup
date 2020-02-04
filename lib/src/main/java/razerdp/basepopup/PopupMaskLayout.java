@@ -168,10 +168,13 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        mPopupHelper.dispatchOutSideEvent(event);
-        return super.onTouchEvent(event);
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        MotionEvent evCopy = MotionEvent.obtain(ev);
+        evCopy.setLocation(ev.getRawX(), ev.getRawY());
+        mPopupHelper.dispatchOutSideEvent(evCopy);
+        return super.dispatchTouchEvent(ev);
     }
+
 
     @Override
     public void clear(boolean destroy) {
