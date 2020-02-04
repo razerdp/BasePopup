@@ -61,7 +61,6 @@ public class MultiRecyclerViewAdapter<T extends MultiType> extends BaseRecyclerV
 
     @Override
     protected BaseRecyclerViewHolder getViewHolder(ViewGroup parent, View itemView, int viewType) {
-        PopupLog.i(TAG, "创建multitype viewholder：", viewType);
         if (mHolderInfos.size() < 0) {
             PopupLog.e(TAG, "holder没有注册，请调用#appendHolder添加holder信息");
             return createEmptyHolder();

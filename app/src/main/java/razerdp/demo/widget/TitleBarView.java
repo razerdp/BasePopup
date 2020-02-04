@@ -10,19 +10,17 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.IntDef;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IntDef;
 import razerdp.basepopup.R;
 import razerdp.demo.base.interfaces.MultiClickListener;
 import razerdp.demo.utils.StringUtil;
 import razerdp.demo.utils.UIHelper;
 import razerdp.demo.utils.ViewUtil;
-import razerdp.util.log.PopupLog;
 
 import static razerdp.demo.widget.TitleBarView.TitleBarMode.MODE_BOTH;
 import static razerdp.demo.widget.TitleBarView.TitleBarMode.MODE_LEFT;
@@ -276,7 +274,6 @@ public class TitleBarView extends FrameLayout implements View.OnClickListener, V
                 (mTitleBarTextRight.getVisibility() == VISIBLE ? mTitleBarTextRight.getWidth() : 0);
 
         int padding = Math.max(paddingLeft, paddingRight) + TITLE_PADDING;
-        PopupLog.i(TAG, "onLayoutChange  :: " + padding);
         mTitleBarTitle.setPadding(padding, 0, padding, 0);
 
     }

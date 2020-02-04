@@ -1,5 +1,22 @@
 apply plugin: 'com.android.application'
 
+def keystoreFilepath = ''
+def keystorePSW = ''
+def keystoreAlias = ''
+def keystoreAliasPSW = ''
+def keyfile = file('s.keystore.temp')
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+keystoreFilepath = properties.getProperty("keystore.path")
+
+if (keystoreFilepath) {
+    keystorePSW = properties.getProperty("keystore.password")
+    keystoreAlias = properties.getProperty("keystore.alias")
+    keystoreAliasPSW = properties.getProperty("keystore.alias_password")
+    keyfile = file(keystoreFilepath)
+}
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
@@ -20,18 +37,22 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    signingConfigs {
+        release {
+            keyAlias keystoreAlias
+            keyPassword keystoreAliasPSW
+            storeFile keyfile
+            storePassword keystorePSW
+        }
+    }
 
     buildTypes {
         debug {
-            Properties properties = new Properties()
-            properties.load(project.rootProject.file('local.properties').newDataInputStream())
             String token = properties.getProperty("api_token")
             resValue("string", "token", token == null ? "" : token)
         }
         release {
             minifyEnabled false
-            Properties properties = new Properties()
-            properties.load(project.rootProject.file('local.properties').newDataInputStream())
             String token = properties.getProperty("api_token")
             resValue("string", "token", token == null ? "" : token)
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -57,7 +78,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.github.razerdp:StrokeLayouts:1.0.0'
     implementation project(path: ':lib')
-    implementation project(path: ':lib_supporter_x')
+//    implementation project(path: ':lib_supporter_x')
 
     implementation "com.jakewharton:butterknife:10.1.0"
     annotationProcessor "com.jakewharton:butterknife-compiler:10.1.0"
