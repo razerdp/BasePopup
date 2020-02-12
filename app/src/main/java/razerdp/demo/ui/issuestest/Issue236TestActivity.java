@@ -9,7 +9,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import razerdp.basepopup.R;
 import razerdp.demo.base.baseactivity.BaseActivity;
-import razerdp.demo.popup.issue.PopupIssue230;
+import razerdp.demo.popup.issue.PopupIssue236;
 import razerdp.demo.widget.DPTextView;
 
 /**
@@ -20,7 +20,7 @@ import razerdp.demo.widget.DPTextView;
 public class Issue236TestActivity extends BaseActivity {
     @BindView(R.id.tv_show)
     DPTextView mTvShow;
-
+    PopupIssue236 mPopupIssue236;
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -35,6 +35,7 @@ public class Issue236TestActivity extends BaseActivity {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onInitView(View decorView) {
+
         mTvShow.setOnTouchListener(new View.OnTouchListener() {
             float x, y;
             boolean onMove;
@@ -52,8 +53,7 @@ public class Issue236TestActivity extends BaseActivity {
                         float curY = event.getY();
                         v.offsetLeftAndRight((int) (curX - x));
                         v.offsetTopAndBottom((int) (curY - y));
-                        x = curX;
-                        y = curY;
+                        onMove = true;
                         break;
                     case MotionEvent.ACTION_UP:
                         if (onMove) return true;
@@ -65,8 +65,11 @@ public class Issue236TestActivity extends BaseActivity {
     }
 
     @OnClick(R.id.tv_show)
-    void show() {
-        new PopupIssue230(this).showPopupWindow();
+    void show(View v) {
+        if (mPopupIssue236 == null) {
+            mPopupIssue236 = new PopupIssue236(this);
+        }
+        mPopupIssue236.showPopupWindow(v);
     }
 
 }

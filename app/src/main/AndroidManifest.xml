@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -70,9 +71,11 @@
             android:screenOrientation="landscape" />
         <activity android:name="razerdp.demo.ui.issuestest.Issue230TestActivity" />
         <activity android:name="razerdp.demo.ui.issuestest.Issue236TestActivity" />
+        <activity android:name="razerdp.demo.ui.issuestest.Issue242TestActivity" />
         <activity android:name="razerdp.demo.ui.lifecycle.ShowOnCreateActivity" />
 
         <service android:name="razerdp.demo.services.DemoService" />
+        <service android:name="razerdp.demo.services.DelayDemoService" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

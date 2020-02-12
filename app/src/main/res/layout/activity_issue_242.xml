@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <razerdp.demo.widget.TitleBarView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title_text="Issue #230" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.3"
+        android:padding="@dimen/default_padding"
+        android:text="问题描述：\n當Activity位於當前畫面時行為正常\nActivity不在當前畫面Service PopupWindow 失效\nContext使用的是ApplicationContext"
+        android:textColor="@color/text_black2"
+        android:textSize="@dimen/text_small" />
+
+
+    <razerdp.demo.widget.DPTextView
+        android:id="@+id/tv_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/default_padding"
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingTop="8dp"
+        android:paddingRight="@dimen/default_padding"
+        android:paddingBottom="8dp"
+        android:text="点击打开Service"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_normal"
+        app:backgroundColor="@color/color_blue"
+        app:corner_radius="4dp" />
+</LinearLayout>

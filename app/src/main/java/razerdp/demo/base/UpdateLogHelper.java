@@ -22,6 +22,7 @@ public class UpdateLogHelper {
 
     private static void buildUpdateLogs() {
         addTips();
+        addCandy2_2_2();
         addRelease2_2_1();
         addCandy2_2_1();
         addRelease2_2_0();
@@ -48,6 +49,21 @@ public class UpdateLogHelper {
                 .root());
     }
 
+    private static void addCandy2_2_2() {
+        sCache.add(new UpdateLogInfo("【Candy】2.2.2(2020/02)")
+                .append("重构BasePopupWindow，增加BaseLazyPopupWindow")
+                .append("精简代码，重构整体框架，去掉多数冗余的、实现逻辑复杂的方法")
+                .append("解决遗留的内存泄漏问题")
+                .append("去除 limitScreed()方法")
+                .append("重构DecorViewProxy，现在蒙层的适配重新交由系统，BasePopupWindow只解决位置问题")
+                .append("优化Measure，添加跟AnchorView关联时高度或者宽度为Match_parent无法填满剩余空间的问题")
+                .append("解决Android 10 黑/灰名单问题")
+                .append("修复outSideTouchable下键盘适配的问题")
+                .append("去除onAnchorTop/onAnchorBottom方法，后续将会重构这一部分，替换为别的方法，暂时屏蔽该方法")
+                .append("bug fixed：")
+                .child("#236/#242").keyAt("#236").keyAt("#242").end()
+                .root());
+    }
 
     private static void addRelease2_2_1() {
         sCache.add(new UpdateLogInfo("【Release】2.2.1(2019/06/24)")

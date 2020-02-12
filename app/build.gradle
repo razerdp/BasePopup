@@ -73,34 +73,36 @@ dependencies {
     // android
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.github.razerdp:StrokeLayouts:1.0.0'
     implementation project(path: ':lib')
-//    implementation project(path: ':lib_supporter_x')
+    implementation project(path: ':lib_supporter_x')
 
     implementation "com.jakewharton:butterknife:10.1.0"
     annotationProcessor "com.jakewharton:butterknife-compiler:10.1.0"
 
-    implementation('com.github.bumptech.glide:glide:4.10.0') {
+    implementation('com.github.bumptech.glide:glide:4.11.0') {
         exclude group: "android.support"
     }
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation "com.github.bumptech.glide:okhttp3-integration:4.11.0"
+
     implementation 'com.caverock:androidsvg:1.2.1'
 
-    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
     //net
-    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.2.1'
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.10.0'
     //gson
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.8.6'
 
     implementation 'com.azhon:appupdateX:2.4.0'
 
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 
     // rx
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.14'
 }

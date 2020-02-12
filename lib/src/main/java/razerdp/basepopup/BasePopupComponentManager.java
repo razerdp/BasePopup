@@ -74,7 +74,6 @@ public final class BasePopupComponentManager {
         unLockSuccess = Reflection.unseal(context) != -1;
         mApplicationContext = (Application) context.getApplicationContext();
         regLifeCallback();
-
     }
 
     public Activity getTopActivity() {

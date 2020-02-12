@@ -8,6 +8,7 @@ import razerdp.demo.ui.issuestest.Issue210TestActivity;
 import razerdp.demo.ui.issuestest.Issue226TestActivity;
 import razerdp.demo.ui.issuestest.Issue230TestActivity;
 import razerdp.demo.ui.issuestest.Issue236TestActivity;
+import razerdp.demo.ui.issuestest.Issue242TestActivity;
 import razerdp.demo.utils.DescBuilder;
 import razerdp.demo.utils.StringUtil;
 
@@ -21,6 +22,7 @@ class IssueHelper {
         add_226(result);
         add_230(result);
         add_236(result);
+        add_242(result);
 
         sort(result);
 
@@ -86,7 +88,7 @@ class IssueHelper {
     private static void add_236(List<IssueInfo> result) {
         IssueInfo issue236 = new IssueInfo();
         issue236.setIssue("236")
-                .setFixed(false)
+                .setFixed(true)
                 .setActivityClass(Issue236TestActivity.class)
                 .setTitle("2.2.1 release版本 xml里面的match_parent无效")
                 .setDesc(DescBuilder.get()
@@ -95,5 +97,19 @@ class IssueHelper {
                         .append("2.2.1 release版本。xml里面的match_parent无效，必须在代码里再设置一次setWidht(getScreenWidth())才行。2.2.0没有此问题")
                         .build());
         result.add(issue236);
+    }
+
+    private static void add_242(List<IssueInfo> result) {
+        IssueInfo issue242 = new IssueInfo();
+        issue242.setIssue("242")
+                .setFixed(true)
+                .setActivityClass(Issue242TestActivity.class)
+                .setTitle("Release 2.2.1 Service Popup 失效")
+                .setDesc(DescBuilder.get()
+                        .append("系统版本：UNKNOWN")
+                        .append("库版本：release 2.2.1")
+                        .append("Activity不在前台，同时Service中弹出BasePopup，无法弹出。")
+                        .build());
+        result.add(issue242);
     }
 }

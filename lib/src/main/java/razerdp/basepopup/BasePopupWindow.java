@@ -348,7 +348,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     private WeakReference<View> mAnchorDecorView;
 
     private BasePopupHelper mHelper;
-    WeakReference<Context> mContext;
+    WeakReference<Activity> mContext;
 
     volatile boolean isWindowTokenReady;
     Pair<View, Boolean> cacheShowInfo;
@@ -372,8 +372,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     public BasePopupWindow(Context context, int width, int height) {
-        BasePopupComponentManager.getInstance().init(context);
-        mContext = new WeakReference<Context>(context);
+        Activity act = PopupUtils.getActivity(context);
+        if (act == null) {
+            throw new NullPointerException("无法从context处获得Activity，请确保您的Context是否为Activity");
+        }
+        mContext = new WeakReference<Activity>(act);
         mHelper = new BasePopupHelper(this);
         BasePopupComponentManager.getInstance().recordWindow(this);
         initView(width, height);
@@ -723,6 +726,13 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             onShowError(new IllegalStateException("宿主窗口尚未准备好，等待准备就绪后弹出"));
             return;
         }
+        //什么都没传递，取顶级view的id
+        Activity act = getContext();
+        if (act == null) {
+            onShowError(new NullPointerException("无法从context处获得WindowToken，请确保您的Context是否为Activity"));
+            return;
+        }
+
         onLogInternal("宿主窗口已经准备好，执行弹出");
         mHelper.prepare(v, positionMode);
         try {
@@ -731,6 +741,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 return;
             }
             mHelper.onShow();
+            View decorView = findDecorView(act);
             //传递了view
             if (v != null) {
                 if (v.getWindowToken() == null) {
@@ -743,14 +754,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                     mPopupWindow.showAtLocation(v, getPopupGravity(), 0, 0);
                 }
             } else {
-                //什么都没传递，取顶级view的id
-                Activity act = getContext();
-                if (act == null) {
-                    onShowError(new NullPointerException("无法从context处获得WindowToken，请确保您的Context是否为Activity"));
-                    return;
-                }
-                mPopupWindow.showAtLocation(findDecorView(act),
-                        Gravity.NO_GRAVITY, 0, 0);
+                mPopupWindow.showAtLocation(decorView, Gravity.NO_GRAVITY, 0, 0);
             }
             onLogInternal("弹窗执行成功");
         } catch (Exception e) {
@@ -1328,7 +1332,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @return 返回对应的context。如果为空，则返回{@code null}
      */
     public Activity getContext() {
-        return mContext == null ? null : PopupUtils.getActivity(mContext.get());
+        return mContext == null ? null : mContext.get();
     }
 
     /**
@@ -1686,7 +1690,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     /**
      * 是否允许BasePopup自动调整大小
      * <p>
-     * 在{@link #setClipToScreen(boolean)}为true的情况下，BasePopup会针对剩余高度来调整Popup的大小，因此可能出现实际显示高度过小的情况
+     * 在{@link #setClipToScreen(boolean)}为true的情况下，BasePopup会针对剩余空间来调整Popup的大小，因此可能出现实际显示过小的情况
      */
     public BasePopupWindow setFitSize(boolean canResize) {
         mHelper.resize(canResize);
@@ -1752,11 +1756,15 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public void onDestroy() {
         onLogInternal("onDestroy");
         removeListener();
+        if (mPopupWindow != null) {
+            mPopupWindow.clear(true);
+        }
         if (mHelper != null) {
             mHelper.clear(true);
         }
         mWindowCallbackWrapper = null;
         cacheShowInfo = null;
+        mPopupWindow = null;
     }
 
     private boolean checkPerformShow(View v) {

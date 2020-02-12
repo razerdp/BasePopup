@@ -579,6 +579,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
     @Override
     public void onKeyboardChange(Rect keyboardBounds, boolean isVisible) {
+        if (mHelper.isOutSideTouchable() && !mHelper.isFullScreen()) return;
         int offset = 0;
         boolean forceAdjust = (mHelper.flag & BasePopupFlag.KEYBOARD_FORCE_ADJUST) != 0;
         boolean process = forceAdjust || ((PopupUiUtils.getScreenOrientation() != Configuration.ORIENTATION_LANDSCAPE)

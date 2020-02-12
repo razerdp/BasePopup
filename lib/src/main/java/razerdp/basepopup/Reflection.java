@@ -42,14 +42,14 @@ final class Reflection {
         }
     }
 
-    public static int unseal(Context context) {
+    static int unseal(Context context) {
         if (SDK_INT < 28) {
             // Below Android P, ignore
             return 0;
         }
 
         // try exempt API first.
-        if (exemptAll()) {
+        if (exempt("Landroid/widget/PopupWindow")) {
             PopupLog.e(TAG, "解锁黑/灰名单成功");
             return 0;
         } else {

@@ -128,8 +128,8 @@ public class DemoActivity extends BaseActivity {
         List<DemoMainItem> result = new ArrayList<>();
         result.add(new DemoMainItem(GuideActivity.class, "简介", GuideActivity.DESC, null));
         result.add(new DemoMainItem(CommonUsageActivity.class, "快速入门", CommonUsageActivity.DESC, "入门推荐"));
-        result.add(new DemoMainItem(UpdateLogActivity.class, "历史更新", UpdateLogActivity.DESC, "ChangeLog"));
         result.add(new DemoMainItem(IssueHomeActivity.class, "Issue测试Demo", IssueHomeActivity.DESC, "issue"));
+        result.add(new DemoMainItem(UpdateLogActivity.class, "历史更新", UpdateLogActivity.DESC, "ChangeLog"));
         return result;
     }
 
