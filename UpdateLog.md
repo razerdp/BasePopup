@@ -1,7 +1,7 @@
 ## BasePopup更新日志
 
 * **【里程碑】2.2.2**
-    * **【Candy】2.2.2.200203 ** 2020/02/03
+    * **【Candy】2.2.2.200203** 2020/02/03
       * 重构onCreate中弹出的方案
       * 解决一些检查到的内存泄漏
       * 去除`limitScreen()`方法
@@ -9,6 +9,17 @@
       * 优化Measure方法，当BasePopup显示跟Anchor关联时，如果宽或者高为match_parent，将会填满剩余可用空间
       * 解决Android 10黑/灰名单的问题
       * 即将发布正式版
+    * **【Candy】2.2.2.200212** 2020/02/12
+      * 再次检查内存泄漏问题
+      * 修复outSideTouchable下键盘适配问题
+      * 修复正常情况下无法弹窗的问题
+      * 预发布release
+      * 去除onAnchorTop/onAnchorBottom方法，后续将会替换为别的方法，暂时屏蔽该类方法
+      * 未验证重构：
+        * autoLocated问题
+        * update问题
+      * bug fixed:[**#236**](https://github.com/razerdp/BasePopup/issues/236)/[**#242**](https://github.com/razerdp/BasePopup/issues/242)
+
 
 * **【Candy】2.2.2**
     * **【Candy】190704**

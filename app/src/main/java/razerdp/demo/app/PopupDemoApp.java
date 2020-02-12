@@ -3,7 +3,6 @@ package razerdp.demo.app;
 import android.app.Application;
 import android.content.Context;
 
-
 import razerdp.basepopup.BasePopupWindow;
 
 /**

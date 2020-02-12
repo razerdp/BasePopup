@@ -31,6 +31,7 @@ import razerdp.demo.model.common.CommonFriendCircleInfo;
 import razerdp.demo.model.common.CommonGestureNavInfo;
 import razerdp.demo.model.common.CommonInputInfo;
 import razerdp.demo.model.common.CommonSlideInfo;
+import razerdp.demo.model.lifecycle.ShowInServiceInfo;
 import razerdp.demo.model.lifecycle.ShowOnCreateInfo;
 import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.DescBuilder;
@@ -116,6 +117,7 @@ public class CommonUsageActivity extends BaseActivity {
         result.add(new CommonBackgroundAlignInfo());
         result.add(new DemoCommonUsageTitle("生命期类"));
         result.add(new ShowOnCreateInfo());
+        result.add(new ShowInServiceInfo());
         result.add(new DemoCommonUsageTitle("输入法"));
         result.add(new CommonInputInfo());
         result.add(new DemoCommonUsageTitle("兼容性测试"));
