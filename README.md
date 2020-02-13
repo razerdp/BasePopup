@@ -43,10 +43,10 @@
 			</td>
 		</tr>
 		<tr>
-			<td rowspan="3" align="center">Compat组件</td>
+			<td rowspan="3" align="center">扩展组件</td>
 			<td align="center"></td>
-			<td align="center">support（已终止迭代）</td>
-			<td align="center">lifecycle（已终止迭代）</td>
+			<td align="center">Support（已终止迭代）</td>
+			<td align="center">Lifecycle（已终止迭代）</td>
 			<td align="center">androidx</td>
 			<tr>
 			<td align="center">Release</td>
@@ -105,6 +105,7 @@
  - [更新日志](#更新日志-历史更新)
    - [历史更新](./UpdateLog.md)
  - [例子预览](#例子预览)
+   - [**apk体验下载**](https://fir.im/pfc9)
  - [打赏](#打赏看在我那么努力维护的份上给个零食呗)
  - [交流群](#交流群)
  - [常见问题](#常见问题)
@@ -132,7 +133,6 @@
     - Release版本：一般在Candy版本反复验证修复后发布到Release，如果您对稳定性要求较高，请使用Release版本。
     - Candy版本：一般新功能、issue修复都会发布到Candy版本，Candy版本发布比较频繁，但通常会拥有新的功能，如果您喜欢试验新功能同时对稳定性要求不高，请使用Candy版本。
     - **Release和Candy两个版本互相切换可能会导致Build失败，这时候您Clean一下Project即可**
-  - **如果您是以前1.x版本的用户，现在想更新到2.x，请在更新前查阅：[1.x迁移到2.x帮助文档](https://github.com/razerdp/BasePopup/blob/master/1.x%E8%BF%81%E7%A7%BB2.x%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3.md)**
   - 从16年[**第一次**](https://github.com/razerdp/BasePopup/commit/c92b7088270d5757269d9b79213627a4a0392d31)提交到现在，本人技术也一直在进步，BasePopup也会一直迭代更新，所以，请谨慎选择版本哦~一不小心就颠覆了之前的实现。
 
 <br>
