@@ -96,10 +96,10 @@
 ### 导航
  
  - [特性](#特性)
- - [文章分享](https://github.com/razerdp/Article/blob/master/%E4%BA%B2%EF%BC%8C%E8%BF%98%E5%9C%A8%E4%B8%BAPopupWindow%E7%83%A6%E6%81%BC%E5%90%97.md)
  - [注意事项](#注意事项)
  - [环境依赖](#环境依赖)
  - [快速入门](#快速入门)
+   - [BasePopup手册](https://www.kancloud.cn/razerdp/basepopup/content)
  - [混淆](#混淆)
  - [Api（请看Wiki）](#api请看wiki)
  - [更新日志](#更新日志-历史更新)
@@ -129,6 +129,7 @@
 ### 注意事项
 
   - **请务必仔细阅读本README,每个版本升级请务必查阅更新日志，这可以为您减少不必要弯路**
+  - **2.2.2版本开始不再支持Support，建议您尽快升级到AndroidX**
   - **请注意引用版本的问题，Release版本是稳定版，Candy是预览版。**
     - Release版本：一般在Candy版本反复验证修复后发布到Release，如果您对稳定性要求较高，请使用Release版本。
     - Candy版本：一般新功能、issue修复都会发布到Candy版本，Candy版本发布比较频繁，但通常会拥有新的功能，如果您喜欢试验新功能同时对稳定性要求不高，请使用Candy版本。
@@ -181,6 +182,10 @@
 * **近期正在重构BasePopup，旨在代码更容易读，因此近期更新可能较慢，新版本将会对issue统一处理**
 
 * **【里程碑】2.2.2**
+    * 2020/02/14
+      * 情人节快乐~
+      * 更新了文档
+      * 初步通过Candy版本，等待issue反馈后发布release
     * **【Candy】2.2.2.200203** 2020/02/03
       * 重构onCreate中弹出的方案
       * 解决一些检查到的内存泄漏
@@ -253,14 +258,12 @@
 
 <br>
 
-|  |  |
-| - | - |
-| ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_1.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_2.gif) |
-| ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_3.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_4.gif) |
-| ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_5.gif) | Coming soon |
+|  |  |  |
+| - | - | - |
+| ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_1.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_2.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_3.gif) |
+| ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_4.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_5.gif) | Coming soon |
 
 <br>
-
 
 ### 打赏（看在我那么努力维护的份上。。。给个零食呗~）
 
