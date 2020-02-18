@@ -1,6 +1,12 @@
 ## BasePopup更新日志
 
 * **【里程碑】2.2.2**
+    * **【Candy】2.2.2.200219** 2020/02/19
+      * 采取[#263](https://github.com/razerdp/BasePopup/issues/263)的建议，非常感谢[@xchengDroid](https://github.com/xchengDroid)提出的建议
+    * 2020/02/14
+      * 情人节快乐~
+      * 更新了文档
+      * 初步通过Candy版本，等待issue反馈后发布release
     * **【Candy】2.2.2.200203** 2020/02/03
       * 重构onCreate中弹出的方案
       * 解决一些检查到的内存泄漏

@@ -182,6 +182,8 @@
 * **近期正在重构BasePopup，旨在代码更容易读，因此近期更新可能较慢，新版本将会对issue统一处理**
 
 * **【里程碑】2.2.2**
+    * **【Candy】2.2.2.200219** 2020/02/19
+      * 采取[#263](https://github.com/razerdp/BasePopup/issues/263)的建议，非常感谢[@xchengDroid](https://github.com/xchengDroid)提出的建议
     * 2020/02/14
       * 情人节快乐~
       * 更新了文档
@@ -204,41 +206,6 @@
         * autoLocated问题
         * update问题
       * bug fixed:[**#236**](https://github.com/razerdp/BasePopup/issues/236)/[**#242**](https://github.com/razerdp/BasePopup/issues/242)
-
-* **【Candy】2.2.2**
-    * **【Candy】190704**
-      * 修复AnimatorSet的时间问题 fix [**#203**](https://github.com/razerdp/BasePopup/issues/203)
-    * **【Candy】190722**
-      * 回滚[#188](https://github.com/razerdp/BasePopup/issues/188)修复
-      * 经检查，[#188](https://github.com/razerdp/BasePopup/issues/188)修复带来的问题比较严重，建议升级到该版本
-    * **【Candy】190816**
-      * 考虑到很多用户提出全面屏会有蒙层无法填充的问题，因此增加`setMaskLayoutWidth`和`setMaskLayoutHeight`方法，该方法允许您自定义蒙层的高度
-      * 开始重构BasePopupWindow，本次重构将会解决遗留问题同时缩减冗余代码，并提高代码可读性
-    * **【Candy】190904**
-      * 重构屏幕宽高获取逻辑
-      * 修改supporter名字为component
-    * **【Candy】190912**
-      * 重构键盘逻辑，现在键盘对齐支持选择模式了~
-      * 相关文档请查阅文档 [**键盘（输入法）**](https://www.kancloud.cn/razerdp/basepopup/1277045)
-    * **2019/09/20**
-      * Demo大翻新
-    * **2019/09/22**
-      * 增加输入法Demo
-      * Demo支持更新
-      * Demo增加issue修复测试用例
-    * **2019/09/26**
-      * 取消对support的支持
-    * **2019/09/27**
-      * 增加手势导航栏支持
-    * **2019/09/29**
-      * 发布新版candy
-    * **2019/10/09**
-      * 添加issue #230测试用例
-    * **2019/10/31**
-      * 优化autoLocate
-      * 优化超出屏幕的位移问题
-      * 添加setResize()方法
-      * 添加onAutoLocationChange()方法
 
 * **【Release】2.2.1**(2019/06/24)
   * 支持Service或者非ActivityContext里弹窗

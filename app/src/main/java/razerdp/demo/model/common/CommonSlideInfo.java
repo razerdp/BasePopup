@@ -1,6 +1,5 @@
 package razerdp.demo.model.common;
 
-import android.app.Activity;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -10,8 +9,8 @@ import android.view.animation.TranslateAnimation;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.demo.model.DemoCommonUsageInfo;
 import razerdp.demo.popup.PopupSlide;
-import razerdp.demo.popup.options.PopupSlideOption;
 import razerdp.demo.popup.PopupSlideSmall;
+import razerdp.demo.popup.options.PopupSlideOption;
 import razerdp.util.SimpleAnimationUtils;
 
 /**

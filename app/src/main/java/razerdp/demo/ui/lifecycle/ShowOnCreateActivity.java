@@ -15,6 +15,7 @@ import razerdp.basepopup.R;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.popup.PopupShowOnCreate;
 import razerdp.demo.ui.ActivityLauncher;
+import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2020/2/3.
@@ -38,8 +39,28 @@ public class ShowOnCreateActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        View decor = getWindow().getDecorView();
+        decor.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View v) {
+                PopupLog.e(TAG, v.getWindowToken());
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+                PopupLog.e(TAG, v.getWindowToken());
+            }
+        });
+        decor.post(new Runnable() {
+            @Override
+            public void run() {
+                PopupLog.e(TAG, decor.getWindowToken());
+            }
+        });
+        PopupLog.e(TAG, decor.getWindowToken());
         popupShowOnCreate = new PopupShowOnCreate(this);
         popupShowOnCreate.setOnErrorPrintListener(msg -> {
+            if (mTvDesc == null) return;
             mTvDesc.append("\n");
             mTvDesc.append(msg);
             mViewScroller.post(() -> {
@@ -49,6 +70,7 @@ public class ShowOnCreateActivity extends BaseActivity {
             });
         });
         popupShowOnCreate.showPopupWindow();
+
     }
 
     @Override
