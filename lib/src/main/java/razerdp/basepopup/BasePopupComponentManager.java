@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
-import java.util.WeakHashMap;
 
 import razerdp.util.log.PopupLog;
 
@@ -20,13 +19,11 @@ public final class BasePopupComponentManager {
 
     private static volatile Application mApplicationContext;
     static final BasePopupComponentProxy proxy;
-    private static final WeakHashMap<Activity, BasePopupWindow> mWindowWeakHashMap;
     private WeakReference<Activity> mTopActivity;
     private boolean unLockSuccess;
 
     static {
         proxy = new BasePopupComponentProxy();
-        mWindowWeakHashMap = new WeakHashMap<>();
     }
 
     static class BasePopupComponentProxy implements BasePopupComponent {
@@ -119,27 +116,12 @@ public final class BasePopupComponentManager {
 
             @Override
             public void onActivityDestroyed(Activity activity) {
-                if (proxy.IMPL == null) {
-                    BasePopupWindow window = mWindowWeakHashMap.get(activity);
-                    if (window != null) {
-                        window.onDestroy();
-                    }
-                    mWindowWeakHashMap.remove(activity);
-                }
             }
         });
     }
 
     public static BasePopupComponentManager getInstance() {
         return SingleTonHolder.INSTANCE;
-    }
-
-    void recordWindow(BasePopupWindow window) {
-        if (proxy.IMPL != null) return;
-        Activity act = window.getContext();
-        if (act != null) {
-            mWindowWeakHashMap.put(act, window);
-        }
     }
 
     public static Application getApplication() {

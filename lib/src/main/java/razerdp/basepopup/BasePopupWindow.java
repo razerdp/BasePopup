@@ -215,7 +215,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -234,7 +233,6 @@ import razerdp.blur.PopupBlurOption;
 import razerdp.util.KeyboardUtils;
 import razerdp.util.PopupUtils;
 import razerdp.util.SimpleAnimationUtils;
-import razerdp.util.WindowCallbackWrapper;
 import razerdp.util.log.PopupLog;
 
 /**
@@ -346,13 +344,12 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public static final int WRAP_CONTENT = ViewGroup.LayoutParams.WRAP_CONTENT;
 
     private WeakReference<View> mAnchorDecorView;
+    private View.OnAttachStateChangeListener mOnAttachStateChangeListener;
 
     private BasePopupHelper mHelper;
     WeakReference<Activity> mContext;
 
     volatile boolean isWindowTokenReady;
-    Pair<View, Boolean> cacheShowInfo;
-    private WindowCallbackWrapper mWindowCallbackWrapper;
     //元素定义
     PopupWindowProxy mPopupWindow;
     //popup视图
@@ -378,7 +375,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
         mContext = new WeakReference<Activity>(act);
         mHelper = new BasePopupHelper(this);
-        BasePopupComponentManager.getInstance().recordWindow(this);
         initView(width, height);
     }
 
@@ -717,12 +713,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     //------------------------------------------Methods-----------------------------------------------
     void tryToShowPopup(View v, boolean positionMode) {
-        cacheShowInfo = null;
         checkWindowTokenReady();
         addListener();
-        //如果是在onCreate里，先存下来，根据是否有lifecycle决定是否缓存
+        addAttachStateChangeListener(v, positionMode);
         if (!isWindowTokenReady) {
-            cacheShow(v, positionMode);
             onShowError(new IllegalStateException("宿主窗口尚未准备好，等待准备就绪后弹出"));
             return;
         }
@@ -776,19 +770,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         onLogInternal(e.getMessage());
     }
 
-    void cacheShow(View v, boolean positionMode) {
-        cacheShowInfo = Pair.create(v, positionMode);
-    }
-
-    void restoreShow() {
-        isWindowTokenReady = true;
-        if (cacheShowInfo == null) {
-            return;
-        }
-        onLogInternal("重新执行因窗口未准备就绪的弹窗");
-        tryToShowPopup(cacheShowInfo.first, cacheShowInfo.second);
-    }
-
     private View findDecorView(Activity activity) {
         if (mAnchorDecorView != null && mAnchorDecorView.get() != null) {
             return mAnchorDecorView.get();
@@ -819,31 +800,36 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
 
     private void addListener() {
-        addFocusChangeListener();
         addGlobalListener();
         addLinkedLayoutListener();
     }
 
-    private void addFocusChangeListener() {
-        if (isWindowTokenReady) return;
+    private void addAttachStateChangeListener(View v, final boolean positionMode) {
+        if (mOnAttachStateChangeListener != null) return;
         Activity act = getContext();
-        Window window = act == null ? null : act.getWindow();
-        if (window != null) {
-            if (mWindowCallbackWrapper == null) {
-                mWindowCallbackWrapper = new WindowCallbackWrapper(window.getCallback()) {
-                    @Override
-                    public void onWindowFocusChanged(boolean hasFocus) {
-                        super.onWindowFocusChanged(hasFocus);
-                        onLogInternal("监听到Activity的焦点变化：" + hasFocus);
-                        if (hasFocus) {
-                            restoreShow();
-                        }
-                    }
-                };
+        if (act == null) return;
+        View decorView = act.getWindow() == null ? null : act.getWindow().getDecorView();
+        if (decorView == null) return;
+        mOnAttachStateChangeListener = new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View v) {
+                //如果在监听前就已经准备就绪，则无需要重新show了
+                //仅仅在非token ready时show
+                if (!isWindowTokenReady) {
+                    isWindowTokenReady = true;
+                    onLogInternal("重新执行因窗口未准备就绪的弹窗");
+                    tryToShowPopup(v, positionMode);
+                }
             }
-            onLogInternal("代理Activity的WindowCallback：" + mWindowCallbackWrapper + "\n原Activity的WindowCallback：" + mWindowCallbackWrapper.getWrapped());
-            window.setCallback(mWindowCallbackWrapper);
-        }
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+                v.removeOnAttachStateChangeListener(this);
+                mOnAttachStateChangeListener = null;
+                onDestroy();
+            }
+        };
+        decorView.addOnAttachStateChangeListener(mOnAttachStateChangeListener);
     }
 
     private void addGlobalListener() {
@@ -866,16 +852,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             return;
         mLinkedViewLayoutChangeListenerWrapper = new LinkedViewLayoutChangeListenerWrapper();
         mLinkedViewLayoutChangeListenerWrapper.addSelf();
-    }
-
-    private void restoreWindowCallback() {
-        Activity act = getContext();
-        Window window = act == null ? null : act.getWindow();
-        if (window != null && mWindowCallbackWrapper != null) {
-            onLogInternal("恢复到原来的Activity#WindowCallback：" + mWindowCallbackWrapper.getWrapped());
-            window.setCallback(mWindowCallbackWrapper.getWrapped());
-            mWindowCallbackWrapper = null;
-        }
     }
 
     private void removeGlobalListener() {
@@ -1736,7 +1712,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     void removeListener() {
-        restoreWindowCallback();
         removeGlobalListener();
         removeLinkedLayoutListener();
     }
@@ -1762,8 +1737,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         if (mHelper != null) {
             mHelper.clear(true);
         }
-        mWindowCallbackWrapper = null;
-        cacheShowInfo = null;
         mPopupWindow = null;
     }
 
