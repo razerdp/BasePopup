@@ -720,7 +720,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             onShowError(new IllegalStateException("宿主窗口尚未准备好，等待准备就绪后弹出"));
             return;
         }
-        //什么都没传递，取顶级view的id
         Activity act = getContext();
         if (act == null) {
             onShowError(new NullPointerException("无法从context处获得WindowToken，请确保您的Context是否为Activity"));
