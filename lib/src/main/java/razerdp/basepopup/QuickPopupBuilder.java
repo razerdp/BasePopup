@@ -18,8 +18,8 @@ public class QuickPopupBuilder {
     private WeakReference<Context> mContextWeakReference;
     private QuickPopupConfig mConfig;
 
-    private int width = ViewGroup.LayoutParams.WRAP_CONTENT;
-    private int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+    private int width = 0;
+    private int height = 0;
 
 
     private QuickPopupBuilder(Context context) {

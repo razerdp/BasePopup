@@ -28,6 +28,11 @@ public class QuickPopup extends BaseLazyPopupWindow {
         if (mConfig == null) {
             throw new NullPointerException("QuickPopupConfig must be not null!");
         }
+    }
+
+    @Override
+    public void onInit(View contentView) {
+        super.onInit(contentView);
         applyConfigSetting(mConfig);
     }
 
