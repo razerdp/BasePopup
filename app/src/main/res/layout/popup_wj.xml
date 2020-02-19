@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="48dp"
+    android:background="@drawable/bg_round_white_8dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/default_padding"
+        android:text="有奖调查问卷"
+        android:textColor="@color/text_black1"
+        android:textSize="@dimen/text_large"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingExtra="1.5dp"
+        android:lineSpacingMultiplier="1.5"
+        android:padding="@dimen/default_padding"
+        android:text="为了更好地计划及迭代BasePopup，我们（好吧，其实是作者一个人）设立了一份调查问卷，并自掏腰包提供了微信红包作为奖品。\n希望大家可以认真答题，我也能收到大家的反馈，更好地迭代这个库-V-\n\n(红包一共100个，拼手气，我设了25人中一个~看RP哦)"
+        android:textColor="@color/text_black2"
+        android:textSize="@dimen/text_small" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/qrcode" />
+
+    <razerdp.demo.widget.DPTextView
+        android:id="@+id/tv_go"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_padding"
+        android:gravity="center"
+        android:padding="@dimen/default_padding"
+        android:text="确定"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_small"
+        app:backgroundColor="@color/color_link"
+        app:corner_bottomLeftRadius="8dp"
+        app:corner_bottomRightRadius="8dp"
+        app:textPressedColor="@color/white_70" />
+
+</LinearLayout>

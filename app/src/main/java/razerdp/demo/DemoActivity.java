@@ -84,6 +84,14 @@ public class DemoActivity extends BaseActivity {
 
         checkForUpdate();
 
+
+        QuickPopupBuilder.with(this)
+                .contentView(R.layout.popup_wj)
+                .config(new QuickPopupConfig()
+                        .withClick(R.id.tv_go, null, true)
+                        .blurBackground(true)
+                        .dismissOnOutSideTouch(false))
+                .show();
     }
 
     private void checkForUpdate() {
