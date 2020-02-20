@@ -200,7 +200,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         boolean isAlignAnchorMode = mHelper.getGravityMode() == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE;
 
         //针对关联anchorView和对齐模式的测量（如果允许resize）
-        if (mHelper.isShowAsDropDown()) {
+        if (mHelper.isWithAnchor()) {
             final Rect anchorBound = mHelper.getAnchorViewBound();
             //剩余空间
             //etc.如果是相对于锚点，则剩余宽度为屏幕左侧到anchor左侧
@@ -319,7 +319,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 child.layout(childLeft, childTop, childLeft + width, childTop + height);
             } else {
                 Rect anchorBound = mHelper.getAnchorViewBound();
-                boolean isRelativeToAnchor = mHelper.isShowAsDropDown();
+                boolean isRelativeToAnchor = mHelper.isWithAnchor();
                 boolean isAlignAnchorMode = mHelper.getGravityMode() == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE;
 
                 //不跟anchorView联系的情况下，gravity意味着在整个decorView中的方位

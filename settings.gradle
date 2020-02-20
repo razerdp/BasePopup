@@ -1,1 +1,1 @@
-include ':app', ':lib', ':lib_supporter_x'
+include ':app', ':lib'

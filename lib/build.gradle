@@ -27,6 +27,7 @@ ext {
 }
 
 dependencies {
+    compileOnly 'androidx.appcompat:appcompat:1.1.0'
 }
 
 apply from: "$rootProject.rootDir/scripts/upload.gradle"

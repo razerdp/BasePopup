@@ -119,11 +119,11 @@ public class GuideActivity extends BaseActivity {
                 .append(String.format(FORMAT, "如果商业用途，请使用Release版本"))
                 .append(String.format(FORMAT, "如果希望体验新的特性和功能，请使用Candy版本"))
                 .append('\n')
-                .append("自2.2.2版本开始，BasePopup将不再支持Support库，同时BasePopup建议您尽早迁移到AndroidX");
+                .append("自2.2.2版本开始，BasePopup将完全迁移至AndroidX，不再提供扩展组件了，BasePopup建议您尽早迁移到AndroidX");
         SpanUtil.create(builder)
                 .append("Release").setTextStyle(Typeface.DEFAULT_BOLD).setTextColor(Color.BLACK)
                 .append("Candy").setTextStyle(Typeface.DEFAULT_BOLD).setTextColor(Color.BLACK)
-                .append("自2.2.2版本开始，BasePopup将不再支持Support库，同时BasePopup建议您尽早迁移到AndroidX").setTextColor(Color.RED).setTextStyle(Typeface.DEFAULT_BOLD)
+                .append("自2.2.2版本开始，BasePopup将完全迁移至AndroidX，不再提供扩展组件了，BasePopup建议您尽早迁移到AndroidX").setTextColor(Color.RED).setTextStyle(Typeface.DEFAULT_BOLD)
                 .into(tvDependence);
 
         appendReleaseDependence();
@@ -136,15 +136,6 @@ public class GuideActivity extends BaseActivity {
         infos.add(new DependenceInfo("https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg",
                 "基础库（必选）",
                 "implementation 'com.github.razerdp:BasePopup:{$latestVersion}'"));
-        infos.add(new DependenceInfo("https://api.bintray.com/packages/razerdp/maven/BasePopup-compat-support/images/download.svg",
-                "support支持库（可选）",
-                "implementation 'com.github.razerdp:BasePopup-compat-support:{$latestVersion}'"));
-        infos.add(new DependenceInfo("https://api.bintray.com/packages/razerdp/maven/BasePopup-compat-lifecycle/images/download.svg",
-                "lifecycle支持库（可选）",
-                "implementation 'com.github.razerdp:BasePopup-compat-lifecycle:{$latestVersion}'"));
-        infos.add(new DependenceInfo("https://api.bintray.com/packages/razerdp/maven/BasePopup-compat-androidx/images/download.svg",
-                "androidx支持库\n（可选，不可跟别的支持库同时存在）",
-                "implementation 'com.github.razerdp:BasePopup-compat-androidx:{$latestVersion}'"));
         FillViewUtil.fillView(infos, layoutDependenceRelease, R.layout.item_guide_denpendence, fillViewsListener);
     }
 
@@ -153,15 +144,6 @@ public class GuideActivity extends BaseActivity {
         infos.add(new DependenceInfo("https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg",
                 "基础库（必选）",
                 "implementation 'com.github.razerdp:BasePopup_Candy:{$latestVersion}'"));
-        infos.add(new DependenceInfo("https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy-compat-support/images/download.svg",
-                "support支持库（可选）",
-                "implementation 'com.github.razerdp:BasePopup_Candy-compat-support:{$latestVersion}'"));
-        infos.add(new DependenceInfo("https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy-compat-lifecycle/images/download.svg",
-                "lifecycle支持库（可选）",
-                "implementation 'com.github.razerdp:BasePopup_Candy-compat-lifecycle:{$latestVersion}'"));
-        infos.add(new DependenceInfo("https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy-compat-androidx/images/download.svg",
-                "androidx支持库\n（可选，不可跟别的支持库同时存在）",
-                "implementation 'com.github.razerdp:BasePopup_Candy-compat-androidx:{$latestVersion}'"));
         FillViewUtil.fillView(infos, layoutDependenceCandy, R.layout.item_guide_denpendence, fillViewsListener);
     }
 

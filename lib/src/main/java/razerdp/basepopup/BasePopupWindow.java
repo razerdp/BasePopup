@@ -207,6 +207,7 @@ package razerdp.basepopup;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -221,7 +222,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.EditText;
@@ -229,9 +229,15 @@ import android.widget.PopupWindow;
 
 import java.lang.ref.WeakReference;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.OnLifecycleEvent;
 import razerdp.blur.PopupBlurOption;
 import razerdp.util.KeyboardUtils;
-import razerdp.util.PopupUtils;
 import razerdp.util.SimpleAnimationUtils;
 import razerdp.util.log.PopupLog;
 
@@ -324,7 +330,7 @@ import razerdp.util.log.PopupLog;
  * @since 2016/1/14
  */
 @SuppressWarnings("All")
-public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismissListener {
+public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismissListener, LifecycleObserver {
     private static final String TAG = "BasePopupWindow";
     public static int DEFAULT_BACKGROUND_COLOR = Color.parseColor("#8f000000");
 
@@ -344,19 +350,18 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public static final int WRAP_CONTENT = ViewGroup.LayoutParams.WRAP_CONTENT;
 
     private WeakReference<View> mAnchorDecorView;
-    private View.OnAttachStateChangeListener mOnAttachStateChangeListener;
 
     private BasePopupHelper mHelper;
     WeakReference<Activity> mContext;
 
-    volatile boolean isWindowTokenReady;
+    Object ownerAnchorParent;
+    boolean pendingPopupWindow;
+
     //元素定义
     PopupWindowProxy mPopupWindow;
     //popup视图
     View mContentView;
     View mDisplayAnimateView;
-
-    WeakReference<Object> mAttached;
 
     private volatile boolean isExitAnimatePlaying = false;
 
@@ -369,17 +374,63 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     public BasePopupWindow(Context context, int width, int height) {
-        Activity act = PopupUtils.getActivity(context);
+        this(context, width, height, 0);
+    }
+
+    public BasePopupWindow(Fragment fragment) {
+        this(fragment, 0, 0);
+    }
+
+    public BasePopupWindow(Fragment fragment, int width, int height) {
+        this(fragment, width, height, 0);
+    }
+
+    public BasePopupWindow(Dialog dialog) {
+        this(dialog, 0, 0);
+    }
+
+    public BasePopupWindow(Dialog dialog, int width, int height) {
+        this(dialog, width, height, 0);
+    }
+
+    BasePopupWindow(Object ownerAnchorParent, int width, int height, int flag) {
+        this.ownerAnchorParent = ownerAnchorParent;
+        onCreateConstructor(ownerAnchorParent, width, height);
+        Activity act = BasePopupHelper.findActivity(ownerAnchorParent);
+        //double check
         if (act == null) {
             throw new NullPointerException("无法从context处获得Activity，请确保您的Context是否为Activity");
+        }
+        if (act instanceof LifecycleOwner) {
+            ((LifecycleOwner) act).getLifecycle().addObserver(this);
+        } else {
+            listenForLifeCycle(act);
         }
         mContext = new WeakReference<Activity>(act);
         mHelper = new BasePopupHelper(this);
         initView(width, height);
     }
 
+    private void listenForLifeCycle(Activity act) {
+        act.getWindow().getDecorView().addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View v) {
+
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+                v.removeOnAttachStateChangeListener(this);
+                onDestroy();
+            }
+        });
+    }
+
+    void onCreateConstructor(Object ownerAnchorParent, int width, int height) {
+
+    }
+
     void initView(int width, int height) {
-        attachLifeCycle(getContext());
         mContentView = onCreateContentView();
         mHelper.setContentRootId(mContentView);
         mDisplayAnimateView = onCreateAnimateView();
@@ -565,7 +616,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public void showPopupWindow() {
         if (checkPerformShow(null)) {
-            mHelper.setShowAsDropDown(false);
+            mHelper.withAnchor(false);
             tryToShowPopup(null, false);
         }
     }
@@ -605,7 +656,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public void showPopupWindow(View anchorView) {
         if (checkPerformShow(anchorView)) {
             if (anchorView != null) {
-                mHelper.setShowAsDropDown(true);
+                mHelper.withAnchor(true);
             }
             tryToShowPopup(anchorView, false);
         }
@@ -624,7 +675,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public void showPopupWindow(int x, int y) {
         if (checkPerformShow(null)) {
             mHelper.setShowLocation(x, y);
-            mHelper.setShowAsDropDown(true);
+            mHelper.withAnchor(true);
             tryToShowPopup(null, true);
         }
     }
@@ -667,7 +718,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public void update(int x, int y) {
         if (!isShowing() || getContentView() == null) return;
         mHelper.setShowLocation(x, y);
-        mHelper.setShowAsDropDown(true);
+        mHelper.withAnchor(true);
         mHelper.update(null, true);
     }
 
@@ -704,7 +755,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public void update(int x, int y, float width, float height) {
         if (!isShowing() || getContentView() == null) return;
         mHelper.setShowLocation(x, y);
-        mHelper.setShowAsDropDown(true);
+        mHelper.withAnchor(true);
         mHelper.setPopupViewWidth((int) width);
         mHelper.setPopupViewHeight((int) height);
         mHelper.update(null, true);
@@ -712,20 +763,22 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
 
     //------------------------------------------Methods-----------------------------------------------
-    void tryToShowPopup(View v, boolean positionMode) {
-        checkWindowTokenReady();
-        addListener();
-        addAttachStateChangeListener(v, positionMode);
-        if (!isWindowTokenReady) {
-            onShowError(new IllegalStateException("宿主窗口尚未准备好，等待准备就绪后弹出"));
-            return;
-        }
-        Activity act = getContext();
-        if (act == null) {
-            onShowError(new NullPointerException("无法从context处获得WindowToken，请确保您的Context是否为Activity"));
-            return;
-        }
 
+    /**
+     * 感谢@xchengDroid(https://github.com/xchengDroid)在#263(https://github.com/razerdp/BasePopup/issues/263)中提出的建议
+     */
+    void tryToShowPopup(View v, boolean positionMode) {
+        View decorView = getDecorView();
+        if (decorView == null) {
+            onShowError(new NullPointerException("PopupWindow需要宿主DecorView的WindowToken，请检查是否存在DecorView"));
+            return;
+        }
+        if (decorView.getWindowToken() == null) {
+            onShowError(new IllegalStateException("宿主窗口尚未准备好，等待准备就绪后弹出"));
+            pendingPopupWindow(decorView, v, positionMode);
+            return;
+        }
+        addListener();
         onLogInternal("宿主窗口已经准备好，执行弹出");
         mHelper.prepare(v, positionMode);
         try {
@@ -734,34 +787,22 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 return;
             }
             mHelper.onShow();
-            View decorView = findDecorView(act);
             //传递了view
             if (v != null) {
                 if (v.getWindowToken() == null) {
                     onShowError(new NullPointerException("PopupWindow弹出的锚点View必须拥有WindowToken，请检查是否传入了PopupWindow中的View,PopupWindow中的View并没有WindowToken。"));
                     return;
                 }
-                if (mHelper.isShowAsDropDown()) {
-                    mPopupWindow.showAsDropDown(v, 0, 0, getPopupGravity());
-                } else {
-                    mPopupWindow.showAtLocation(v, getPopupGravity(), 0, 0);
-                }
+                mPopupWindow.showAtLocation(v, getPopupGravity(), 0, 0);
             } else {
                 mPopupWindow.showAtLocation(decorView, Gravity.NO_GRAVITY, 0, 0);
             }
             onLogInternal("弹窗执行成功");
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             e.printStackTrace();
             onShowError(e);
         }
-    }
-
-    private void checkWindowTokenReady() {
-        if (isWindowTokenReady) return;
-        Activity act = getContext();
-        Window window = act == null ? null : act.getWindow();
-        if (window == null) return;
-        isWindowTokenReady = window.isActive();
     }
 
     protected void onShowError(Exception e) {
@@ -769,15 +810,17 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         onLogInternal(e.getMessage());
     }
 
-    private View findDecorView(Activity activity) {
+    @Nullable
+    private View getDecorView() {
         if (mAnchorDecorView != null && mAnchorDecorView.get() != null) {
             return mAnchorDecorView.get();
         }
-        View result = onFindDecorView(activity);
+        View result = BasePopupHelper.findDecorView(ownerAnchorParent);
         if (result == null) {
-            result = BasePopupComponentManager.getInstance().proxy.findDecorView(this, activity);
+            Activity activity = getContext();
+            if (activity == null) return null;
+            result = activity.findViewById(android.R.id.content);
         }
-        result = result == null ? activity.findViewById(android.R.id.content) : result;
         if (mAnchorDecorView == null || mAnchorDecorView.get() == null) {
             mAnchorDecorView = new WeakReference<>(result);
         }
@@ -790,45 +833,28 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         }
     }
 
-    /**
-     * 指定DecorView，对于一些在弹窗上的弹窗（例如Dialog）里，其windowToken需要是Dialog的window才可以使PopupWindow悬浮在它的上面
-     */
-    protected View onFindDecorView(Activity activity) {
-        return null;
-    }
-
 
     private void addListener() {
         addGlobalListener();
         addLinkedLayoutListener();
     }
 
-    private void addAttachStateChangeListener(View v, final boolean positionMode) {
-        if (mOnAttachStateChangeListener != null) return;
-        Activity act = getContext();
-        if (act == null) return;
-        View decorView = act.getWindow() == null ? null : act.getWindow().getDecorView();
-        if (decorView == null) return;
-        mOnAttachStateChangeListener = new View.OnAttachStateChangeListener() {
+    private void pendingPopupWindow(@NonNull View decorView, @Nullable final View anchorView, final boolean positionMode) {
+        if (pendingPopupWindow) return;
+        pendingPopupWindow = true;
+        decorView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override
             public void onViewAttachedToWindow(View v) {
-                //如果在监听前就已经准备就绪，则无需要重新show了
-                //仅仅在非token ready时show
-                if (!isWindowTokenReady) {
-                    isWindowTokenReady = true;
-                    onLogInternal("重新执行因窗口未准备就绪的弹窗");
-                    tryToShowPopup(v, positionMode);
-                }
+                pendingPopupWindow = false;
+                v.removeOnAttachStateChangeListener(this);
+                tryToShowPopup(anchorView, positionMode);
             }
 
             @Override
             public void onViewDetachedFromWindow(View v) {
-                v.removeOnAttachStateChangeListener(this);
-                mOnAttachStateChangeListener = null;
-                onDestroy();
+
             }
-        };
-        decorView.addOnAttachStateChangeListener(mOnAttachStateChangeListener);
+        });
     }
 
     private void addGlobalListener() {
@@ -1141,7 +1167,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             if (optionInitListener != null) {
                 optionInitListener.onCreateBlurOption(option);
             }
-            View decorView = findDecorView(activity);
+            View decorView = getDecorView();
             if (decorView instanceof ViewGroup && decorView.getId() == android.R.id.content) {
                 option.setBlurView(((ViewGroup) activity.getWindow().getDecorView()).getChildAt(0));
                 option.setFullScreen(true);
@@ -1162,14 +1188,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public BasePopupWindow setBlurOption(PopupBlurOption option) {
         mHelper.setToBlur(option);
-        return this;
-    }
-
-    /**
-     * 如果在dialog/dialogfragment/bottomsheet等地方弹窗，出现不适配的症状，可以使用该方法适配
-     */
-    public BasePopupWindow inject(Object object) {
-        this.mAttached = new WeakReference<>(object);
         return this;
     }
 
@@ -1672,14 +1690,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return this;
     }
 
-    /**
-     * 绑定lifecycle
-     */
-    public BasePopupWindow attachLifeCycle(Object owner) {
-        if (owner == null) return this;
-        return BasePopupComponentManager.getInstance().proxy.attachLifeCycle(this, owner);
-    }
-
     //endregion
 
     //region ------------------------------------------状态控制-----------------------------------------------
@@ -1727,6 +1737,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         removeListener();
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onDestroy() {
         onLogInternal("onDestroy");
         removeListener();
@@ -1957,7 +1968,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     protected void onLogInternal(String msg) {
         PopupLog.d(TAG, msg);
     }
-    //endregion
+//endregion
 
     //region------------------------------------------Interface-----------------------------------------------
     public interface OnBeforeShowCallback {
@@ -2014,9 +2025,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         void onKeyboardChange(int keyboardTop, int keyboardHeight, boolean isVisible, boolean fullScreen);
     }
 
-    //endregion
+//endregion
 
-    //region ------------------------------------------InnerClass-----------------------------------------------
+//region ------------------------------------------InnerClass-----------------------------------------------
 
     private class LinkedViewLayoutChangeListenerWrapper implements ViewTreeObserver.OnPreDrawListener {
 
@@ -2106,5 +2117,5 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             return true;
         }
     }
-    //endregion
+//endregion
 }

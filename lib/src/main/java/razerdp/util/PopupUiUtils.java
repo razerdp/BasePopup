@@ -18,7 +18,7 @@ import android.view.WindowManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import razerdp.basepopup.BasePopupComponentManager;
+import razerdp.basepopup.BasePopupSDK;
 import razerdp.util.log.PopupLog;
 
 /**
@@ -39,7 +39,7 @@ public class PopupUiUtils {
 
 
     public static int getNavigationBarHeight() {
-        Resources resources = BasePopupComponentManager.getApplication().getResources();
+        Resources resources = BasePopupSDK.getApplication().getResources();
         int resourceId = resources.getIdentifier("navigation_bar_height",
                 "dimen", "android");
         if (resourceId > 0) {
@@ -104,10 +104,10 @@ public class PopupUiUtils {
     }
 
     private static void checkRealSize() {
-        Resources resources = BasePopupComponentManager.getApplication().getResources();
+        Resources resources = BasePopupSDK.getApplication().getResources();
         int orientation = getScreenOrientation();
         if (REAL_SIZE.get(orientation) != null) return;
-        WindowManager windowManager = (WindowManager) BasePopupComponentManager.getApplication().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager) BasePopupSDK.getApplication().getSystemService(Context.WINDOW_SERVICE);
         Point point = new Point();
         if (windowManager == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
             point.x = resources.getDisplayMetrics().widthPixels;
@@ -142,7 +142,7 @@ public class PopupUiUtils {
     }
 
     public static int getScreenOrientation() {
-        return BasePopupComponentManager.getApplication().getResources().getConfiguration().orientation;
+        return BasePopupSDK.getApplication().getResources().getConfiguration().orientation;
     }
 
     public static int getStatusBarHeight() {
@@ -154,7 +154,7 @@ public class PopupUiUtils {
         if (statusBarHeight != 0) return;
         int result = 0;
         //获取状态栏高度的资源id
-        Resources resources = BasePopupComponentManager.getApplication().getResources();
+        Resources resources = BasePopupSDK.getApplication().getResources();
         int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
             result = resources.getDimensionPixelSize(resourceId);
@@ -171,7 +171,7 @@ public class PopupUiUtils {
      */
     public static int getScreenRotation() {
         try {
-            return ((WindowManager) BasePopupComponentManager.getApplication().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+            return ((WindowManager) BasePopupSDK.getApplication().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
         } catch (Exception e) {
             return Surface.ROTATION_0;
         }
@@ -198,13 +198,13 @@ public class PopupUiUtils {
     private static boolean hasGestureNavigation() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) return false;
         if (RomUtils.isXiaomi()) {
-            return Settings.Global.getInt(BasePopupComponentManager.getApplication().getContentResolver(), GESTURE_NAV_XIAOMI, 0) != 0;
+            return Settings.Global.getInt(BasePopupSDK.getApplication().getContentResolver(), GESTURE_NAV_XIAOMI, 0) != 0;
         }
         if (RomUtils.isVivo()) {
-            return Settings.Secure.getInt(BasePopupComponentManager.getApplication().getContentResolver(), GESTURE_NAV_XVIVO, 0) != 0;
+            return Settings.Secure.getInt(BasePopupSDK.getApplication().getContentResolver(), GESTURE_NAV_XVIVO, 0) != 0;
         }
         if (RomUtils.isSamsung()) {
-            return Settings.Global.getInt(BasePopupComponentManager.getApplication().getContentResolver(), GESTURE_NAVA_SAMSUNG, 0) != 0;
+            return Settings.Global.getInt(BasePopupSDK.getApplication().getContentResolver(), GESTURE_NAVA_SAMSUNG, 0) != 0;
         }
         return false;
     }

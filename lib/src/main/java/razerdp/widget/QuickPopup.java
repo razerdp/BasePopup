@@ -1,6 +1,7 @@
 package razerdp.widget;
 
 import android.animation.Animator;
+import android.app.Dialog;
 import android.content.Context;
 import android.util.Pair;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.animation.Animation;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.fragment.app.Fragment;
 import razerdp.basepopup.BaseLazyPopupWindow;
 import razerdp.basepopup.BasePopupFlag;
 import razerdp.basepopup.QuickPopupConfig;
@@ -22,13 +24,30 @@ public class QuickPopup extends BaseLazyPopupWindow {
 
     private QuickPopupConfig mConfig;
 
-    public QuickPopup(Context context, QuickPopupConfig config, int w, int h) {
-        super(context, w, h);
+    public QuickPopup(Fragment fragment, int width, int height, QuickPopupConfig config) {
+        super(fragment, width, height);
         mConfig = config;
         if (mConfig == null) {
             throw new NullPointerException("QuickPopupConfig must be not null!");
         }
     }
+
+    public QuickPopup(Dialog dialog, int width, int height, QuickPopupConfig config) {
+        super(dialog, width, height);
+        mConfig = config;
+        if (mConfig == null) {
+            throw new NullPointerException("QuickPopupConfig must be not null!");
+        }
+    }
+
+    public QuickPopup(Context context, int width, int height, QuickPopupConfig config) {
+        super(context, width, height);
+        mConfig = config;
+        if (mConfig == null) {
+            throw new NullPointerException("QuickPopupConfig must be not null!");
+        }
+    }
+
 
     @Override
     public void onInit(View contentView) {

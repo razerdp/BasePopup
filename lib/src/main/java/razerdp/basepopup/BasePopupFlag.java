@@ -22,7 +22,7 @@ public interface BasePopupFlag {
     int CONTROL_SHIFT = 6;
     int FADE_ENABLE = 0X1 << CONTROL_SHIFT;// 淡入淡出
     int AUTO_LOCATED = 0x2 << CONTROL_SHIFT;//自动定位
-    int AS_DROP_DOWN = 0x4 << CONTROL_SHIFT;//关联Anchor
+    int WITH_ANCHOR = 0x4 << CONTROL_SHIFT;//关联Anchor
     int AUTO_INPUT_METHOD = 0x8 << CONTROL_SHIFT;//自动弹出输入法
     int ALIGN_BACKGROUND = 0x10 << CONTROL_SHIFT;//对齐蒙层
     int FITSIZE = 0x20 << CONTROL_SHIFT;//允许popup重设大小

@@ -38,5 +38,3 @@
 -keep class * implements android.arch.lifecycle.GeneratedAdapter {
     <init>(...);
 }
-
--keep class * implements razerdp.basepopup.BasePopupComponent

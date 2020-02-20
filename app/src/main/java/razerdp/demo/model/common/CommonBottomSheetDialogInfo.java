@@ -66,9 +66,8 @@ public class CommonBottomSheetDialogInfo extends DemoCommonUsageInfo {
 
         private void showPopup() {
             if (mDemoPopup == null) {
-                mDemoPopup = new DemoPopup(getContext()).setText("兼容性测试\n\nBttomSheetDialog内弹出BasePopup");
+                mDemoPopup = new DemoPopup(this).setText("兼容性测试\n\nBttomSheetDialog内弹出BasePopup");
             }
-            mDemoPopup.inject(this);
             mDemoPopup.showPopupWindow();
         }
     }

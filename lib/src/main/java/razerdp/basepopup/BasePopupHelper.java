@@ -1,6 +1,8 @@
 package razerdp.basepopup;
 
 import android.animation.Animator;
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -15,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.EditText;
@@ -26,6 +29,9 @@ import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import razerdp.blur.PopupBlurOption;
 import razerdp.library.R;
 import razerdp.util.KeyboardUtils;
@@ -378,16 +384,16 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return this;
     }
 
-    boolean isShowAsDropDown() {
-        return (flag & AS_DROP_DOWN) != 0;
+    boolean isWithAnchor() {
+        return (flag & WITH_ANCHOR) != 0;
     }
 
     boolean isFitsizable() {
         return (flag & FITSIZE) != 0;
     }
 
-    BasePopupHelper setShowAsDropDown(boolean showAsDropDown) {
-        setFlag(AS_DROP_DOWN, showAsDropDown);
+    BasePopupHelper withAnchor(boolean showAsDropDown) {
+        setFlag(WITH_ANCHOR, showAsDropDown);
         return this;
     }
 
@@ -725,7 +731,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         } else {
             this.flag |= flag;
             if (flag == AUTO_LOCATED) {
-                this.flag |= AS_DROP_DOWN;
+                this.flag |= WITH_ANCHOR;
             }
         }
     }
@@ -844,6 +850,55 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         if (popupWindow != null) {
             popupWindow.dispatchOutSideEvent(event);
         }
+    }
+
+
+    @Nullable
+    static Activity findActivity(Object parent) {
+        return findActivity(parent, true);
+    }
+
+    @Nullable
+    static Activity findActivity(Object parent, boolean returnTopIfNull) {
+        Activity act = null;
+        if (parent instanceof Context) {
+            act = PopupUtils.getActivity((Context) parent);
+        } else if (parent instanceof Fragment) {
+            act = ((Fragment) parent).getActivity();
+        } else if (parent instanceof Dialog) {
+            act = PopupUtils.getActivity(((Dialog) parent).getContext());
+        }
+        if (act == null && returnTopIfNull) {
+            act = BasePopupSDK.getInstance().getTopActivity();
+        }
+        return act;
+    }
+
+    @Nullable
+    static View findDecorView(Object parent) {
+        View decorView = null;
+        Window window = null;
+        if (parent instanceof Dialog) {
+            window = ((Dialog) parent).getWindow();
+        } else if (parent instanceof DialogFragment) {
+            if (((DialogFragment) parent).getDialog() == null) {
+                decorView = ((DialogFragment) parent).getView();
+            } else {
+                window = ((DialogFragment) parent).getDialog().getWindow();
+            }
+        } else if (parent instanceof Fragment) {
+            decorView = ((Fragment) parent).getView();
+        } else if (parent instanceof Context) {
+            Activity act = PopupUtils.getActivity((Context) parent);
+            decorView = act == null ? null : act.findViewById(android.R.id.content);
+        }
+
+        if (decorView != null) {
+            return decorView;
+        } else {
+            return window == null ? null : window.getDecorView();
+        }
+
     }
 
     @Override

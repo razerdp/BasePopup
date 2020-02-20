@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
@@ -119,34 +118,6 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
         super.showAtLocation(parent, gravity, x, y);
         onAfterShowExec(activity);
     }
-
-    /**
-     * fix showAsDropDown when android api ver is over N
-     * <p>
-     * https://code.google.com/p/android/issues/detail?id=221001
-     *
-     * @param anchor
-     * @param xoff
-     * @param yoff
-     * @param gravity
-     */
-    @Override
-    public void showAsDropDown(View anchor, int xoff, int yoff, int gravity) {
-        if (isShowing()) return;
-        Activity activity = PopupUtils.getActivity(anchor.getContext());
-        if (activity == null) {
-            Log.e(TAG, "please make sure that context is instance of activity");
-            return;
-        }
-        onBeforeShowExec(activity);
-        anchor.getLocationInWindow(anchorLocation);
-        xoff = anchorLocation[0];
-        yoff = anchorLocation[1] + anchor.getHeight();
-        //offset在basepopupwindow已经计算好，在windowmanagerproxy里面进行适配
-        super.showAtLocation(anchor, Gravity.NO_GRAVITY, xoff, yoff);
-        onAfterShowExec(activity);
-    }
-
 
     void onBeforeShowExec(Activity act) {
         if (needObserverUiVisibilityChange(act)) {
