@@ -11,6 +11,37 @@
 			<th>Api</th>
 			<th>Author</th>
         </tr>
+           <tr>
+                    <td align="center">
+        				<a href ="https://bintray.com/razerdp/maven/BasePopup/_latestVersion">
+        					<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg"/>
+        				</a>
+        			</td>
+        			<td align="center">
+        				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion">
+        					<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg"/>
+        				</a>
+        			</td>
+        			<td align="center">
+        				<a href = "https://github.com/razerdp/BasePopup/blob/master/LICENSE">
+        					<img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"/>
+        				</a>
+        				<br></br>
+        				<a href = "https://github.com/razerdp/BasePopup/blob/master/LICENSE_996">
+                        	<img src="https://img.shields.io/badge/license-Anti%20996-blue.svg?style=flat-square"/>
+                        </a>
+        			</td>
+        			<td align="center">
+        				<a href="https://img.shields.io/badge/Api-14%2B-green.svg">
+        					<img src="https://img.shields.io/badge/Api-16%2B-green.svg"/>
+        				</a>
+        			</td>
+        			<td align="center">
+        				<a href = "https://github.com/razerdp">
+        					<img src="https://img.shields.io/badge/Author-razerdp-blue.svg"/>
+        				</a>
+        			</td>
+        		</tr>
 </table>
 
 </div>
