@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 
-import razerdp.basepopup.BasePopupComponentManager;
+import razerdp.basepopup.BasePopupSDK;
 
 /**
  * Created by 大灯泡 on 2016/1/14.
@@ -85,7 +85,7 @@ public class KeyboardUtils {
 
     public static boolean isOpen() {
         try {
-            InputMethodManager imm = (InputMethodManager) BasePopupComponentManager.getApplication().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) BasePopupSDK.getApplication().getSystemService(Context.INPUT_METHOD_SERVICE);
             if (imm != null) {
                 return imm.isActive();
             }
@@ -97,7 +97,7 @@ public class KeyboardUtils {
 
     public static boolean isOpen(View view) {
         try {
-            InputMethodManager imm = (InputMethodManager) BasePopupComponentManager.getApplication().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) BasePopupSDK.getApplication().getSystemService(Context.INPUT_METHOD_SERVICE);
             if (imm != null) {
                 return imm.isActive(view);
             }

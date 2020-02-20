@@ -1,6 +1,13 @@
 ## BasePopup更新日志
 
 * **【里程碑】2.2.2**
+    * **【Alpha】2.2.2** 2020/02/20
+      * 移除扩展组件
+      * 主体迁移至AndroidX
+      * 优化生命期监听
+    * **【Candy】2.2.2.200220** 2020/02/20
+      * 修复QuickPopupBuilder因为变更而导致的问题
+      * 增加调查问卷
     * **【Candy】2.2.2.200219** 2020/02/19
       * 采取[#263](https://github.com/razerdp/BasePopup/issues/263)的建议，非常感谢[@xchengDroid](https://github.com/xchengDroid)提出的建议
     * 2020/02/14

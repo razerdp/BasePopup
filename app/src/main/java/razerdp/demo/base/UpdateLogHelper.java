@@ -22,6 +22,7 @@ public class UpdateLogHelper {
 
     private static void buildUpdateLogs() {
         addTips();
+        addAlpha2_2_2();
         addCandy2_2_2();
         addRelease2_2_1();
         addCandy2_2_1();
@@ -46,6 +47,20 @@ public class UpdateLogHelper {
         sCache.add(new UpdateLogInfo("为防止内容过多，2.2.1之前的Candy版本不再展示，仅展示Release版本")
                 .append("如果内容过多可以左右滑动哦~")
                 .append("#issue是可以点击的~")
+                .root());
+    }
+
+    private static void addAlpha2_2_2() {
+        sCache.add(new UpdateLogInfo("【Alpha】2.2.2(2020/02/20)")
+                .append("移除扩展组件")
+                .append("主体迁移至AndroidX")
+                .append("优化生命期监听")
+                .append("修复QuickPopupBuilder问题")
+                .append("增加对Fragment/Dialog的支持（包括构造器）")
+                .append("增加调查问卷")
+                .append("采纳#263的建议，非常感谢@xchengDroid提出的建议")
+                .keyAt("#263").end()
+                .keyAt("@xchengDroid").url("https://github.com/xchengDroid")
                 .root());
     }
 

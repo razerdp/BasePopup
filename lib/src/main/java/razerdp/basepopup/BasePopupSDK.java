@@ -4,66 +4,26 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
 
 import java.lang.ref.WeakReference;
-
-import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2019/5/13
  * <p>
- * Description：组件管理器
+ * Description：
  */
-public final class BasePopupComponentManager {
+public final class BasePopupSDK {
 
     private static volatile Application mApplicationContext;
-    static final BasePopupComponentProxy proxy;
     private WeakReference<Activity> mTopActivity;
     private boolean unLockSuccess;
 
-    static {
-        proxy = new BasePopupComponentProxy();
-    }
-
-    static class BasePopupComponentProxy implements BasePopupComponent {
-        private BasePopupComponent IMPL;
-        private static final String IMPL_X = "razerdp.basepopup.BasePopupComponentX";
-
-        BasePopupComponentProxy() {
-            try {
-                IMPL = ((BasePopupComponent) Class.forName(IMPL_X).newInstance());
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            PopupLog.i("initComponent", IMPL);
-        }
-
-        @Override
-        public View findDecorView(BasePopupWindow basePopupWindow, Activity activity) {
-            if (IMPL == null) return null;
-            return IMPL.findDecorView(basePopupWindow, activity);
-        }
-
-        @Override
-        public BasePopupWindow attachLifeCycle(BasePopupWindow basePopupWindow, Object owner) {
-            if (IMPL != null) {
-                IMPL.attachLifeCycle(basePopupWindow, owner);
-            }
-            return basePopupWindow;
-        }
-    }
-
     private static class SingleTonHolder {
-        private static BasePopupComponentManager INSTANCE = new BasePopupComponentManager();
+        private static BasePopupSDK INSTANCE = new BasePopupSDK();
     }
 
 
-    private BasePopupComponentManager() {
+    private BasePopupSDK() {
     }
 
     synchronized void init(Context context) {
@@ -75,10 +35,6 @@ public final class BasePopupComponentManager {
 
     public Activity getTopActivity() {
         return mTopActivity == null ? null : mTopActivity.get();
-    }
-
-    public boolean hasComponent() {
-        return proxy.IMPL != null;
     }
 
     private void regLifeCallback() {
@@ -120,7 +76,7 @@ public final class BasePopupComponentManager {
         });
     }
 
-    public static BasePopupComponentManager getInstance() {
+    public static BasePopupSDK getInstance() {
         return SingleTonHolder.INSTANCE;
     }
 

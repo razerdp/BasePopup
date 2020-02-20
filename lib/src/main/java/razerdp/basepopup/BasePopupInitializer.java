@@ -11,7 +11,7 @@ import android.net.Uri;
 public class BasePopupInitializer extends ContentProvider {
     @Override
     public boolean onCreate() {
-        BasePopupComponentManager.getInstance().init(getContext());
+        BasePopupSDK.getInstance().init(getContext());
         return true;
     }
 

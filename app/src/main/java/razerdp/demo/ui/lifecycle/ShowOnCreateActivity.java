@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.OnClick;
-import razerdp.basepopup.BasePopupComponentManager;
 import razerdp.basepopup.R;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.popup.PopupShowOnCreate;
@@ -80,7 +79,6 @@ public class ShowOnCreateActivity extends BaseActivity {
 
     @Override
     protected void onInitView(View decorView) {
-        mTvDesc.append("是否有AndroidX组件：" + BasePopupComponentManager.getInstance().hasComponent());
     }
 
     @OnClick(R.id.btn_open_own)

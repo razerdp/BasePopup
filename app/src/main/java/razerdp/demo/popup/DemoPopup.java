@@ -1,10 +1,12 @@
 package razerdp.demo.popup;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
@@ -19,6 +21,16 @@ public class DemoPopup extends BasePopupWindow {
 
     public DemoPopup(Context context) {
         super(context);
+        ButterKnifeUtil.bind(this, getContentView());
+    }
+
+    public DemoPopup(Fragment fragment) {
+        super(fragment);
+        ButterKnifeUtil.bind(this, getContentView());
+    }
+
+    public DemoPopup(Dialog dialog) {
+        super(dialog);
         ButterKnifeUtil.bind(this, getContentView());
     }
 

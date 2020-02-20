@@ -11,83 +11,7 @@
 			<th>Api</th>
 			<th>Author</th>
         </tr>
-        <tr>
-            <td align="center">
-				<a href ="https://bintray.com/razerdp/maven/BasePopup/_latestVersion">
-					<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg"/>
-				</a>
-			</td>
-			<td align="center">
-				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion">
-					<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg"/>
-				</a>
-			</td>
-			<td align="center">
-				<a href = "https://github.com/razerdp/BasePopup/blob/master/LICENSE">
-					<img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"/>		
-				</a>
-				<br></br>
-				<a href = "https://github.com/razerdp/BasePopup/blob/master/LICENSE_996">
-                	<img src="https://img.shields.io/badge/license-Anti%20996-blue.svg?style=flat-square"/>
-                </a>
-			</td>
-			<td align="center">
-				<a href="https://img.shields.io/badge/Api-14%2B-green.svg">
-					<img src="https://img.shields.io/badge/Api-16%2B-green.svg"/>
-				</a>
-			</td>
-			<td align="center">
-				<a href = "https://github.com/razerdp">
-					<img src="https://img.shields.io/badge/Author-razerdp-blue.svg"/>
-				</a>
-			</td>
-		</tr>
-		<tr>
-			<td rowspan="3" align="center">扩展组件</td>
-			<td align="center"></td>
-			<td align="center">Support（已终止迭代）</td>
-			<td align="center">Lifecycle（已终止迭代）</td>
-			<td align="center">androidx</td>
-			<tr>
-			<td align="center">Release</td>
-			<td align="center">
-				<a href = "https://bintray.com/razerdp/maven/BasePopup-compat-support/_latestVersion">
-                	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup-compat-support/images/download.svg"/>		
-                </a>
-            </td>
-			<td align="center">
-				<a href = "https://bintray.com/razerdp/maven/BasePopup-compat-lifecycle/_latestVersion">
-                	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup-compat-lifecycle/images/download.svg"/>		
-                </a>
-			</td>
-			<td align="center">
-				<a href = "https://bintray.com/razerdp/maven/BasePopup-compat-androidx/_latestVersion">
-                	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup-compat-androidx/images/download.svg"/>		
-                </a>
-			</td>
-			</tr>
-			<tr>
-			<td align="center">Candy</td>
-			<td align="center">
-				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy-compat-support/_latestVersion">
-                	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy-compat-support/images/download.svg"/>		
-                </a>
-			</td>
-			<td align="center">
-				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy-compat-lifecycle/_latestVersion">
-                	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy-compat-lifecycle/images/download.svg"/>		
-                </a>
-			</td>
-			<td align="center">
-				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy-compat-androidx/_latestVersion">
-                	<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy-compat-androidx/images/download.svg"/>		
-                </a>
-			</td>
-		</tr>
-			
 </table>
-
-
 
 </div>
 
@@ -112,7 +36,6 @@
  - [环境依赖](#环境依赖)
  - [快速入门](#快速入门)
    - [BasePopup手册](https://www.kancloud.cn/razerdp/basepopup/content)
- - [混淆](#混淆)
  - [Api（请看Wiki）](#api请看wiki)
  - [更新日志](#更新日志-历史更新)
    - [历史更新](./UpdateLog.md)
@@ -123,7 +46,6 @@
  - [常见问题](#常见问题)
  - [LICENSE](#license)
    
-<br>
 <br>
 
 ### 特性
@@ -154,15 +76,13 @@
 
 请把下述 **{$latestVersion}** 替换为上面表格中对应的版本。
 
-**自2.2.2版本开始，BasePopup将不再支持support**，同时BasePopup建议您尽早迁移到AndroidX
+**自2.2.2版本开始，BasePopup将完全迁移至AndroidX，不再提供扩展组件了**，BasePopup建议您尽早迁移到AndroidX
 
  - **Release：**
    - 基础库（必选）：**`implementation 'com.github.razerdp:BasePopup:{$latestVersion}'`**
-   - androidx支持库（可选）：**`implementation 'com.github.razerdp:BasePopup-compat-androidx:{$latestVersion}'`**
 
  - **Candy**
     - 基础库（必选）：**`implementation 'com.github.razerdp:BasePopup_Candy:{$latestVersion}'`**
-    - androidx支持库（可选）：**`implementation 'com.github.razerdp:BasePopup_Candy-compat-androidx:{$latestVersion}'`**
 
 <br>
 
@@ -170,16 +90,6 @@
 
 请参考文档：[**BasePopup手册**](https://www.kancloud.cn/razerdp/basepopup/content)
 
-
-<br>
-
-### 混淆
-
-理论上库自带继承的混淆，如果发现组件不可用，可以自行添加以下混淆：
-
-```xml
--keep class * implements razerdp.basepopup.BasePopupComponent
-```
 <br>
 
 ### Api（请看Wiki，后续迁移至文档）
@@ -194,6 +104,10 @@
 * **近期正在重构BasePopup，旨在代码更容易读，因此近期更新可能较慢，新版本将会对issue统一处理**
 
 * **【里程碑】2.2.2**
+    * **【Alpha】2.2.2** 2020/02/20
+      * 移除扩展组件
+      * 主体迁移至AndroidX
+      * 优化生命期监听
     * **【Candy】2.2.2.200220** 2020/02/20
       * 修复QuickPopupBuilder因为变更而导致的问题
       * 增加调查问卷

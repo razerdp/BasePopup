@@ -3,7 +3,6 @@ package razerdp.demo.utils;
 import android.graphics.Typeface;
 import android.os.Parcel;
 import android.text.Layout;
-import android.text.NoCopySpan;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -23,14 +22,12 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.ColorRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import razerdp.demo.app.AppContext;
 import razerdp.demo.widget.span.CustomImageSpan;
 
@@ -448,7 +445,7 @@ public class SpanUtil {
 
     }
 
-    static class ClickableSpanEx extends ClickableSpan implements NoCopySpan {
+    static class ClickableSpanEx extends ClickableSpan {
         private int backgroundColor = -1;
         private int textColor = -1;
         private boolean needUnderLine;
