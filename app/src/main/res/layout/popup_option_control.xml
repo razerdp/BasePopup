@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/default_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/default_padding"
+            android:text="控制模式选择"
+            android:textColor="@color/text_black2"
+            android:textSize="@dimen/text_normal" />
+
+        <View style="@style/divider" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/check_backpressenable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="setBackPressEnable\n（是否允许返回键Dismiss）"
+            android:textColor="@color/text_black2"
+            android:textSize="@dimen/text_small"
+            android:theme="@style/MyCheckBox" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/check_setOutSideTouchable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="setOutSideTouchable\n（是否允许外部点击）"
+            android:textColor="@color/text_black2"
+            android:textSize="@dimen/text_small"
+            android:theme="@style/MyCheckBox" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/check_setOutSideDismiss"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:checked="true"
+            android:text="setOutSideDismiss\n（点击外部的时候是否dismiss）"
+            android:textColor="@color/text_black2"
+            android:textSize="@dimen/text_small"
+            android:theme="@style/MyCheckBox" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/check_blur"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="模糊背景"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small"
+                android:theme="@style/MyCheckBox" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/check_open_new_one"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="使用新的PopupWindow"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small"
+                android:theme="@style/MyCheckBox" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <razerdp.demo.widget.DPTextView
+        android:id="@+id/tv_go"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/default_padding"
+        android:text="确定"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_small"
+        app:backgroundColor="@color/color_link"
+        app:textPressedColor="@color/white_70" />
+
+
+</LinearLayout>

@@ -1,6 +1,11 @@
 ## BasePopup更新日志
 
 * **【里程碑】2.2.2**
+    * **【Beta】2.2.2** 2020/02/23
+      * 添加队列
+      * 修复 [#238](https://github.com/razerdp/BasePopup/issues/238)
+      * 修复多个`outSideTouchAble`下事件永远到decor的问题
+      * 考虑后续版本不再依赖系统的PopupWindow，直接通过WindowManager实现
     * **【Alpha】2.2.2** 2020/02/20
       * 移除扩展组件
       * 主体迁移至AndroidX

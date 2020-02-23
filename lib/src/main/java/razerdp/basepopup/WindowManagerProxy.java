@@ -3,10 +3,16 @@ package razerdp.basepopup;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+
+import androidx.annotation.Nullable;
+import razerdp.util.PopupUiUtils;
 import razerdp.util.log.PopupLog;
 
 /**
@@ -17,8 +23,9 @@ import razerdp.util.log.PopupLog;
 final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
     private static final String TAG = "WindowManagerProxy";
     private WindowManager mWindowManager;
-    private PopupDecorViewProxy mPopupDecorViewProxy;
+    PopupDecorViewProxy mPopupDecorViewProxy;
     private BasePopupHelper mPopupHelper;
+    boolean isAddedToQueue;
 
     WindowManagerProxy(WindowManager windowManager, BasePopupHelper helper) {
         mWindowManager = windowManager;
@@ -33,6 +40,7 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
     @Override
     public void removeViewImmediate(View view) {
         PopupLog.i(TAG, "WindowManager.removeViewImmediate  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
+        PopupWindowQueueManager.getInstance().remove(this);
         if (mWindowManager == null || view == null) return;
         if (isPopupInnerDecorView(view) && mPopupDecorViewProxy != null) {
             PopupDecorViewProxy popupDecorViewProxy = mPopupDecorViewProxy;
@@ -49,7 +57,8 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
 
     @Override
     public void addView(View view, ViewGroup.LayoutParams params) {
-        PopupLog.i(TAG, "WindowManager.addView  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
+        PopupLog.i(TAG, "WindowManager.addView  >>>  " + (view == null ? null : view.getClass().getName()));
+        PopupWindowQueueManager.getInstance().put(this);
         if (mWindowManager == null || view == null) return;
         if (isPopupInnerDecorView(view)) {
             /**
@@ -104,11 +113,10 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
 
     @Override
     public void updateViewLayout(View view, ViewGroup.LayoutParams params) {
-        PopupLog.i(TAG, "WindowManager.updateViewLayout  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
+        PopupLog.i(TAG, "WindowManager.updateViewLayout  >>>  " + (view == null ? null : view.getClass().getName()));
         if (mWindowManager == null || view == null) return;
         if (isPopupInnerDecorView(view) && mPopupDecorViewProxy != null || view == mPopupDecorViewProxy) {
-            PopupDecorViewProxy popupDecorViewProxy = mPopupDecorViewProxy;
-            mWindowManager.updateViewLayout(popupDecorViewProxy, fitLayoutParamsPosition(params));
+            mWindowManager.updateViewLayout(mPopupDecorViewProxy, fitLayoutParamsPosition(params));
         } else {
             mWindowManager.updateViewLayout(view, params);
         }
@@ -139,6 +147,7 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
     @Override
     public void removeView(View view) {
         PopupLog.i(TAG, "WindowManager.removeView  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
+        PopupWindowQueueManager.getInstance().remove(this);
         if (mWindowManager == null || view == null) return;
         if (isPopupInnerDecorView(view) && mPopupDecorViewProxy != null) {
             mWindowManager.removeView(mPopupDecorViewProxy);
@@ -150,9 +159,7 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
 
 
     private boolean isPopupInnerDecorView(View v) {
-        if (v == null) return false;
-        String viewSimpleClassName = v.getClass().getSimpleName();
-        return TextUtils.equals(viewSimpleClassName, "PopupDecorView") || TextUtils.equals(viewSimpleClassName, "PopupViewContainer");
+        return PopupUiUtils.isPopupDecorView(v) || PopupUiUtils.isPopupViewContainer(v);
     }
 
     @Override
@@ -165,9 +172,97 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
         }
 
         if (destroy) {
+            String key = PopupWindowQueueManager.getInstance().getKey(this);
+            PopupWindowQueueManager.getInstance().clear(key);
             mWindowManager = null;
             mPopupDecorViewProxy = null;
             mPopupHelper = null;
+        }
+    }
+
+    @Nullable
+    WindowManagerProxy preWindow() {
+        return PopupWindowQueueManager.getInstance().preWindow(this);
+    }
+
+    void dispatchToDecorProxy(MotionEvent ev) {
+        if (mPopupDecorViewProxy != null) {
+            mPopupDecorViewProxy.dispatchTouchEvent(ev);
+        }
+    }
+
+    static class PopupWindowQueueManager {
+
+        private static final HashMap<String, LinkedList<WindowManagerProxy>> sQueueMap = new HashMap<>();
+
+        private static class SingleTonHolder {
+            private static PopupWindowQueueManager INSTANCE = new PopupWindowQueueManager();
+        }
+
+        private PopupWindowQueueManager() {
+        }
+
+        static PopupWindowQueueManager getInstance() {
+            return PopupWindowQueueManager.SingleTonHolder.INSTANCE;
+        }
+
+        String getKey(WindowManagerProxy managerProxy) {
+            if (managerProxy == null || managerProxy.mPopupHelper == null || managerProxy.mPopupHelper.mPopupWindow == null) {
+                return null;
+            }
+            return String.valueOf(managerProxy.mPopupHelper.mPopupWindow.getContext());
+        }
+
+        void put(WindowManagerProxy managerProxy) {
+            if (managerProxy == null || managerProxy.isAddedToQueue) return;
+            String key = getKey(managerProxy);
+            if (TextUtils.isEmpty(key)) return;
+            LinkedList<WindowManagerProxy> queue = sQueueMap.get(key);
+            if (queue == null) {
+                queue = new LinkedList<>();
+                sQueueMap.put(key, queue);
+            }
+            queue.addLast(managerProxy);
+            managerProxy.isAddedToQueue = true;
+
+            PopupLog.d(TAG, queue);
+        }
+
+        void remove(WindowManagerProxy managerProxy) {
+            if (managerProxy == null || !managerProxy.isAddedToQueue) return;
+            String key = getKey(managerProxy);
+            if (TextUtils.isEmpty(key)) return;
+            LinkedList<WindowManagerProxy> queue = sQueueMap.get(key);
+            if (queue != null) {
+                queue.remove(managerProxy);
+            }
+            managerProxy.isAddedToQueue = false;
+            PopupLog.d(TAG, queue);
+        }
+
+        void clear(String key) {
+            LinkedList<WindowManagerProxy> queue = sQueueMap.get(key);
+            if (queue != null) {
+                queue.clear();
+            }
+            sQueueMap.remove(key);
+            PopupLog.d(TAG, queue, sQueueMap);
+        }
+
+        @Nullable
+        WindowManagerProxy preWindow(WindowManagerProxy managerProxy) {
+            if (managerProxy == null) {
+                return null;
+            }
+            String key = getKey(managerProxy);
+            if (TextUtils.isEmpty(key)) return null;
+            LinkedList<WindowManagerProxy> queue = sQueueMap.get(key);
+            if (queue == null) return null;
+            int index = queue.indexOf(managerProxy) - 1;
+            if (index >= 0 && index < queue.size()) {
+                return queue.get(index);
+            }
+            return null;
         }
     }
 }

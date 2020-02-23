@@ -1,7 +1,6 @@
 package razerdp.basepopup;
 
 import android.app.Activity;
-import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.View;
@@ -23,7 +22,7 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
     private static final String TAG = "PopupWindowProxy";
 
     private BasePopupHelper mHelper;
-    private WindowManagerProxy mWindowManagerProxy;
+    WindowManagerProxy mWindowManagerProxy;
     private boolean oldFocusable = true;
     private boolean isHandledFullScreen;
 
@@ -77,29 +76,21 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
     @Override
     public void update() {
         try {
-            if (mHelper != null) {
-                if (mHelper.isOutSideTouchable()) {
-                    Rect anchorBound = mHelper.getAnchorViewBound();
-                    super.update(anchorBound.left, anchorBound.bottom, mHelper.getLayoutParams().width, mHelper.getLayoutParams().height, true);
-                }
-                if (mWindowManagerProxy != null) {
-                    mWindowManagerProxy.update();
-                }
-            } else {
-                super.update();
+            if (mHelper != null && mWindowManagerProxy != null) {
+                mWindowManagerProxy.update();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    void handleFullScreenFocusable() {
+    private void handleFullScreenFocusable() {
         oldFocusable = isFocusable();
         setFocusable(false);
         isHandledFullScreen = true;
     }
 
-    void restoreFocusable() {
+    private void restoreFocusable() {
         if (mWindowManagerProxy != null) {
             mWindowManagerProxy.updateFocus(oldFocusable);
         }

@@ -12,9 +12,9 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:padding="@dimen/default_padding"
+        android:text="BasePopup"
         android:textColor="@color/text_black2"
-        android:textSize="@dimen/text_large"
-        tools:text="动画展示" />
+        android:textSize="@dimen/text_large" />
 
 
 </FrameLayout>

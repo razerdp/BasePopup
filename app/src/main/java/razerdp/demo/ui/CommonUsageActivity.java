@@ -3,7 +3,6 @@ package razerdp.demo.ui;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -27,6 +26,7 @@ import razerdp.demo.model.common.CommonAnyPosInfo;
 import razerdp.demo.model.common.CommonBackgroundAlignInfo;
 import razerdp.demo.model.common.CommonBackgroundInfo;
 import razerdp.demo.model.common.CommonBottomSheetDialogInfo;
+import razerdp.demo.model.common.CommonControllerInfo;
 import razerdp.demo.model.common.CommonFriendCircleInfo;
 import razerdp.demo.model.common.CommonGestureNavInfo;
 import razerdp.demo.model.common.CommonInputInfo;
@@ -105,20 +105,22 @@ public class CommonUsageActivity extends BaseActivity {
 
     private List<MultiType> createItem() {
         List<MultiType> result = new ArrayList<>();
-        result.add(new DemoCommonUsageTitle("位置类"));
+        result.add(new DemoCommonUsageTitle("位置相关"));
         result.add(new CommonSlideInfo());
         result.add(new CommonAnyPosInfo());
         result.add(new CommonFriendCircleInfo());
         result.add(new CommonAnchorMatchInfo());
-        result.add(new DemoCommonUsageTitle("动画类"));
+        result.add(new DemoCommonUsageTitle("PopupWindow控制相关"));
+        result.add(new CommonControllerInfo());
+        result.add(new DemoCommonUsageTitle("动画相关"));
         result.add(new CommonAnimateInfo());
-        result.add(new DemoCommonUsageTitle("背景类"));
+        result.add(new DemoCommonUsageTitle("背景相关"));
         result.add(new CommonBackgroundInfo());
         result.add(new CommonBackgroundAlignInfo());
-        result.add(new DemoCommonUsageTitle("生命期类"));
+        result.add(new DemoCommonUsageTitle("生命期相关"));
         result.add(new ShowOnCreateInfo());
         result.add(new ShowInServiceInfo());
-        result.add(new DemoCommonUsageTitle("输入法"));
+        result.add(new DemoCommonUsageTitle("输入法相关"));
         result.add(new CommonInputInfo());
         result.add(new DemoCommonUsageTitle("兼容性测试"));
         result.add(new CommonBottomSheetDialogInfo());
@@ -152,8 +154,6 @@ public class CommonUsageActivity extends BaseActivity {
 
     static class InnerItemViewHolder extends BaseMultiRecyclerViewHolder<DemoCommonUsageInfo> {
 
-        @BindView(R.id.iv_tips)
-        ImageView ivTips;
         @BindView(R.id.tv_fun)
         TextView tvFun;
         @BindView(R.id.divider)
@@ -175,11 +175,6 @@ public class CommonUsageActivity extends BaseActivity {
         public void onBindData(DemoCommonUsageInfo data, int position) {
             tvFun.setText(data.title);
             tvOption.setText(TextUtils.isEmpty(data.option) ? "配置" : data.option);
-        }
-
-        @OnClick(R.id.iv_tips)
-        void showTips(View v) {
-            getData().shoTips(v);
         }
 
         @OnClick(R.id.tv_option)

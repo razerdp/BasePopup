@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Rect;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -42,6 +41,13 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     private Rect lastKeyboardBounds = new Rect();
     private boolean isFirstLayoutComplete = false;
     private int layoutCount = 0;
+    private OnClickListener emptyInterceptClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            //do nothing
+            //主要是为了解决透传到蒙层的问题
+        }
+    };
 
     private PopupDecorViewProxy(Context context) {
         super(context);
@@ -81,18 +87,13 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
 
         //限制一个mask一个target，不允许多个target
-        if (getChildCount() == 2) {
-            removeViewsInLayout(1, 1);
+        final int childCount = getChildCount();
+        if (childCount >= 2) {
+            removeViewsInLayout(1, childCount - 1);
         }
 
         mTarget = target;
-        target.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //do nothing
-                //主要是为了解决透传到蒙层的问题
-            }
-        });
+        target.setOnClickListener(emptyInterceptClickListener);
         WindowManager.LayoutParams wp = new WindowManager.LayoutParams();
         wp.copyFrom(params);
         wp.x = 0;
@@ -114,7 +115,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             }
 
             View parent = (View) contentView.getParent();
-            if (parent != null && parent != target) {
+            if (PopupUiUtils.isPopupBackgroundView(parent)) {
                 //可能被包裹了一个backgroundview
                 ViewGroup.LayoutParams p = parent.getLayoutParams();
                 if (p == null) {
@@ -124,6 +125,10 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                     p.height = lp.height;
                 }
                 parent.setLayoutParams(p);
+            }
+            //fixed #238  https://github.com/razerdp/BasePopup/issues/238
+            if (contentView.isFocusable()) {
+                contentView.requestFocus();
             }
             contentView.setLayoutParams(lp);
         }
@@ -135,6 +140,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         childRightMargin = mHelper.getLayoutParams().rightMargin;
         childBottomMargin = mHelper.getLayoutParams().bottomMargin;
 
+        //添加decorView作为自己的子控件
         addView(target, wp);
     }
 
@@ -146,11 +152,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         if (!(root instanceof ViewGroup)) return root;
         ViewGroup rootGroup = (ViewGroup) root;
         if (rootGroup.getChildCount() <= 0) return root;
-        String viewSimpleClassName = rootGroup.getClass().getSimpleName();
-        View result = null;
-        while (!isContentView(viewSimpleClassName)) {
+        View result = root;
+        while (!isContentView(result)) {
             result = rootGroup.getChildAt(0);
-            viewSimpleClassName = result.getClass().getSimpleName();
             if (result instanceof ViewGroup) {
                 rootGroup = ((ViewGroup) result);
             } else {
@@ -160,10 +164,10 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         return result;
     }
 
-    private boolean isContentView(String contentClassName) {
-        return !TextUtils.equals(contentClassName, "PopupDecorView") &&
-                !TextUtils.equals(contentClassName, "PopupViewContainer") &&
-                !TextUtils.equals(contentClassName, "PopupBackgroundView");
+    private boolean isContentView(View v) {
+        return !PopupUiUtils.isPopupDecorView(v) &&
+                !PopupUiUtils.isPopupBackgroundView(v) &&
+                !PopupUiUtils.isPopupViewContainer(v);
     }
 
     @Override
@@ -466,10 +470,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (mHelper != null) {
-            return mHelper.onInterceptTouchEvent(ev);
-        }
-        return false;
+        boolean intercept = mHelper != null && mHelper.onInterceptTouchEvent(ev);
+        if (intercept) return true;
+        return super.onInterceptTouchEvent(ev);
     }
 
     @Override
@@ -546,9 +549,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         if (mMaskLayout != null) {
             mMaskLayout.update();
         }
-        if (isLayoutRequested()) {
-            requestLayout();
-        }
+        requestLayout();
     }
 
 
@@ -643,6 +644,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
         if (mMaskLayout != null) {
             mMaskLayout.clear(destroy);
+        }
+        if (mTarget != null) {
+            mTarget.setOnClickListener(null);
         }
         getViewTreeObserver().removeOnGlobalLayoutListener(this);
         mHelper = null;

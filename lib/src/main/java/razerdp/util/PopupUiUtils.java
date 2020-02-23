@@ -9,10 +9,12 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 
 import java.util.ArrayList;
@@ -26,6 +28,22 @@ import razerdp.util.log.PopupLog;
  */
 public class PopupUiUtils {
 
+    public static final String POPUP_DECORVIEW = "android.widget.PopupWindow$PopupDecorView";
+    public static final String POPUP_VIEWCONTAINER = "android.widget.PopupWindow$PopupViewContainer";
+    public static final String POPUP_BACKGROUNDVIEW = "android.widget.PopupWindow$PopupBackgroundView";
+
+
+    public static boolean isPopupDecorView(View view) {
+        return view != null && TextUtils.equals(view.getClass().getName(), POPUP_DECORVIEW);
+    }
+
+    public static boolean isPopupViewContainer(View view) {
+        return view != null && TextUtils.equals(view.getClass().getName(), POPUP_VIEWCONTAINER);
+    }
+
+    public static boolean isPopupBackgroundView(View view) {
+        return view != null && TextUtils.equals(view.getClass().getName(), POPUP_BACKGROUNDVIEW);
+    }
 
     private static final List<String> NAVIGATION_BAR_NAMES = new ArrayList<>();
 
@@ -186,6 +204,21 @@ public class PopupUiUtils {
         }
     }
 
+    public static void safeAddGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener listener) {
+        try {
+            v.getViewTreeObserver().addOnGlobalLayoutListener(listener);
+        } catch (Exception e) {
+            PopupLog.e(e);
+        }
+    }
+
+    public static void safeRemoveGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener listener) {
+        try {
+            v.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
+        } catch (Exception e) {
+            PopupLog.e(e);
+        }
+    }
 
     //======================
     private static final String GESTURE_NAV_XVIVO = "navigation_gesture_on";
