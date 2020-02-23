@@ -27,9 +27,4 @@ public abstract class DemoCommonUsageInfo implements MultiType {
 
     public abstract void toOption(View v);
 
-    public void shoTips(View v){
-
-    }
-
-
 }

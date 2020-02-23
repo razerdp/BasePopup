@@ -38,6 +38,7 @@ import razerdp.demo.utils.VersionUtil;
 import razerdp.demo.utils.ViewUtil;
 import razerdp.demo.widget.DPRecyclerView;
 import razerdp.demo.widget.DPTextView;
+import razerdp.util.SimpleAnimationUtils;
 
 public class DemoActivity extends BaseActivity {
 
@@ -67,6 +68,8 @@ public class DemoActivity extends BaseActivity {
                 QuickPopupBuilder.with(DemoActivity.this)
                         .contentView(R.layout.popup_demo)
                         .config(new QuickPopupConfig()
+                                .withShowAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(true))
+                                .withDismissAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(false))
                                 .blurBackground(true))
                         .show();
             }
@@ -88,6 +91,8 @@ public class DemoActivity extends BaseActivity {
         QuickPopupBuilder.with(this)
                 .contentView(R.layout.popup_wj)
                 .config(new QuickPopupConfig()
+                        .withShowAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(true))
+                        .withDismissAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(false))
                         .withClick(R.id.tv_go, null, true)
                         .blurBackground(true)
                         .dismissOnOutSideTouch(false))

@@ -50,8 +50,8 @@ public class QuickPopup extends BaseLazyPopupWindow {
 
 
     @Override
-    public void onInit(View contentView) {
-        super.onInit(contentView);
+    public void onViewCreated(View contentView) {
+        super.onViewCreated(contentView);
         applyConfigSetting(mConfig);
     }
 

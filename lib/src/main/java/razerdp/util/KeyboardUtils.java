@@ -149,7 +149,7 @@ public class KeyboardUtils {
                 onKeyboardChangeListener.onKeyboardChange(keyboardRect, isVisible);
             }
         };
-        decor.getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
+        PopupUiUtils.safeAddGlobalLayoutListener(decor, layoutListener);
         return layoutListener;
     }
 

@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import razerdp.blur.BlurImageView;
 import razerdp.library.R;
 import razerdp.util.PopupUtils;
+import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2018/5/9.
@@ -169,6 +170,7 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        PopupLog.i("ddddd", getWindowToken(), getApplicationWindowToken());
         if (mPopupHelper != null && mPopupHelper.isOutSideTouchable()) {
             MotionEvent evCopy = MotionEvent.obtain(ev);
             evCopy.setLocation(ev.getRawX(), ev.getRawY());
