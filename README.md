@@ -109,11 +109,8 @@
 
 **自2.2.2版本开始，BasePopup将完全迁移至AndroidX，不再提供扩展组件了**，BasePopup建议您尽早迁移到AndroidX
 
- - **Release：**
-   - 基础库（必选）：**`implementation 'com.github.razerdp:BasePopup:{$latestVersion}'`**
-
- - **Candy**
-    - 基础库（必选）：**`implementation 'com.github.razerdp:BasePopup_Candy:{$latestVersion}'`**
+ - **Release：** `implementation 'com.github.razerdp:BasePopup:{$latestVersion}'`
+ - **Candy：** `implementation 'com.github.razerdp:BasePopup_Candy:{$latestVersion}'`
 
 <br>
 
