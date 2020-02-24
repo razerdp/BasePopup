@@ -1,4 +1,44 @@
 ## BasePopup更新日志
+* **【Release】2.2.2**(2020/02/24)
+  * 发布2.2.2正式版，**本版本是一个重构版本，请认真阅读更新日志哦**
+  * **新增功能/特性：**
+    * 新增 `BaseLazyPopupWindow`，以后懒加载的PopupWindow只需要extend这个就可以了，旧版本的`delayInit()`已经在该版本去除
+    * 增加BasePopup队列，针对outSideTouch优化
+    * 适配Android 10，解决Android 10黑/灰名单的问题
+    * 适配`match_parent`，现在`match_parent`将会填充剩余空间
+    * 主体完全迁移至AndroidX，去除BasePopup扩展组件库，同时建议您尽快适配AndroidX
+    * 针对内存泄漏进行梳理，同时增加生命期监听，在`destroy`中会释放引用
+    * 增加对`dialog`/`fragment`/`dialogfragment`的支持
+    * 添加`setFitSize()`方法
+      * `setFitSize()`：BasePopup会针对剩余空间来调整Popup的大小，因此可能出现实际显示过小的情况
+    * 优化QuickPopupBuilder
+    * 蒙层交回给系统托管，再也不用担心为啥全面屏无法全覆盖了
+    * 优化在`onCreate()`中弹窗无法弹出的问题
+      * 采取[#263](https://github.com/razerdp/BasePopup/issues/263)的建议，非常感谢[@xchengDroid](https://github.com/xchengDroid)提出的建议
+    * 增加`onLogInternal()`方法，您可以在这里打印BasePopupWindow执行期间的日志
+    * 增加`onViewCreated()`方法，您可以在这里对ContentView进行操作，或者使用ButterKnife进行注入
+  * **精简：**
+    * 去除onAnchorTop/onAnchorBottom方法，后续将会替换为别的方法
+    * 去除`limitScreen()`方法
+    * 去除扩展组件，现在主体支持AndroidX，同时不再支持Support包了
+  * **bug fixed：**
+    * fixed [#184](https://github.com/razerdp/BasePopup/issues/184)
+    * fixed [#207](https://github.com/razerdp/BasePopup/issues/207)
+    * fixed [#210](https://github.com/razerdp/BasePopup/issues/210)
+    * fixed [#213](https://github.com/razerdp/BasePopup/issues/213)
+    * fixed [#226](https://github.com/razerdp/BasePopup/issues/226)
+    * fixed [#232](https://github.com/razerdp/BasePopup/issues/232)
+    * fixed [#236](https://github.com/razerdp/BasePopup/issues/236)
+    * fixed [#238](https://github.com/razerdp/BasePopup/issues/238)
+    * fixed [#240](https://github.com/razerdp/BasePopup/issues/240)
+    * fixed [#242](https://github.com/razerdp/BasePopup/issues/242)
+    * fixed [#244](https://github.com/razerdp/BasePopup/issues/244)
+    * fixed [#247](https://github.com/razerdp/BasePopup/issues/247)
+    * fixed [#248](https://github.com/razerdp/BasePopup/issues/248)
+    * fixed [#249](https://github.com/razerdp/BasePopup/issues/249)
+    * fixed [#260](https://github.com/razerdp/BasePopup/issues/260)
+    * fixed [#262](https://github.com/razerdp/BasePopup/issues/262)
+    * fixed [#263](https://github.com/razerdp/BasePopup/issues/263)
 
 * **【里程碑】2.2.2**
     * **【Beta】2.2.2** 2020/02/23

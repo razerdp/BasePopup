@@ -21,17 +21,19 @@ public class DemoPopup extends BasePopupWindow {
 
     public DemoPopup(Context context) {
         super(context);
-        ButterKnifeUtil.bind(this, getContentView());
     }
 
     public DemoPopup(Fragment fragment) {
         super(fragment);
-        ButterKnifeUtil.bind(this, getContentView());
     }
 
     public DemoPopup(Dialog dialog) {
         super(dialog);
-        ButterKnifeUtil.bind(this, getContentView());
+    }
+
+    @Override
+    public void onViewCreated(View contentView) {
+        ButterKnifeUtil.bind(this, contentView);
     }
 
     @Override

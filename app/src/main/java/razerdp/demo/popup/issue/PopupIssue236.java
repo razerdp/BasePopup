@@ -21,8 +21,12 @@ public class PopupIssue236 extends BasePopupWindow {
 
     public PopupIssue236(Context context) {
         super(context);
-        ButterKnifeUtil.bind(this, getContentView());
         setPopupGravity(Gravity.BOTTOM);
+    }
+
+    @Override
+    public void onViewCreated(View contentView) {
+        ButterKnifeUtil.bind(this, contentView);
     }
 
     @Override

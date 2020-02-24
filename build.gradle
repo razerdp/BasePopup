@@ -35,10 +35,10 @@ ext {
     compileSdkVersion = 29
     minSdkVersion = 16
     targetSdkVersion = 29
-    versionCode = 89
-    versionName = '2.2.2-beta'
+    versionCode = 90
+    versionName = '2.2.2'
 
-    candy = true
+    candy = false
     group = 'com.github.razerdp'
 
     pkg_name='BasePopup'

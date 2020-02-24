@@ -46,9 +46,13 @@ public class PopupFriendCircle extends BasePopupWindow {
 
     public PopupFriendCircle(Context context) {
         super(context);
-        ButterKnifeUtil.bind(this, getContentView());
         ViewUtil.setViewPivotRatio(ivStar, 0.5f, 0.5f);
         setBackgroundColor(0);
+    }
+
+    @Override
+    public void onViewCreated(View contentView) {
+        ButterKnifeUtil.bind(this, contentView);
     }
 
     @Override

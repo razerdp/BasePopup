@@ -28,7 +28,11 @@ public class PopupSlideSmall extends BasePopupWindow {
 
     public PopupSlideSmall(Context context) {
         super(context);
-        ButterKnifeUtil.bind(this,getContentView());
+    }
+
+    @Override
+    public void onViewCreated(View contentView) {
+        ButterKnifeUtil.bind(this, contentView);
     }
 
     @Override
