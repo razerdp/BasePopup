@@ -96,8 +96,6 @@ Please replace **{$latestVersion}** with the version shown in the Jcenter tab ab
 
 **Support is no longer supported in version 2.2.2, it is recommended that you upgrade to AndroidX as soon as possible.**
 
-**Based on version 2.2.2, BasePopup will no longer support for SupportLibrary**, and BasePopup recommends that you migrate to AndroidX as soon as possible.
-
  - **Release：** `implementation 'com.github.razerdp:BasePopup:{$latestVersion}'`
  - **Candy：** `implementation 'com.github.razerdp:BasePopup_Candy:{$latestVersion}'`
 
