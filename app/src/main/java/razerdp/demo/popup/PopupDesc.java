@@ -27,8 +27,12 @@ public class PopupDesc extends BasePopupWindow {
 
     public PopupDesc(Context context) {
         super(context);
-        ButterKnifeUtil.bind(this, getContentView());
         setClipChildren(false);
+    }
+
+    @Override
+    public void onViewCreated(View contentView) {
+        ButterKnifeUtil.bind(this, contentView);
     }
 
     @Override

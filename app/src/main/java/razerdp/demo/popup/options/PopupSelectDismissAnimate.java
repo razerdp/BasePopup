@@ -7,11 +7,10 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.OnClick;
 import razerdp.basepopup.BasePopupWindow;
@@ -42,10 +41,14 @@ public class PopupSelectDismissAnimate extends BasePopupWindow {
 
     public PopupSelectDismissAnimate(Context context) {
         super(context);
-        ButterKnifeUtil.bind(this, getContentView());
         setMaxHeight(UIHelper.getScreenHeight() >> 1);
         generateAnimation();
         FillViewUtil.fillView(animations, layoutAnimation, R.layout.item_popup_animate, creator);
+    }
+
+    @Override
+    public void onViewCreated(View contentView) {
+        ButterKnifeUtil.bind(this, contentView);
     }
 
     private void generateAnimation() {

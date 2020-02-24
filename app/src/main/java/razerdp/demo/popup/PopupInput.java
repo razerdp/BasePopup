@@ -26,7 +26,6 @@ public class PopupInput extends BasePopupWindow {
 
     public PopupInput(Context context) {
         super(context);
-        ButterKnifeUtil.bind(this, getContentView());
         mTvSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -34,6 +33,11 @@ public class PopupInput extends BasePopupWindow {
                 dismiss();
             }
         });
+    }
+
+    @Override
+    public void onViewCreated(View contentView) {
+        ButterKnifeUtil.bind(this, contentView);
     }
 
     @Override

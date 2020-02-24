@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Rect;
-import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -51,14 +50,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
     private PopupDecorViewProxy(Context context) {
         super(context);
-    }
-
-    private PopupDecorViewProxy(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    private PopupDecorViewProxy(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
     }
 
     PopupDecorViewProxy(Context context, BasePopupHelper helper) {
