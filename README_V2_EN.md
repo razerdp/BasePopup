@@ -116,7 +116,7 @@ Reference document(CN)：[**BasePopup manual**](https://www.kancloud.cn/razerdp/
 
 ### ChangeLog ([Historical update](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
-* **【Release】2.2.2.1**(2020/02/24)
+* **【Release】2.2.2.1**(2020/02/26)
   * Fix the problem that the input method can not pop up again automatically.
 
 * **【Release】2.2.2**(2020/02/24)

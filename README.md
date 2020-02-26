@@ -129,7 +129,7 @@
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
-* **【Release】2.2.2.1**(2020/02/24)
+* **【Release】2.2.2.1**(2020/02/26)
   * 修复输入法自动弹出后不能再次弹出的问题
 
 * **【Release】2.2.2**(2020/02/24)
