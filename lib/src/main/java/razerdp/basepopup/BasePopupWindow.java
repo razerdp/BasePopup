@@ -1368,7 +1368,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </ul>
      *
      * @param mode         <ul><li>GravityMode.RELATIVE_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup处于该Anchor的哪个位置</li>
-     *                     <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪个位置</li></ul>
+     *                                         <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪个位置</li></ul>
      * @param popupGravity
      */
     public BasePopupWindow setPopupGravity(GravityMode mode, int popupGravity) {
@@ -1635,10 +1635,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     void superDismiss() {
         try {
-            mHelper.onDismiss();
             mPopupWindow.superDismiss();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            mHelper.onDismiss();
         }
     }
 

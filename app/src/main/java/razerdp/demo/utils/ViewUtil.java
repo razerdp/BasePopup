@@ -7,21 +7,18 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.text.InputFilter;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
 import android.widget.AdapterViewFlipper;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
@@ -32,14 +29,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
-
-
-import java.lang.reflect.Field;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import razerdp.demo.base.interfaces.ClearMemoryObject;
-import razerdp.demo.base.interfaces.SimpleCallback;
 import razerdp.demo.base.interfaces.SimpleReturnCallback;
 import razerdp.util.log.PopupLog;
 

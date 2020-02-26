@@ -18,6 +18,8 @@ public class KeyboardUtils {
      * 显示软键盘
      */
     public static void open(View view) {
+        if (view == null) return;
+        view.requestFocus();
         InputMethodManager imm = (InputMethodManager) view.getContext()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
@@ -29,6 +31,7 @@ public class KeyboardUtils {
      * 显示软键盘
      */
     public static void open(Context context) {
+        if (context==null)return;
         InputMethodManager imm = (InputMethodManager) context
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
