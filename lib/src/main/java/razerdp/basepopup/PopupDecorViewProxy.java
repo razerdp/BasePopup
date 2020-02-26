@@ -117,11 +117,23 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 }
                 parent.setLayoutParams(p);
             }
+            contentView.setLayoutParams(lp);
+
             //fixed #238  https://github.com/razerdp/BasePopup/issues/238
             if (contentView.isFocusable()) {
-                contentView.requestFocus();
+                if (contentView instanceof ViewGroup) {
+                    ((ViewGroup) contentView).setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
+                }
+                PopupUiUtils.requestFocus(contentView);
             }
-            contentView.setLayoutParams(lp);
+
+            if (mHelper.isAutoShowInputMethod()) {
+                View focusTarget = mHelper.mAutoShowInputEdittext;
+                if (focusTarget == null) {
+                    focusTarget = contentView.findFocus();
+                }
+                KeyboardUtils.open(focusTarget == null ? contentView : focusTarget, 350);
+            }
         }
 
         wp.width = mHelper.getLayoutParams().width;
@@ -592,7 +604,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
 
         boolean animate = (mHelper.flag & BasePopupFlag.KEYBOARD_ANIMATE_ALIGN) != 0;
-
         anchor.getLocationOnScreen(location);
         int bottom = location[1] + anchor.getHeight();
 

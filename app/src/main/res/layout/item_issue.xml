@@ -26,11 +26,11 @@
             android:id="@+id/iv_state"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            app:layout_constraintRight_toRightOf="parent"
-            tools:src="@drawable/ic_fixed"
             android:layout_margin="@dimen/default_padding"
             android:alpha=".2"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_fixed" />
 
         <TextView
             android:id="@+id/tv_issue"
@@ -49,10 +49,12 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingRight="@dimen/default_padding"
             android:text="BasePopup"
             android:textColor="@color/text_black1"
             android:textSize="@dimen/text_large"
-            android:layout_marginTop="@dimen/default_padding"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_issue" />

@@ -8,6 +8,7 @@ import razerdp.demo.ui.issuestest.Issue210TestActivity;
 import razerdp.demo.ui.issuestest.Issue226TestActivity;
 import razerdp.demo.ui.issuestest.Issue230TestActivity;
 import razerdp.demo.ui.issuestest.Issue236TestActivity;
+import razerdp.demo.ui.issuestest.Issue238TestActivity;
 import razerdp.demo.ui.issuestest.Issue242TestActivity;
 import razerdp.demo.utils.DescBuilder;
 import razerdp.demo.utils.StringUtil;
@@ -22,6 +23,7 @@ class IssueHelper {
         add_226(result);
         add_230(result);
         add_236(result);
+        add_238(result);
         add_242(result);
 
         sort(result);
@@ -97,6 +99,20 @@ class IssueHelper {
                         .append("2.2.1 release版本。xml里面的match_parent无效，必须在代码里再设置一次setWidht(getScreenWidth())才行。2.2.0没有此问题")
                         .build());
         result.add(issue236);
+    }
+
+    private static void add_238(List<IssueInfo> result) {
+        IssueInfo issue238 = new IssueInfo();
+        issue238.setIssue("238")
+                .setFixed(true)
+                .setActivityClass(Issue238TestActivity.class)
+                .setTitle("2.2.0 release版本 contentView的点击事件，需要点击两次才能触发")
+                .setDesc(DescBuilder.get()
+                        .append("系统版本：9.0")
+                        .append("库版本：release 2.2.0")
+                        .append("contentView的点击事件，需要点击两次才能触发")
+                        .build());
+        result.add(issue238);
     }
 
     private static void add_242(List<IssueInfo> result) {

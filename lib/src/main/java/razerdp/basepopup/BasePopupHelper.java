@@ -115,7 +115,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     InnerShowInfo mShowInfo;
 
-    ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener;
+    GlobalLayoutListener mGlobalLayoutListener;
     LinkedViewLayoutChangeListenerWrapper mLinkedViewLayoutChangeListenerWrapper;
 
     View mLinkedTarget;
@@ -689,7 +689,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     public BasePopupHelper linkTo(View anchorView) {
         if (anchorView == null) {
             if (mLinkedViewLayoutChangeListenerWrapper != null) {
-                mLinkedViewLayoutChangeListenerWrapper.removeListener();
+                mLinkedViewLayoutChangeListenerWrapper.detach();
                 mLinkedViewLayoutChangeListenerWrapper = null;
             }
             mLinkedTarget = null;
@@ -721,12 +721,16 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
             showCount--;
             showCount = Math.max(0, showCount);
         }
+        if (isAutoShowInputMethod()) {
+            KeyboardUtils.close(mPopupWindow.getContext());
+        }
+
         if (mGlobalLayoutListener != null) {
-            PopupUiUtils.safeRemoveGlobalLayoutListener(mPopupWindow.getContext().getWindow().getDecorView(), mGlobalLayoutListener);
+            mGlobalLayoutListener.detach();
         }
 
         if (mLinkedViewLayoutChangeListenerWrapper != null) {
-            mLinkedViewLayoutChangeListenerWrapper.removeListener();
+            mLinkedViewLayoutChangeListenerWrapper.detach();
         }
     }
 
@@ -775,14 +779,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         } else {
             startShowAnimate(mPopupWindow.mDisplayAnimateView.getWidth(), mPopupWindow.mDisplayAnimateView.getHeight());
         }
-        if (isAutoShowInputMethod()) {
-            if (mAutoShowInputEdittext != null) {
-                mAutoShowInputEdittext.requestFocus();
-                KeyboardUtils.open(mAutoShowInputEdittext, 350);
-            } else {
-                KeyboardUtils.open(mPopupWindow.getContentView(), 350);
-            }
-        }
         //针对官方的坑（两个popup切换页面后重叠）
         if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP ||
                 android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
@@ -792,16 +788,16 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     private void prepareShow() {
         if (mGlobalLayoutListener == null) {
-            mGlobalLayoutListener = KeyboardUtils.observerKeyboardChange(mPopupWindow.getContext(), this);
-        } else {
-            PopupUiUtils.safeAddGlobalLayoutListener(mPopupWindow.getContext().getWindow().getDecorView(), mGlobalLayoutListener);
+            mGlobalLayoutListener = new GlobalLayoutListener();
         }
+        mGlobalLayoutListener.attach();
+
         if (mLinkedTarget != null) {
             if (mLinkedViewLayoutChangeListenerWrapper == null) {
                 mLinkedViewLayoutChangeListenerWrapper = new LinkedViewLayoutChangeListenerWrapper(mLinkedTarget);
             }
             if (!mLinkedViewLayoutChangeListenerWrapper.isAdded) {
-                mLinkedViewLayoutChangeListenerWrapper.addSelf();
+                mLinkedViewLayoutChangeListenerWrapper.attach();
             }
         }
     }
@@ -813,9 +809,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         }
         if (mPopupWindow.mDisplayAnimateView == null || animateDismiss && (flag & CUSTOM_ON_ANIMATE_DISMISS) != 0) {
             return;
-        }
-        if (isAutoShowInputMethod()) {
-            KeyboardUtils.close(mPopupWindow.getContext());
         }
         Message msg = BasePopupEvent.getMessage(BasePopupEvent.EVENT_DISMISS);
         if (animateDismiss) {
@@ -883,8 +876,57 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         boolean positionMode;
 
         InnerShowInfo(View mAnchorView, boolean positionMode) {
-            this.mAnchorView =mAnchorView;
+            this.mAnchorView = mAnchorView;
             this.positionMode = positionMode;
+        }
+    }
+
+    class GlobalLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
+        Rect rect = new Rect();
+        Rect keyboardRect = new Rect();
+        boolean lastVisible;
+        int lastHeight;
+        boolean isAdded;
+
+        void attach() {
+            if (isAdded) return;
+            try {
+                PopupUiUtils.safeAddGlobalLayoutListener(mPopupWindow.getContext().getWindow().getDecorView(), this);
+                isAdded = true;
+            } catch (Exception e) {
+                PopupLog.e(e);
+            }
+        }
+
+        void detach() {
+            try {
+                isAdded = false;
+                rect.setEmpty();
+                keyboardRect.setEmpty();
+                lastVisible = false;
+                lastHeight = 0;
+                PopupUiUtils.safeRemoveGlobalLayoutListener(mPopupWindow.getContext().getWindow().getDecorView(), this);
+            } catch (Exception e) {
+                PopupLog.e(e);
+            }
+        }
+
+        @Override
+        public void onGlobalLayout() {
+            try {
+                View decor = mPopupWindow.getContext().getWindow().getDecorView();
+                View content = decor.findViewById(android.R.id.content);
+                decor.getWindowVisibleDisplayFrame(rect);
+                int screenHeight = content == null ? decor.getHeight() : content.getHeight();
+                keyboardRect.set(rect.left, rect.bottom, rect.right, screenHeight);
+                boolean isVisible = keyboardRect.height() > (screenHeight >> 2) && KeyboardUtils.isOpen();
+                if (isVisible == lastVisible && keyboardRect.height() == lastHeight) return;
+                lastVisible = isVisible;
+                lastHeight = keyboardRect.height();
+                onKeyboardChange(keyboardRect, isVisible);
+            } catch (Exception e) {
+                PopupLog.e(e);
+            }
         }
     }
 
@@ -902,7 +944,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
             mTarget = target;
         }
 
-        void addSelf() {
+        void attach() {
             if (mTarget == null || isAdded) return;
             mTarget.getGlobalVisibleRect(lastLocationRect);
             refreshViewParams();
@@ -910,12 +952,11 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
             isAdded = true;
         }
 
-        void removeListener() {
+        void detach() {
             if (mTarget == null || !isAdded) return;
             try {
                 mTarget.getViewTreeObserver().removeOnPreDrawListener(this);
             } catch (Exception e) {
-
             }
             isAdded = false;
         }
@@ -1059,15 +1100,11 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
             mShowInfo.mAnchorView = null;
         }
         if (mGlobalLayoutListener != null) {
-            try {
-                mPopupWindow.getContext().getWindow().getDecorView().getViewTreeObserver().removeOnGlobalLayoutListener(mGlobalLayoutListener);
-            } catch (Exception e) {
-                PopupLog.e(e);
-            }
+            mGlobalLayoutListener.detach();
         }
 
         if (mLinkedViewLayoutChangeListenerWrapper != null) {
-            mLinkedViewLayoutChangeListenerWrapper.removeListener();
+            mLinkedViewLayoutChangeListenerWrapper.detach();
         }
 
         mShowAnimation = null;
