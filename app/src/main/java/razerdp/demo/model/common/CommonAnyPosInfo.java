@@ -14,7 +14,7 @@ import razerdp.demo.popup.options.PopupAnyPosOption;
  * Created by 大灯泡 on 2019/9/20.
  */
 public class CommonAnyPosInfo extends DemoCommonUsageInfo {
-    public boolean clipScreen = true;
+    public boolean outSideTouchable = false;
     public boolean blur = false;
 
     PopupAnyPosOption mPopupAnyPosOption;

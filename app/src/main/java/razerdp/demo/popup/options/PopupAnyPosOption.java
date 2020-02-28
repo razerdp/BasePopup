@@ -16,8 +16,8 @@ import razerdp.demo.widget.DPTextView;
  * @see CommonAnyPosInfo
  */
 public class PopupAnyPosOption extends BaseOptionPopup<CommonAnyPosInfo> {
-    @BindView(R.id.check_clip_screen)
-    AppCompatCheckBox mCheckClipScreen;
+    @BindView(R.id.check_outside_touch)
+    AppCompatCheckBox mCheckOutSideTouch;
     @BindView(R.id.check_blur)
     AppCompatCheckBox mCheckBlur;
     @BindView(R.id.tv_go)
@@ -25,7 +25,6 @@ public class PopupAnyPosOption extends BaseOptionPopup<CommonAnyPosInfo> {
 
     public PopupAnyPosOption(Context context) {
         super(context);
-        mCheckClipScreen.setChecked(true);
     }
 
 
@@ -36,7 +35,7 @@ public class PopupAnyPosOption extends BaseOptionPopup<CommonAnyPosInfo> {
 
     @OnClick(R.id.tv_go)
     void ok() {
-        mInfo.clipScreen = mCheckClipScreen.isChecked();
+        mInfo.outSideTouchable = mCheckOutSideTouch.isChecked();
         mInfo.blur = mCheckBlur.isChecked();
         dismiss();
     }

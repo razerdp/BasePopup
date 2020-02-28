@@ -816,13 +816,12 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             WindowManagerProxy proxy = mPopupWindow.mWindowManagerProxy.preWindow();
             if (proxy == null) {
                 if (mAnchorDecorView != null && mAnchorDecorView.get() != null) {
-                    mAnchorDecorView.get().dispatchTouchEvent(event);
+                    mAnchorDecorView.get().getRootView().dispatchTouchEvent(event);
                 }
             } else {
                 proxy.dispatchToDecorProxy(event);
             }
         }
-
     }
 
 
@@ -1666,13 +1665,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         dismiss(false);
     }
 
-    void forceDismiss() {
-        mHelper.forceDismiss();
-    }
-
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onDestroy() {
         onLogInternal("onDestroy");
+        mHelper.forceDismiss();
         if (mPopupWindow != null) {
             mPopupWindow.clear(true);
         }

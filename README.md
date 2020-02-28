@@ -129,6 +129,15 @@
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Release（待发布）】2.2.2.2**(2020/02/28)
+  * 修复一个很严重的可能会导致崩溃的问题
+    * 重现方式：dismiss动画没执行完的情况下finish了activity，会引发空指针崩溃
+    * 该问题在此之前的版本中是无法被 **try & catch**的
+  * 修复了finish的时候没有强制dismiss的问题
+  * 修复了一些flag的问题
+  * 修复outsideTouch在非全屏下位置偏离的问题
+  * **非常抱歉，因为自身原因没有查到此类错误，在收到反馈后我第一时间排查了所有类似的地方并逐一修复，这次重构的周期跨度较长，涉及板块较多，测试周期也很长，但因为个人精力有限仍然会有遗漏的地方。在此希望能够得到您的支持，尽量在Candy测试期及时反馈问题，减少此类问题的发生。**
+
 * **【Release】2.2.2.1**(2020/02/26)
   * 修复输入法自动弹出后不能再次弹出的问题
 
@@ -172,14 +181,6 @@
     * fixed [#260](https://github.com/razerdp/BasePopup/issues/260)
     * fixed [#262](https://github.com/razerdp/BasePopup/issues/262)
     * fixed [#263](https://github.com/razerdp/BasePopup/issues/263)
-
-* **【Release】2.2.1**(2019/06/24)
-  * 支持Service或者非ActivityContext里弹窗
-  * 优化PopupUiUtils，优化获取屏幕宽高算法
-    * fixed [**#186**](https://github.com/razerdp/BasePopup/issues/186)、[**#167**](https://github.com/razerdp/BasePopup/issues/167)
-    * fixed [**#188**](https://github.com/razerdp/BasePopup/issues/188)(not perfect)
-  * 修改并优化键盘判断逻辑
-  * 优化全屏状态下点击范围的判定，fixed [**#200**](https://github.com/razerdp/BasePopup/issues/200)
 
 <br>
 

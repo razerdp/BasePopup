@@ -804,7 +804,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
 
     void dismiss(boolean animateDismiss) {
-        if (mOnDismissListener != null && !mOnDismissListener.onBeforeDismiss()) {
+        if (mPopupWindow == null || mOnDismissListener != null && !mOnDismissListener.onBeforeDismiss()) {
             return;
         }
         if (mPopupWindow.mDisplayAnimateView == null || animateDismiss && (flag & CUSTOM_ON_ANIMATE_DISMISS) != 0) {
@@ -814,13 +814,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         if (animateDismiss) {
             startDismissAnimate(mPopupWindow.mDisplayAnimateView.getWidth(), mPopupWindow.mDisplayAnimateView.getHeight());
             msg.arg1 = 1;
-            mPopupWindow.mDisplayAnimateView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    flag &= ~CUSTOM_ON_ANIMATE_DISMISS;
-                    mPopupWindow.superDismiss();
-                }
-            }, Math.max(dismissDuration, 0));
+            mPopupWindow.mDisplayAnimateView.removeCallbacks(dismissAnimationDelayRunnable);
+            mPopupWindow.mDisplayAnimateView.postDelayed(dismissAnimationDelayRunnable, Math.max(dismissDuration, 0));
         } else {
             msg.arg1 = 0;
             mPopupWindow.superDismiss();
@@ -828,12 +823,26 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         sendEvent(msg);
     }
 
+    private Runnable dismissAnimationDelayRunnable = new Runnable() {
+        @Override
+        public void run() {
+            flag &= ~CUSTOM_ON_ANIMATE_DISMISS;
+            if (mPopupWindow != null) {
+                //popup可能已经释放引用了
+                mPopupWindow.superDismiss();
+            }
+        }
+    };
+
     void forceDismiss() {
         if (mDismissAnimation != null) mDismissAnimation.cancel();
         if (mDismissAnimator != null) mDismissAnimator.cancel();
-        KeyboardUtils.close(mPopupWindow.getContext());
-        flag &= ~CUSTOM_ON_ANIMATE_DISMISS;
-        mPopupWindow.superDismiss();
+        if (mPopupWindow != null) {
+            KeyboardUtils.close(mPopupWindow.getContext());
+        }
+        if (dismissAnimationDelayRunnable != null) {
+            dismissAnimationDelayRunnable.run();
+        }
     }
 
     void onAutoLocationChange(int oldGravity, int newGravity) {
@@ -1074,6 +1083,10 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     @Override
     public void clear(boolean destroy) {
+        if (mPopupWindow != null && mPopupWindow.mDisplayAnimateView != null) {
+            //神奇的是，这个方式有可能失效，runnable根本就没有被remove掉
+            mPopupWindow.mDisplayAnimateView.removeCallbacks(dismissAnimationDelayRunnable);
+        }
         if (eventObserverMap != null) {
             eventObserverMap.clear();
         }
@@ -1107,6 +1120,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
             mLinkedViewLayoutChangeListenerWrapper.detach();
         }
 
+        dismissAnimationDelayRunnable = null;
         mShowAnimation = null;
         mDismissAnimation = null;
         mShowAnimator = null;
