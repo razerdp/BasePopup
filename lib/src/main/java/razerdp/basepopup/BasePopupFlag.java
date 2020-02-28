@@ -28,11 +28,11 @@ public interface BasePopupFlag {
     int FITSIZE = 0x20 << CONTROL_SHIFT;//允许popup重设大小
 
     //quick popup config
-    int QUICK_POPUP_CONFIG_SHIFT = 11;
+    int QUICK_POPUP_CONFIG_SHIFT = 13;
     int BLUR_BACKGROUND = 0x1 << QUICK_POPUP_CONFIG_SHIFT;//blur background
 
     //键盘
-    int KEYBOARD_CONTROL_SHIFT = 13;
+    int KEYBOARD_CONTROL_SHIFT = 15;
     int KEYBOARD_ALIGN_TO_VIEW = 0x1 << KEYBOARD_CONTROL_SHIFT;
     int KEYBOARD_ALIGN_TO_ROOT = 0x2 << KEYBOARD_CONTROL_SHIFT;
     int KEYBOARD_IGNORE_OVER_KEYBOARD = 0x4 << KEYBOARD_CONTROL_SHIFT;

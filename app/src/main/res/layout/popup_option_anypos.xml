@@ -18,10 +18,10 @@
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatCheckBox
-                android:id="@+id/check_clip_screen"
+                android:id="@+id/check_outside_touch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="是否ClipScreen"
+                android:text="外部是否可点击"
                 android:textColor="@color/text_black2"
                 android:textSize="@dimen/text_small"
                 android:theme="@style/MyCheckBox" />

@@ -436,8 +436,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                         } else if (right > getMeasuredWidth()) {
                             horizontalOffset = Math.min(getMeasuredWidth() - right, 0);
                         }
-                        left = left + horizontalOffset < 0 ? 0 : left + horizontalOffset;
-                        right = right + horizontalOffset > getMeasuredWidth() ? getMeasuredWidth() : right + horizontalOffset;
+                        left = Math.max(left + horizontalOffset, 0);
+                        right = Math.min(right + horizontalOffset, getMeasuredWidth());
                     }
                     //垂直调整
                     if (top < 0 && bottom > getMeasuredHeight()) {
@@ -450,8 +450,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                         } else if (bottom > getMeasuredHeight()) {
                             verticalOffset = Math.min(getMeasuredHeight() - bottom, 0);
                         }
-                        top = top + verticalOffset < 0 ? 0 : top + verticalOffset;
-                        bottom = bottom + verticalOffset > getMeasuredHeight() ? getMeasuredHeight() : bottom + verticalOffset;
+                        top = Math.max(top + verticalOffset, 0);
+                        bottom = Math.min(bottom + verticalOffset, getMeasuredHeight());
                     }
                 }
                 child.layout(left, top, right, bottom);
