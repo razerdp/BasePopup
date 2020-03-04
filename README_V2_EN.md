@@ -62,6 +62,7 @@
    - [Historical update](./UpdateLog.md)
  - [Preview](#Preview)
    - [**Demo apk(pass:123)**](https://www.pgyer.com/basepopup)
+      <img src="./img/download.png"  width="256"/>
  - [QA](#QA)
  - [LICENSE](#license)
 

@@ -73,7 +73,7 @@
    - [历史更新](./UpdateLog.md)
  - [例子预览](#例子预览)
    - [**apk体验下载（密码123）**](https://www.pgyer.com/basepopup)
-   - <img src="./img/download.png"  width="256"/>
+    <img src="./img/download.png"  width="256"/>
  - [打赏](#打赏看在我那么努力维护的份上给个零食呗)
  - [交流群](#交流群)
  - [常见问题](#常见问题)
