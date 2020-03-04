@@ -38,6 +38,13 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     signingConfigs {
+        debug {
+            keyAlias keystoreAlias
+            keyPassword keystoreAliasPSW
+            storeFile keyfile
+            storePassword keystorePSW
+        }
+
         release {
             keyAlias keystoreAlias
             keyPassword keystoreAliasPSW
@@ -48,13 +55,13 @@ android {
 
     buildTypes {
         debug {
-            String token = properties.getProperty("api_token")
-            resValue("string", "token", token == null ? "" : token)
+            String appid = properties.getProperty("pgy_appid")
+            manifestPlaceholders = [APPID: appid]
         }
         release {
             minifyEnabled false
-            String token = properties.getProperty("api_token")
-            resValue("string", "token", token == null ? "" : token)
+            String appid = properties.getProperty("pgy_appid")
+            manifestPlaceholders = [APPID: appid]
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -97,7 +104,8 @@ dependencies {
     //gson
     implementation 'com.google.code.gson:gson:2.8.6'
 
-    implementation 'com.azhon:appupdateX:2.4.0'
+    //蒲公英
+    implementation 'com.pgyersdk:sdk:3.0.10'
 
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 

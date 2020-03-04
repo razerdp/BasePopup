@@ -1,14 +1,16 @@
 package razerdp.demo;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.azhon.appupdate.config.UpdateConfiguration;
-import com.azhon.appupdate.manager.DownloadManager;
+import com.pgyersdk.update.DownloadFileListener;
+import com.pgyersdk.update.PgyUpdateManager;
+import com.pgyersdk.update.UpdateManagerListener;
+import com.pgyersdk.update.javabean.AppBean;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,18 +25,15 @@ import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.OnItemClickListener;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
-import razerdp.demo.base.interfaces.SimpleCallback;
 import razerdp.demo.model.DemoMainItem;
+import razerdp.demo.popup.update.PopupUpdate;
 import razerdp.demo.ui.ActivityLauncher;
 import razerdp.demo.ui.CommonUsageActivity;
 import razerdp.demo.ui.GuideActivity;
 import razerdp.demo.ui.UpdateLogActivity;
 import razerdp.demo.ui.issuestest.home.IssueHomeActivity;
-import razerdp.demo.update.UpdateRequest;
-import razerdp.demo.update.entity.UpdateInfo;
 import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.UIHelper;
-import razerdp.demo.utils.VersionUtil;
 import razerdp.demo.utils.ViewUtil;
 import razerdp.demo.widget.DPRecyclerView;
 import razerdp.demo.widget.DPTextView;
@@ -46,6 +45,8 @@ public class DemoActivity extends BaseActivity {
     DPRecyclerView rvContent;
 
     SimpleRecyclerViewAdapter<DemoMainItem> mAdapter;
+
+    PopupUpdate mPopupUpdate;
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -62,18 +63,13 @@ public class DemoActivity extends BaseActivity {
 
         rvContent.setLayoutManager(new LinearLayoutManager(this));
         View header = ViewUtil.inflate(this, R.layout.item_main_demo_header, rvContent, false);
-        header.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                QuickPopupBuilder.with(DemoActivity.this)
-                        .contentView(R.layout.popup_demo)
-                        .config(new QuickPopupConfig()
-                                .withShowAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(true))
-                                .withDismissAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(false))
-                                .blurBackground(true))
-                        .show();
-            }
-        });
+        header.setOnClickListener(v -> QuickPopupBuilder.with(DemoActivity.this)
+                .contentView(R.layout.popup_demo)
+                .config(new QuickPopupConfig()
+                        .withShowAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(true))
+                        .withDismissAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(false))
+                        .blurBackground(true))
+                .show());
         rvContent.addHeaderView(header);
         mAdapter = new SimpleRecyclerViewAdapter<>(this, generateItem());
         mAdapter.setHolder(InnerViewHolder.class);
@@ -100,41 +96,55 @@ public class DemoActivity extends BaseActivity {
     }
 
     private void checkForUpdate() {
-        new UpdateRequest().checkUpdate(new SimpleCallback<UpdateInfo>() {
-            @Override
-            public void onCall(UpdateInfo data) {
-                if (data != null) {
-                    int code = data.getBuild();
-                    int currentCode = VersionUtil.getAppVersionCode();
-                    if (code <= currentCode) {
-                        UIHelper.toast("当前已经是最新版");
-                    } else {
-                        toUpdate(data);
+        new PgyUpdateManager.Builder()
+                .setUpdateManagerListener(new UpdateManagerListener() {
+                    @Override
+                    public void onNoUpdateAvailable() {
+                        UIHelper.toast("已经是最新版");
                     }
-                } else {
-                    UIHelper.toast("当前已经是最新版");
-                }
-            }
-        });
-    }
 
-    private void toUpdate(UpdateInfo data) {
-        int code = data.getBuild();
-        UpdateConfiguration configuration = new UpdateConfiguration()
-                .setEnableLog(true)
-                .setJumpInstallPage(true)
-                .setDialogImage(R.drawable.ic_dialog)
-                .setDialogButtonColor(UIHelper.getColor(R.color.color_blue))
-                .setDialogButtonTextColor(Color.WHITE);
-        DownloadManager manager = DownloadManager.getInstance(DemoActivity.this);
-        manager.setApkName(String.format("basepopup_v_%s.apk", code))
-                .setApkUrl(data.getInstallUrl())
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setConfiguration(configuration)
-                .setApkVersionCode(code)
-                .setApkVersionName(data.getVersion())
-                .setApkDescription(data.getChangelog())
-                .download();
+                    @Override
+                    public void onUpdateAvailable(AppBean appBean) {
+                        if (appBean == null) {
+                            UIHelper.toast("已经是最新版");
+                            return;
+                        }
+                        if (mPopupUpdate == null) {
+                            mPopupUpdate = new PopupUpdate(self());
+                        }
+                        mPopupUpdate.showPopupWindow(appBean);
+                    }
+
+                    @Override
+                    public void checkUpdateFailed(Exception e) {
+                        UIHelper.toast(e.getMessage());
+                    }
+                })
+                .setDownloadFileListener(new DownloadFileListener() {
+                    @Override
+                    public void downloadFailed() {
+                        //下载失败
+                        if (mPopupUpdate != null) {
+                            mPopupUpdate.onError();
+                        }
+                    }
+
+                    @Override
+                    public void downloadSuccessful(File file) {
+                        if (mPopupUpdate != null) {
+                            mPopupUpdate.dismiss(false);
+                        }
+                        PgyUpdateManager.installApk(file);
+                    }
+
+                    @Override
+                    public void onProgressUpdate(Integer... integers) {
+                        if (mPopupUpdate != null) {
+                            mPopupUpdate.onProgress(integers[0]);
+                        }
+                    }
+                })
+                .register();
     }
 
     private List<DemoMainItem> generateItem() {

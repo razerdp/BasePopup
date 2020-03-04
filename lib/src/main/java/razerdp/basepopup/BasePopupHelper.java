@@ -411,6 +411,11 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return this;
     }
 
+    BasePopupHelper setPopupGravityMode(BasePopupWindow.GravityMode mode) {
+        this.gravityMode = mode;
+        return this;
+    }
+
     BasePopupHelper setClipChildren(boolean clipChildren) {
         setFlag(CLIP_CHILDREN, clipChildren);
         return this;
@@ -528,12 +533,12 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return this;
     }
 
-    boolean isFullScreen() {
-        return (flag & FULL_SCREEN) != 0;
+    boolean isOverlayStatusbar() {
+        return (flag & OVERLAY_STATUS_BAR) != 0;
     }
 
-    BasePopupHelper fullScreen(boolean fullScreen) {
-        setFlag(FULL_SCREEN, fullScreen);
+    BasePopupHelper overlayStatusbar(boolean overlay) {
+        setFlag(OVERLAY_STATUS_BAR, overlay);
         return this;
     }
 

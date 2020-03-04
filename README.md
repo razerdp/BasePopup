@@ -3,13 +3,14 @@
 <p align="center"><img src="./img/logo.png" alt="Logo图片似乎加载不出来" height="360"/></p>
 <h2 align="center">BasePopup - Android下打造通用便捷的PopupWindow</h2>
 <div align="center">
-<table>
+
+<table align="center">
         <tr>
-            <th>Release</th>
-            <th>Candy</th>
-            <th>License</th>
-			<th>Api</th>
-			<th>Author</th>
+            <th align="center" width="9999">Release</th>
+            <th align="center" width="9999">Candy</th>
+            <th align="center" width="9999">License</th>
+			<th align="center" width="9999">Api</th>
+			<th align="center" width="9999">Author</th>
         </tr>
            <tr>
                     <td align="center">
@@ -32,8 +33,8 @@
                         </a>
         			</td>
         			<td align="center">
-        				<a href="https://img.shields.io/badge/Api-14%2B-green.svg">
-        					<img src="https://img.shields.io/badge/Api-16%2B-green.svg"/>
+        				<a href="https://img.shields.io/badge/Api-19%2B-green.svg">
+        					<img src="https://img.shields.io/badge/Api-19%2B-green.svg"/>
         				</a>
         			</td>
         			<td align="center">
@@ -71,7 +72,8 @@
  - [更新日志](#更新日志-历史更新)
    - [历史更新](./UpdateLog.md)
  - [例子预览](#例子预览)
-   - [**apk体验下载**](https://fir.im/pfc9)
+   - [**apk体验下载（密码123）**](https://www.pgyer.com/basepopup)
+   - <img src="./img/download.png"  width="256"/>
  - [打赏](#打赏看在我那么努力维护的份上给个零食呗)
  - [交流群](#交流群)
  - [常见问题](#常见问题)
@@ -129,6 +131,13 @@
 
 ### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
 
+* **【Candy】2.2.3**
+  * **【2.2.3.20200304】**
+    * 优化覆盖状态栏情况下的事件传递
+    * 方法弃用：~~`setPopupWindowFullScreen()`~~ -> `setOverlayStatusbar()`
+    * 新增方法：`setPopupGravityMode()`
+    * Demo迁移至蒲公英
+
 * **【Release】2.2.2.2**(2020/03/01)
   * 修复一个很严重的可能会导致崩溃的问题
     * 重现方式：dismiss动画没执行完的情况下finish了activity，会引发空指针崩溃
@@ -164,23 +173,12 @@
     * 去除`limitScreen()`方法
     * 去除扩展组件，现在主体支持AndroidX，同时不再支持Support包了
   * **bug fixed：**
-    * fixed [#184](https://github.com/razerdp/BasePopup/issues/184)
-    * fixed [#207](https://github.com/razerdp/BasePopup/issues/207)
-    * fixed [#210](https://github.com/razerdp/BasePopup/issues/210)
-    * fixed [#213](https://github.com/razerdp/BasePopup/issues/213)
-    * fixed [#226](https://github.com/razerdp/BasePopup/issues/226)
-    * fixed [#232](https://github.com/razerdp/BasePopup/issues/232)
-    * fixed [#236](https://github.com/razerdp/BasePopup/issues/236)
-    * fixed [#238](https://github.com/razerdp/BasePopup/issues/238)
-    * fixed [#240](https://github.com/razerdp/BasePopup/issues/240)
-    * fixed [#242](https://github.com/razerdp/BasePopup/issues/242)
-    * fixed [#244](https://github.com/razerdp/BasePopup/issues/244)
-    * fixed [#247](https://github.com/razerdp/BasePopup/issues/247)
-    * fixed [#248](https://github.com/razerdp/BasePopup/issues/248)
-    * fixed [#249](https://github.com/razerdp/BasePopup/issues/249)
-    * fixed [#260](https://github.com/razerdp/BasePopup/issues/260)
-    * fixed [#262](https://github.com/razerdp/BasePopup/issues/262)
-    * fixed [#263](https://github.com/razerdp/BasePopup/issues/263)
+    * fixed [#184](https://github.com/razerdp/BasePopup/issues/184)、[#207](https://github.com/razerdp/BasePopup/issues/207)、[#210](https://github.com/razerdp/BasePopup/issues/210)
+    * fixed [#213](https://github.com/razerdp/BasePopup/issues/213)、[#226](https://github.com/razerdp/BasePopup/issues/226)、[#232](https://github.com/razerdp/BasePopup/issues/232)
+    * fixed [#236](https://github.com/razerdp/BasePopup/issues/236)、[#238](https://github.com/razerdp/BasePopup/issues/238)、[#240](https://github.com/razerdp/BasePopup/issues/240)
+    * fixed [#242](https://github.com/razerdp/BasePopup/issues/242)、[#244](https://github.com/razerdp/BasePopup/issues/244)、[#247](https://github.com/razerdp/BasePopup/issues/247)
+    * fixed [#248](https://github.com/razerdp/BasePopup/issues/248)、[#249](https://github.com/razerdp/BasePopup/issues/249)、[#260](https://github.com/razerdp/BasePopup/issues/260)
+    * fixed [#262](https://github.com/razerdp/BasePopup/issues/262)、[#263](https://github.com/razerdp/BasePopup/issues/263)
 
 <br>
 
@@ -188,13 +186,13 @@
 
 <br>
 
-#### 更多例子请下载Demo：[**apk体验下载**](https://fir.im/pfc9)
+#### 更多例子请下载Demo：[**apk体验下载（密码123）**](https://www.pgyer.com/basepopup)
 
 <br>
 
 |  |  |  |
 | - | - | - |
-| ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_1.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_2.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_3.gif) |
+| ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_1.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/new_demo_2.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_3.gif) |
 | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_4.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_5.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_6.gif) |
 
 <br>

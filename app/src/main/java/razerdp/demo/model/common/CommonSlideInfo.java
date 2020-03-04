@@ -23,6 +23,7 @@ public class CommonSlideInfo extends DemoCommonUsageInfo {
     public int gravity = Gravity.BOTTOM;
     public boolean withAnchor;
     public boolean blur;
+    public BasePopupWindow.GravityMode gravityMode = BasePopupWindow.GravityMode.RELATIVE_TO_ANCHOR;
 
     PopupSlideOption mPopupOption;
     PopupSlide mPopupSlide;
@@ -76,7 +77,7 @@ public class CommonSlideInfo extends DemoCommonUsageInfo {
         }
 
         popupWindow.setBlurBackgroundEnable(blur);
-        popupWindow.setPopupGravity(gravity);
+        popupWindow.setPopupGravity(gravityMode, gravity);
         popupWindow.setShowAnimation(showAnimation);
         popupWindow.setDismissAnimation(dismissAnimation);
         if (withAnchor) {

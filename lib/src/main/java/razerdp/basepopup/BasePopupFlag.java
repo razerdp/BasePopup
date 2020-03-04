@@ -15,7 +15,7 @@ public interface BasePopupFlag {
 
     //显示控制 3 bit
     int DISPLAY_SHIFT = 3;
-    int FULL_SCREEN = 0x1 << DISPLAY_SHIFT;//全屏（允许覆盖状态栏）
+    int OVERLAY_STATUS_BAR = 0x1 << DISPLAY_SHIFT;//允许覆盖状态栏
     int CLIP_CHILDREN = 0x2 << DISPLAY_SHIFT;//裁剪子控件
 
     //popup控制 6 bit
@@ -47,7 +47,7 @@ public interface BasePopupFlag {
 
     int IDLE = OUT_SIDE_DISMISS
             | BACKPRESS_ENABLE
-            | FULL_SCREEN
+            | OVERLAY_STATUS_BAR
             | CLIP_CHILDREN
             | FADE_ENABLE
             | KEYBOARD_ALIGN_TO_ROOT

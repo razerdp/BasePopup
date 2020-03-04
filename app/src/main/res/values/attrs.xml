@@ -62,4 +62,15 @@
         <attr name="fv_lineSpacing" format="dimension" />
         <attr name="fv_itemSpacing" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="LimitSizeFrameLayout">
+        <attr name="minWidth_Ratio" format="float" />
+        <attr name="minHeight_Ratio" format="float" />
+        <attr name="maxWidth_Ratio" format="float" />
+        <attr name="maxHeight_Ratio" format="float" />
+        <attr name="minWidth" format="dimension" />
+        <attr name="minHeight" format="dimension" />
+        <attr name="maxWidth" format="dimension" />
+        <attr name="maxHeight" format="dimension" />
+    </declare-styleable>
 </resources>

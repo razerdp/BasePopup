@@ -3,46 +3,48 @@
 <p align="center"><img src="./img/logo.png" alt="Logo load failed" height="360"/></p>
 <h2 align="center">BasePopup - A powerful and convenient PopupWindow library for Android</h2>
 <div align="center">
-<table>
+
+<table align="center">
         <tr>
-            <th>Release</th>
-            <th>Candy</th>
-            <th>License</th>
-			<th>Api</th>
-			<th>Author</th>
+            <th align="center" width="9999">Release</th>
+            <th align="center" width="9999">Candy</th>
+            <th align="center" width="9999">License</th>
+			<th align="center" width="9999">Api</th>
+			<th align="center" width="9999">Author</th>
         </tr>
-        <tr>
-            <td align="center">
-				<a href ="https://bintray.com/razerdp/maven/BasePopup/_latestVersion">
-					<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg"/>
-				</a>
-			</td>
-			<td align="center">
-				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion">
-					<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg"/>
-				</a>
-			</td>
-			<td align="center">
-				<a href = "https://github.com/razerdp/BasePopup/blob/master/LICENSE">
-					<img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"/>
-				</a>
-				<br></br>
-				<a href = "https://github.com/razerdp/BasePopup/blob/master/LICENSE_996">
-                	<img src="https://img.shields.io/badge/license-Anti%20996-blue.svg?style=flat-square"/>
-                </a>
-			</td>
-			<td align="center">
-				<a href="https://img.shields.io/badge/Api-14%2B-green.svg">
-					<img src="https://img.shields.io/badge/Api-16%2B-green.svg"/>
-				</a>
-			</td>
-			<td align="center">
-				<a href = "https://github.com/razerdp">
-					<img src="https://img.shields.io/badge/Author-razerdp-blue.svg"/>
-				</a>
-			</td>
-		</tr>
+           <tr>
+                    <td align="center">
+        				<a href ="https://bintray.com/razerdp/maven/BasePopup/_latestVersion">
+        					<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg"/>
+        				</a>
+        			</td>
+        			<td align="center">
+        				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion">
+        					<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg"/>
+        				</a>
+        			</td>
+        			<td align="center">
+        				<a href = "https://github.com/razerdp/BasePopup/blob/master/LICENSE">
+        					<img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"/>
+        				</a>
+        				<br></br>
+        				<a href = "https://github.com/razerdp/BasePopup/blob/master/LICENSE_996">
+                        	<img src="https://img.shields.io/badge/license-Anti%20996-blue.svg?style=flat-square"/>
+                        </a>
+        			</td>
+        			<td align="center">
+        				<a href="https://img.shields.io/badge/Api-19%2B-green.svg">
+        					<img src="https://img.shields.io/badge/Api-19%2B-green.svg"/>
+        				</a>
+        			</td>
+        			<td align="center">
+        				<a href = "https://github.com/razerdp">
+        					<img src="https://img.shields.io/badge/Author-razerdp-blue.svg"/>
+        				</a>
+        			</td>
+        		</tr>
 </table>
+
 
 </div>
 
@@ -59,7 +61,7 @@
  - [ChangeLog](#changelog-historical-update)
    - [Historical update](./UpdateLog.md)
  - [Preview](#Preview)
-   - [**Demo apk**](https://fir.im/pfc9)
+   - [**Demo apk(pass:123)**](https://www.pgyer.com/basepopup)
  - [QA](#QA)
  - [LICENSE](#license)
 
@@ -142,23 +144,13 @@ Reference document(CN)：[**BasePopup manual**](https://www.kancloud.cn/razerdp/
     * Remove the `limitScreen ()` method.
     * Removed the extension components, now the main body supports AndroidX, and no longer supports the Support package.
   * **bug fixed：**
-    * fixed [#184](https://github.com/razerdp/BasePopup/issues/184).
-    * fixed [#207](https://github.com/razerdp/BasePopup/issues/207).
-    * fixed [#210](https://github.com/razerdp/BasePopup/issues/210).
-    * fixed [#213](https://github.com/razerdp/BasePopup/issues/213).
-    * fixed [#226](https://github.com/razerdp/BasePopup/issues/226).
-    * fixed [#232](https://github.com/razerdp/BasePopup/issues/232).
-    * fixed [#236](https://github.com/razerdp/BasePopup/issues/236).
-    * fixed [#238](https://github.com/razerdp/BasePopup/issues/238).
-    * fixed [#240](https://github.com/razerdp/BasePopup/issues/240).
-    * fixed [#242](https://github.com/razerdp/BasePopup/issues/242).
-    * fixed [#244](https://github.com/razerdp/BasePopup/issues/244).
-    * fixed [#247](https://github.com/razerdp/BasePopup/issues/247).
-    * fixed [#248](https://github.com/razerdp/BasePopup/issues/248).
-    * fixed [#249](https://github.com/razerdp/BasePopup/issues/249).
-    * fixed [#260](https://github.com/razerdp/BasePopup/issues/260).
-    * fixed [#262](https://github.com/razerdp/BasePopup/issues/262).
-    * fixed [#263](https://github.com/razerdp/BasePopup/issues/263).
+    * fixed [#184](https://github.com/razerdp/BasePopup/issues/184)、[#207](https://github.com/razerdp/BasePopup/issues/207)、[#210](https://github.com/razerdp/BasePopup/issues/210)
+    * fixed [#213](https://github.com/razerdp/BasePopup/issues/213)、[#226](https://github.com/razerdp/BasePopup/issues/226)、[#232](https://github.com/razerdp/BasePopup/issues/232)
+    * fixed [#236](https://github.com/razerdp/BasePopup/issues/236)、[#238](https://github.com/razerdp/BasePopup/issues/238)、[#240](https://github.com/razerdp/BasePopup/issues/240)
+    * fixed [#242](https://github.com/razerdp/BasePopup/issues/242)、[#244](https://github.com/razerdp/BasePopup/issues/244)、[#247](https://github.com/razerdp/BasePopup/issues/247)
+    * fixed [#248](https://github.com/razerdp/BasePopup/issues/248)、[#249](https://github.com/razerdp/BasePopup/issues/249)、[#260](https://github.com/razerdp/BasePopup/issues/260)
+    * fixed [#262](https://github.com/razerdp/BasePopup/issues/262)、[#263](https://github.com/razerdp/BasePopup/issues/263)
+
 
 * **【Release】2.2.1**(2019/06/24)
   * Support for showing popupwindow in Service or non-ActivityContext.
@@ -174,13 +166,13 @@ Reference document(CN)：[**BasePopup manual**](https://www.kancloud.cn/razerdp/
 
 <br>
 
-#### For more examples, please download Demo: [**Demo**](https://fir.im/pfc9)
+#### For more examples, please download Demo: [**Demo (pass:123)**](https://www.pgyer.com/basepopup)
 
 <br>
 
 |  |  |  |
 | - | - | - |
-| ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_1.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_2.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_3.gif) |
+| ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_1.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/new_demo_2.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_3.gif) |
 | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_4.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_5.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_6.gif) |
 
 <br>

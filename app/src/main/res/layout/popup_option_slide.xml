@@ -34,15 +34,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="@dimen/default_padding">
 
                 <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/check_anchor"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/default_padding"
-                    android:layout_marginTop="@dimen/default_padding"
-                    android:layout_weight="1"
+                    android:layout_weight="0.4"
                     android:text="关联AnchorView"
                     android:textColor="@color/text_black2"
                     android:textSize="@dimen/text_small"
@@ -52,15 +51,22 @@
                     android:id="@+id/check_blur"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/default_padding"
-                    android:layout_marginTop="@dimen/default_padding"
-                    android:layout_weight="1"
+                    android:layout_weight="0.3"
                     android:text="背景模糊"
                     android:textColor="@color/text_black2"
                     android:textSize="@dimen/text_small"
                     android:theme="@style/MyCheckBox" />
-            </LinearLayout>
 
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/check_align_to_side"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+                    android:text="对边模式"
+                    android:textColor="@color/text_black2"
+                    android:textSize="@dimen/text_small"
+                    android:theme="@style/MyCheckBox" />
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

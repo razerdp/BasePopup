@@ -35,23 +35,12 @@
     * 去除`limitScreen()`方法
     * 去除扩展组件，现在主体支持AndroidX，同时不再支持Support包了
   * **bug fixed：**
-    * fixed [#184](https://github.com/razerdp/BasePopup/issues/184)
-    * fixed [#207](https://github.com/razerdp/BasePopup/issues/207)
-    * fixed [#210](https://github.com/razerdp/BasePopup/issues/210)
-    * fixed [#213](https://github.com/razerdp/BasePopup/issues/213)
-    * fixed [#226](https://github.com/razerdp/BasePopup/issues/226)
-    * fixed [#232](https://github.com/razerdp/BasePopup/issues/232)
-    * fixed [#236](https://github.com/razerdp/BasePopup/issues/236)
-    * fixed [#238](https://github.com/razerdp/BasePopup/issues/238)
-    * fixed [#240](https://github.com/razerdp/BasePopup/issues/240)
-    * fixed [#242](https://github.com/razerdp/BasePopup/issues/242)
-    * fixed [#244](https://github.com/razerdp/BasePopup/issues/244)
-    * fixed [#247](https://github.com/razerdp/BasePopup/issues/247)
-    * fixed [#248](https://github.com/razerdp/BasePopup/issues/248)
-    * fixed [#249](https://github.com/razerdp/BasePopup/issues/249)
-    * fixed [#260](https://github.com/razerdp/BasePopup/issues/260)
-    * fixed [#262](https://github.com/razerdp/BasePopup/issues/262)
-    * fixed [#263](https://github.com/razerdp/BasePopup/issues/263)
+    * fixed [#184](https://github.com/razerdp/BasePopup/issues/184)、[#207](https://github.com/razerdp/BasePopup/issues/207)、[#210](https://github.com/razerdp/BasePopup/issues/210)
+    * fixed [#213](https://github.com/razerdp/BasePopup/issues/213)、[#226](https://github.com/razerdp/BasePopup/issues/226)、[#232](https://github.com/razerdp/BasePopup/issues/232)
+    * fixed [#236](https://github.com/razerdp/BasePopup/issues/236)、[#238](https://github.com/razerdp/BasePopup/issues/238)、[#240](https://github.com/razerdp/BasePopup/issues/240)
+    * fixed [#242](https://github.com/razerdp/BasePopup/issues/242)、[#244](https://github.com/razerdp/BasePopup/issues/244)、[#247](https://github.com/razerdp/BasePopup/issues/247)
+    * fixed [#248](https://github.com/razerdp/BasePopup/issues/248)、[#249](https://github.com/razerdp/BasePopup/issues/249)、[#260](https://github.com/razerdp/BasePopup/issues/260)
+    * fixed [#262](https://github.com/razerdp/BasePopup/issues/262)、[#263](https://github.com/razerdp/BasePopup/issues/263)
 
 * **【里程碑】2.2.2**
     * **【Beta】2.2.2** 2020/02/23
