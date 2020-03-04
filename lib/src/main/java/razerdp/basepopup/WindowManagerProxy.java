@@ -81,8 +81,8 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 p.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT;
             }
-            if (helper.isFullScreen()) {
-                PopupLog.i(TAG, "applyHelper  >>>  全屏");
+            if (helper.isOverlayStatusbar()) {
+                PopupLog.i(TAG, "applyHelper  >>>  全屏（覆盖状态栏）");
                 p.flags |= LayoutParams.FLAG_LAYOUT_IN_SCREEN;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     //允许占用刘海

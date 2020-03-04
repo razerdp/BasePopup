@@ -218,7 +218,7 @@ public class QuickPopupConfig implements BasePopupFlag {
     }
 
     public QuickPopupConfig fullScreen(boolean fullscreen) {
-        setFlag(FULL_SCREEN, fullscreen);
+        setFlag(OVERLAY_STATUS_BAR, fullscreen);
         return this;
     }
 

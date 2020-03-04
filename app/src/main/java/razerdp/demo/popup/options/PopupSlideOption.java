@@ -37,6 +37,8 @@ public class PopupSlideOption extends BaseOptionPopup<CommonSlideInfo> {
     AppCompatCheckBox anchorCheck;
     @BindView(R.id.check_blur)
     AppCompatCheckBox blurCheck;
+    @BindView(R.id.check_align_to_side)
+    AppCompatCheckBox gravitySideMode;
     @BindView(R.id.tv_go)
     DPTextView tvGo;
 
@@ -85,6 +87,7 @@ public class PopupSlideOption extends BaseOptionPopup<CommonSlideInfo> {
         mInfo.gravity = gravity;
         mInfo.withAnchor = anchorCheck.isChecked();
         mInfo.blur = blurCheck.isChecked();
+        mInfo.gravityMode = gravitySideMode.isChecked() ? GravityMode.ALIGN_TO_ANCHOR_SIDE : GravityMode.RELATIVE_TO_ANCHOR;
         dismiss();
     }
 

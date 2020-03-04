@@ -388,10 +388,11 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                         }
                         break;
                 }
+
                 childTop = childTop + childTopMargin - childBottomMargin;
 
                 if (mHelper.isAutoLocatePopup()) {
-                    int tBottom = childTop + height + offsetY + (mHelper.isFullScreen() ? 0 : -PopupUiUtils.getStatusBarHeight());
+                    int tBottom = childTop + height + offsetY + (mHelper.isOverlayStatusbar() ? 0 : -PopupUiUtils.getStatusBarHeight());
                     int restHeight;
                     switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
                         case Gravity.TOP:
@@ -418,13 +419,13 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 }
 
                 int left = childLeft + offsetX;
-                int top = childTop + offsetY + (mHelper.isFullScreen() ? 0 : PopupUiUtils.getStatusBarHeight());
+                int top = childTop + offsetY ;
                 int right = left + width;
                 int bottom = top + height;
 
-                boolean isOverScreen = left < 0 || top < 0 || right > getMeasuredWidth() || bottom > getMeasuredHeight();
+                boolean isOutsideScreen = left < 0 || top < 0 || right > getMeasuredWidth() || bottom > getMeasuredHeight();
 
-                if (isOverScreen) {
+                if (isOutsideScreen) {
                     //水平调整
                     if (left < 0 && right > getMeasuredWidth()) {
                         left = 0;
@@ -583,7 +584,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
     @Override
     public void onKeyboardChange(Rect keyboardBounds, boolean isVisible) {
-        if (mHelper.isOutSideTouchable() && !mHelper.isFullScreen()) return;
+        if (mHelper.isOutSideTouchable() && !mHelper.isOverlayStatusbar()) return;
         int offset = 0;
         boolean forceAdjust = (mHelper.flag & BasePopupFlag.KEYBOARD_FORCE_ADJUST) != 0;
         boolean process = forceAdjust || ((PopupUiUtils.getScreenOrientation() != Configuration.ORIENTATION_LANDSCAPE)

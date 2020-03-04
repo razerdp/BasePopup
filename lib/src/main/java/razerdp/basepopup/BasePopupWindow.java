@@ -999,9 +999,16 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     /**
      * <p>
      * 允许PopupWindow覆盖屏幕（包含状态栏）
+     * <p>
+     * use {@link #setOverlayStatusbar(boolean)} instead
      */
+    @Deprecated
     public BasePopupWindow setPopupWindowFullScreen(boolean isFullScreen) {
-        mHelper.fullScreen(isFullScreen);
+        return setOverlayStatusbar(isFullScreen);
+    }
+
+    public BasePopupWindow setOverlayStatusbar(boolean overlay) {
+        mHelper.overlayStatusbar(overlay);
         return this;
     }
 
@@ -1366,12 +1373,24 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * <li> 如果跟anchorView联系，gravity意味着以anchorView为中心的方位{@link #showPopupWindow(View)}</li>
      * </ul>
      *
-     * @param mode         <ul><li>GravityMode.RELATIVE_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup处于该Anchor的哪个位置</li>
-     *                                         <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪个位置</li></ul>
-     * @param popupGravity
+     * @param mode <ul><li>GravityMode.RELATIVE_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup处于该Anchor的哪个位置</li>
+     *             <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
+     *             </ul>
      */
     public BasePopupWindow setPopupGravity(GravityMode mode, int popupGravity) {
         mHelper.setPopupGravity(mode, popupGravity);
+        return this;
+    }
+
+    /**
+     * 设置参考模式 {@link Gravity}
+     *
+     * @param mode <ul><li>GravityMode.RELATIVE_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup处于该Anchor的哪个位置</li>
+     *             <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
+     *             </ul>
+     */
+    public BasePopupWindow setPopupGravityMode(GravityMode mode) {
+        mHelper.setPopupGravityMode(mode);
         return this;
     }
 

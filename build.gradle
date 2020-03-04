@@ -2,13 +2,14 @@
 
 buildscript {
     repositories {
+        maven { url "https://raw.githubusercontent.com/Pgyer/mvn_repo_pgyer/master" }
         maven { url "https://maven.google.com" }
         maven { url "https://jitpack.io" }
         jcenter()
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.0'
+        classpath 'com.android.tools.build:gradle:3.6.1'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
 
@@ -19,6 +20,7 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url "https://raw.githubusercontent.com/Pgyer/mvn_repo_pgyer/master" }
         maven { url "https://maven.google.com" }
         maven { url "https://jitpack.io" }
         jcenter()
@@ -33,10 +35,10 @@ task clean(type: Delete) {
 ext {
     //Android
     compileSdkVersion = 29
-    minSdkVersion = 16
+    minSdkVersion = 19
     targetSdkVersion = 29
-    versionCode = 92
-    versionName = '2.2.2.2'
+    versionCode = 95
+    versionName = '2.2.3.20200304'
 
     candy = true
     group = 'com.github.razerdp'

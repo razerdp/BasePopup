@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 
 import razerdp.blur.BlurImageView;
 import razerdp.library.R;
+import razerdp.util.PopupUiUtils;
 import razerdp.util.PopupUtils;
 
 /**
@@ -170,7 +171,12 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (mPopupHelper != null && mPopupHelper.isOutSideTouchable()) {
-            mPopupHelper.dispatchOutSideEvent(MotionEvent.obtain(ev));
+            MotionEvent nEv = MotionEvent.obtain(ev);
+            if (!mPopupHelper.isOverlayStatusbar()){
+                nEv.offsetLocation(0, PopupUiUtils.getStatusBarHeight());
+            }
+            mPopupHelper.dispatchOutSideEvent(nEv);
+            nEv.recycle();
         }
         return super.dispatchTouchEvent(ev);
     }
