@@ -188,6 +188,8 @@
 
 #### 更多例子请下载Demo：[**apk体验下载（密码123）**](https://www.pgyer.com/basepopup)
 
+<img src="./img/download.png"  width="256"/>
+
 <br>
 
 |  |  |  |

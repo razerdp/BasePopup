@@ -169,6 +169,8 @@ Reference document(CN)：[**BasePopup manual**](https://www.kancloud.cn/razerdp/
 
 #### For more examples, please download Demo: [**Demo (pass:123)**](https://www.pgyer.com/basepopup)
 
+<img src="./img/download.png"  width="256"/>
+
 <br>
 
 |  |  |  |
