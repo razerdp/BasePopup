@@ -122,18 +122,18 @@ Reference document(CN)：[**BasePopup manual**](https://www.kancloud.cn/razerdp/
 * **【Candy】2.2.3**
   * **【2.2.3.20200304】**
     * Optimized event delivery in case of status bar coverage
-    * Method deprecation: ~~ `setPopupWindowFullScreen ()` ~~-> `setOverlayStatusbar ()`
+    * Method deprecation: ~~`setPopupWindowFullScreen ()`~~-> `setOverlayStatusbar ()`
     * Added method: `setPopupGravityMode ()`
     * Update Demo
 
 * **【Release】2.2.2.2**(2020/03/01)
   * Fix a serious problem that may cause a crash
     * Reappearance: Finishing the activity when the dismiss animation is not completed will cause the null pointer to crash
-    * This issue cannot be ** try & catch ** in previous versions
+    * This issue cannot be **try & catch** in previous versions
   * Fixed an issue that did not force dismiss when finished
   * Fixed some flags wrong
   * Fix the problem that the position of outsideTouch deviates in non-full screen
-  * ** I feel very sorry, I did not find such errors for my own reasons. After receiving the feedback, I immediately checked all similar places and fixed them one by one. This time the reconfiguration cycle is longer, involving more plates, and the test cycle It is also long, but there are still omissions due to limited personal energy. I hope that I can get your support and try to report any problems during the Candy test period to reduce such problems. **
+  * **I feel very sorry, I did not find such errors for my own reasons. After receiving the feedback, I immediately checked all similar places and fixed them one by one. This time the reconfiguration cycle is longer, involving more plates, and the test cycle It is also long, but there are still omissions due to limited personal energy. I hope that I can get your support and try to report any problems during the Candy test period to reduce such problems.**
 
 * **【Release】2.2.2.1**(2020/02/26)
   * Fix the problem that the input method can not pop up again automatically.
