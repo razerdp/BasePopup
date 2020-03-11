@@ -389,11 +389,24 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                         break;
                 }
 
-                childTop = childTop + childTopMargin - childBottomMargin;
+                childTop = childTop + childTopMargin - childBottomMargin - (mHelper.isOverlayStatusbar() ? 0 : PopupUiUtils.getStatusBarHeight());
 
-                if (mHelper.isAutoLocatePopup()) {
-                    int tBottom = childTop + height + offsetY + (mHelper.isOverlayStatusbar() ? 0 : -PopupUiUtils.getStatusBarHeight());
-                    int restHeight;
+                if (mHelper.isAutoLocatePopup() && mHelper.isWithAnchor()) {
+                    int tRight = childLeft + width + offsetX;
+                    int tBottom = childTop + height + offsetY;
+                    int restWidth, restHeight;
+                    // TODO: 2020/3/11 优化autolocate
+                    /*switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
+                        case Gravity.RIGHT:
+                            restWidth = isAlignAnchorMode ? anchorBound.right : r - anchorBound.right;
+                            if (tRight > restWidth) {
+
+                            }
+                            break;
+                        case Gravity.LEFT:
+                        default:
+                            break;
+                    }*/
                     switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
                         case Gravity.TOP:
                             restHeight = isAlignAnchorMode ? b - anchorBound.top : anchorBound.top;
@@ -419,7 +432,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 }
 
                 int left = childLeft + offsetX;
-                int top = childTop + offsetY ;
+                int top = childTop + offsetY;
                 int right = left + width;
                 int bottom = top + height;
 
@@ -469,6 +482,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         super.onAttachedToWindow();
         if (mMaskLayout != null) {
             mMaskLayout.handleStart(-2);
+        }
+        if (mHelper != null) {
+            mHelper.onAttachToWindow();
         }
     }
 

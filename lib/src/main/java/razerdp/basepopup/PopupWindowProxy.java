@@ -32,7 +32,6 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
             | View.SYSTEM_UI_FLAG_FULLSCREEN;
-    private int[] anchorLocation = new int[2];
 
     PopupWindowProxy(View contentView, BasePopupHelper mHelper) {
         super(contentView);

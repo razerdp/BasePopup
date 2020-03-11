@@ -137,6 +137,12 @@
     * 方法弃用：~~`setPopupWindowFullScreen()`~~ -> `setOverlayStatusbar()`
     * 新增方法：`setPopupGravityMode()`
     * Demo迁移至蒲公英
+  * **【2.2.3.20200311】**
+    * 开放BasePopup的PopupShowing回调
+      * 现在可以在`onShowing()`中监听BasePopup显示了~
+    * 增加`OnPopupWindowShowListener`，效果同上
+    * fix [#267](https://github.com/razerdp/BasePopup/issues/267)
+    * 修复`setOverlayStatusbar(false)`情况下与Anchor关联时显示位置错误的问题
 
 * **【Release】2.2.2.2**(2020/03/01)
   * 修复一个很严重的可能会导致崩溃的问题
