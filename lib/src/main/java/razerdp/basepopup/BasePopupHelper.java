@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -78,6 +79,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     //callback
     BasePopupWindow.OnDismissListener mOnDismissListener;
     BasePopupWindow.OnBeforeShowCallback mOnBeforeShowCallback;
+    BasePopupWindow.OnPopupWindowShowListener mOnPopupWindowShowListener;
 
     //option
     BasePopupWindow.GravityMode gravityMode = BasePopupWindow.GravityMode.RELATIVE_TO_ANCHOR;
@@ -464,24 +466,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return this;
     }
 
-    BasePopupWindow.OnDismissListener getOnDismissListener() {
-        return mOnDismissListener;
-    }
-
-    BasePopupHelper setOnDismissListener(BasePopupWindow.OnDismissListener onDismissListener) {
-        mOnDismissListener = onDismissListener;
-        return this;
-    }
-
-    BasePopupWindow.OnBeforeShowCallback getOnBeforeShowCallback() {
-        return mOnBeforeShowCallback;
-    }
-
-    BasePopupHelper setOnBeforeShowCallback(BasePopupWindow.OnBeforeShowCallback onBeforeShowCallback) {
-        mOnBeforeShowCallback = onBeforeShowCallback;
-        return this;
-    }
-
     boolean isOutSideDismiss() {
         return (flag & OUT_SIDE_DISMISS) != 0;
     }
@@ -504,9 +488,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     BasePopupHelper getAnchorLocation(View v) {
         if (v == null) return this;
-        int[] location = new int[2];
-        v.getLocationOnScreen(location);
-        mAnchorViewBound.set(location[0], location[1], location[0] + v.getWidth(), location[1] + v.getHeight());
+        v.getGlobalVisibleRect(mAnchorViewBound);
         return this;
     }
 
@@ -538,6 +520,10 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     BasePopupHelper overlayStatusbar(boolean overlay) {
+        if (!overlay && PopupUiUtils.isActivityFullScreen(mPopupWindow.getContext())) {
+            Log.e(BasePopupWindow.TAG, "setOverlayStatusbar: 全屏Activity下没有StatusBar，此处不能设置为false");
+            overlay = true;
+        }
         setFlag(OVERLAY_STATUS_BAR, overlay);
         return this;
     }
@@ -788,6 +774,15 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP ||
                 android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
             showCount++;
+        }
+    }
+
+    void onAttachToWindow() {
+        if (mPopupWindow != null) {
+            mPopupWindow.onShowing();
+        }
+        if (mOnPopupWindowShowListener != null) {
+            mOnPopupWindowShowListener.onShowing();
         }
     }
 
@@ -1132,6 +1127,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         mDismissAnimator = null;
         eventObserverMap = null;
         mPopupWindow = null;
+        mOnPopupWindowShowListener = null;
         mOnDismissListener = null;
         mOnBeforeShowCallback = null;
         mBlurOption = null;

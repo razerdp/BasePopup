@@ -328,7 +328,7 @@ import razerdp.util.log.PopupLog;
  */
 @SuppressWarnings("All")
 public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismissListener, LifecycleObserver {
-    private static final String TAG = "BasePopupWindow";
+    static final String TAG = "BasePopupWindow";
     public static int DEFAULT_BACKGROUND_COLOR = Color.parseColor("#8f000000");
 
     public static final int FLAG_KEYBOARD_ALIGN_TO_VIEW = BasePopupFlag.KEYBOARD_ALIGN_TO_VIEW;
@@ -1165,11 +1165,19 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * PopupWindow是否处于展示状态
      */
     public boolean isShowing() {
-        return mPopupWindow.isShowing();
+        return mPopupWindow == null ? false : mPopupWindow.isShowing();
     }
 
     public OnDismissListener getOnDismissListener() {
-        return mHelper.getOnDismissListener();
+        return mHelper.mOnDismissListener;
+    }
+
+    /**
+     * 设置PopupWindow显示的监听
+     */
+    public BasePopupWindow setOnPopupWindowShowListener(OnPopupWindowShowListener onPopupWindowShowListener) {
+        mHelper.mOnPopupWindowShowListener = onPopupWindowShowListener;
+        return this;
     }
 
     /**
@@ -1180,12 +1188,12 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param onDismissListener 监听器
      */
     public BasePopupWindow setOnDismissListener(OnDismissListener onDismissListener) {
-        mHelper.setOnDismissListener(onDismissListener);
+        mHelper.mOnDismissListener = onDismissListener;
         return this;
     }
 
     public OnBeforeShowCallback getOnBeforeShowCallback() {
-        return mHelper.getOnBeforeShowCallback();
+        return mHelper.mOnBeforeShowCallback;
     }
 
     /**
@@ -1206,7 +1214,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @see OnBeforeShowCallback#onBeforeShow(View, View, boolean)
      */
     public BasePopupWindow setOnBeforeShowCallback(OnBeforeShowCallback mOnBeforeShowCallback) {
-        mHelper.setOnBeforeShowCallback(mOnBeforeShowCallback);
+        mHelper.mOnBeforeShowCallback = mOnBeforeShowCallback;
         return this;
     }
 
@@ -1374,8 +1382,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </ul>
      *
      * @param mode <ul><li>GravityMode.RELATIVE_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup处于该Anchor的哪个位置</li>
-     *             <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
-     *             </ul>
+     *                                                                                                                                                 <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
+     *                                                                                                                                                 </ul>
      */
     public BasePopupWindow setPopupGravity(GravityMode mode, int popupGravity) {
         mHelper.setPopupGravity(mode, popupGravity);
@@ -1700,8 +1708,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     private boolean checkPerformShow(View v) {
         boolean result = true;
-        if (mHelper.getOnBeforeShowCallback() != null) {
-            result = mHelper.getOnBeforeShowCallback().onBeforeShow(mContentView, v,
+        if (mHelper.mOnBeforeShowCallback != null) {
+            result = mHelper.mOnBeforeShowCallback.onBeforeShow(mContentView, v,
                     mHelper.mShowAnimation != null || mHelper.mShowAnimator != null);
         }
         return result;
@@ -1812,10 +1820,17 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     @Override
     public void onDismiss() {
-        if (mHelper.getOnDismissListener() != null) {
-            mHelper.getOnDismissListener().onDismiss();
+        if (mHelper.mOnDismissListener != null) {
+            mHelper.mOnDismissListener.onDismiss();
         }
         isExitAnimatePlaying = false;
+    }
+
+    /**
+     * 在PopupWindow显示后回调该方法
+     */
+    public void onShowing() {
+
     }
 
     //endregion
@@ -1967,6 +1982,13 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
          */
         public void onDismissAnimationStart() {
         }
+    }
+
+    /**
+     * 当PopupWindow显示在Window上回回调给该接口监听（如果设置了监听的话）
+     */
+    public interface OnPopupWindowShowListener {
+        void onShowing();
     }
 
     interface OnKeyboardStateChangeListener {

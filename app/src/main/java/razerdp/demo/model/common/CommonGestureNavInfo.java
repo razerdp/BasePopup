@@ -4,7 +4,7 @@ import android.view.View;
 
 import razerdp.demo.model.DemoCommonUsageInfo;
 import razerdp.demo.popup.PopupDesc;
-import razerdp.util.RomUtils;
+import razerdp.demo.utils.RomUtils;
 
 /**
  * Created by 大灯泡 on 2019/9/27

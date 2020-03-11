@@ -1,11 +1,13 @@
 package razerdp.util;
 
+import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 
 import razerdp.basepopup.BasePopupSDK;
 import razerdp.util.log.PopupLog;
@@ -87,5 +89,11 @@ public class PopupUiUtils {
         } catch (Exception e) {
             PopupLog.e(e);
         }
+    }
+
+    public static boolean isActivityFullScreen(Activity act) {
+        if (act == null || act.getWindow() == null) return false;
+        return (act.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
+
     }
 }
