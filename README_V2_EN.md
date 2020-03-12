@@ -56,7 +56,7 @@
  - [Precautions](#Precautions)
  - [Download](#Download)
  - [Quick start](#quick-start)
-   - [BasePopup manual](https://www.kancloud.cn/razerdp/basepopup/content)
+   - [BasePopup manual](https://www.yuque.com/razerdp/basepopup)
  - [Api(Wiki)](#api)
  - [ChangeLog](#changelog-historical-update)
    - [Historical update](./UpdateLog.md)
@@ -106,7 +106,7 @@ Please replace **{$latestVersion}** with the version shown in the Jcenter tab ab
 
 ### Quick start
 
-Reference document(CN)：[**BasePopup manual**](https://www.kancloud.cn/razerdp/basepopup/content)
+Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/basepopup)
 
 <br>
 
@@ -198,7 +198,7 @@ Reference document(CN)：[**BasePopup manual**](https://www.kancloud.cn/razerdp/
 
 ### QA
 
-Please refer to [**Basepopup manual: Frequently QA**](https://www.kancloud.cn/razerdp/basepopup/1277047)
+Please refer to [**Basepopup manual: Frequently QA**](https://www.yuque.com/razerdp/basepopup/dgf6ry)
 
 <br>
 
