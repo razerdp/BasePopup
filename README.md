@@ -67,8 +67,8 @@
  - [注意事项](#注意事项)
  - [环境依赖](#环境依赖)
  - [快速入门](#快速入门)
-   - [BasePopup手册](https://www.kancloud.cn/razerdp/basepopup/content)
- - [Api（请看Wiki）](#api请看wiki)
+   - [BasePopup手册](https://www.yuque.com/razerdp/basepopup)
+ - [Api（请看Wiki）](#api请看wiki后续迁移至文档)
  - [更新日志](#更新日志-历史更新)
    - [历史更新](./UpdateLog.md)
  - [例子预览](#例子预览)
@@ -118,7 +118,7 @@
 
 ### 快速入门
 
-请参考文档：[**BasePopup手册**](https://www.kancloud.cn/razerdp/basepopup/content)
+请参考文档：[**BasePopup手册**](https://www.yuque.com/razerdp/basepopup)
 
 <br>
 
@@ -219,7 +219,7 @@
 
 ### 常见问题
 
-请查阅[**手册：常见问题**](https://www.kancloud.cn/razerdp/basepopup/1277047)
+请查阅[**手册：常见问题**](https://www.yuque.com/razerdp/basepopup/dgf6ry)
 
 <br>
 
