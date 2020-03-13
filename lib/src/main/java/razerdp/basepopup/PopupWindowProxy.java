@@ -1,16 +1,16 @@
 package razerdp.basepopup;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.drawable.ColorDrawable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
 
-import java.lang.reflect.Field;
-
 import razerdp.util.PopupUtils;
-import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2017/1/12.
@@ -20,9 +20,8 @@ import razerdp.util.log.PopupLog;
 
 class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
     private static final String TAG = "PopupWindowProxy";
+    private BasePopupContextWrapper mBasePopupContextWrapper;
 
-    private BasePopupHelper mHelper;
-    WindowManagerProxy mWindowManagerProxy;
     private boolean oldFocusable = true;
     private boolean isHandledFullScreen;
 
@@ -33,51 +32,19 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
             | View.SYSTEM_UI_FLAG_FULLSCREEN;
 
-    PopupWindowProxy(View contentView, BasePopupHelper mHelper) {
-        super(contentView);
-        this.mHelper = mHelper;
-        init();
-    }
-
-    private void init() {
+    public PopupWindowProxy(BasePopupContextWrapper context) {
+        super(context);
+        mBasePopupContextWrapper = context;
         setFocusable(true);
         setOutsideTouchable(true);
         setBackgroundDrawable(new ColorDrawable());
-        tryToHookWindowManager();
     }
 
-    @Override
-    public void setContentView(View contentView) {
-        super.setContentView(contentView);
-        tryToHookWindowManager();
-    }
-
-
-    private void tryToHookWindowManager() {
-        if (mWindowManagerProxy != null || mHelper == null) return;
-        try {
-            Field fieldWindowManager = PopupWindow.class.getDeclaredField("mWindowManager");
-            fieldWindowManager.setAccessible(true);
-            final WindowManager windowManager = (WindowManager) fieldWindowManager.get(this);
-            if (windowManager == null) return;
-            mWindowManagerProxy = new WindowManagerProxy(windowManager, mHelper);
-            fieldWindowManager.set(this, mWindowManagerProxy);
-
-            Field fieldScroll = PopupWindow.class.getDeclaredField("mOnScrollChangedListener");
-            fieldScroll.setAccessible(true);
-            fieldScroll.set(this, null);
-
-        } catch (Exception ignore) {
-            PopupLog.e(TAG, ignore);
-        }
-    }
 
     @Override
     public void update() {
         try {
-            if (mHelper != null && mWindowManagerProxy != null) {
-                mWindowManagerProxy.update();
-            }
+            mBasePopupContextWrapper.mWindowManagerProxy.update();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,8 +57,8 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
     }
 
     private void restoreFocusable() {
-        if (mWindowManagerProxy != null) {
-            mWindowManagerProxy.updateFocus(oldFocusable);
+        if (mBasePopupContextWrapper != null && mBasePopupContextWrapper.mWindowManagerProxy != null) {
+            mBasePopupContextWrapper.mWindowManagerProxy.updateFocus(oldFocusable);
         }
         isHandledFullScreen = false;
     }
@@ -139,7 +106,9 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
 
     @Override
     public void dismiss() {
-        mHelper.dismiss(true);
+        if (mBasePopupContextWrapper != null && mBasePopupContextWrapper.helper != null) {
+            mBasePopupContextWrapper.helper.dismiss(true);
+        }
     }
 
     void superDismiss() {
@@ -152,15 +121,61 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
         }
     }
 
+    WindowManagerProxy prevWindow() {
+        if (mBasePopupContextWrapper == null || mBasePopupContextWrapper.mWindowManagerProxy == null) {
+            return null;
+        }
+        return mBasePopupContextWrapper.mWindowManagerProxy.preWindow();
+    }
+
     @Override
     public void clear(boolean destroy) {
-        if (mWindowManagerProxy != null) {
-            mWindowManagerProxy.clear(destroy);
+        if (mBasePopupContextWrapper != null) {
+            mBasePopupContextWrapper.clear(destroy);
         }
         PopupUtils.clearViewFromParent(getContentView());
         if (destroy) {
-            mHelper = null;
-            mWindowManagerProxy = null;
+            mBasePopupContextWrapper = null;
+        }
+    }
+
+    /**
+     * 采取ContextWrapper来hook WindowManager，从此再也无需反射及各种黑科技了~
+     * 感谢
+     *
+     * @xchengDroid https://github.com/xchengDroid  提供的方案
+     */
+    static class BasePopupContextWrapper extends ContextWrapper implements ClearMemoryObject {
+        BasePopupHelper helper;
+        WindowManagerProxy mWindowManagerProxy;
+
+        public BasePopupContextWrapper(Context base, BasePopupHelper helper) {
+            super(base);
+            this.helper = helper;
+        }
+
+        @Override
+        public Object getSystemService(String name) {
+            if (TextUtils.equals(name, Context.WINDOW_SERVICE)) {
+                if (mWindowManagerProxy != null) {
+                    return mWindowManagerProxy;
+                }
+                WindowManager windowManager = (WindowManager) super.getSystemService(name);
+                mWindowManagerProxy = new WindowManagerProxy(windowManager, helper);
+                return mWindowManagerProxy;
+            }
+            return super.getSystemService(name);
+        }
+
+        @Override
+        public void clear(boolean destroy) {
+            if (mWindowManagerProxy != null) {
+                mWindowManagerProxy.clear(destroy);
+            }
+            if (destroy) {
+                helper = null;
+                mWindowManagerProxy = null;
+            }
         }
     }
 }

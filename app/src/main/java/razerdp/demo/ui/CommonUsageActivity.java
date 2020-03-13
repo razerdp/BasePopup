@@ -25,6 +25,7 @@ import razerdp.demo.model.common.CommonAnimateInfo;
 import razerdp.demo.model.common.CommonAnyPosInfo;
 import razerdp.demo.model.common.CommonBackgroundAlignInfo;
 import razerdp.demo.model.common.CommonBackgroundInfo;
+import razerdp.demo.model.common.CommonBlurInfo;
 import razerdp.demo.model.common.CommonBottomSheetDialogInfo;
 import razerdp.demo.model.common.CommonControllerInfo;
 import razerdp.demo.model.common.CommonFriendCircleInfo;
@@ -117,6 +118,7 @@ public class CommonUsageActivity extends BaseActivity {
         result.add(new DemoCommonUsageTitle("背景相关"));
         result.add(new CommonBackgroundInfo());
         result.add(new CommonBackgroundAlignInfo());
+        result.add(new CommonBlurInfo());
         result.add(new DemoCommonUsageTitle("生命期相关"));
         result.add(new ShowOnCreateInfo());
         result.add(new ShowInServiceInfo());

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/default_padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_blur"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:text="模糊度：10%"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/progress_blur"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight=".7"
+                android:max="25"
+                android:progress="10" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_scale"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:text="预缩放系数：0.15"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/progress_scale"
+                android:layout_width="0dp"
+                android:layout_weight=".7"
+                android:layout_height="20dp"
+                android:max="100"
+                android:progress="15" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_blur_in"
+                android:layout_width="0dp"
+                android:layout_weight=".3"
+                android:layout_height="wrap_content"
+                android:text="淡入时间：500ms"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/progress_blur_in"
+                android:layout_width="0dp"
+                android:layout_weight=".7"
+                android:layout_height="20dp"
+                android:max="10000"
+                android:progress="500" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_blur_out"
+                android:layout_width="0dp"
+                android:layout_weight=".3"
+                android:layout_height="wrap_content"
+                android:text="淡出时间：500ms"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/progress_blur_out"
+                android:layout_width="0dp"
+                android:layout_weight=".7"
+                android:layout_height="20dp"
+                android:max="10000"
+                android:progress="500" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/check_blur"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="开启模糊"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small"
+                android:theme="@style/MyCheckBox" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/check_blur_anchor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="只模糊Anchor"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small"
+                android:theme="@style/MyCheckBox" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <razerdp.demo.widget.DPTextView
+        android:id="@+id/tv_go"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/default_padding"
+        android:text="确定"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_small"
+        app:backgroundColor="@color/color_link"
+        app:textPressedColor="@color/white_70" />
+
+
+</LinearLayout>
