@@ -12,6 +12,9 @@
     * 增加`OnPopupWindowShowListener`，效果同上
     * fix [#267](https://github.com/razerdp/BasePopup/issues/267)
     * 修复`setOverlayStatusbar(false)`情况下与Anchor关联时显示位置错误的问题
+  * **【2.2.3.20200313】**
+    * 增加背景模糊demo
+    * 抛弃反射黑科技，感谢[@xchengDroid](https://github.com/xchengDroid)提出的方案
 
 * **【Release】2.2.2.2**(2020/03/01)
   * 修复一个很严重的可能会导致崩溃的问题

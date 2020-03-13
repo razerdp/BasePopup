@@ -16,7 +16,6 @@ public final class BasePopupSDK {
 
     private static volatile Application mApplicationContext;
     private WeakReference<Activity> mTopActivity;
-    private boolean unLockSuccess;
 
     private static class SingleTonHolder {
         private static BasePopupSDK INSTANCE = new BasePopupSDK();
@@ -28,7 +27,6 @@ public final class BasePopupSDK {
 
     synchronized void init(Context context) {
         if (mApplicationContext != null) return;
-        unLockSuccess = Reflection.unseal(context) != -1;
         mApplicationContext = (Application) context.getApplicationContext();
         regLifeCallback();
     }
