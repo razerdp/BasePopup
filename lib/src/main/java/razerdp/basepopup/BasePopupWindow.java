@@ -214,7 +214,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -625,7 +624,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </p>
      *
      * @param anchorViewResid anchorView的ViewId
+     * @deprecated please use {@link #showPopupWindow(View)}
+     *
      */
+    @Deprecated
     public void showPopupWindow(int anchorViewResid) {
         Activity act = getContext();
 
@@ -798,7 +800,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     protected void onShowError(Exception e) {
-        Log.e(TAG, "onShowError: ", e);
+        PopupLog.e(TAG, "onShowError: ", e);
         onLogInternal(e.getMessage());
     }
 

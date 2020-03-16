@@ -36,6 +36,7 @@ ext {
     //Android
     compileSdkVersion = 29
     minSdkVersion = 19
+    minLibSdkVersion = 16
     targetSdkVersion = 29
     versionCode = 97
     versionName = '2.2.3.20200313'
