@@ -33,8 +33,8 @@
                         </a>
         			</td>
         			<td align="center">
-        				<a href="https://img.shields.io/badge/Api-19%2B-green.svg">
-        					<img src="https://img.shields.io/badge/Api-19%2B-green.svg"/>
+        				<a href="https://img.shields.io/badge/Api-16%2B-green.svg">
+        					<img src="https://img.shields.io/badge/Api-16%2B-green.svg"/>
         				</a>
         			</td>
         			<td align="center">
