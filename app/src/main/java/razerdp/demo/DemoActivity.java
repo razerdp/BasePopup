@@ -5,17 +5,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.pgyersdk.update.DownloadFileListener;
-import com.pgyersdk.update.PgyUpdateManager;
-import com.pgyersdk.update.UpdateManagerListener;
-import com.pgyersdk.update.javabean.AppBean;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
 import razerdp.basepopup.QuickPopupBuilder;
@@ -26,7 +21,6 @@ import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.OnItemClickListener;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.model.DemoMainItem;
-import razerdp.demo.popup.update.PopupUpdate;
 import razerdp.demo.ui.ActivityLauncher;
 import razerdp.demo.ui.CommonUsageActivity;
 import razerdp.demo.ui.GuideActivity;
@@ -45,8 +39,6 @@ public class DemoActivity extends BaseActivity {
     DPRecyclerView rvContent;
 
     SimpleRecyclerViewAdapter<DemoMainItem> mAdapter;
-
-    PopupUpdate mPopupUpdate;
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -81,9 +73,6 @@ public class DemoActivity extends BaseActivity {
         });
         rvContent.setAdapter(mAdapter);
 
-        checkForUpdate();
-
-
         QuickPopupBuilder.with(this)
                 .contentView(R.layout.popup_wj)
                 .config(new QuickPopupConfig()
@@ -93,58 +82,6 @@ public class DemoActivity extends BaseActivity {
                         .blurBackground(true)
                         .dismissOnOutSideTouch(false))
                 .show();
-    }
-
-    private void checkForUpdate() {
-        new PgyUpdateManager.Builder()
-                .setUpdateManagerListener(new UpdateManagerListener() {
-                    @Override
-                    public void onNoUpdateAvailable() {
-                        UIHelper.toast("已经是最新版");
-                    }
-
-                    @Override
-                    public void onUpdateAvailable(AppBean appBean) {
-                        if (appBean == null) {
-                            UIHelper.toast("已经是最新版");
-                            return;
-                        }
-                        if (mPopupUpdate == null) {
-                            mPopupUpdate = new PopupUpdate(self());
-                        }
-                        mPopupUpdate.showPopupWindow(appBean);
-                    }
-
-                    @Override
-                    public void checkUpdateFailed(Exception e) {
-                        UIHelper.toast(e.getMessage());
-                    }
-                })
-                .setDownloadFileListener(new DownloadFileListener() {
-                    @Override
-                    public void downloadFailed() {
-                        //下载失败
-                        if (mPopupUpdate != null) {
-                            mPopupUpdate.onError();
-                        }
-                    }
-
-                    @Override
-                    public void downloadSuccessful(File file) {
-                        if (mPopupUpdate != null) {
-                            mPopupUpdate.dismiss(false);
-                        }
-                        PgyUpdateManager.installApk(file);
-                    }
-
-                    @Override
-                    public void onProgressUpdate(Integer... integers) {
-                        if (mPopupUpdate != null) {
-                            mPopupUpdate.onProgress(integers[0]);
-                        }
-                    }
-                })
-                .register();
     }
 
     private List<DemoMainItem> generateItem() {
