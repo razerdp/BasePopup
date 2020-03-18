@@ -3,8 +3,6 @@ package razerdp.demo.app;
 import android.app.Application;
 import android.content.Context;
 
-import com.pgyersdk.crash.PgyCrashManager;
-
 import razerdp.basepopup.BasePopupWindow;
 
 /**
@@ -17,9 +15,4 @@ public class PopupDemoApp extends Application {
         super.attachBaseContext(base);
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        PgyCrashManager.register();
-    }
 }

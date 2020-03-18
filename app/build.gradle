@@ -1,22 +1,5 @@
 apply plugin: 'com.android.application'
 
-def keystoreFilepath = ''
-def keystorePSW = ''
-def keystoreAlias = ''
-def keystoreAliasPSW = ''
-def keyfile = file('s.keystore.temp')
-
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-keystoreFilepath = properties.getProperty("keystore.path")
-
-if (keystoreFilepath) {
-    keystorePSW = properties.getProperty("keystore.password")
-    keystoreAlias = properties.getProperty("keystore.alias")
-    keystoreAliasPSW = properties.getProperty("keystore.alias_password")
-    keyfile = file(keystoreFilepath)
-}
-
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
@@ -37,34 +20,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    signingConfigs {
-        debug {
-            keyAlias keystoreAlias
-            keyPassword keystoreAliasPSW
-            storeFile keyfile
-            storePassword keystorePSW
-        }
 
-        release {
-            keyAlias keystoreAlias
-            keyPassword keystoreAliasPSW
-            storeFile keyfile
-            storePassword keystorePSW
-        }
-    }
-
-    buildTypes {
-        debug {
-            String appid = properties.getProperty("pgy_appid")
-            manifestPlaceholders = [APPID: appid]
-        }
-        release {
-            minifyEnabled false
-            String appid = properties.getProperty("pgy_appid")
-            manifestPlaceholders = [APPID: appid]
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
     dexOptions {
         javaMaxHeapSize "4g"
         preDexLibraries = true
@@ -86,8 +42,8 @@ dependencies {
     implementation 'com.github.razerdp:StrokeLayouts:1.0.0'
     implementation project(path: ':lib')
 
-    implementation "com.jakewharton:butterknife:10.1.0"
-    annotationProcessor "com.jakewharton:butterknife-compiler:10.1.0"
+    implementation "com.jakewharton:butterknife:10.2.1"
+    annotationProcessor "com.jakewharton:butterknife-compiler:10.2.1"
 
     implementation('com.github.bumptech.glide:glide:4.11.0') {
         exclude group: "android.support"
@@ -103,9 +59,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.10.0'
     //gson
     implementation 'com.google.code.gson:gson:2.8.6'
-
-    //蒲公英
-    implementation 'com.pgyersdk:sdk:3.0.10'
 
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 
