@@ -77,7 +77,7 @@ public class QuickPopup extends BaseLazyPopupWindow {
         setAlignBackground((config.flag & BasePopupFlag.ALIGN_BACKGROUND) != 0);
         setAlignBackgroundGravity(config.getAlignBackgroundGravity());
         setAutoLocatePopup((config.flag & BasePopupFlag.AUTO_LOCATED) != 0);
-        setPopupWindowFullScreen((config.flag & BasePopupFlag.OVERLAY_STATUS_BAR) != 0);
+        setOverlayStatusbar((config.flag & BasePopupFlag.OVERLAY_STATUS_BAR) != 0);
         setOnDismissListener(config.getDismissListener());
         setBackground(config.getBackground());
         linkTo(config.getLinkedView());

@@ -625,7 +625,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *
      * @param anchorViewResid anchorView的ViewId
      * @deprecated please use {@link #showPopupWindow(View)}
-     *
      */
     @Deprecated
     public void showPopupWindow(int anchorViewResid) {
@@ -959,6 +958,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *                      {@link android.view.WindowManager.LayoutParams#softInputMode}
      *                      for the full list
      */
+    @Deprecated
     public BasePopupWindow setSoftInputMode(int softInputMode) {
         mHelper.setSoftInputMode(softInputMode);
         return this;
@@ -1388,8 +1388,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </ul>
      *
      * @param mode <ul><li>GravityMode.RELATIVE_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup处于该Anchor的哪个位置</li>
-     *                                                                                                                                                                                                                                                                                                 <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
-     *                                                                                                                                                                                                                                                                                                 </ul>
+     *                                                                                                                                                                                                                                                                                                                         <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
+     *                                                                                                                                                                                                                                                                                                                         </ul>
      */
     public BasePopupWindow setPopupGravity(GravityMode mode, int popupGravity) {
         mHelper.setPopupGravity(mode, popupGravity);
