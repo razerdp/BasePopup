@@ -17,6 +17,8 @@ import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 
 import razerdp.demo.app.AppContext;
+import razerdp.demo.utils.rx.RxCall;
+import razerdp.demo.utils.rx.RxHelper;
 
 
 /**
@@ -91,7 +93,16 @@ public class UIHelper {
     }
 
     public static void toast(String text, int duration) {
-        Toast.makeText(AppContext.getAppContext(), text, duration).show();
+        if (ToolUtil.isMainThread()) {
+            Toast.makeText(AppContext.getAppContext(), text, duration).show();
+        } else {
+            RxHelper.runOnUiThread(new RxCall<Void>() {
+                @Override
+                public void onCall(Void data) {
+                    toast(text, duration);
+                }
+            });
+        }
     }
 
     /**

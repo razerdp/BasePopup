@@ -68,7 +68,7 @@
  - [环境依赖](#环境依赖)
  - [快速入门](#快速入门)
    - [BasePopup手册](https://www.yuque.com/razerdp/basepopup)
- - [Api（请看Wiki）](#api请看wiki后续迁移至文档)
+ - [Api](#api)
  - [更新日志](#更新日志-历史更新)
    - [历史更新](./UpdateLog.md)
  - [例子预览](#例子预览)
@@ -122,9 +122,9 @@
 
 <br>
 
-### Api（请看Wiki，后续迁移至文档）
+### Api
 
-**Link👉**[WIKI](https://github.com/razerdp/BasePopup/wiki)
+**Link👉**[WIKI](https://www.yuque.com/razerdp/basepopup/api)
 
 <br>
 
