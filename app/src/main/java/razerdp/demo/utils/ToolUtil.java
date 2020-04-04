@@ -42,7 +42,11 @@ public class ToolUtil {
             }
         }
         return true;
+    }
 
+    public static boolean indexIn(Collection<?> target, int index) {
+        if (target == null || isEmpty(target)) return false;
+        return index >= 0 && index < target.size();
     }
 
     /**
