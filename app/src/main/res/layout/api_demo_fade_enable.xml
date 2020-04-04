@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/default_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_padding"
+            android:text="setPopupFadeEnable(boolean isPopupFadeAnimate)"
+            android:textColor="@color/text_black1"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <View style="@style/divider" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:lineSpacingExtra="1.5dp"
+            android:lineSpacingMultiplier="1.5"
+            android:text="设置PopupWindow是否淡入淡出，默认开启淡入淡出。"
+            android:textColor="@color/text_black2"
+            android:textSize="@dimen/text_small" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:lineSpacingExtra="1.5dp"
+            android:lineSpacingMultiplier="1.5"
+            android:text="【注意】由于Android 6.0系统的问题，开启动画会导致显示很卡，因此在Android 6.0中默认关闭。"
+            android:textColor="@color/common_red_light"
+            android:textSize="@dimen/text_small" />
+
+        <razerdp.demo.widget.DPTextView
+            android:id="@+id/tv_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="测试弹窗"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_normal"
+            app:backgroundColor="@color/common_blue"
+            app:corner_radius="25dp" />
+    </LinearLayout>
+</LinearLayout>

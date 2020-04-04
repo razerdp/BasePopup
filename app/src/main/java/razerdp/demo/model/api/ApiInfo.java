@@ -1,21 +1,28 @@
 package razerdp.demo.model.api;
 
+import java.io.Serializable;
+
 import razerdp.demo.ui.apidemo.ApiDemoFragment;
 import razerdp.demo.utils.StringUtil;
 
 /**
  * Created by 大灯泡 on 2020/4/4.
  */
-public class ApiInfo {
+public class ApiInfo implements Serializable {
     private CharSequence api;
     private Class<? extends ApiDemoFragment> fragmentClass;
     private String titleText;
+    private String tips;
 
     public ApiInfo(CharSequence api, Class<? extends ApiDemoFragment> fragmentClass) {
-        this.api = api;
-        this.fragmentClass = fragmentClass;
+        this(api, fragmentClass, null);
     }
 
+    public ApiInfo(CharSequence api, Class<? extends ApiDemoFragment> fragmentClass, String titleText) {
+        this.api = api;
+        this.fragmentClass = fragmentClass;
+        this.titleText = titleText;
+    }
 
     public CharSequence getApi() {
         return api;
@@ -25,6 +32,14 @@ public class ApiInfo {
         return fragmentClass;
     }
 
+    public ApiInfo setTips(String tips) {
+        this.tips = tips;
+        return this;
+    }
+
+    public String getTips() {
+        return tips;
+    }
 
     public String getTitleText() {
         if (StringUtil.noEmpty(titleText)) {

@@ -17,6 +17,9 @@ import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.model.api.ApiInfo;
+import razerdp.demo.ui.apidemo.ApiDemoActivity;
+import razerdp.demo.ui.apidemo.fragments.ConstructorApiFragment;
+import razerdp.demo.ui.apidemo.fragments.FadeEnableApiFragment;
 import razerdp.demo.utils.DescBuilder;
 import razerdp.demo.utils.UIHelper;
 
@@ -37,6 +40,31 @@ public class ApiListActivity extends BaseActivity {
 
     static {
         sApiInfos = new ArrayList<>();
+        ApiInfo apiInfo = new ApiInfo("BasePopupWindow()", ConstructorApiFragment.class, "构造器");
+        sApiInfos.add(apiInfo);
+
+        apiInfo = new ApiInfo("onCreateShowAnimation()", null);
+        apiInfo.setTips("请查看【快速入门】-【动画展示】");
+        sApiInfos.add(apiInfo);
+
+        apiInfo = new ApiInfo("onCreateDismissAnimation()", null);
+        apiInfo.setTips("请查看【快速入门】-【动画展示】");
+        sApiInfos.add(apiInfo);
+
+        apiInfo = new ApiInfo("onCreateShowAnimator()", null);
+        apiInfo.setTips("请查看【快速入门】-【动画展示】");
+        sApiInfos.add(apiInfo);
+
+        apiInfo = new ApiInfo("onCreateDismissAnimator()", null);
+        apiInfo.setTips("请查看【快速入门】-【动画展示】");
+        sApiInfos.add(apiInfo);
+
+        apiInfo = new ApiInfo("onCreateAnimateView()", null);
+        apiInfo.setTips("返回PopupWindow执行动画的View，缺省值为ContentView");
+        sApiInfos.add(apiInfo);
+
+        apiInfo = new ApiInfo("setPopupFadeEnable(boolean isPopupFadeAnimate)", FadeEnableApiFragment.class, "淡入淡出");
+        sApiInfos.add(apiInfo);
     }
 
     @Override
@@ -57,7 +85,13 @@ public class ApiListActivity extends BaseActivity {
         DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         divider.setDrawable(UIHelper.getDrawable(R.drawable.divider));
         mRvContent.addItemDecoration(divider);
-        adapter.setOnItemClickListener((v, position, data) -> ActivityLauncher.start(self(), data.getActivityClass(), data.getExtraData()));
+        adapter.setOnItemClickListener((v, position, data) -> {
+            if (data.getFragmentClass() != null) {
+                ActivityLauncher.start(self(), ApiDemoActivity.class, new ApiDemoActivity.Data(data));
+            } else {
+                UIHelper.toast(data.getTips());
+            }
+        });
         mRvContent.setAdapter(adapter);
 
     }
