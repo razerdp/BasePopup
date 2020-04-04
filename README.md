@@ -148,6 +148,10 @@
     * 抛弃反射黑科技，感谢[@xchengDroid](https://github.com/xchengDroid)提出的方案
   * **【2.2.3.20200316】**
     * 支持的最低版本降至api 16
+  * **【2.2.3.20200404】**
+    * 优化decorView寻找方式，释放引用优化
+    * 添加LifeCycle绑定方法(`bindLifecycleOwner()`)
+    * 添加Api展示
 
 * **【Release】2.2.2.2**(2020/03/01)
   * 修复一个很严重的可能会导致崩溃的问题

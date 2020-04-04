@@ -44,6 +44,10 @@ public class QuickPopupConfig implements BasePopupFlag {
     protected int minHeight;
     protected int maxHeight;
 
+    protected boolean backPressedEnable;
+    protected boolean outSideTouchable;
+    protected boolean outSideDismiss;
+
     protected Drawable background = new ColorDrawable(BasePopupWindow.DEFAULT_BACKGROUND_COLOR);
 
     protected View mLinkedView;

@@ -96,12 +96,7 @@ public class UIHelper {
         if (ToolUtil.isMainThread()) {
             Toast.makeText(AppContext.getAppContext(), text, duration).show();
         } else {
-            RxHelper.runOnUiThread(new RxCall<Void>() {
-                @Override
-                public void onCall(Void data) {
-                    toast(text, duration);
-                }
-            });
+            RxHelper.runOnUiThread((RxCall<Void>) data -> toast(text, duration));
         }
     }
 
