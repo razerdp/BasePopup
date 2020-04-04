@@ -8,7 +8,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.1'
+        classpath 'com.android.tools.build:gradle:3.6.2'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
 
@@ -36,14 +36,14 @@ ext {
     minSdkVersion = 19
     minLibSdkVersion = 16
     targetSdkVersion = 29
-    versionCode = 97
-    versionName = '2.2.3.20200316'
+    versionCode = 98
+    versionName = '2.2.3.20200404'
 
     candy = true
     group = 'com.github.razerdp'
 
-    pkg_name='BasePopup'
-    pkg_candy_name='BasePopup_Candy'
+    pkg_name = 'BasePopup'
+    pkg_candy_name = 'BasePopup_Candy'
 }
 
 

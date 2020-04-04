@@ -1,0 +1,7 @@
+<resources>
+    <string name="api_constructor_context">• 最常用的构造器，传入context情况下会寻找其Activity作为依附的WindowToken，如果获取不到（如ApplicationContext）则取当前应用最顶层Activity作为依附的WindowToken\n\n• 此时PopupWindow的层级与Activity的Window一致，无法显示在别的Window上方（如弹出一个Dialog再弹出一个PopupWindow，此时PopupWindow显示在Dialog下层）\n\n• 该构造器构造的BasePopup可以在Dialog或DialogFragment下弹出</string>
+    <string name="api_constructor_fragment">• 构造器传入Fragment情况下会寻找其RootView作为依附的WindowToken，如果获取不到则取当前fragment所属Activity作为依附的WindowToken\n\n• 此时PopupWindow的层级与Fragment的Window一致，无法显示在其他Window上方（如弹出一个Dialog再弹出一个PopupWindow，此时PopupWindow显示在Dialog下层）\n\n• 该构造器构造的BasePopup可以在DialogFragment或者依附于Activity的Fragment下弹出，其余情况不能弹出\n\n• 【注意】：DialogFragment在getDialog()!=null的情况下，会获取其Dialog的WindowToken。 </string>
+    <string name="api_constructor_dialog">• 构造器传入Dialog情况下会寻找其Window作为依附的WindowToken，如果获取不到则取Dialog所属Activity作为依附的WindowToken\n\n• 此时PopupWindow的层级与Dialog的Window一致，无法显示在其他Window上方（如弹出一个Dialog再弹出一个PopupWindow，此时PopupWindow显示在Dialog上层）\n\n• 该构造器构造的BasePopup只可以在Dialog显示（即Dialog的ContentView准备就绪）的时候弹出</string>
+
+
+</resources>

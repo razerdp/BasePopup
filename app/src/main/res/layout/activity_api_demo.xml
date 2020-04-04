@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <razerdp.demo.widget.TitleBarView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:mode="mode_both"
+        app:right_icon="@drawable/ic_setting_white"
+        app:title_text="Api Demo" />
+
+    <FrameLayout
+        android:id="@+id/layout_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white" />
+
+</LinearLayout>
