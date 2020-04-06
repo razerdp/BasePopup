@@ -152,6 +152,9 @@
     * 优化decorView寻找方式，释放引用优化
     * 添加LifeCycle绑定方法(`bindLifecycleOwner()`)
     * 添加Api展示
+  * **【2.2.3.20200406】**
+    * 修复当PopupWindow弹出时，Activity弹出的输入法显示在PopupWindow下层的问题
+    * fix [#224](https://github.com/razerdp/BasePopup/issues/224)
 
 * **【Release】2.2.2.2**(2020/03/01)
   * 修复一个很严重的可能会导致崩溃的问题
