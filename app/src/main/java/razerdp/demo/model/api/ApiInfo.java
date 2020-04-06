@@ -12,7 +12,6 @@ public class ApiInfo implements Serializable {
     private CharSequence api;
     private Class<? extends ApiDemoFragment> fragmentClass;
     private String titleText;
-    private String tips;
 
     public ApiInfo(CharSequence api, Class<? extends ApiDemoFragment> fragmentClass) {
         this(api, fragmentClass, null);
@@ -30,15 +29,6 @@ public class ApiInfo implements Serializable {
 
     public Class<? extends ApiDemoFragment> getFragmentClass() {
         return fragmentClass;
-    }
-
-    public ApiInfo setTips(String tips) {
-        this.tips = tips;
-        return this;
-    }
-
-    public String getTips() {
-        return tips;
     }
 
     public String getTitleText() {
