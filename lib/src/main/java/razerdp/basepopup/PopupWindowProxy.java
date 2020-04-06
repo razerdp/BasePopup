@@ -38,6 +38,7 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
         setFocusable(true);
         setOutsideTouchable(true);
         setBackgroundDrawable(new ColorDrawable());
+        setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
     }
 
 

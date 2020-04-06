@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <razerdp.demo.widget.TitleBarView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title_text="Issue #224" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.3"
+        android:padding="@dimen/default_padding"
+        android:text="问题描述：\n想实现autocompletetextview类似的EditText模糊查找数据功能，弹出popupwindow后EditText的键盘输入事件被popwindow拦截了\nContentView大小变化后无法挂载到原AnchorView"
+        android:textColor="@color/text_black2"
+        android:textSize="@dimen/text_small" />
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/check_fit_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:checked="true"
+        android:text="setFitSize\n（是否允许BasePopup自动调整大小）"
+        android:textColor="@color/text_black2"
+        android:theme="@style/MyCheckBox" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="250dp" />
+
+    <LinearLayout
+        android:id="@+id/layout_test_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/default_padding">
+
+        <EditText
+            android:id="@+id/ed_num"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@drawable/bg_round_white_8dp"
+            android:hint="输入ItemView个数"
+            android:inputType="number"
+            android:padding="@dimen/default_padding"
+            android:textColor="@color/text_black1"
+            android:textSize="@dimen/text_normal" />
+
+        <razerdp.demo.widget.DPTextView
+            android:id="@+id/tv_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/default_padding"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingTop="8dp"
+            android:paddingRight="@dimen/default_padding"
+            android:paddingBottom="8dp"
+            android:text="show"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_normal"
+            app:backgroundColor="@color/color_blue"
+            app:corner_radius="4dp" />
+    </LinearLayout>
+
+</LinearLayout>

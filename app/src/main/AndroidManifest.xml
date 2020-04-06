@@ -84,6 +84,10 @@
         <activity android:name="razerdp.demo.ui.lifecycle.ShowOnCreateActivity" />
         <activity android:name="razerdp.demo.ui.ApiListActivity" />
         <activity android:name="razerdp.demo.ui.apidemo.ApiDemoActivity" />
+        <activity
+            android:name="razerdp.demo.ui.issuestest.Issue224TestActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
         <service android:name="razerdp.demo.services.DemoService" />
         <service android:name="razerdp.demo.services.DelayDemoService" />
