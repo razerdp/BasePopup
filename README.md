@@ -70,7 +70,7 @@
    - [BasePopup手册](https://www.yuque.com/razerdp/basepopup)
  - [Api](#api)
  - [更新日志](#更新日志-历史更新)
-   - [历史更新](./UpdateLog.md)
+   - [历史更新](https://www.yuque.com/razerdp/basepopup/uyrsxx)
  - [例子预览](#例子预览)
    - [**apk体验下载（密码123）**](https://www.pgyer.com/basepopup)
     <img src="./img/download.png"  width="256"/>
@@ -129,7 +129,7 @@
 <br>
 
 
-### 更新日志 ([历史更新](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
+### 更新日志 ([历史更新](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
 * **【Candy】2.2.3**
   * **【2.2.3.20200304】**
