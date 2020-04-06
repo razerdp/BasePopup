@@ -84,19 +84,23 @@
         <activity android:name="razerdp.demo.ui.lifecycle.ShowOnCreateActivity" />
         <activity android:name="razerdp.demo.ui.ApiListActivity" />
         <activity android:name="razerdp.demo.ui.apidemo.ApiDemoActivity" />
+        <activity
+            android:name="razerdp.demo.ui.issuestest.Issue224TestActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
         <service android:name="razerdp.demo.services.DemoService" />
         <service android:name="razerdp.demo.services.DelayDemoService" />
 
-<!--        <provider-->
-<!--            android:name="androidx.core.content.FileProvider"-->
-<!--            android:authorities="${applicationId}"-->
-<!--            android:exported="false"-->
-<!--            android:grantUriPermissions="true">-->
-<!--            <meta-data-->
-<!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
-<!--                android:resource="@xml/file_paths_public_popup" />-->
-<!--        </provider>-->
+        <!--        <provider-->
+        <!--            android:name="androidx.core.content.FileProvider"-->
+        <!--            android:authorities="${applicationId}"-->
+        <!--            android:exported="false"-->
+        <!--            android:grantUriPermissions="true">-->
+        <!--            <meta-data-->
+        <!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
+        <!--                android:resource="@xml/file_paths_public_popup" />-->
+        <!--        </provider>-->
 
         <meta-data
             android:name="PGYER_APPID"

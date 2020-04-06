@@ -5,6 +5,7 @@ import java.util.List;
 
 import razerdp.demo.model.issue.IssueInfo;
 import razerdp.demo.ui.issuestest.Issue210TestActivity;
+import razerdp.demo.ui.issuestest.Issue224TestActivity;
 import razerdp.demo.ui.issuestest.Issue226TestActivity;
 import razerdp.demo.ui.issuestest.Issue230TestActivity;
 import razerdp.demo.ui.issuestest.Issue236TestActivity;
@@ -19,6 +20,7 @@ import razerdp.demo.utils.StringUtil;
 class IssueHelper {
 
     static List<IssueInfo> addIssues(List<IssueInfo> result) {
+        add_224(result);
         add_210(result);
         add_226(result);
         add_230(result);
@@ -37,6 +39,22 @@ class IssueHelper {
             int issue2 = StringUtil.toInt(o2.issue);
             return Integer.compare(issue, issue2);
         });
+    }
+
+    private static void add_224(List<IssueInfo> result) {
+         IssueInfo issue224 = new IssueInfo();
+        issue224.setActivityClass(Issue224TestActivity.class)
+                .setIssue("224")
+                .setFixed(true)
+                .setTitle("想实现autocompletetextview类似的EditText模糊查找数据功能")
+                .setDesc(DescBuilder.get()
+                        .append("系统版本：UnKnown")
+                        .append("库版本：unknown")
+                        .append("想实现autocompletetextview类似的EditText模糊查找数据功能，弹出popupwindow后EditText的键盘输入事件被popwindow拦截了\nContentView大小变化后无法挂载到原AnchorView")
+                        .build())
+                .appendPic("https://user-images.githubusercontent.com/15073931/64840685-f17f4400-d62e-11e9-99e1-4f324e77c813.gif");
+
+        result.add(issue224);
     }
 
     private static void add_210(List<IssueInfo> result) {
