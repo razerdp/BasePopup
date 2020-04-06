@@ -59,7 +59,7 @@
    - [BasePopup manual](https://www.yuque.com/razerdp/basepopup)
  - [Api(Wiki)](#api)
  - [ChangeLog](#changelog-historical-update)
-   - [Historical update](./UpdateLog.md)
+   - [Historical update](https://www.yuque.com/razerdp/basepopup/uyrsxx)
  - [Preview](#Preview)
    - [**Demo apk(pass:123)**](https://www.pgyer.com/basepopup)
     <img src="./img/download.png"  width="256"/>
@@ -117,7 +117,7 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 <br>
 
 
-### ChangeLog ([Historical update](https://github.com/razerdp/BasePopup/blob/master/UpdateLog.md))
+### ChangeLog ([Historical update](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
 * **【Candy】2.2.3**
   * **【2.2.3.20200304】**
