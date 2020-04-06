@@ -13,10 +13,11 @@
         android:padding="@dimen/default_padding">
 
         <TextView
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_padding"
-            android:text="setPopupFadeEnable(boolean)"
+            android:text="setOverlayStatusbar(boolean)"
             android:textColor="@color/text_black1"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -29,7 +30,7 @@
             android:layout_marginTop="@dimen/default_padding"
             android:lineSpacingExtra="1.5dp"
             android:lineSpacingMultiplier="1.5"
-            android:text="设置PopupWindow是否淡入淡出，默认开启淡入淡出。"
+            android:text="设置BasePopup是否覆盖状态栏"
             android:textColor="@color/text_black2"
             android:textSize="@dimen/text_small" />
 
@@ -39,7 +40,7 @@
             android:layout_marginTop="@dimen/default_padding"
             android:lineSpacingExtra="1.5dp"
             android:lineSpacingMultiplier="1.5"
-            android:text="【注意】由于Android 6.0系统的问题，开启动画会导致显示很卡，因此在Android 6.0中默认关闭。"
+            android:text="【注意】：本方法在2.2.3版本新增，在2.2.3之前请使用setPopupWindowFullScreen(boolean)"
             android:textColor="@color/common_red_light"
             android:textSize="@dimen/text_small" />
 

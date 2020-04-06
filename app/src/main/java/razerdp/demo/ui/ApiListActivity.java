@@ -1,6 +1,7 @@
 package razerdp.demo.ui;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.view.View;
 import android.widget.TextView;
 
@@ -18,9 +19,13 @@ import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.model.api.ApiInfo;
 import razerdp.demo.ui.apidemo.ApiDemoActivity;
+import razerdp.demo.ui.apidemo.fragments.BackPressEnableApiFragment;
 import razerdp.demo.ui.apidemo.fragments.ConstructorApiFragment;
 import razerdp.demo.ui.apidemo.fragments.FadeEnableApiFragment;
+import razerdp.demo.ui.apidemo.fragments.OverStatusbarApiFragment;
 import razerdp.demo.utils.DescBuilder;
+import razerdp.demo.utils.SpanUtil;
+import razerdp.demo.utils.ToolUtil;
 import razerdp.demo.utils.UIHelper;
 
 /**
@@ -30,11 +35,13 @@ import razerdp.demo.utils.UIHelper;
  */
 public class ApiListActivity extends BaseActivity {
     public static final String DESC = DescBuilder.get()
-            .append("Api列表")
-            .append("ApiDemo")
+            .append("部分Api列表")
+            .append("部分ApiDemo")
             .build();
     @BindView(R.id.rv_content)
     RecyclerView mRvContent;
+    @BindView(R.id.tv_tips)
+    TextView tvTips;
 
     private static final List<ApiInfo> sApiInfos;
 
@@ -43,27 +50,16 @@ public class ApiListActivity extends BaseActivity {
         ApiInfo apiInfo = new ApiInfo("BasePopupWindow()", ConstructorApiFragment.class, "构造器");
         sApiInfos.add(apiInfo);
 
-        apiInfo = new ApiInfo("onCreateShowAnimation()", null);
-        apiInfo.setTips("请查看【快速入门】-【动画展示】");
+        apiInfo = new ApiInfo("setPopupFadeEnable(boolean)", FadeEnableApiFragment.class, "淡入淡出");
         sApiInfos.add(apiInfo);
 
-        apiInfo = new ApiInfo("onCreateDismissAnimation()", null);
-        apiInfo.setTips("请查看【快速入门】-【动画展示】");
+        apiInfo = new ApiInfo("setBackPressEnable(boolean)", BackPressEnableApiFragment.class, "返回键Dismiss");
         sApiInfos.add(apiInfo);
 
-        apiInfo = new ApiInfo("onCreateShowAnimator()", null);
-        apiInfo.setTips("请查看【快速入门】-【动画展示】");
+        apiInfo = new ApiInfo("setPopupWindowFullScreen(boolean)", OverStatusbarApiFragment.class, "覆盖状态栏");
         sApiInfos.add(apiInfo);
 
-        apiInfo = new ApiInfo("onCreateDismissAnimator()", null);
-        apiInfo.setTips("请查看【快速入门】-【动画展示】");
-        sApiInfos.add(apiInfo);
-
-        apiInfo = new ApiInfo("onCreateAnimateView()", null);
-        apiInfo.setTips("返回PopupWindow执行动画的View，缺省值为ContentView");
-        sApiInfos.add(apiInfo);
-
-        apiInfo = new ApiInfo("setPopupFadeEnable(boolean isPopupFadeAnimate)", FadeEnableApiFragment.class, "淡入淡出");
+        apiInfo = new ApiInfo("setOverlayStatusbar(boolean)", OverStatusbarApiFragment.class, "覆盖状态栏");
         sApiInfos.add(apiInfo);
     }
 
@@ -79,6 +75,12 @@ public class ApiListActivity extends BaseActivity {
 
     @Override
     protected void onInitView(View decorView) {
+        SpanUtil.create("本页仅展示部分常见Api的使用效果Demo，不列出所有Api方法，如果您需要查阅所有的Api，欢迎点击【这里】浏览文档")
+                .append("【这里】")
+                .setTextColorRes(R.color.common_red_light)
+                .setTextStyle(Typeface.DEFAULT_BOLD)
+                .setSpanClickListener(v -> ToolUtil.openInSystemBroswer(self(), "https://www.yuque.com/razerdp/basepopup/api"))
+                .into(tvTips);
         SimpleRecyclerViewAdapter<ApiInfo> adapter = new SimpleRecyclerViewAdapter<>(this, sApiInfos);
         adapter.setHolder(InnerViewHolder.class);
         mRvContent.setLayoutManager(new LinearLayoutManager(this));
@@ -88,8 +90,6 @@ public class ApiListActivity extends BaseActivity {
         adapter.setOnItemClickListener((v, position, data) -> {
             if (data.getFragmentClass() != null) {
                 ActivityLauncher.start(self(), ApiDemoActivity.class, new ApiDemoActivity.Data(data));
-            } else {
-                UIHelper.toast(data.getTips());
             }
         });
         mRvContent.setAdapter(adapter);
