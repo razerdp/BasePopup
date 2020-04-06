@@ -36,7 +36,7 @@ public class CommonBackgroundInfo extends DemoCommonUsageInfo {
 
     @Override
     public void toOption(View v) {
-        if (mPopupBackgroundOption==null){
+        if (mPopupBackgroundOption == null) {
             mPopupBackgroundOption = new PopupBackgroundOption(v.getContext());
             mPopupBackgroundOption.setInfo(this);
         }

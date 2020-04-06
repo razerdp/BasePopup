@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_padding"
-            android:text="setPopupFadeEnable(boolean)"
+            android:text="setBackPressEnable(boolean)"
             android:textColor="@color/text_black1"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -29,18 +29,8 @@
             android:layout_marginTop="@dimen/default_padding"
             android:lineSpacingExtra="1.5dp"
             android:lineSpacingMultiplier="1.5"
-            android:text="设置PopupWindow是否淡入淡出，默认开启淡入淡出。"
+            android:text="设置BasePopup是否允许返回键dismiss"
             android:textColor="@color/text_black2"
-            android:textSize="@dimen/text_small" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_padding"
-            android:lineSpacingExtra="1.5dp"
-            android:lineSpacingMultiplier="1.5"
-            android:text="【注意】由于Android 6.0系统的问题，开启动画会导致显示很卡，因此在Android 6.0中默认关闭。"
-            android:textColor="@color/common_red_light"
             android:textSize="@dimen/text_small" />
 
         <razerdp.demo.widget.DPTextView
