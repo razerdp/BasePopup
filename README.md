@@ -155,6 +155,8 @@
   * **【2.2.3.20200406】**
     * 修复当PopupWindow弹出时，Activity弹出的输入法显示在PopupWindow下层的问题
     * fix [#224](https://github.com/razerdp/BasePopup/issues/224)
+  * **【2.2.3.20200411】**
+    * 增加`onPreShow()`方法，在真正show之前可以在该方法配置
 
 * **【Release】2.2.2.2**(2020/03/01)
   * 修复一个很严重的可能会导致崩溃的问题
