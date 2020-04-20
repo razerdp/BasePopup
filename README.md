@@ -157,6 +157,13 @@
     * fix [#224](https://github.com/razerdp/BasePopup/issues/224)
   * **【2.2.3.20200411】**
     * 增加`onPreShow()`方法，在真正show之前可以在该方法配置
+  * **【2.2.3-dev01】**(2020/04/21)
+    * fix[#281](https://github.com/razerdp/BasePopup/issues/281)
+    * 补充QuickPopupConfig方法
+    * deprecated：
+      * BasePopupWindow#dismissWithOutAnimate()
+      * QuickPopupConfig#dismissOnOutSideTouch()
+      * QuickPopupConfig#allowInterceptTouchEvent()
 
 * **【Release】2.2.2.2**(2020/03/01)
   * 修复一个很严重的可能会导致崩溃的问题

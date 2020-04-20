@@ -785,6 +785,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 感谢@xchengDroid(https://github.com/xchengDroid)在#263(https://github.com/razerdp/BasePopup/issues/263)中提出的建议
      */
     void tryToShowPopup(View v, boolean positionMode) {
+        if (isShowing() || mContentView == null) return;
         if (isDestroyed) {
             onShowError(new IllegalAccessException("该BasePopup已经被Destroy，不可以继续show了哦~"));
             return;
@@ -1410,8 +1411,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </ul>
      *
      * @param mode <ul><li>GravityMode.RELATIVE_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup处于该Anchor的哪个位置</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 </ul>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 </ul>
      */
     public BasePopupWindow setPopupGravity(GravityMode mode, int popupGravity) {
         mHelper.setPopupGravity(mode, popupGravity);
@@ -1710,12 +1711,16 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param animateDismiss 传入为true，则执行退出动画后dismiss（如果有的话）
      */
     public void dismiss(boolean animateDismiss) {
+        if (!isShowing() || mContentView == null) return;
         mHelper.dismiss(animateDismiss);
     }
 
     /**
      * 直接消掉PopupWindow而不需要动画
+     *
+     * @deprecated 请使用 {@link #dismiss(boolean)}
      */
+    @Deprecated
     public void dismissWithOutAnimate() {
         dismiss(false);
     }
