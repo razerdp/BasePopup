@@ -129,34 +129,9 @@
 <br>
 
 
-### 更新日志 ([历史更新](https://www.yuque.com/razerdp/basepopup/uyrsxx)
+### 更新日志 [历史更新](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Candy】2.2.3**
-  * **【2.2.3.20200304】**
-    * 优化覆盖状态栏情况下的事件传递
-    * 方法弃用：~~`setPopupWindowFullScreen()`~~ -> `setOverlayStatusbar()`
-    * 新增方法：`setPopupGravityMode()`
-    * Demo迁移至蒲公英
-  * **【2.2.3.20200311】**
-    * 开放BasePopup的PopupShowing回调
-      * 现在可以在`onShowing()`中监听BasePopup显示了~
-    * 增加`OnPopupWindowShowListener`，效果同上
-    * fix [#267](https://github.com/razerdp/BasePopup/issues/267)
-    * 修复`setOverlayStatusbar(false)`情况下与Anchor关联时显示位置错误的问题
-  * **【2.2.3.20200313】**
-    * 增加背景模糊demo
-    * 抛弃反射黑科技，感谢[@xchengDroid](https://github.com/xchengDroid)提出的方案
-  * **【2.2.3.20200316】**
-    * 支持的最低版本降至api 16
-  * **【2.2.3.20200404】**
-    * 优化decorView寻找方式，释放引用优化
-    * 添加LifeCycle绑定方法(`bindLifecycleOwner()`)
-    * 添加Api展示
-  * **【2.2.3.20200406】**
-    * 修复当PopupWindow弹出时，Activity弹出的输入法显示在PopupWindow下层的问题
-    * fix [#224](https://github.com/razerdp/BasePopup/issues/224)
-  * **【2.2.3.20200411】**
-    * 增加`onPreShow()`方法，在真正show之前可以在该方法配置
+**Candy开发日志请查看dev分支**[**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
 * **【Release】2.2.2.2**(2020/03/01)
   * 修复一个很严重的可能会导致崩溃的问题
