@@ -129,7 +129,7 @@
 <br>
 
 
-### 更新日志 ([历史更新](https://www.yuque.com/razerdp/basepopup/uyrsxx)
+### 更新日志 [历史更新](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
 * **【Candy】2.2.3**
   * **【2.2.3.20200304】**
