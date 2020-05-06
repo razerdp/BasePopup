@@ -23,6 +23,7 @@ import razerdp.demo.model.DemoCommonUsageTitle;
 import razerdp.demo.model.common.CommonAnchorMatchInfo;
 import razerdp.demo.model.common.CommonAnimateInfo;
 import razerdp.demo.model.common.CommonAnyPosInfo;
+import razerdp.demo.model.common.CommonArrowInfo;
 import razerdp.demo.model.common.CommonBackgroundAlignInfo;
 import razerdp.demo.model.common.CommonBackgroundInfo;
 import razerdp.demo.model.common.CommonBlurInfo;
@@ -111,6 +112,7 @@ public class CommonUsageActivity extends BaseActivity {
         result.add(new CommonAnyPosInfo());
         result.add(new CommonFriendCircleInfo());
         result.add(new CommonAnchorMatchInfo());
+        result.add(new CommonArrowInfo());
         result.add(new DemoCommonUsageTitle("PopupWindow控制相关"));
         result.add(new CommonControllerInfo());
         result.add(new DemoCommonUsageTitle("动画相关"));

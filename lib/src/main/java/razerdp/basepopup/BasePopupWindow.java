@@ -210,6 +210,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -1411,8 +1412,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </ul>
      *
      * @param mode <ul><li>GravityMode.RELATIVE_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup处于该Anchor的哪个位置</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 </ul>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 </ul>
      */
     public BasePopupWindow setPopupGravity(GravityMode mode, int popupGravity) {
         mHelper.setPopupGravity(mode, popupGravity);
@@ -1869,6 +1870,30 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public void onShowing() {
 
+    }
+
+    /**
+     * 返回BasePopup布局中的位置信息
+     */
+    public void onPopupLayout(@NonNull Rect popupRect, @NonNull Rect anchorRect) {
+
+    }
+
+    public int computeGravity(@NonNull Rect popupRect, @NonNull Rect anchorRect) {
+        int gravity = Gravity.NO_GRAVITY;
+        int xDelta = popupRect.centerX() - anchorRect.centerX();
+        int yDelta = popupRect.centerY() - anchorRect.centerY();
+        if (xDelta == 0) {
+            gravity = yDelta == 0 ? Gravity.CENTER : Gravity.CENTER_HORIZONTAL | ((yDelta > 0) ? Gravity.BOTTOM : Gravity.TOP);
+        }
+        if (yDelta == 0) {
+            gravity = xDelta == 0 ? Gravity.CENTER : Gravity.CENTER_VERTICAL | ((xDelta > 0) ? Gravity.RIGHT : Gravity.LEFT);
+        }
+        if (gravity == Gravity.NO_GRAVITY) {
+            gravity = xDelta > 0 ? Gravity.RIGHT : Gravity.LEFT;
+            gravity |= yDelta > 0 ? Gravity.BOTTOM : Gravity.TOP;
+        }
+        return gravity;
     }
 
     //endregion

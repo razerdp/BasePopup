@@ -29,6 +29,7 @@ import android.widget.PopupWindow;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -783,6 +784,12 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         }
         if (mOnPopupWindowShowListener != null) {
             mOnPopupWindowShowListener.onShowing();
+        }
+    }
+
+    void onPopupLayout(@NonNull Rect popupRect, @NonNull Rect anchorRect) {
+        if (mPopupWindow != null) {
+            mPopupWindow.onPopupLayout(popupRect, anchorRect);
         }
     }
 

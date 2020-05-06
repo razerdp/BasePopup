@@ -166,6 +166,9 @@
       * QuickPopupConfig#allowInterceptTouchEvent()
   * **【2.2.3-dev02】**(2020/05/06)
     * 修复全屏activity判断bug
+  * **【2.2.3-dev03】**(2020/05/07)
+    * 添加`onPopupLayout()`和`computeGravity()`方法，便于完成箭头这类需求的部署
+    * 添加demo
 
 * **【Release】2.2.2.2**(2020/03/01)
   * 修复一个很严重的可能会导致崩溃的问题
