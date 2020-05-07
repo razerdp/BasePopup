@@ -17,7 +17,7 @@ public final class BasePopupSDK {
     private static volatile Application mApplicationContext;
     private WeakReference<Activity> mTopActivity;
 
-    private static class SingleTonHolder {
+    private static class SingletonHolder {
         private static BasePopupSDK INSTANCE = new BasePopupSDK();
     }
 
@@ -75,7 +75,7 @@ public final class BasePopupSDK {
     }
 
     public static BasePopupSDK getInstance() {
-        return SingleTonHolder.INSTANCE;
+        return SingletonHolder.INSTANCE;
     }
 
     public static Application getApplication() {
