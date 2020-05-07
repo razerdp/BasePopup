@@ -235,11 +235,6 @@ public class QuickPopupConfig implements BasePopupFlag {
         return this;
     }
 
-    public QuickPopupConfig backPressedEnable(boolean backPressedEnable) {
-        setFlag(BACKPRESS_ENABLE, backPressedEnable);
-        return this;
-    }
-
 
     public QuickPopupConfig outSideDismiss(boolean outsideDismiss) {
         setFlag(OUT_SIDE_DISMISS, outsideDismiss);

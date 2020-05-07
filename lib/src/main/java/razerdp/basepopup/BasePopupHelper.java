@@ -24,7 +24,6 @@ import android.view.animation.Animation;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -76,6 +75,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     long showDuration;
     long dismissDuration;
+
+    int animationStyleRes;
 
     //callback
     BasePopupWindow.OnDismissListener mOnDismissListener;
@@ -375,8 +376,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return (flag & FADE_ENABLE) != 0;
     }
 
-    BasePopupHelper setPopupFadeEnable(PopupWindow popupWindow, boolean fadeEnable) {
-        if (popupWindow == null) return this;
+    BasePopupHelper setPopupFadeEnable(boolean fadeEnable) {
         setFlag(FADE_ENABLE, fadeEnable);
         return this;
     }
@@ -446,10 +446,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return (flag & AUTO_INPUT_METHOD) != 0;
     }
 
-    BasePopupHelper autoShowInputMethod(PopupWindow popupWindow, boolean autoShowInputMethod) {
-        if (popupWindow == null) return this;
+    BasePopupHelper autoShowInputMethod(boolean autoShowInputMethod) {
         setFlag(AUTO_INPUT_METHOD, autoShowInputMethod);
-        popupWindow.setSoftInputMode(autoShowInputMethod ? WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE : WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED);
         return this;
     }
 
@@ -471,8 +469,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return (flag & OUT_SIDE_DISMISS) != 0;
     }
 
-    BasePopupHelper dismissOutSideTouch(PopupWindow popupWindow, boolean dismissWhenTouchOutside) {
-        if (popupWindow == null) return this;
+    BasePopupHelper dismissOutSideTouch(boolean dismissWhenTouchOutside) {
         setFlag(OUT_SIDE_DISMISS, dismissWhenTouchOutside);
         return this;
     }
@@ -481,9 +478,13 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return (flag & OUT_SIDE_TOUCHABLE) != 0;
     }
 
-    BasePopupHelper outSideTouchable(PopupWindow popupWindow, boolean touchAble) {
-        if (popupWindow == null) return this;
+    BasePopupHelper outSideTouchable(boolean touchAble) {
         setFlag(OUT_SIDE_TOUCHABLE, touchAble);
+        return this;
+    }
+
+    BasePopupHelper setPopupAnimationStyle(int animationStyleRes) {
+        this.animationStyleRes = animationStyleRes;
         return this;
     }
 
@@ -510,8 +511,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return (flag & BACKPRESS_ENABLE) != 0;
     }
 
-    BasePopupHelper backPressEnable(PopupWindow popupWindow, boolean backPressEnable) {
-        if (popupWindow == null) return this;
+    BasePopupHelper backPressEnable(boolean backPressEnable) {
         setFlag(BACKPRESS_ENABLE, backPressEnable);
         return this;
     }
@@ -705,6 +705,14 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
             setShowMode(v == null ? BasePopupHelper.ShowMode.SCREEN : BasePopupHelper.ShowMode.RELATIVE_TO_ANCHOR);
         }
         getAnchorLocation(v);
+        applyToPopupWindow();
+    }
+
+    private void applyToPopupWindow() {
+        if (mPopupWindow == null || mPopupWindow.mPopupWindowProxy == null) return;
+        mPopupWindow.mPopupWindowProxy.setSoftInputMode(isAutoShowInputMethod() ? WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE : WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED);
+        mPopupWindow.mPopupWindowProxy.setSoftInputMode(mSoftInputMode);
+        mPopupWindow.mPopupWindowProxy.setAnimationStyle(animationStyleRes);
     }
 
     void onDismiss() {
@@ -872,7 +880,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     void update(View v, boolean positionMode) {
         if (!mPopupWindow.isShowing() || mPopupWindow.mContentView == null) return;
         prepare(v, positionMode);
-        mPopupWindow.mPopupWindow.update();
+        mPopupWindow.mPopupWindowProxy.update();
     }
 
     void onUpdate() {

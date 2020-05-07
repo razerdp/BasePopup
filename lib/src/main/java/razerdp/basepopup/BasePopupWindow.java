@@ -341,7 +341,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     boolean pendingPopupWindow;
 
     //元素定义
-    PopupWindowProxy mPopupWindow;
+    PopupWindowProxy mPopupWindowProxy;
     //popup视图
     View mContentView;
     View mDisplayAnimateView;
@@ -452,9 +452,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         setHeight(height);
 
         //默认占满全屏
-        mPopupWindow = new PopupWindowProxy(new PopupWindowProxy.BasePopupContextWrapper(getContext(), mHelper));
-        mPopupWindow.setContentView(mContentView);
-        mPopupWindow.setOnDismissListener(this);
+        mPopupWindowProxy = new PopupWindowProxy(new PopupWindowProxy.BasePopupContextWrapper(getContext(), mHelper));
+        mPopupWindowProxy.setContentView(mContentView);
+        mPopupWindowProxy.setOnDismissListener(this);
         setPopupAnimationStyle(0);
 
         mHelper.preMeasurePopupView(mContentView, width, height);
@@ -589,7 +589,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param isPopupFadeAnimate true for apply anim style
      */
     public BasePopupWindow setPopupFadeEnable(boolean isPopupFadeAnimate) {
-        mHelper.setPopupFadeEnable(mPopupWindow, isPopupFadeAnimate);
+        mHelper.setPopupFadeEnable(isPopupFadeAnimate);
         return this;
     }
 
@@ -612,7 +612,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </p>
      */
     public BasePopupWindow setPopupAnimationStyle(int animationStyleRes) {
-        mPopupWindow.setAnimationStyle(animationStyleRes);
+        mHelper.setPopupAnimationStyle(animationStyleRes);
         return this;
     }
 
@@ -812,9 +812,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             mHelper.onShow();
             //传递了view
             if (v != null) {
-                mPopupWindow.showAtLocation(v, getPopupGravity(), 0, 0);
+                mPopupWindowProxy.showAtLocation(v, getPopupGravity(), 0, 0);
             } else {
-                mPopupWindow.showAtLocation(decorView, Gravity.NO_GRAVITY, 0, 0);
+                mPopupWindowProxy.showAtLocation(decorView, Gravity.NO_GRAVITY, 0, 0);
             }
             onLogInternal("弹窗执行成功");
         } catch (Exception e) {
@@ -840,7 +840,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     void dispatchOutSideEvent(MotionEvent event) {
         if (mHelper.isOutSideTouchable()) {
-            WindowManagerProxy proxy = mPopupWindow.prevWindow();
+            WindowManagerProxy proxy = mPopupWindowProxy.prevWindow();
             if (proxy == null) {
                 if (mAnchorDecorView != null) {
                     mAnchorDecorView.getRootView().dispatchTouchEvent(event);
@@ -904,10 +904,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public BasePopupWindow setAdjustInputMethod(boolean needAdjust, int flag) {
         if (needAdjust) {
-            mPopupWindow.setSoftInputMode(flag);
             setSoftInputMode(flag);
         } else {
-            mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
             setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         }
         return this;
@@ -961,7 +959,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </p>
      */
     public BasePopupWindow setAutoShowInputMethod(boolean autoShow) {
-        mHelper.autoShowInputMethod(mPopupWindow, autoShow);
+        mHelper.autoShowInputMethod(autoShow);
         return this;
     }
 
@@ -995,7 +993,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * <p>
      */
     public BasePopupWindow setBackPressEnable(boolean backPressEnable) {
-        mHelper.backPressEnable(mPopupWindow, backPressEnable);
+        mHelper.backPressEnable(backPressEnable);
         return this;
     }
 
@@ -1195,7 +1193,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * PopupWindow是否处于展示状态
      */
     public boolean isShowing() {
-        return mPopupWindow == null ? false : mPopupWindow.isShowing();
+        return mPopupWindowProxy == null ? false : mPopupWindowProxy.isShowing();
     }
 
     public OnDismissListener getOnDismissListener() {
@@ -1351,7 +1349,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @return
      */
     public PopupWindow getPopupWindow() {
-        return mPopupWindow;
+        return mPopupWindowProxy;
     }
 
     public int getOffsetX() {
@@ -1412,8 +1410,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </ul>
      *
      * @param mode <ul><li>GravityMode.RELATIVE_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup处于该Anchor的哪个位置</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 </ul>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     </ul>
      */
     public BasePopupWindow setPopupGravity(GravityMode mode, int popupGravity) {
         mHelper.setPopupGravity(mode, popupGravity);
@@ -1517,7 +1515,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param outSideDismiss true for allow
      */
     public BasePopupWindow setOutSideDismiss(boolean outSideDismiss) {
-        mHelper.dismissOutSideTouch(mPopupWindow, outSideDismiss);
+        mHelper.dismissOutSideTouch(outSideDismiss);
         return this;
     }
 
@@ -1555,7 +1553,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      *                  </ul>
      */
     public BasePopupWindow setOutSideTouchable(boolean touchable) {
-        mHelper.outSideTouchable(mPopupWindow, touchable);
+        mHelper.outSideTouchable(touchable);
         return this;
     }
 
@@ -1691,7 +1689,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     void superDismiss() {
         try {
-            mPopupWindow.superDismiss();
+            mPopupWindowProxy.superDismiss();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -1731,15 +1729,15 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         isDestroyed = true;
         onLogInternal("onDestroy");
         mHelper.forceDismiss();
-        if (mPopupWindow != null) {
-            mPopupWindow.clear(true);
+        if (mPopupWindowProxy != null) {
+            mPopupWindowProxy.clear(true);
         }
         if (mHelper != null) {
             mHelper.clear(true);
         }
         ownerAnchorParent = null;
         mAnchorDecorView = null;
-        mPopupWindow = null;
+        mPopupWindowProxy = null;
         mDisplayAnimateView = null;
         mContentView = null;
         mContext = null;
