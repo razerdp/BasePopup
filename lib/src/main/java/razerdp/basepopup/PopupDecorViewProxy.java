@@ -30,6 +30,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     private BasePopupHelper mHelper;
     private View mTarget;
     private int changedGravity = Gravity.NO_GRAVITY;
+    private Rect popupRect = new Rect();
+    private Rect anchorRect = new Rect();
 
     private int childLeftMargin;
     private int childTopMargin;
@@ -472,8 +474,12 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 if (delayLayoutMask) {
                     mMaskLayout.handleAlignBackground(mHelper.getAlignBackgroundGravity(), left, top, right, bottom);
                 }
+                if (isRelativeToAnchor) {
+                    popupRect.set(left, top, right, bottom);
+                    anchorRect.set(mHelper.getAnchorViewBound());
+                    mHelper.onPopupLayout(popupRect, anchorRect);
+                }
             }
-
         }
     }
 
@@ -667,6 +673,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         if (mTarget != null) {
             mTarget.setOnClickListener(null);
         }
+        isFirstLayoutComplete = false;
+        layoutCount = 0;
         getViewTreeObserver().removeOnGlobalLayoutListener(this);
         mHelper = null;
         mTarget = null;

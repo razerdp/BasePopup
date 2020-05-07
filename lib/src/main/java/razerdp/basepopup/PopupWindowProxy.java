@@ -78,7 +78,7 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
     }
 
     void onBeforeShowExec(Activity act) {
-        if (needObserverUiVisibilityChange(act)) {
+        if (isFullScreen(act)) {
             handleFullScreenFocusable();
         }
     }
@@ -90,7 +90,7 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
         }
     }
 
-    boolean needObserverUiVisibilityChange(Activity act) {
+    boolean isFullScreen(Activity act) {
         if (act == null) return false;
         try {
             View decorView = act.getWindow().getDecorView();
@@ -99,7 +99,7 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
             int f = decorView.getWindowSystemUiVisibility();
 
             return (i & WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0
-                    && ((f & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0 || (f & View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION) != 0);
+                    || ((f & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0 || (f & View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION) != 0);
         } catch (Exception e) {
             return false;
         }

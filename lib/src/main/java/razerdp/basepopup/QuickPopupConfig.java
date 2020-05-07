@@ -44,10 +44,6 @@ public class QuickPopupConfig implements BasePopupFlag {
     protected int minHeight;
     protected int maxHeight;
 
-    protected boolean backPressedEnable;
-    protected boolean outSideTouchable;
-    protected boolean outSideDismiss;
-
     protected Drawable background = new ColorDrawable(BasePopupWindow.DEFAULT_BACKGROUND_COLOR);
 
     protected View mLinkedView;
@@ -63,10 +59,11 @@ public class QuickPopupConfig implements BasePopupFlag {
     }
 
     public static QuickPopupConfig generateDefault() {
+        //https://github.com/razerdp/BasePopup/issues/152
         return new QuickPopupConfig()
                 .withShowAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(true))
                 .withDismissAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(false))
-                .fadeInAndOut(Build.VERSION.SDK_INT != Build.VERSION_CODES.M);//https://github.com/razerdp/BasePopup/issues/152
+                .fadeInAndOut(Build.VERSION.SDK_INT != Build.VERSION_CODES.M);
     }
 
     public QuickPopupConfig withShowAnimation(Animation showAnimation) {
@@ -170,6 +167,9 @@ public class QuickPopupConfig implements BasePopupFlag {
         return this;
     }
 
+    /**
+     * @deprecated 请使用 {@link #outSideTouchable(boolean)}
+     */
     @Deprecated
     public QuickPopupConfig allowInterceptTouchEvent(boolean allowInterceptTouchEvent) {
         setFlag(OUT_SIDE_TOUCHABLE, !allowInterceptTouchEvent);
@@ -191,6 +191,10 @@ public class QuickPopupConfig implements BasePopupFlag {
         return this;
     }
 
+    /**
+     * @deprecated 请使用 {@link #outSideDismiss(boolean)}
+     */
+    @Deprecated
     public QuickPopupConfig dismissOnOutSideTouch(boolean dismissOutSide) {
         setFlag(OUT_SIDE_DISMISS, dismissOutSide);
         return this;
@@ -231,6 +235,11 @@ public class QuickPopupConfig implements BasePopupFlag {
         return this;
     }
 
+
+    public QuickPopupConfig outSideDismiss(boolean outsideDismiss) {
+        setFlag(OUT_SIDE_DISMISS, outsideDismiss);
+        return this;
+    }
     //-----------------------------------------getter-----------------------------------------
 
     public Animation getShowAnimation() {
