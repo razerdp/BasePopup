@@ -61,6 +61,7 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
         if (mBasePopupContextWrapper != null && mBasePopupContextWrapper.mWindowManagerProxy != null) {
             mBasePopupContextWrapper.mWindowManagerProxy.updateFocus(oldFocusable);
         }
+        setFocusable(oldFocusable);
         isHandledFullScreen = false;
     }
 
