@@ -215,6 +215,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
+import android.util.AndroidRuntimeException;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -786,6 +788,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * 感谢@xchengDroid(https://github.com/xchengDroid)在#263(https://github.com/razerdp/BasePopup/issues/263)中提出的建议
      */
     void tryToShowPopup(View v, boolean positionMode) {
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            throw new CalledFromWrongThreadException("请在主线程操作哦~");
+        }
         if (isShowing() || mContentView == null) return;
         if (isDestroyed) {
             onShowError(new IllegalAccessException("该BasePopup已经被Destroy，不可以继续show了哦~"));
@@ -1410,8 +1415,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </ul>
      *
      * @param mode <ul><li>GravityMode.RELATIVE_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup处于该Anchor的哪个位置</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     </ul>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         </ul>
      */
     public BasePopupWindow setPopupGravity(GravityMode mode, int popupGravity) {
         mHelper.setPopupGravity(mode, popupGravity);
@@ -1710,6 +1715,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * @param animateDismiss 传入为true，则执行退出动画后dismiss（如果有的话）
      */
     public void dismiss(boolean animateDismiss) {
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            throw new CalledFromWrongThreadException("请在主线程操作哦~");
+        }
         if (!isShowing() || mContentView == null) return;
         mHelper.dismiss(animateDismiss);
     }
@@ -2061,5 +2069,11 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
 //endregion
+
+    public static final class CalledFromWrongThreadException extends AndroidRuntimeException {
+        public CalledFromWrongThreadException(String msg) {
+            super(msg);
+        }
+    }
 
 }
