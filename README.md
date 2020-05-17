@@ -136,6 +136,7 @@
     * 修复全屏activity下focusable没有恢复的问题
   * **【2.2.4.0517】**
     * 修复全屏Activity下SystemUiVisibility被强制修改的问题
+    * 添加线程检查
 
 
 <br>
