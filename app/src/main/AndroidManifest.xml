@@ -88,6 +88,7 @@
             android:name="razerdp.demo.ui.issuestest.Issue224TestActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity android:name="razerdp.demo.ui.fullscreen.FullScreenActivity" />
 
         <service android:name="razerdp.demo.services.DemoService" />
         <service android:name="razerdp.demo.services.DelayDemoService" />

@@ -30,6 +30,7 @@ import razerdp.demo.model.common.CommonBlurInfo;
 import razerdp.demo.model.common.CommonBottomSheetDialogInfo;
 import razerdp.demo.model.common.CommonControllerInfo;
 import razerdp.demo.model.common.CommonFriendCircleInfo;
+import razerdp.demo.model.common.CommonFullScreenActivityInfo;
 import razerdp.demo.model.common.CommonGestureNavInfo;
 import razerdp.demo.model.common.CommonInputInfo;
 import razerdp.demo.model.common.CommonSlideInfo;
@@ -129,6 +130,7 @@ public class CommonUsageActivity extends BaseActivity {
         result.add(new DemoCommonUsageTitle("兼容性测试"));
         result.add(new CommonBottomSheetDialogInfo());
         result.add(new CommonGestureNavInfo());
+        result.add(new CommonFullScreenActivityInfo());
 
         return result;
     }
