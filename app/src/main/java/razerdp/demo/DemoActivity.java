@@ -1,9 +1,14 @@
 package razerdp.demo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.pgyersdk.update.DownloadFileListener;
 import com.pgyersdk.update.PgyUpdateManager;
@@ -14,10 +19,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
+import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.QuickPopupBuilder;
 import razerdp.basepopup.QuickPopupConfig;
 import razerdp.basepopup.R;
@@ -37,6 +41,7 @@ import razerdp.demo.utils.UIHelper;
 import razerdp.demo.utils.ViewUtil;
 import razerdp.demo.widget.DPRecyclerView;
 import razerdp.demo.widget.DPTextView;
+import razerdp.util.PopupAnimationBuilder;
 import razerdp.util.SimpleAnimationUtils;
 
 public class DemoActivity extends BaseActivity {
@@ -63,13 +68,7 @@ public class DemoActivity extends BaseActivity {
 
         rvContent.setLayoutManager(new LinearLayoutManager(this));
         View header = ViewUtil.inflate(this, R.layout.item_main_demo_header, rvContent, false);
-        header.setOnClickListener(v -> QuickPopupBuilder.with(DemoActivity.this)
-                .contentView(R.layout.popup_demo)
-                .config(new QuickPopupConfig()
-                        .withShowAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(true))
-                        .withDismissAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(false))
-                        .blurBackground(true))
-                .show());
+        header.setOnClickListener(v -> onHeaderClick());
         rvContent.addHeaderView(header);
         mAdapter = new SimpleRecyclerViewAdapter<>(this, generateItem());
         mAdapter.setHolder(InnerViewHolder.class);
@@ -152,6 +151,40 @@ public class DemoActivity extends BaseActivity {
         return result;
     }
 
+    void onHeaderClick() {
+        /*QuickPopupBuilder.with(DemoActivity.this)
+                .contentView(R.layout.popup_demo)
+                .config(new QuickPopupConfig()
+                        .withShowAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(true))
+                        .withDismissAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(false))
+                        .blurBackground(true))
+                .show();*/
+        new T(this).showPopupWindow();
+    }
+
+    class T extends BasePopupWindow {
+
+        public T(Context context) {
+            super(context);
+        }
+
+        @Override
+        public View onCreateContentView() {
+            return createPopupById(R.layout.popup_demo);
+        }
+
+        @Override
+        protected Animation onCreateShowAnimation() {
+            return PopupAnimationBuilder.asAnimation()
+//                    .addAlpha(new PopupAnimationBuilder.AlphaConfig()
+//                            .from(0f).to(1f))
+                    .addScale(new PopupAnimationBuilder.ScaleConfig()
+                            .scaleFrom(PopupAnimationBuilder.Direction.RIGHT, PopupAnimationBuilder.Direction.BOTTOM)
+                            .scaleTo(PopupAnimationBuilder.Direction.TOP, PopupAnimationBuilder.Direction.LEFT)
+                            .duration(800))
+                    .build();
+        }
+    }
 
     static class InnerViewHolder extends BaseSimpleRecyclerViewHolder<DemoMainItem> {
 
