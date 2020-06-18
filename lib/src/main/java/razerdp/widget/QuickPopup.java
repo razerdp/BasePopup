@@ -7,10 +7,11 @@ import android.util.Pair;
 import android.view.View;
 import android.view.animation.Animation;
 
+import androidx.fragment.app.Fragment;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import androidx.fragment.app.Fragment;
 import razerdp.basepopup.BaseLazyPopupWindow;
 import razerdp.basepopup.BasePopupFlag;
 import razerdp.basepopup.QuickPopupConfig;
@@ -73,6 +74,7 @@ public class QuickPopup extends BaseLazyPopupWindow {
 
         setOutSideDismiss((config.flag & BasePopupFlag.OUT_SIDE_DISMISS) != 0);
         setOutSideTouchable((config.flag & BasePopupFlag.OUT_SIDE_TOUCHABLE) != 0);
+        setBackPressEnable((config.flag & BasePopupFlag.BACKPRESS_ENABLE) != 0);
         setPopupGravity(config.getGravity());
         setAlignBackground((config.flag & BasePopupFlag.ALIGN_BACKGROUND) != 0);
         setAlignBackgroundGravity(config.getAlignBackgroundGravity());
