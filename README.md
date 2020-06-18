@@ -137,6 +137,8 @@
   * **【2.2.4.0517】**
     * 修复全屏Activity下SystemUiVisibility被强制修改的问题
     * 添加线程检查
+  * **【2.2.4.0618】**
+    * 修复Quickpopupbuilder中backpressenable设置失效的问题([#296](https://github.com/razerdp/BasePopup/issues/296))
 
 
 <br>
