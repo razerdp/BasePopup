@@ -139,6 +139,8 @@
     * 添加线程检查
   * **【2.2.4.0618】**
     * 修复Quickpopupbuilder中backpressenable设置失效的问题([#296](https://github.com/razerdp/BasePopup/issues/296))
+  * **【未发布版本】**（2020/06/19）
+    * 修复非BasePopup内EditText弹出键盘时挡住EditText的问题([#297](https://github.com/razerdp/BasePopup/issues/297))
 
 
 <br>

@@ -235,6 +235,7 @@ import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.OnLifecycleEvent;
 import razerdp.blur.PopupBlurOption;
+import razerdp.util.PopupUiUtils;
 import razerdp.util.SimpleAnimationUtils;
 import razerdp.util.log.PopupLog;
 
@@ -1886,20 +1887,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     public int computeGravity(@NonNull Rect popupRect, @NonNull Rect anchorRect) {
-        int gravity = Gravity.NO_GRAVITY;
-        int xDelta = popupRect.centerX() - anchorRect.centerX();
-        int yDelta = popupRect.centerY() - anchorRect.centerY();
-        if (xDelta == 0) {
-            gravity = yDelta == 0 ? Gravity.CENTER : Gravity.CENTER_HORIZONTAL | ((yDelta > 0) ? Gravity.BOTTOM : Gravity.TOP);
-        }
-        if (yDelta == 0) {
-            gravity = xDelta == 0 ? Gravity.CENTER : Gravity.CENTER_VERTICAL | ((xDelta > 0) ? Gravity.RIGHT : Gravity.LEFT);
-        }
-        if (gravity == Gravity.NO_GRAVITY) {
-            gravity = xDelta > 0 ? Gravity.RIGHT : Gravity.LEFT;
-            gravity |= yDelta > 0 ? Gravity.BOTTOM : Gravity.TOP;
-        }
-        return gravity;
+        return PopupUiUtils.computeGravity(popupRect,anchorRect);
     }
 
     //endregion
