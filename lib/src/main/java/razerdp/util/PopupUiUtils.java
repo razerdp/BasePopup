@@ -2,13 +2,16 @@ package razerdp.util;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
 import razerdp.basepopup.BasePopupSDK;
 import razerdp.util.log.PopupLog;
 
@@ -95,5 +98,22 @@ public class PopupUiUtils {
         if (act == null || act.getWindow() == null) return false;
         return (act.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
 
+    }
+
+    public static int computeGravity(@NonNull Rect popupRect, @NonNull Rect anchorRect) {
+        int gravity = Gravity.NO_GRAVITY;
+        int xDelta = popupRect.centerX() - anchorRect.centerX();
+        int yDelta = popupRect.centerY() - anchorRect.centerY();
+        if (xDelta == 0) {
+            gravity = yDelta == 0 ? Gravity.CENTER : Gravity.CENTER_HORIZONTAL | ((yDelta > 0) ? Gravity.BOTTOM : Gravity.TOP);
+        }
+        if (yDelta == 0) {
+            gravity = xDelta == 0 ? Gravity.CENTER : Gravity.CENTER_VERTICAL | ((xDelta > 0) ? Gravity.RIGHT : Gravity.LEFT);
+        }
+        if (gravity == Gravity.NO_GRAVITY) {
+            gravity = xDelta > 0 ? Gravity.RIGHT : Gravity.LEFT;
+            gravity |= yDelta > 0 ? Gravity.BOTTOM : Gravity.TOP;
+        }
+        return gravity;
     }
 }

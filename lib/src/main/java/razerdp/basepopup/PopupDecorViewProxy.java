@@ -614,21 +614,22 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 mHelper.getSoftInputMode() == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE));
 
         if (!process) return;
-        View anchor = null;
+        View alignWhat = null;
 
         if ((mHelper.flag & BasePopupFlag.KEYBOARD_ALIGN_TO_VIEW) != 0) {
             if (mHelper.keybaordAlignViewId != 0) {
-                anchor = mTarget.findViewById(mHelper.keybaordAlignViewId);
+                alignWhat = mTarget.findViewById(mHelper.keybaordAlignViewId);
             }
         }
 
-        if ((mHelper.flag & BasePopupFlag.KEYBOARD_ALIGN_TO_ROOT) != 0 || anchor == null) {
-            anchor = mTarget;
+        if ((mHelper.flag & BasePopupFlag.KEYBOARD_ALIGN_TO_ROOT) != 0 || alignWhat == null) {
+            alignWhat = mTarget;
         }
 
         boolean animate = (mHelper.flag & BasePopupFlag.KEYBOARD_ANIMATE_ALIGN) != 0;
-        anchor.getLocationOnScreen(location);
-        int bottom = location[1] + anchor.getHeight();
+        alignWhat.getLocationOnScreen(location);
+        //自身或者指定view的bottom
+        int bottom = location[1] + alignWhat.getHeight();
 
         if (isVisible && keyboardBounds.height() > 0) {
             offset = keyboardBounds.top - bottom;
@@ -636,6 +637,15 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                     && (mHelper.flag & BasePopupFlag.KEYBOARD_IGNORE_OVER_KEYBOARD) != 0
                     && lastKeyboardBounds.isEmpty()) {
                 offset = 0;
+            } else {
+                //如果是有anchor，则考虑anchor的情况
+                if (mHelper.isWithAnchor()) {
+                    int gravity = PopupUiUtils.computeGravity(popupRect, anchorRect);
+                    if ((gravity & Gravity.VERTICAL_GRAVITY_MASK) == Gravity.TOP) {
+                        //显示在anchor顶部，则需要考虑anchor的高度
+                        offset -= mHelper.getAnchorViewBound().height();
+                    }
+                }
             }
         }
 
