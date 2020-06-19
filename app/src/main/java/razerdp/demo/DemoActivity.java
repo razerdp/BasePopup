@@ -1,10 +1,10 @@
 package razerdp.demo;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -43,6 +43,11 @@ import razerdp.demo.widget.DPRecyclerView;
 import razerdp.demo.widget.DPTextView;
 import razerdp.util.PopupAnimationBuilder;
 import razerdp.util.SimpleAnimationUtils;
+
+import static razerdp.util.PopupAnimationBuilder.Direction.BOTTOM;
+import static razerdp.util.PopupAnimationBuilder.Direction.LEFT;
+import static razerdp.util.PopupAnimationBuilder.Direction.RIGHT;
+import static razerdp.util.PopupAnimationBuilder.Direction.TOP;
 
 public class DemoActivity extends BaseActivity {
 
@@ -85,7 +90,7 @@ public class DemoActivity extends BaseActivity {
                         .withDismissAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(false))
                         .withClick(R.id.tv_go, null, true)
                         .blurBackground(true)
-                        .dismissOnOutSideTouch(false))
+                        .outSideDismiss(false))
                 .show();
     }
 
@@ -152,14 +157,15 @@ public class DemoActivity extends BaseActivity {
     }
 
     void onHeaderClick() {
-        /*QuickPopupBuilder.with(DemoActivity.this)
+        QuickPopupBuilder.with(DemoActivity.this)
                 .contentView(R.layout.popup_demo)
                 .config(new QuickPopupConfig()
                         .withShowAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(true))
                         .withDismissAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(false))
+                        .backpressEnable(false)
                         .blurBackground(true))
-                .show();*/
-        new T(this).showPopupWindow();
+                .show();
+//        new T(this).showPopupWindow();
     }
 
     class T extends BasePopupWindow {
@@ -173,18 +179,25 @@ public class DemoActivity extends BaseActivity {
             return createPopupById(R.layout.popup_demo);
         }
 
+//        @Override
+//        protected Animation onCreateShowAnimation() {
+//            return PopupAnimationBuilder.asAnimation()
+//                    .withScale(new PopupAnimationBuilder.ScaleConfig()
+//                            .from(PopupAnimationBuilder.Direction.RIGHT, PopupAnimationBuilder.Direction.BOTTOM)
+//                            .to(PopupAnimationBuilder.Direction.TOP, PopupAnimationBuilder.Direction.LEFT))
+//                    .build();
+//        }
+
         @Override
-        protected Animation onCreateShowAnimation() {
-            return PopupAnimationBuilder.asAnimation()
-//                    .addAlpha(new PopupAnimationBuilder.AlphaConfig()
-//                            .from(0f).to(1f))
-                    .addScale(new PopupAnimationBuilder.ScaleConfig()
-                            .scaleFrom(PopupAnimationBuilder.Direction.RIGHT, PopupAnimationBuilder.Direction.BOTTOM)
-                            .scaleTo(PopupAnimationBuilder.Direction.TOP, PopupAnimationBuilder.Direction.LEFT)
-                            .duration(800))
+        protected Animator onCreateShowAnimator() {
+            return PopupAnimationBuilder.asAnimator()
+                    .withScale(new PopupAnimationBuilder.ScaleConfig()
+                            .from(RIGHT, BOTTOM)
+                            .to(TOP, LEFT))
                     .build();
         }
     }
+
 
     static class InnerViewHolder extends BaseSimpleRecyclerViewHolder<DemoMainItem> {
 
