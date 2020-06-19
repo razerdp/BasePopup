@@ -41,26 +41,24 @@ public class PopupAnimationBuilder {
     }
 
     public enum Direction {
-        LEFT(-1, 0, -1, 0, 0, 1, 1, 1),
-        TOP(0, -1, 0, -1, 1, 0, 1, 1),
-        RIGHT(1, 0, 1, 0, 0, 1, 1, 1),
-        BOTTOM(0, 1, 0, 1, 1, 0, 1, 1),
-        CENTER(0.5f, 0.5f, 0.5f, 0.5f, 0, 0, 1, 1),
-        CENTER_HORIZONTAL(0.5f, 0, 0.5f, 0, 0, 0, 1, 1),
-        CENTER_VERTICAL(0, 0.5f, 0, 0.5f, 0, 0, 1, 1);
+        LEFT(-1, 0, -1, 0, 0, 0),
+        TOP(0, -1, 0, -1, 0, 0),
+        RIGHT(1, 0, 1, 0, 1, 0),
+        BOTTOM(0, 1, 0, 1, 0, 1),
+        CENTER(0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f),
+        CENTER_HORIZONTAL(0.5f, 0, 0.5f, 0, 0.5f, 0),
+        CENTER_VERTICAL(0, 0.5f, 0, 0.5f, 0, 0.5f);
 
         float transFromX, transFromY, transToX, transToY;
-        float scaleFromX, scaleFromY, scaleToX, scaleToY;
+        float scalePivotX, scalePivotY;
 
-        Direction(float transFromX, float transFromY, float transToX, float transToY, float scaleFromX, float scaleFromY, float scaleToX, float scaleToY) {
+        Direction(float transFromX, float transFromY, float transToX, float transToY, float scalePivotX, float scalePivotY) {
             this.transFromX = transFromX;
             this.transFromY = transFromY;
             this.transToX = transToX;
             this.transToY = transToY;
-            this.scaleFromX = scaleFromX;
-            this.scaleFromY = scaleFromY;
-            this.scaleToX = scaleToX;
-            this.scaleToY = scaleToY;
+            this.scalePivotX = scalePivotX;
+            this.scalePivotY = scalePivotY;
         }
     }
 
@@ -77,7 +75,7 @@ public class PopupAnimationBuilder {
         }
 
         //-----------alpha-------------
-        public T addAlpha(@NonNull AlphaConfig config) {
+        public T withAlpha(@NonNull AlphaConfig config) {
             if (config == null) {
                 return (T) this;
             }
@@ -87,7 +85,7 @@ public class PopupAnimationBuilder {
         }
 
         //-----------scale-------------
-        public T addScale(@NonNull ScaleConfig config) {
+        public T withScale(@NonNull ScaleConfig config) {
             if (config == null) {
                 return (T) this;
             }
@@ -97,7 +95,7 @@ public class PopupAnimationBuilder {
         }
 
         //-----------translation-------------
-        public T addTranslation(@NonNull TranslationConfig config) {
+        public T withTranslation(@NonNull TranslationConfig config) {
             if (config == null) {
                 return (T) this;
             }
@@ -258,7 +256,6 @@ public class PopupAnimationBuilder {
         boolean relativeToParent;
 
         public ScaleConfig() {
-            pivot(0.5f, 0.5f);
         }
 
         public ScaleConfig scale(float from, float to) {
@@ -267,24 +264,21 @@ public class PopupAnimationBuilder {
             return this;
         }
 
-        public ScaleConfig scaleFrom(Direction... from) {
+        public ScaleConfig from(Direction... from) {
             if (from != null) {
                 scaleFromX = scaleFromY = 0;
+                pivotXratio = pivotYratio = 0;
                 for (Direction direction : from) {
-                    scaleFromX += direction.scaleFromX;
-                    scaleFromY += direction.scaleFromY;
+                    pivotXratio += direction.scalePivotX;
+                    pivotYratio += direction.scalePivotY;
                 }
             }
             return this;
         }
 
-        public ScaleConfig scaleTo(Direction... to) {
+        public ScaleConfig to(Direction... to) {
             if (to != null) {
-                scaleToX = scaleToY = 0;
-                for (Direction direction : to) {
-                    scaleToX += direction.scaleToX;
-                    scaleToY += direction.scaleToY;
-                }
+                scaleToX = scaleToY = 1;
             }
             return this;
         }
@@ -343,7 +337,7 @@ public class PopupAnimationBuilder {
         }
     }
 
-    public static class TranslationConfig extends BaseConfig<ScaleConfig> {
+    public static class TranslationConfig extends BaseConfig<TranslationConfig> {
         float fromX, toX;
         float fromY, toY;
         float coordinateX, coordinateY;

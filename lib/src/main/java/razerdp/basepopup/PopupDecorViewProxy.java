@@ -637,7 +637,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                     && lastKeyboardBounds.isEmpty()) {
                 offset = 0;
             }
-
         }
 
         if (animate) {
