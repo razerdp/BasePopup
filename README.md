@@ -49,15 +49,17 @@
 
 ---
 
-### 有奖问卷调查（作者自掏腰包哦~）
+### 开发计划 & 需求投票
 
-为了更好地计划及迭代BasePopup，我们（好吧，其实是作者一个人）设立了一份调查问卷，并自掏腰包提供了微信红包作为奖品，希望大家可以认真答题，我也能收到大家的反馈，更好地迭代这个库-V-
+当前开发：动画迭代
+当前需求投票：[允许蒙层高亮一个或多个其依附的View](https://github.com/razerdp/BasePopup/issues/300)
+需求提单：[【BasePopup需求提单】](https://github.com/razerdp/BasePopup/issues/299)
 
-(红包一共100个，拼手气，我设了25人中一个~看RP哦)
+有奖调查问卷：
 
-[调查问卷(需要微信登录)](https://wj.qq.com/s2/5468287/c24f/)
-
-![](./img/qrcode.png)
+<a href ="https://wj.qq.com/s2/5468287/c24f">
+    <img src="./img/qrcode.png"/>
+</a>
 
 <br>
 
