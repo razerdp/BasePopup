@@ -1,6 +1,7 @@
 package razerdp.util;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.res.Resources;
@@ -18,6 +19,7 @@ import androidx.annotation.NonNull;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.zip.DeflaterOutputStream;
 
 import razerdp.util.log.PopupLog;
 
@@ -65,9 +67,6 @@ public class PopupAnimationBuilder {
     public static abstract class AnimationApi<T> {
         Set<BaseConfig> configs;
 
-        public AnimationApi() {
-        }
-
         private void checkAndInitConfigSet() {
             if (configs == null) {
                 configs = new HashSet<>();
@@ -107,14 +106,15 @@ public class PopupAnimationBuilder {
 
     public static abstract class BaseConfig<T> {
         protected String TAG = this.getClass().getSimpleName();
-        static final long DEFAULT_DURATION = Resources.getSystem().getInteger(android.R.integer.config_mediumAnimTime);
+        static final long DEFAULT_DURATION = Resources.getSystem().getInteger(android.R.integer.config_shortAnimTime);
         static final Interpolator DEFAULT_INTERPOLATOR = new AccelerateDecelerateInterpolator();
         Interpolator interpolator = DEFAULT_INTERPOLATOR;
         long duration = DEFAULT_DURATION;
-        float pivotXratio;
-        float pivotYratio;
         float pivotX;
         float pivotY;
+        float pivotX2;
+        float pivotY2;
+        boolean ignoreRevert;
 
         public T interpolator(Interpolator interpolator) {
             this.interpolator = interpolator;
@@ -127,36 +127,22 @@ public class PopupAnimationBuilder {
         }
 
         public T pivot(@FloatRange(from = 0, to = 1) float x, @FloatRange(from = 0, to = 1) float y) {
-            pivotXratio = x;
-            pivotYratio = y;
-            return (T) this;
-        }
-
-        public T pivot(int x, int y) {
             pivotX = x;
             pivotY = y;
             return (T) this;
         }
 
-        public T pivotX(@FloatRange(from = 0, to = 1) float x) {
-            pivotXratio = x;
-            return (T) this;
-        }
 
-        public T pivotX(int x) {
+        public T pivotX(@FloatRange(from = 0, to = 1) float x) {
             pivotX = x;
             return (T) this;
         }
 
         public T pivotY(@FloatRange(from = 0, to = 1) float y) {
-            pivotYratio = y;
-            return (T) this;
-        }
-
-        public T pivotY(int y) {
             pivotY = y;
             return (T) this;
         }
+
 
         void deploy(Animation animation) {
             if (animation == null) return;
@@ -178,32 +164,34 @@ public class PopupAnimationBuilder {
             return "BaseConfig{" +
                     "interpolator=" + interpolator +
                     ", duration=" + duration +
-                    ", pivotXratio=" + pivotXratio +
-                    ", pivotYratio=" + pivotYratio +
                     ", pivotX=" + pivotX +
                     ", pivotY=" + pivotY +
                     '}';
         }
 
-        final Animation $buildAnimation() {
+        final Animation $buildAnimation(boolean isRevert) {
             log();
-            return buildAnimation();
+            return buildAnimation(isRevert);
         }
 
-        final Animator $buildAnimator() {
+        final Animator $buildAnimator(boolean isRevert) {
             log();
-            return buildAnimator();
+            return buildAnimator(isRevert);
         }
 
-        protected abstract Animation buildAnimation();
+        protected abstract Animation buildAnimation(boolean isRevert);
 
-        protected abstract Animator buildAnimator();
+        protected abstract Animator buildAnimator(boolean isRevert);
 
     }
 
     public static class AlphaConfig extends BaseConfig<AlphaConfig> {
         float alphaFrom;
         float alphaTo;
+
+        public AlphaConfig() {
+            ignoreRevert = true;
+        }
 
         public AlphaConfig from(@FloatRange(from = 0, to = 1) float from) {
             alphaFrom = from;
@@ -234,14 +222,14 @@ public class PopupAnimationBuilder {
         }
 
         @Override
-        protected Animation buildAnimation() {
+        protected Animation buildAnimation(boolean isRevert) {
             AlphaAnimation animation = new AlphaAnimation(alphaFrom, alphaTo);
             deploy(animation);
             return animation;
         }
 
         @Override
-        protected Animator buildAnimator() {
+        protected Animator buildAnimator(boolean isRevert) {
             Animator animator = ObjectAnimator.ofFloat(null, View.ALPHA, alphaFrom, alphaTo);
             deploy(animator);
             return animator;
@@ -255,10 +243,9 @@ public class PopupAnimationBuilder {
         float scaleToY = 1;
         boolean relativeToParent;
 
-        public ScaleConfig() {
-        }
 
         public ScaleConfig scale(float from, float to) {
+            ignoreRevert = true;
             scaleFromX = scaleFromY = from;
             scaleToX = scaleToY = to;
             return this;
@@ -267,10 +254,9 @@ public class PopupAnimationBuilder {
         public ScaleConfig from(Direction... from) {
             if (from != null) {
                 scaleFromX = scaleFromY = 0;
-                pivotXratio = pivotYratio = 0;
                 for (Direction direction : from) {
-                    pivotXratio += direction.scalePivotX;
-                    pivotYratio += direction.scalePivotY;
+                    pivotX += direction.scalePivotX;
+                    pivotY += direction.scalePivotY;
                 }
             }
             return this;
@@ -279,17 +265,23 @@ public class PopupAnimationBuilder {
         public ScaleConfig to(Direction... to) {
             if (to != null) {
                 scaleToX = scaleToY = 1;
+                for (Direction direction : to) {
+                    pivotX2 += direction.scalePivotX;
+                    pivotY2 += direction.scalePivotY;
+                }
             }
             return this;
         }
 
         public ScaleConfig scaleX(float from, float to) {
+            ignoreRevert = true;
             scaleFromX = from;
             scaleToX = to;
             return this;
         }
 
         public ScaleConfig sclaeY(float from, float to) {
+            ignoreRevert = true;
             scaleFromY = from;
             scaleToY = to;
             return this;
@@ -317,20 +309,60 @@ public class PopupAnimationBuilder {
                     '}';
         }
 
+        /**
+         * 0 = fromx
+         * 1 = tox
+         * 2 = fromy
+         * 3 = toy
+         * 4 = pivotx
+         * 5 = pivoty
+         */
+        float[] values(boolean isRevert) {
+            float[] result = new float[6];
+            boolean exchange = !ignoreRevert && isRevert;
+            result[0] = exchange ? scaleToX : scaleFromX;
+            result[1] = exchange ? scaleFromX : scaleToX;
+            result[2] = exchange ? scaleToY : scaleFromY;
+            result[3] = exchange ? scaleFromY : scaleToY;
+            result[4] = exchange ? pivotX2 : pivotX;
+            result[5] = exchange ? pivotY2 : pivotY;
+            return result;
+        }
+
         @Override
-        protected Animation buildAnimation() {
-            Animation animation = new ScaleAnimation(scaleFromX, scaleToX, scaleFromY, scaleToY,
-                    relativeToParent ? Animation.RELATIVE_TO_PARENT : Animation.RELATIVE_TO_SELF, pivotXratio,
-                    relativeToParent ? Animation.RELATIVE_TO_PARENT : Animation.RELATIVE_TO_SELF, pivotYratio);
+        protected Animation buildAnimation(boolean isRevert) {
+            float[] values = values(isRevert);
+            Animation animation = new ScaleAnimation(values[0], values[1], values[2], values[3],
+                                                     relativeToParent ? Animation.RELATIVE_TO_PARENT : Animation.RELATIVE_TO_SELF, values[4],
+                                                     relativeToParent ? Animation.RELATIVE_TO_PARENT : Animation.RELATIVE_TO_SELF, values[5]);
             deploy(animation);
             return animation;
         }
 
         @Override
-        protected Animator buildAnimator() {
+        protected Animator buildAnimator(boolean isRevert) {
+            final float[] values = values(isRevert);
             AnimatorSet animatorSet = new AnimatorSet();
-            Animator scaleX = ObjectAnimator.ofFloat(null, View.SCALE_X, scaleFromX, scaleToX);
-            Animator scaleY = ObjectAnimator.ofFloat(null, View.SCALE_Y, scaleFromY, scaleToY);
+            final Animator scaleX = ObjectAnimator.ofFloat(null, View.SCALE_X, values[0], values[1]);
+            final Animator scaleY = ObjectAnimator.ofFloat(null, View.SCALE_Y, values[2], values[3]);
+            scaleX.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    Object target = ((ObjectAnimator) animation).getTarget();
+                    if (target instanceof View) {
+                        ((View) target).setPivotX(((View) target).getWidth() * values[4]);
+                    }
+                }
+            });
+            scaleY.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    Object target = ((ObjectAnimator) animation).getTarget();
+                    if (target instanceof View) {
+                        ((View) target).setPivotY(((View) target).getHeight() * values[5]);
+                    }
+                }
+            });
             animatorSet.playTogether(scaleX, scaleY);
             deploy(animatorSet);
             return animatorSet;
@@ -419,21 +451,21 @@ public class PopupAnimationBuilder {
         }
 
         @Override
-        protected Animation buildAnimation() {
+        protected Animation buildAnimation(boolean isRevert) {
             Animation animation = new TranslateAnimation(relativeToParent ? Animation.RELATIVE_TO_PARENT : Animation.RELATIVE_TO_SELF,
-                    fromX,
-                    relativeToParent ? Animation.RELATIVE_TO_PARENT : Animation.RELATIVE_TO_SELF,
-                    toX,
-                    relativeToParent ? Animation.RELATIVE_TO_PARENT : Animation.RELATIVE_TO_SELF,
-                    fromY,
-                    relativeToParent ? Animation.RELATIVE_TO_PARENT : Animation.RELATIVE_TO_SELF,
-                    toY);
+                                                         fromX,
+                                                         relativeToParent ? Animation.RELATIVE_TO_PARENT : Animation.RELATIVE_TO_SELF,
+                                                         toX,
+                                                         relativeToParent ? Animation.RELATIVE_TO_PARENT : Animation.RELATIVE_TO_SELF,
+                                                         fromY,
+                                                         relativeToParent ? Animation.RELATIVE_TO_PARENT : Animation.RELATIVE_TO_SELF,
+                                                         toY);
             deploy(animation);
             return animation;
         }
 
         @Override
-        protected Animator buildAnimator() {
+        protected Animator buildAnimator(boolean isRevert) {
             AnimatorSet animatorSet = new AnimatorSet();
             Animator scaleX = ObjectAnimator.ofFloat(null, View.TRANSLATION_X, fromX, toX);
             Animator scaleY = ObjectAnimator.ofFloat(null, View.TRANSLATION_Y, fromY, toY);
@@ -445,11 +477,23 @@ public class PopupAnimationBuilder {
 
     public static class AnimationBuilder extends AnimationApi<AnimationBuilder> {
 
-        public Animation build() {
+
+        public Animation buildShown() {
             AnimationSet set = new AnimationSet(false);
             if (configs != null) {
                 for (BaseConfig config : configs) {
-                    set.addAnimation(config.$buildAnimation());
+                    set.addAnimation(config.$buildAnimation(false));
+                }
+            }
+            return set;
+        }
+
+
+        public Animation buildDismiss() {
+            AnimationSet set = new AnimationSet(false);
+            if (configs != null) {
+                for (BaseConfig config : configs) {
+                    set.addAnimation(config.$buildAnimation(true));
                 }
             }
             return set;
@@ -457,11 +501,22 @@ public class PopupAnimationBuilder {
     }
 
     public static class AnimatorBuilder extends AnimationApi<AnimatorBuilder> {
-        public Animator build() {
+
+        public Animator buildShow() {
             AnimatorSet set = new AnimatorSet();
             if (configs != null) {
                 for (BaseConfig config : configs) {
-                    set.playTogether(config.$buildAnimator());
+                    set.playTogether(config.$buildAnimator(false));
+                }
+            }
+            return set;
+        }
+
+        public Animator buildDismiss() {
+            AnimatorSet set = new AnimatorSet();
+            if (configs != null) {
+                for (BaseConfig config : configs) {
+                    set.playTogether(config.$buildAnimator(true));
                 }
             }
             return set;

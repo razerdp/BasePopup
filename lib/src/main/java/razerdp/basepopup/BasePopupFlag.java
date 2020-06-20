@@ -39,10 +39,12 @@ public interface BasePopupFlag {
     int KEYBOARD_ANIMATE_ALIGN = 0x8 << KEYBOARD_CONTROL_SHIFT;
     int KEYBOARD_FORCE_ADJUST = 0x10 << KEYBOARD_CONTROL_SHIFT;
 
+
     //内部使用 高8位
     int INNER_USAGE_SHIFT = 24;
     int CUSTOM_ON_UPDATE = 0x4 << INNER_USAGE_SHIFT;
     int CUSTOM_ON_ANIMATE_DISMISS = 0x8 << INNER_USAGE_SHIFT;
+    int SYNC_MASK_ANIMATION_DURATION = 0x10 << INNER_USAGE_SHIFT;//同步蒙层和用户动画的时间
 
 
     int IDLE = OUT_SIDE_DISMISS
@@ -52,6 +54,7 @@ public interface BasePopupFlag {
             | FADE_ENABLE
             | KEYBOARD_ALIGN_TO_ROOT
             | KEYBOARD_IGNORE_OVER_KEYBOARD
-            | KEYBOARD_ANIMATE_ALIGN;
+            | KEYBOARD_ANIMATE_ALIGN
+            | SYNC_MASK_ANIMATION_DURATION;
 
 }

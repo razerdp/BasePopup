@@ -84,14 +84,14 @@ public class DemoActivity extends BaseActivity {
 
 
         QuickPopupBuilder.with(this)
-                .contentView(R.layout.popup_wj)
-                .config(new QuickPopupConfig()
-                        .withShowAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(true))
-                        .withDismissAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(false))
-                        .withClick(R.id.tv_go, null, true)
-                        .blurBackground(true)
-                        .outSideDismiss(false))
-                .show();
+                         .contentView(R.layout.popup_wj)
+                         .config(new QuickPopupConfig()
+                                         .withShowAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(true))
+                                         .withDismissAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(false))
+                                         .withClick(R.id.tv_go, null, true)
+                                         .blurBackground(true)
+                                         .outSideDismiss(false))
+                         .show();
     }
 
     private void checkForUpdate() {
@@ -157,15 +157,15 @@ public class DemoActivity extends BaseActivity {
     }
 
     void onHeaderClick() {
-        QuickPopupBuilder.with(DemoActivity.this)
+/*        QuickPopupBuilder.with(DemoActivity.this)
                 .contentView(R.layout.popup_demo)
                 .config(new QuickPopupConfig()
                         .withShowAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(true))
                         .withDismissAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(false))
                         .backpressEnable(false)
                         .blurBackground(true))
-                .show();
-//        new T(this).showPopupWindow();
+                .show();*/
+        new T(this).showPopupWindow();
     }
 
     class T extends BasePopupWindow {
@@ -191,10 +191,19 @@ public class DemoActivity extends BaseActivity {
         @Override
         protected Animator onCreateShowAnimator() {
             return PopupAnimationBuilder.asAnimator()
-                    .withScale(new PopupAnimationBuilder.ScaleConfig()
-                            .from(RIGHT, BOTTOM)
-                            .to(TOP, LEFT))
-                    .build();
+                                        .withScale(new PopupAnimationBuilder.ScaleConfig()
+                                                           .from(LEFT,BOTTOM)
+                                                           .to(RIGHT))
+                                        .buildShow();
+        }
+
+        @Override
+        protected Animator onCreateDismissAnimator() {
+            return PopupAnimationBuilder.asAnimator()
+                                        .withScale(new PopupAnimationBuilder.ScaleConfig()
+                                                           .from(LEFT,BOTTOM)
+                                                           .to(TOP))
+                                        .buildDismiss();
         }
     }
 
