@@ -71,7 +71,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         changedGravity = Gravity.NO_GRAVITY;
     }
 
-    public void wrapPopupDecorView(View target, WindowManager.LayoutParams params) {
+    public void wrapPopupDecorView(final View target, WindowManager.LayoutParams params) {
         if (target == null) {
             throw new NullPointerException("contentView不能为空");
         }

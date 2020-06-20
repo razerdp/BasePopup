@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
@@ -20,7 +21,10 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -59,6 +63,20 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     private static final int CONTENT_VIEW_ID = R.id.base_popup_content_root;
+    Animation DEFAULT_MASK_SHOW_ANIMATION = new AlphaAnimation(0f, 1f) {
+        {
+            setFillAfter(true);
+            setInterpolator(new DecelerateInterpolator());
+            setDuration(Resources.getSystem().getInteger(android.R.integer.config_shortAnimTime));
+        }
+    };
+    Animation DEFAULT_MASK_DISMISS_ANIMATION = new AlphaAnimation(1f, 0f) {
+        {
+            setFillAfter(true);
+            setInterpolator(new DecelerateInterpolator());
+            setDuration(Resources.getSystem().getInteger(android.R.integer.config_shortAnimTime));
+        }
+    };
 
     ShowMode mShowMode = ShowMode.SCREEN;
 
@@ -73,6 +91,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     Animator mShowAnimator;
     Animation mDismissAnimation;
     Animator mDismissAnimator;
+
+    Animation mMaskViewShowAnimation;
+    Animation mMaskViewDismissAnimation;
 
     long showDuration;
     long dismissDuration;
@@ -129,6 +150,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         mAnchorViewBound = new Rect();
         this.mPopupWindow = popupWindow;
         this.eventObserverMap = new WeakHashMap<>();
+        this.mMaskViewShowAnimation = DEFAULT_MASK_SHOW_ANIMATION;
+        this.mMaskViewDismissAnimation = DEFAULT_MASK_DISMISS_ANIMATION;
     }
 
     void observerEvent(Object who, BasePopupEvent.EventObserver observer) {
@@ -181,7 +204,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     void preMeasurePopupView(View mContentView, int w, int h) {
         if (mContentView != null) {
             int measureWidth = View.MeasureSpec.makeMeasureSpec(Math.max(w, 0), w == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
-            int measureHeight = View.MeasureSpec.makeMeasureSpec(Math.max(w, h), h == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
+            int measureHeight = View.MeasureSpec.makeMeasureSpec(Math.max(w, h),
+                                                                 h == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
             mContentView.measure(measureWidth, measureHeight);
             setPreMeasureWidth(mContentView.getMeasuredWidth());
             setPreMeasureHeight(mContentView.getMeasuredHeight());
@@ -204,6 +228,10 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         if (getShowAnimation(width, height) == null) {
             getShowAnimator(width, height);
         }
+        //通知蒙层动画，此时duration已经计算完毕
+        Message msg = Message.obtain();
+        msg.what = BasePopupEvent.EVENT_SHOW;
+        sendEvent(msg);
         if (mShowAnimation != null) {
             mShowAnimation.cancel();
             mPopupWindow.mDisplayAnimateView.startAnimation(mShowAnimation);
@@ -692,6 +720,22 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         }
         mLinkedTarget = anchorView;
         return this;
+    }
+
+    void setMaskViewShowAnimation(Animation mMaskViewShowAnimation) {
+        this.mMaskViewShowAnimation = mMaskViewShowAnimation;
+    }
+
+    void setMaskViewDismissAnimation(Animation mMaskViewDismissAnimation) {
+        this.mMaskViewDismissAnimation = mMaskViewDismissAnimation;
+    }
+
+    void syncMaskAnimationDuration(boolean sync) {
+        setFlag(BasePopupFlag.SYNC_MASK_ANIMATION_DURATION, sync);
+    }
+
+    boolean isSyncMaskAnimationDuration() {
+        return (flag & BasePopupFlag.SYNC_MASK_ANIMATION_DURATION) != 0;
     }
 
     //-----------------------------------------controller-----------------------------------------

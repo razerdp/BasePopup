@@ -1689,6 +1689,27 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         return this;
     }
 
+    /**
+     * 设置背景蒙层显示的动画，如果为空，则蒙层不显示动画，直接弹出
+     */
+    public BasePopupWindow setMaskViewShowAnimation(Animation animation){
+        mHelper.setMaskViewShowAnimation(animation);
+        return this;
+    }
+
+    /**
+     * 设置背景蒙层退出的动画，如果为空，则蒙层不显示动画，直接消失
+     */
+    public BasePopupWindow setMaskViewDismissAnimation(Animation animation){
+        mHelper.setMaskViewDismissAnimation(animation);
+        return this;
+    }
+
+    public BasePopupWindow syncMaskAnimationDuration(boolean sync){
+        mHelper.syncMaskAnimationDuration(sync);
+        return this;
+    }
+
     //endregion
 
     //region ------------------------------------------状态控制-----------------------------------------------
