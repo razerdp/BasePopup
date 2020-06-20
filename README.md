@@ -52,7 +52,9 @@
 ### 开发计划 & 需求投票
 
 当前开发：动画迭代
+
 当前需求投票：[允许蒙层高亮一个或多个其依附的View](https://github.com/razerdp/BasePopup/issues/300)
+
 需求提单：[【BasePopup需求提单】](https://github.com/razerdp/BasePopup/issues/299)
 
 有奖调查问卷：
