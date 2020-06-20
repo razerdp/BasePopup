@@ -90,7 +90,7 @@
  - 无论是[**Animation**](https://www.yuque.com/razerdp/basepopup/mg3bcw#onCreateShowAnimation)还是[**Animator**](https://www.yuque.com/razerdp/basepopup/mg3bcw#onCreateShowAnimator)，只需要跟您平时一样写动画，就可以完成Popup的动效设计了，不需要xml不需要关心别的兼容性问题
  - 背景与主体分离，无论是[**背景模糊**](https://www.yuque.com/razerdp/basepopup/udccdq#12bedc89)，亦或是[**背景颜色**](https://www.yuque.com/razerdp/basepopup/gscx3g#aiRz7)，甚至[**把背景换成您的View**](https://www.yuque.com/razerdp/basepopup/gscx3g#e96cp)，都可以通过简单的设置完成，主体与背景隔离，不用担心事件的问题
  - 还在为Popup的触摸事件头疼吗？BasePopup帮你解决烦恼~返回键控制、外部点击透传、点击外部是否消失都只需要您动动手指头完成配置即可
- - PopupWindow自动锚定AnchorView，滑动到屏幕外自动跟随AnchorView消失，不需要复杂的逻辑设置，只需要通过[**Link**](https://github.com/razerdp/BasePopup/wiki/API#linktoview-anchorview)方法告诉BasePopup
+ - PopupWindow自动锚定AnchorView，滑动到屏幕外自动跟随AnchorView消失，不需要复杂的逻辑设置，只需要通过[**linkTo**](https://www.yuque.com/razerdp/basepopup/api)方法告诉BasePopup即可帮您完成
  - 简单的PopupWindow不想新建一个类，希望拥有链式调用？没问题，[**QuickPopupBuilder**](https://www.yuque.com/razerdp/basepopup/ob329t)为此而生，相信你会越用越爱~
 
 <br>
@@ -135,6 +135,36 @@
 
 **Candy开发日志请查看dev分支**[**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
+* **【Release】2.2.3**(2020/05/07)
+  * 我们针对2.2.2系列问题进行了修复，同时增加了一些新的功能，欢迎更新到最新版本~
+  * **新增功能/方法：**
+    * 新增`setPopupGravityMode()`：您可以单独设置BasePopup对齐方式而不需要始终带上Gravity
+    * 新增`OnPopupWindowShowListener`接口：在BasePopup显示后回调该接口，当回调该方法时意味着弹窗已经完成，此时ui已经显示在屏幕上
+    * 新增`bindLifecycleOwner()`：您现在可以自由绑定您的LifecycleOwner
+    * 新增`onPreShow()`回调：在BasePopup弹出之前回调该方法，如果返回false，则不会弹出
+    * 新增`onShowing()`回调：在BasePopup显示后回调该方法，当回调该方法时意味着弹窗已经完成，此时ui已经显示在屏幕上
+    * 新增`onPopupLayout()`回调：如果弹窗与锚点View关联，当BasePopup在布局的时候回调该方法，分别返回BasePopup在屏幕上的位置和锚点View在屏幕上的位置
+    * 新增`computeGravity()`：配套`onPopupLayout()`回调，计算BasePopup中心点在锚点View的方位。
+  * **弃用方法及更替：**
+    * `BasePopupWindow#dismissWithOutAnimate()`，请使用**dismiss(false)**
+    * `BasePopupWindow#setPopupWindowFullScreen()`，请使用**setOverlayStatusbar()**
+    * `QuickPopupConfig#dismissOnOutSideTouch()`，请使用**outSideDismiss()**
+    * `QuickPopupConfig#allowInterceptTouchEvent()`，请使用**outSideTouchable()**
+  * **优化：**
+    * 优化DecorView的查询方式，原逻辑会缓存下查询后的DecorView，但可能会因为该DecorView宿主已经销毁或者变更而导致显示错误
+    * 支持的最低版本降至Api 16
+    * 放弃反射WindowManager的方式，采取ContextWrapper代理，不再担心遭遇黑灰名单封锁了~感谢[@xchengDroid](https://github.com/xchengDroid)提供的方案
+  * **bug修复：**
+    * 修复覆盖状态栏时事件传递存在偏移的情况
+    * 修复`isShowing()`存在空指针的情况(issue：[#267](https://github.com/razerdp/BasePopup/issues/267))
+    * 修复`setOverlayStatusbar(false)`情况下与Anchor关联时显示位置错误的问题
+    * 修复部分引用没有置空导致**可能**存在的内存泄漏问题（事实上并没发现泄漏）
+    * 修复BasePopup弹出时，Activity弹出的输入法显示在BasePopup下层的问题
+    * 修复全屏Activity判断错误的问题
+    * 修复QuickPopupConfig配置缺漏的问题
+    * 修复未弹窗时直接调用dismiss(),然后首次调用showPopupWindow()失效的问题
+    * fixed issue：[#224](https://github.com/razerdp/BasePopup/issues/224)
+
 * **【Release】2.2.2.2**(2020/03/01)
   * 修复一个很严重的可能会导致崩溃的问题
     * 重现方式：dismiss动画没执行完的情况下finish了activity，会引发空指针崩溃
@@ -146,36 +176,6 @@
 
 * **【Release】2.2.2.1**(2020/02/26)
   * 修复输入法自动弹出后不能再次弹出的问题
-
-* **【Release】2.2.2**(2020/02/24)
-  * 发布2.2.2正式版，**本版本是一个重构版本，请认真阅读更新日志哦**
-  * **新增功能/特性：**
-    * 新增 `BaseLazyPopupWindow`，以后懒加载的PopupWindow只需要extend这个就可以了，旧版本的`delayInit()`已经在该版本去除
-    * 增加BasePopup队列，针对outSideTouch优化
-    * 适配Android 10，解决Android 10黑/灰名单的问题
-    * 适配`match_parent`，现在`match_parent`将会填充剩余空间
-    * 主体完全迁移至AndroidX，去除BasePopup扩展组件库，同时建议您尽快适配AndroidX
-    * 针对内存泄漏进行梳理，同时增加生命期监听，在`destroy`中会释放引用
-    * 增加对`dialog`/`fragment`/`dialogfragment`的支持
-    * 添加`setFitSize()`方法
-      * `setFitSize()`：BasePopup会针对剩余空间来调整Popup的大小，因此可能出现实际显示过小的情况
-    * 优化QuickPopupBuilder
-    * 蒙层交回给系统托管，再也不用担心为啥全面屏无法全覆盖了
-    * 优化在`onCreate()`中弹窗无法弹出的问题
-      * 采取[#263](https://github.com/razerdp/BasePopup/issues/263)的建议，非常感谢[@xchengDroid](https://github.com/xchengDroid)提出的建议
-    * 增加`onLogInternal()`方法，您可以在这里打印BasePopupWindow执行期间的日志
-    * 增加`onViewCreated()`方法，您可以在这里对ContentView进行操作，或者使用ButterKnife进行注入
-  * **精简：**
-    * 去除onAnchorTop/onAnchorBottom方法，后续将会替换为别的方法
-    * 去除`limitScreen()`方法
-    * 去除扩展组件，现在主体支持AndroidX，同时不再支持Support包了
-  * **bug fixed：**
-    * fixed [#184](https://github.com/razerdp/BasePopup/issues/184)、[#207](https://github.com/razerdp/BasePopup/issues/207)、[#210](https://github.com/razerdp/BasePopup/issues/210)
-    * fixed [#213](https://github.com/razerdp/BasePopup/issues/213)、[#226](https://github.com/razerdp/BasePopup/issues/226)、[#232](https://github.com/razerdp/BasePopup/issues/232)
-    * fixed [#236](https://github.com/razerdp/BasePopup/issues/236)、[#238](https://github.com/razerdp/BasePopup/issues/238)、[#240](https://github.com/razerdp/BasePopup/issues/240)
-    * fixed [#242](https://github.com/razerdp/BasePopup/issues/242)、[#244](https://github.com/razerdp/BasePopup/issues/244)、[#247](https://github.com/razerdp/BasePopup/issues/247)
-    * fixed [#248](https://github.com/razerdp/BasePopup/issues/248)、[#249](https://github.com/razerdp/BasePopup/issues/249)、[#260](https://github.com/razerdp/BasePopup/issues/260)
-    * fixed [#262](https://github.com/razerdp/BasePopup/issues/262)、[#263](https://github.com/razerdp/BasePopup/issues/263)
 
 <br>
 
