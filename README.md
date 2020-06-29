@@ -57,6 +57,8 @@
 
 需求提单：[【BasePopup需求提单】](https://github.com/razerdp/BasePopup/issues/299)
 
+讨论：[【关于MIUI小白条及类似的“全面屏手势提示线”覆盖问题描述】](https://github.com/razerdp/BasePopup/issues/307)
+
 有奖调查问卷：
 
 <a href ="https://wj.qq.com/s2/5468287/c24f">
