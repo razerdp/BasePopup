@@ -23,7 +23,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -130,6 +129,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     EditText mAutoShowInputEdittext;
 
     KeyboardUtils.OnKeyboardChangeListener mKeyboardStateChangeListener;
+    KeyboardUtils.OnKeyboardChangeListener mUserKeyboardStateChangeListener;
+    BasePopupWindow.KeyEventListener mKeyEventListener;
 
     int mSoftInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
     ViewGroup.MarginLayoutParams layoutParams;
@@ -205,10 +206,10 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         if (mContentView != null) {
             int measureWidth = View.MeasureSpec.makeMeasureSpec(Math.max(w, 0), w == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
             int measureHeight = View.MeasureSpec.makeMeasureSpec(Math.max(w, h),
-                                                                 h == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
+                    h == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
             mContentView.measure(measureWidth, measureHeight);
-            setPreMeasureWidth(mContentView.getMeasuredWidth());
-            setPreMeasureHeight(mContentView.getMeasuredHeight());
+            preMeasureWidth = mContentView.getMeasuredWidth();
+            preMeasureHeight = mContentView.getMeasuredHeight();
             mContentView.setFocusableInTouchMode(true);
         }
     }
@@ -389,27 +390,13 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return preMeasureWidth;
     }
 
-    BasePopupHelper setPreMeasureWidth(int preMeasureWidth) {
-        this.preMeasureWidth = preMeasureWidth;
-        return this;
-    }
 
     int getPreMeasureHeight() {
         return preMeasureHeight;
     }
 
-    BasePopupHelper setPreMeasureHeight(int preMeasureHeight) {
-        this.preMeasureHeight = preMeasureHeight;
-        return this;
-    }
-
     boolean isPopupFadeEnable() {
         return (flag & FADE_ENABLE) != 0;
-    }
-
-    BasePopupHelper setPopupFadeEnable(boolean fadeEnable) {
-        setFlag(FADE_ENABLE, fadeEnable);
-        return this;
     }
 
     boolean isWithAnchor() {
@@ -445,83 +432,36 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return this;
     }
 
-    BasePopupHelper setPopupGravityMode(BasePopupWindow.GravityMode mode) {
-        this.gravityMode = mode;
-        return this;
-    }
-
-    BasePopupHelper setClipChildren(boolean clipChildren) {
-        setFlag(CLIP_CHILDREN, clipChildren);
-        return this;
-    }
-
     int getOffsetX() {
         return offsetX;
-    }
-
-    BasePopupHelper setOffsetX(int offsetX) {
-        this.offsetX = offsetX;
-        return this;
     }
 
     int getOffsetY() {
         return offsetY;
     }
 
-    BasePopupHelper setOffsetY(int offsetY) {
-        this.offsetY = offsetY;
-        return this;
-    }
 
     boolean isAutoShowInputMethod() {
         return (flag & AUTO_INPUT_METHOD) != 0;
-    }
-
-    BasePopupHelper autoShowInputMethod(boolean autoShowInputMethod) {
-        setFlag(AUTO_INPUT_METHOD, autoShowInputMethod);
-        return this;
-    }
-
-    BasePopupHelper setSoftInputMode(int inputMethodType) {
-        mSoftInputMode = inputMethodType;
-        return this;
     }
 
     boolean isAutoLocatePopup() {
         return (flag & AUTO_LOCATED) != 0;
     }
 
-    BasePopupHelper autoLocatePopup(boolean autoLocatePopup) {
-        setFlag(AUTO_LOCATED, autoLocatePopup);
-        return this;
-    }
-
     boolean isOutSideDismiss() {
         return (flag & OUT_SIDE_DISMISS) != 0;
-    }
-
-    BasePopupHelper dismissOutSideTouch(boolean dismissWhenTouchOutside) {
-        setFlag(OUT_SIDE_DISMISS, dismissWhenTouchOutside);
-        return this;
     }
 
     boolean isOutSideTouchable() {
         return (flag & OUT_SIDE_TOUCHABLE) != 0;
     }
 
-    BasePopupHelper outSideTouchable(boolean touchAble) {
-        setFlag(OUT_SIDE_TOUCHABLE, touchAble);
-        return this;
-    }
-
-    BasePopupHelper setPopupAnimationStyle(int animationStyleRes) {
-        this.animationStyleRes = animationStyleRes;
-        return this;
-    }
-
     BasePopupHelper getAnchorLocation(View v) {
         if (v == null) return this;
-        v.getGlobalVisibleRect(mAnchorViewBound);
+        int[] location = new int[2];
+        v.getLocationOnScreen(location);
+        mAnchorViewBound.set(location[0], location[1], location[0] + v.getWidth(), location[1] + v.getHeight());
         return this;
     }
 
@@ -540,11 +480,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     boolean isBackPressEnable() {
         return (flag & BACKPRESS_ENABLE) != 0;
-    }
-
-    BasePopupHelper backPressEnable(boolean backPressEnable) {
-        setFlag(BACKPRESS_ENABLE, backPressEnable);
-        return this;
     }
 
     boolean isOverlayStatusbar() {
@@ -659,19 +594,10 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return maxWidth;
     }
 
-    BasePopupHelper setMaxWidth(int maxWidth) {
-        this.maxWidth = maxWidth;
-        return this;
-    }
-
     int getMaxHeight() {
         return maxHeight;
     }
 
-    BasePopupHelper setMaxHeight(int maxHeight) {
-        this.maxHeight = maxHeight;
-        return this;
-    }
 
     ShowMode getShowMode() {
         return mShowMode;
@@ -686,24 +612,10 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return minWidth;
     }
 
-    BasePopupHelper setMinWidth(int minWidth) {
-        this.minWidth = minWidth;
-        return this;
-    }
-
     int getMinHeight() {
         return minHeight;
     }
 
-    BasePopupHelper setMinHeight(int minHeight) {
-        this.minHeight = minHeight;
-        return this;
-    }
-
-    BasePopupHelper resize(boolean keep) {
-        setFlag(FITSIZE, keep);
-        return this;
-    }
 
     boolean isResizeable() {
         return (flag & FITSIZE) != 0;
@@ -720,18 +632,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         }
         mLinkedTarget = anchorView;
         return this;
-    }
-
-    void setMaskViewShowAnimation(Animation mMaskViewShowAnimation) {
-        this.mMaskViewShowAnimation = mMaskViewShowAnimation;
-    }
-
-    void setMaskViewDismissAnimation(Animation mMaskViewDismissAnimation) {
-        this.mMaskViewDismissAnimation = mMaskViewDismissAnimation;
-    }
-
-    void syncMaskAnimationDuration(boolean sync) {
-        setFlag(BasePopupFlag.SYNC_MASK_ANIMATION_DURATION, sync);
     }
 
     boolean isSyncMaskAnimationDuration() {
@@ -793,6 +693,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     boolean onDispatchKeyEvent(KeyEvent event) {
+        if (mKeyEventListener != null && mKeyEventListener.onKey(event)) {
+            return true;
+        }
         return mPopupWindow.onDispatchKeyEvent(event);
     }
 
@@ -921,6 +824,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     public void onKeyboardChange(Rect keyboardBounds, boolean isVisible) {
         if (mKeyboardStateChangeListener != null) {
             mKeyboardStateChangeListener.onKeyboardChange(keyboardBounds, isVisible);
+        }
+        if (mUserKeyboardStateChangeListener != null) {
+            mUserKeyboardStateChangeListener.onKeyboardChange(keyboardBounds, isVisible);
         }
     }
 
@@ -1201,5 +1107,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         mLinkedViewLayoutChangeListenerWrapper = null;
         mLinkedTarget = null;
         mGlobalLayoutListener = null;
+        mUserKeyboardStateChangeListener = null;
+        mKeyEventListener = null;
     }
 }
