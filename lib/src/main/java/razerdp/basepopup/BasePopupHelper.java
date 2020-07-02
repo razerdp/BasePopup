@@ -218,7 +218,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     void checkAndSetGravity(ViewGroup.LayoutParams p) {
-        if (p == null) return;
+        //如果设置过gravity，则采取设置的gravity，顶替掉xml设置的
+        if (p == null || this.popupGravity != Gravity.NO_GRAVITY) return;
         if (p instanceof LinearLayout.LayoutParams) {
             setPopupGravity(gravityMode, ((LinearLayout.LayoutParams) p).gravity);
         } else if (p instanceof FrameLayout.LayoutParams) {
