@@ -17,9 +17,10 @@ public interface BasePopupFlag {
     int DISPLAY_SHIFT = 3;
     int OVERLAY_STATUS_BAR = 0x1 << DISPLAY_SHIFT;//允许覆盖状态栏
     int CLIP_CHILDREN = 0x2 << DISPLAY_SHIFT;//裁剪子控件
+    int OVERLAY_NAVIGATION_BAR = 0x4 << DISPLAY_SHIFT;//允许覆盖导航栏
 
     //popup控制 6 bit
-    int CONTROL_SHIFT = 6;
+    int CONTROL_SHIFT = 7;
     int FADE_ENABLE = 0X1 << CONTROL_SHIFT;// 淡入淡出
     int AUTO_LOCATED = 0x2 << CONTROL_SHIFT;//自动定位
     int WITH_ANCHOR = 0x4 << CONTROL_SHIFT;//关联Anchor
@@ -28,11 +29,11 @@ public interface BasePopupFlag {
     int FITSIZE = 0x20 << CONTROL_SHIFT;//允许popup重设大小
 
     //quick popup config
-    int QUICK_POPUP_CONFIG_SHIFT = 13;
+    int QUICK_POPUP_CONFIG_SHIFT = 14;
     int BLUR_BACKGROUND = 0x1 << QUICK_POPUP_CONFIG_SHIFT;//blur background
 
     //键盘
-    int KEYBOARD_CONTROL_SHIFT = 15;
+    int KEYBOARD_CONTROL_SHIFT = 16;
     int KEYBOARD_ALIGN_TO_VIEW = 0x1 << KEYBOARD_CONTROL_SHIFT;
     int KEYBOARD_ALIGN_TO_ROOT = 0x2 << KEYBOARD_CONTROL_SHIFT;
     int KEYBOARD_IGNORE_OVER_KEYBOARD = 0x4 << KEYBOARD_CONTROL_SHIFT;

@@ -147,8 +147,11 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     View mLinkedTarget;
 
+    int navigationBarHeight;
+
     BasePopupHelper(BasePopupWindow popupWindow) {
         mAnchorViewBound = new Rect();
+        navigationBarHeight = PopupUiUtils.getNavigationBarHeight(popupWindow.getContext());
         this.mPopupWindow = popupWindow;
         this.eventObserverMap = new WeakHashMap<>();
         this.mMaskViewShowAnimation = DEFAULT_MASK_SHOW_ANIMATION;
@@ -486,12 +489,25 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return (flag & OVERLAY_STATUS_BAR) != 0;
     }
 
+    boolean isOverlayNavigationBar() {
+        return (flag & OVERLAY_NAVIGATION_BAR) != 0;
+    }
+
+    int getNavigationBarHeight() {
+        return isOverlayNavigationBar() ? 0 : navigationBarHeight;
+    }
+
     BasePopupHelper overlayStatusbar(boolean overlay) {
         if (!overlay && PopupUiUtils.isActivityFullScreen(mPopupWindow.getContext())) {
             Log.e(BasePopupWindow.TAG, "setOverlayStatusbar: 全屏Activity下没有StatusBar，此处不能设置为false");
             overlay = true;
         }
         setFlag(OVERLAY_STATUS_BAR, overlay);
+        return this;
+    }
+
+    BasePopupHelper overlayNavigationBar(boolean overlay) {
+        setFlag(OVERLAY_NAVIGATION_BAR, overlay);
         return this;
     }
 

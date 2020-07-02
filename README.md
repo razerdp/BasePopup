@@ -146,6 +146,7 @@
     * 增加OnKeyboardChangeListener，该监听允许用户监听键盘显示、关闭事件，同时回调键盘大小
     * 增加KeyEventListener，允许用户外部监听并处理传递到BasePopup的KeyEvent [#296](https://github.com/razerdp/BasePopup/issues/296)
     * 动画优化（进度70%）
+    * 增加BasePopup覆盖导航栏的功能：`setOverlayNavigationBar`，相关讨论：[关于MIUI小白条及类似的“全面屏手势提示线”覆盖问题描述](https://github.com/razerdp/BasePopup/issues/307)
 
 
 <br>
