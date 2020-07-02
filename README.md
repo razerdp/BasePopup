@@ -141,7 +141,7 @@
     * 修复Quickpopupbuilder中backpressenable设置失效的问题([#296](https://github.com/razerdp/BasePopup/issues/296))
   * **【未发布版本】**（2020/06/19）
     * 修复非BasePopup内EditText弹出键盘时挡住EditText的问题([#297](https://github.com/razerdp/BasePopup/issues/297))
-  * **【未发布版本】** （2020/07/02）
+  * **【2.2.4.0702】** （2020/07/02）
     * 优化BasePopupHelper代码
     * 增加OnKeyboardChangeListener，该监听允许用户监听键盘显示、关闭事件，同时回调键盘大小
     * 增加KeyEventListener，允许用户外部监听并处理传递到BasePopup的KeyEvent [#296](https://github.com/razerdp/BasePopup/issues/296)
