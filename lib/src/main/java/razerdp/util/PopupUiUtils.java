@@ -1,6 +1,8 @@
 package razerdp.util;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -8,10 +10,15 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import razerdp.basepopup.BasePopupSDK;
 import razerdp.util.log.PopupLog;
 
@@ -24,6 +31,12 @@ public class PopupUiUtils {
     public static final String POPUP_VIEWCONTAINER = "android.widget.PopupWindow$PopupViewContainer";
     public static final String POPUP_BACKGROUNDVIEW = "android.widget.PopupWindow$PopupBackgroundView";
 
+    private static final List<String> NAVIGATION_BAR_NAMES = new ArrayList<>();
+
+    static {
+        NAVIGATION_BAR_NAMES.add("navigationbarbackground");
+        NAVIGATION_BAR_NAMES.add("immersion_navigation_bar_view");
+    }
 
     public static boolean isPopupDecorView(View view) {
         return view != null && TextUtils.equals(view.getClass().getName(), POPUP_DECORVIEW);
@@ -46,6 +59,32 @@ public class PopupUiUtils {
         } else {
             v.requestFocus();
         }
+    }
+
+    /**
+     * 方法参考
+     * https://juejin.im/post/5bb5c4e75188255c72285b54
+     */
+    @SuppressLint("NewApi")
+    public static int getNavigationBarHeight(Context context) {
+        Activity act = PopupUtils.getActivity(context);
+        if (!PopupUtils.isActivityAlive(act)) return 0;
+        ViewGroup decorView = (ViewGroup) act.getWindow().getDecorView();
+        final int childCount = decorView.getChildCount();
+        for (int i = childCount - 1; i >= 0; i--) {
+            View child = decorView.getChildAt(i);
+            if (child.getId() == View.NO_ID || !child.isShown()) continue;
+            String resourceEntryName;
+            try {
+                resourceEntryName = act.getResources().getResourceEntryName(child.getId());
+                if (NAVIGATION_BAR_NAMES.contains(resourceEntryName.toLowerCase())) {
+                    return child.getHeight();
+                }
+            } catch (Exception e) {
+                //do nothing
+            }
+        }
+        return 0;
     }
 
     public static int getScreenOrientation() {

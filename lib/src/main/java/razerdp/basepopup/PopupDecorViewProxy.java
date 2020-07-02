@@ -314,6 +314,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             int width = child.getMeasuredWidth();
             int height = child.getMeasuredHeight();
 
+            int parentWidth = getMeasuredWidth();
+            int parentHeight = getMeasuredHeight();
+
             int gravity = mHelper.getPopupGravity();
 
             int childLeft = l;
@@ -327,6 +330,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             if (child == mMaskLayout) {
                 child.layout(childLeft, childTop, childLeft + width, childTop + height);
             } else {
+                //由于可以布局到navigationbar上，因此在layout的时候对于contentView需要减去navigationbar的高度
+                parentHeight -= mHelper.getNavigationBarHeight();
                 Rect anchorBound = mHelper.getAnchorViewBound();
                 boolean isRelativeToAnchor = mHelper.isWithAnchor();
                 boolean isAlignAnchorMode = mHelper.getGravityMode() == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE;
@@ -421,7 +426,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                             break;
                         case Gravity.BOTTOM:
                         default:
-                            restHeight = isAlignAnchorMode ? anchorBound.bottom : getMeasuredHeight() - anchorBound.bottom;
+                            restHeight = isAlignAnchorMode ? anchorBound.bottom : parentHeight - anchorBound.bottom;
 
                             if (height > restHeight) {
                                 //需要移位
@@ -438,36 +443,36 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 int right = left + width;
                 int bottom = top + height;
 
-                boolean isOutsideScreen = left < 0 || top < 0 || right > getMeasuredWidth() || bottom > getMeasuredHeight();
+                boolean isOutsideScreen = left < 0 || top < 0 || right > parentWidth || bottom > parentHeight;
 
                 if (isOutsideScreen) {
                     //水平调整
-                    if (left < 0 && right > getMeasuredWidth()) {
+                    if (left < 0 && right > parentWidth) {
                         left = 0;
-                        right = getMeasuredWidth();
+                        right = parentWidth;
                     } else {
                         int horizontalOffset = 0;
                         if (left < 0) {
                             horizontalOffset = -left;
-                        } else if (right > getMeasuredWidth()) {
-                            horizontalOffset = Math.min(getMeasuredWidth() - right, 0);
+                        } else if (right > parentWidth) {
+                            horizontalOffset = Math.min(parentWidth - right, 0);
                         }
                         left = Math.max(left + horizontalOffset, 0);
-                        right = Math.min(right + horizontalOffset, getMeasuredWidth());
+                        right = Math.min(right + horizontalOffset, parentWidth);
                     }
                     //垂直调整
-                    if (top < 0 && bottom > getMeasuredHeight()) {
+                    if (top < 0 && bottom > parentHeight) {
                         top = 0;
-                        bottom = getMeasuredHeight();
+                        bottom = parentHeight;
                     } else {
                         int verticalOffset = 0;
                         if (top < 0) {
                             verticalOffset = -top;
-                        } else if (bottom > getMeasuredHeight()) {
-                            verticalOffset = Math.min(getMeasuredHeight() - bottom, 0);
+                        } else if (bottom > parentHeight) {
+                            verticalOffset = Math.min(parentHeight - bottom, 0);
                         }
                         top = Math.max(top + verticalOffset, 0);
-                        bottom = Math.min(bottom + verticalOffset, getMeasuredHeight());
+                        bottom = Math.min(bottom + verticalOffset, parentHeight);
                     }
                 }
                 child.layout(left, top, right, bottom);
