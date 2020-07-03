@@ -143,12 +143,14 @@
     * 修复非BasePopup内EditText弹出键盘时挡住EditText的问题([#297](https://github.com/razerdp/BasePopup/issues/297))
   * **【2.2.4.0702】** （2020/07/02）
     * 优化BasePopupHelper代码
-    * 增加OnKeyboardChangeListener，该监听允许用户监听键盘显示、关闭事件，同时回调键盘大小
-    * 增加KeyEventListener，允许用户外部监听并处理传递到BasePopup的KeyEvent [#296](https://github.com/razerdp/BasePopup/issues/296)
+    * 增加`OnKeyboardChangeListener`，该监听允许用户监听键盘显示、关闭事件，同时回调键盘大小
+    * 增加`KeyEventListener`，允许用户外部监听并处理传递到BasePopup的KeyEvent [#296](https://github.com/razerdp/BasePopup/issues/296)
     * 动画优化（进度70%）
     * 增加BasePopup覆盖导航栏的功能：`setOverlayNavigationBar`，相关讨论：[关于MIUI小白条及类似的“全面屏手势提示线”覆盖问题描述](https://github.com/razerdp/BasePopup/issues/307)
   * **【2.2.4.0703】** （2020/07/03）
     * 修复lazypopup中gravity覆盖的问题 [#310](https://github.com/razerdp/BasePopup/issues/310)
+    * 增加`setWidthAsAnchorView`：该方法将会设置Popup的宽度为AnchorView的宽度
+    * 增加`setHeightAsAnchorView`：该方法将会设置Popup的高度为AnchorView的高度
 
 
 <br>
