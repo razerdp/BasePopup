@@ -1438,8 +1438,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </ul>
      *
      * @param mode <ul><li>GravityMode.RELATIVE_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup处于该Anchor的哪个位置</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         </ul>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     </ul>
      */
     public BasePopupWindow setPopupGravity(GravityMode mode, int popupGravity) {
         mHelper.setPopupGravity(mode, popupGravity);
@@ -1745,6 +1745,22 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public BasePopupWindow setKeyEventListener(KeyEventListener keyEventListener) {
         mHelper.mKeyEventListener = keyEventListener;
+        return this;
+    }
+
+    /**
+     * basepopup宽度跟随anchorview
+     */
+    public BasePopupWindow setWidthAsAnchorView(boolean widthAsAnchor) {
+        mHelper.setFlag(BasePopupFlag.AS_WIDTH_AS_ANCHOR, widthAsAnchor);
+        return this;
+    }
+
+    /**
+     * basepopup高度跟随anchorView
+     */
+    public BasePopupWindow setHeightAsAnchorView(boolean heightAsAnchor) {
+        mHelper.setFlag(BasePopupFlag.AS_HEIGHT_AS_ANCHOR, heightAsAnchor);
         return this;
     }
 

@@ -270,6 +270,16 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             }
         }
 
+        //如果跟anchor对齐大小
+        if (mHelper.isAlignAnchorWidth()) {
+            widthSize = mHelper.getAnchorViewBound().width();
+            widthMode = MeasureSpec.EXACTLY;
+        }
+
+        if (mHelper.isAlignAnchorHeight()) {
+            heightSize = mHelper.getAnchorViewBound().height();
+            heightMode = MeasureSpec.EXACTLY;
+        }
 
         if (mHelper.getMinWidth() > 0 && widthSize < mHelper.getMinWidth()) {
             widthSize = mHelper.getMinWidth();

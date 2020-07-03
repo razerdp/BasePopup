@@ -655,6 +655,28 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return (flag & BasePopupFlag.SYNC_MASK_ANIMATION_DURATION) != 0;
     }
 
+    boolean isAlignAnchorWidth() {
+        if (isWithAnchor()) {
+            //point mode时，由于是一像素，因此忽略
+            if (mShowInfo != null && mShowInfo.positionMode) {
+                return false;
+            }
+            return (flag & BasePopupFlag.AS_WIDTH_AS_ANCHOR) != 0;
+        }
+        return false;
+    }
+
+    boolean isAlignAnchorHeight() {
+        if (isWithAnchor()) {
+            //point mode时，由于是一像素，因此忽略
+            if (mShowInfo != null && mShowInfo.positionMode) {
+                return false;
+            }
+            return (flag & BasePopupFlag.AS_HEIGHT_AS_ANCHOR) != 0;
+        }
+        return false;
+    }
+
     //-----------------------------------------controller-----------------------------------------
     void prepare(View v, boolean positionMode) {
         if (mShowInfo == null) {
