@@ -118,7 +118,7 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 ### ChangeLog ([Historical update](https://www.yuque.com/razerdp/basepopup/uyrsxx))
 
-**Candy dev log see dev branch: [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
+**Candy dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
 * **【Release】2.2.3**(2020/05/07)
   * We have fixed the 2.2.2 series of problems and added some new features.
