@@ -71,14 +71,13 @@
 
 ### Feature
 
- - Simple and precise control of display position with [**Gravity**](https://github.com/razerdp/BasePopup/wiki/API#setpopupgravityint-popupgravity) and [**offset**](https://github.com/razerdp/BasePopup/wiki/API#setoffsetxint-offsetx).
- - Basepopup is an abstract class with almost no constraints on subclasses. You can customize your PopupWindow just like a custom View.
- - Darkening the background, [**changing the background color**](https://github.com/razerdp/BasePopup/wiki/API#setbackgroundcolorint-color) will be very easy.
- - [**Blur background**](https://github.com/razerdp/BasePopup/wiki/API#setblurbackgroundenableboolean-blurbackgroundenable) or [**partial blur**](https://github.com/razerdp/BasePopup/wiki/API#setbluroptionpopupbluroption-option) is also very easy.
- - [**Backpress control**](https://github.com/razerdp/BasePopup/wiki/API#setbackpressenableboolean-backpressenable) , [**click outside to dismiss**](https://github.com/razerdp/BasePopup/wiki/API#setallowdismisswhentouchoutsideboolean-dismisswhentouchoutside) , [**outside touch event**](https://github.com/razerdp/BasePopup/wiki/API#setallowintercepttoucheventboolean-touchable) all separation，no longer have to worry about my PopupWindow various key events problems.
-   - We also support event delivery at the same time.
- - Support [**linkTo**](https://github.com/razerdp/BasePopup/wiki/API#linktoview-anchorview) anchorview.
- - Support for chained calls. For a simple scene,try [**QuickPopupBuilder**](https://github.com/razerdp/BasePopup/wiki/API#QuickPopupBuilder)
+ - This library acts as a base class and does not interfere with your implementation, don't worry about being restricted by Api when implementing certain methods.
+ - No need to worry about how to calculate offset for position control, just simply set [**Gravity**](https://www.yuque.com/razerdp/basepopup/qnu3qd), you can control your popups as you wish.
+ - Whether [**Animation**](https://www.yuque.com/razerdp/basepopup/mg3bcw#onCreateShowAnimation) or [**Animator**](https://www.yuque.com/razerdp/basepopup/mg3bcw#onCreateShowAnimator), just write the animation as you normally would. You can complete the dynamic design of Popup, do not need xml, do not care about other compatibility issues.
+ - Separation of background from content, support for [**background blurring**](https://www.yuque.com/razerdp/basepopup/udccdq#12bedc89),[**background color Settings**](https://www.yuque.com/razerdp/basepopup/gscx3g#aiRz7),or even [**change the background to your View**](https://www.yuque.com/razerdp/basepopup/gscx3g#e96cp),all of which can be done with a simple setup, with the subject isolated from the background, without worrying about the key event's issues.
+ - BasePopup can help you to solve the problem of touch events in Popup. Pass-through, click-through and disappear or not are all just a matter of configuration.
+ - PopupWindow automatically anchors the AnchorView, slide to follow it off screen. AnchorView disappears without complex logic setup, just by [**linkTo**](https://www.yuque.com/razerdp/basepopup/api) method by telling BasePopup to do it for you.
+ - Simple PopupWindow doesn't want to create a new class and wants to have chain calls? No problem, [**QuickPopupBuilder**](https://www.yuque.com/razerdp/basepopup/ob329t) was created for this purpose, and believe that You'll love it more and more.
 
 <br>
 
@@ -119,12 +118,37 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 ### ChangeLog ([Historical update](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Candy】2.2.3**
-  * **【2.2.3.20200304】**
-    * Optimized event delivery in case of status bar coverage
-    * Method deprecation: ~~`setPopupWindowFullScreen ()`~~-> `setOverlayStatusbar ()`
-    * Added method: `setPopupGravityMode ()`
-    * Update Demo
+**Candy dev log see dev branch**[**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
+
+* **【Release】2.2.3**(2020/05/07)
+  * We have fixed the 2.2.2 series of problems and added some new features.
+  * **New features/methods added:**
+    * Added `setPopupGravityMode()`: You can set BasePopup alignment individually instead of always bringing the gravity params.
+    * Added `OnPopupWindowShowListener` interface: Notify this interface after BasePopup is displayed, when this method is called back, it means the popup window has been completed and ui has been displayed on the screen.
+    * Added `bindLifecycleOwner()` method: You can now freely bind your LifecycleOwner.
+    * Added `onPreShow()` method: call this method before BasePopup popup, if it returns **false**, it won't show.
+    * Added `onShowing()` method: Same as `OnPopupWindowShowListener`, but this is the protect method in BasePopup.
+    * Added `onPopupLayout()` method: If the popup is associated with an anchor View, the method will be called when BasePopup is in layout(). And return the position of BasePopup on the screen and the position of the anchor View on the screen respectively.
+    * Added `computeGravity()`: Equipped with `onPopupLayout()` callback to calculate the BasePopup center point's orientation at the anchor View.
+  * **Method of abandonment and replacement:**
+    * `BasePopupWindow#dismissWithOutAnimate()` is Deprecated，please use **dismiss(false)** instead.
+    * `BasePopupWindow#setPopupWindowFullScreen()` is Deprecated，please use **setOverlayStatusbar()** instead.
+    * `QuickPopupConfig#dismissOnOutSideTouch()` is Deprecated，please use **outSideDismiss()** instead.
+    * `QuickPopupConfig#allowInterceptTouchEvent()` is Deprecated，please use **outSideTouchable()** instead.
+  * **Optimisation:**
+    * Optimize the query of the DecorView, the original logic will cache the query of the DecorView, but the display error may be caused by the destruction or change of the DecorView host.
+    * The lowest supported version is down to Api 16.
+    * Abandon the reflective WindowManager approach, take the ContextWrapper proxy, no longer Worried about experiencing a black ash list block ~ thanks [@xchengDroid](https://github.com/xchengDroid).
+  * **Bug fixes:**
+    * Fix offsets in event delivery when overriding the status bar
+    * Fix `isShowing()` with NullPointerException.[#267](https://github.com/razerdp/BasePopup/issues/267)
+    * Fix position error when associated with Anchor in case of `setOverlayStatusbar(false)`.
+    * Fix memory leaks that **might** exist due to some references not being empty (no leaks were actually detected).
+    * Fix the problem that the input method of Activity popup is displayed under BasePopup when BasePopup is showing.
+    * Fix the problem of error in judging full-screen Activity.
+    * Fix the missing QuickPopupConfig configuration issue.
+    * Fix the problem of invoking dismiss() directly when there is no popup window, and then call showPopupWindow() for the first time when it is invalid.
+    * fixed issue:[#224](https://github.com/razerdp/BasePopup/issues/224)
 
 * **【Release】2.2.2.2**(2020/03/01)
   * Fix a serious problem that may cause a crash
@@ -137,45 +161,6 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 * **【Release】2.2.2.1**(2020/02/26)
   * Fix the problem that the input method can not pop up again automatically.
-
-* **【Release】2.2.2**(2020/02/24)
-  * Release 2.2.2, ** This version is a refactored version, please read the change log carefully **
-  * **New features:**
-    * Added `BaseLazyPopupWindow`, lazy-loaded PopupWindow only needs to extend this, the old version of` delayInit () `has been removed in this version.
-    * Added BasePopup queue, optimized for outSideTouch.
-    * Adapt to Android 10, solve the problem of Android 10 black / gray list.
-    * Adapted to `match_parent`, now` match_parent` will fill the remaining space.
-    * The main library is completely migrated to AndroidX, removed the BasePopup extension component library, and it is recommended that you adapt to AndroidX as soon as possible.
-    * Solve memory leaks and increase lifetime monitoring.
-    * Added support for `Dialog` /` Fragment` / `DialogFragment`.
-    * Add `setFitSize ()` method.
-      * `setFitSize ()`: BasePopup will adjust the size of Popup for the remaining space, so the actual display may be too small.
-    * Optimize QuickPopupBuilder.
-    * The mask layer is returned to the system hosting, and the problem that the full screen cannot be covered.
-    * Optimized the problem that popup window could not show in onCreate ().
-      * Take the suggestion of [# 263](https://github.com/razerdp/BasePopup/issues/263), thanks for the suggestion of [@xchengDroid](https://github.com/xchengDroid).
-    * Added `onLogInternal ()` method, where you can print the log during BasePopupWindow execution.
-    * Added `onViewCreated ()` method, you can operate ContentView here, or use ButterKnife for injection.
-  * **Simplify:**
-    * Remove the onAnchorTop / onAnchorBottom method, and it will be replaced by another method.
-    * Remove the `limitScreen ()` method.
-    * Removed the extension components, now the main body supports AndroidX, and no longer supports the Support package.
-  * **bug fixed：**
-    * fixed [#184](https://github.com/razerdp/BasePopup/issues/184)、[#207](https://github.com/razerdp/BasePopup/issues/207)、[#210](https://github.com/razerdp/BasePopup/issues/210)
-    * fixed [#213](https://github.com/razerdp/BasePopup/issues/213)、[#226](https://github.com/razerdp/BasePopup/issues/226)、[#232](https://github.com/razerdp/BasePopup/issues/232)
-    * fixed [#236](https://github.com/razerdp/BasePopup/issues/236)、[#238](https://github.com/razerdp/BasePopup/issues/238)、[#240](https://github.com/razerdp/BasePopup/issues/240)
-    * fixed [#242](https://github.com/razerdp/BasePopup/issues/242)、[#244](https://github.com/razerdp/BasePopup/issues/244)、[#247](https://github.com/razerdp/BasePopup/issues/247)
-    * fixed [#248](https://github.com/razerdp/BasePopup/issues/248)、[#249](https://github.com/razerdp/BasePopup/issues/249)、[#260](https://github.com/razerdp/BasePopup/issues/260)
-    * fixed [#262](https://github.com/razerdp/BasePopup/issues/262)、[#263](https://github.com/razerdp/BasePopup/issues/263)
-
-
-* **【Release】2.2.1**(2019/06/24)
-  * Support for showing popupwindow in Service or non-ActivityContext.
-  * Refactoring PopupUiUtils to optimize the screen width and height algorithm.
-    * fixed [**#186**](https://github.com/razerdp/BasePopup/issues/186)、[**#167**](https://github.com/razerdp/BasePopup/issues/167).
-    * fixed [**#188**](https://github.com/razerdp/BasePopup/issues/188)(not perfect).
-  * Modify and optimize keyboard displacement logic.
-  * Optimize the determination of the click range in full screen state,fixed [**#200**](https://github.com/razerdp/BasePopup/issues/200).
 
 <br>
 
