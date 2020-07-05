@@ -151,6 +151,8 @@
     * 修复lazypopup中gravity覆盖的问题 [#310](https://github.com/razerdp/BasePopup/issues/310)
     * 增加`setWidthAsAnchorView`：该方法将会设置Popup的宽度为AnchorView的宽度
     * 增加`setHeightAsAnchorView`：该方法将会设置Popup的高度为AnchorView的高度
+  * **【2.2.4.0705】** （2020/07/05）
+    * 修复onCreate()下关联锚点View时因未完成测量过程而导致的位置获取不成功问题。[#313](https://github.com/razerdp/BasePopup/issues/313)
 
 
 <br>

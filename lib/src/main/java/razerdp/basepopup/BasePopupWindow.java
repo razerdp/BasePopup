@@ -879,7 +879,13 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             public void onViewAttachedToWindow(View v) {
                 pendingPopupWindow = false;
                 v.removeOnAttachStateChangeListener(this);
-                tryToShowPopup(anchorView, positionMode);
+                v.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        tryToShowPopup(anchorView, positionMode);
+                    }
+                });
+
             }
 
             @Override
