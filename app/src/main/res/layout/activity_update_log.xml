@@ -11,20 +11,9 @@
         android:layout_height="wrap_content"
         app:title_text="历史更新" />
 
-    <razerdp.demo.widget.DPTextView
-        android:id="@+id/tv_loading"
+    <FrameLayout
+        android:id="@+id/web_view_container"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:gravity="center"
-        android:textColor="@color/text_black2"
-        android:textSize="@dimen/text_normal"
-        android:visibility="visible" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:visibility="invisible" />
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

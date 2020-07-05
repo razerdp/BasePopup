@@ -1,6 +1,5 @@
 package razerdp.demo.app;
 
-import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -12,6 +11,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import androidx.multidex.MultiDexApplication;
 import razerdp.basepopup.BasePopupFlag;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.util.log.PopupLog;
@@ -19,11 +19,11 @@ import razerdp.util.log.PopupLog;
 /**
  * Created by 大灯泡 on 2018/12/4.
  */
-public class PopupDemoApp extends Application {
+public class PopupDemoApp extends MultiDexApplication {
     @Override
     protected void attachBaseContext(Context base) {
-        BasePopupWindow.setDebugMode(true);
         super.attachBaseContext(base);
+        BasePopupWindow.setDebugMode(true);
     }
 
     @Override
