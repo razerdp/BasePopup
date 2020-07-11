@@ -7,9 +7,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.pgyersdk.update.DownloadFileListener;
 import com.pgyersdk.update.PgyUpdateManager;
 import com.pgyersdk.update.UpdateManagerListener;
@@ -19,6 +16,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
 import razerdp.basepopup.BasePopupWindow;
@@ -41,13 +40,13 @@ import razerdp.demo.utils.UIHelper;
 import razerdp.demo.utils.ViewUtil;
 import razerdp.demo.widget.DPRecyclerView;
 import razerdp.demo.widget.DPTextView;
-import razerdp.util.PopupAnimationBuilder;
 import razerdp.util.SimpleAnimationUtils;
+import razerdp.util.animation.PopupAnimationBuilder;
+import razerdp.util.animation.TranslationConfig;
 
-import static razerdp.util.PopupAnimationBuilder.Direction.BOTTOM;
-import static razerdp.util.PopupAnimationBuilder.Direction.LEFT;
-import static razerdp.util.PopupAnimationBuilder.Direction.RIGHT;
-import static razerdp.util.PopupAnimationBuilder.Direction.TOP;
+import static razerdp.util.animation.Direction.BOTTOM;
+import static razerdp.util.animation.Direction.CURRENT;
+
 
 public class DemoActivity extends BaseActivity {
 
@@ -94,6 +93,11 @@ public class DemoActivity extends BaseActivity {
                          .show();
     }
 
+    @Override
+    public void onTitleRightClick(View view) {
+        checkForUpdate();
+    }
+
     private void checkForUpdate() {
         new PgyUpdateManager.Builder()
                 .setUpdateManagerListener(new UpdateManagerListener() {
@@ -116,7 +120,7 @@ public class DemoActivity extends BaseActivity {
 
                     @Override
                     public void checkUpdateFailed(Exception e) {
-                        UIHelper.toast(e.getMessage());
+                        UIHelper.toast("检查失败，请到issue反馈");
                     }
                 })
                 .setDownloadFileListener(new DownloadFileListener() {
@@ -191,18 +195,18 @@ public class DemoActivity extends BaseActivity {
         @Override
         protected Animator onCreateShowAnimator() {
             return PopupAnimationBuilder.asAnimator()
-                                        .withScale(new PopupAnimationBuilder.ScaleConfig()
-                                                           .from(LEFT,BOTTOM)
-                                                           .to(RIGHT))
+                                        .withTranslation(new TranslationConfig()
+                                                                 .from(BOTTOM)
+                                                                 .to(CURRENT))
                                         .buildShow();
         }
 
         @Override
         protected Animator onCreateDismissAnimator() {
             return PopupAnimationBuilder.asAnimator()
-                                        .withScale(new PopupAnimationBuilder.ScaleConfig()
-                                                           .from(LEFT,BOTTOM)
-                                                           .to(TOP))
+                                        .withTranslation(new TranslationConfig()
+                                                                 .from(CURRENT)
+                                                                 .to(BOTTOM))
                                         .buildDismiss();
         }
     }
