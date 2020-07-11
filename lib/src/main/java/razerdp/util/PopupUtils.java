@@ -202,4 +202,10 @@ public class PopupUtils {
         return result.toString();
     }
 
+    public static <T> T requireNonNull(T obj) {
+        if (obj == null)
+            throw new NullPointerException();
+        return obj;
+    }
+
 }
