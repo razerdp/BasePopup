@@ -153,6 +153,11 @@
     * 增加`setHeightAsAnchorView`：该方法将会设置Popup的高度为AnchorView的高度
   * **【2.2.4.0705】** （2020/07/05）
     * 修复onCreate()下关联锚点View时因未完成测量过程而导致的位置获取不成功问题。[#313](https://github.com/razerdp/BasePopup/issues/313)
+  * **【2.2.4.0711】** （2020/07/11）
+    * RTL支持：
+        * 增加`setLayoutDirection()`方法，允许您设置依附的窗口的layoutDirection，以适应RTL布局
+        * **请务必注意，BasePopup遵循官方做法，当您需要RTL布局的时候，请使用START代替LEFT，使用END代替RIGHT**
+
 
 
 <br>

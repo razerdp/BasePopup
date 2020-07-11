@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Message;
+import android.util.LayoutDirection;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -28,14 +29,13 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import java.util.Map;
+import java.util.WeakHashMap;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import razerdp.blur.PopupBlurOption;
 import razerdp.library.R;
 import razerdp.util.KeyboardUtils;
@@ -114,6 +114,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     int popupViewWidth = 0;
     int popupViewHeight = 0;
+    int layoutDirection = LayoutDirection.LTR;
     //锚点view的location
     Rect mAnchorViewBound;
 
@@ -218,7 +219,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     void checkAndSetGravity(ViewGroup.LayoutParams p) {
-        //如果设置过gravity，则采取设置的gravity，顶替掉xml设置的
+        //如果设置过gravity，则采取设置的gravity，顶替掉xml设置的（针对lazypopup）
+        //https://github.com/razerdp/BasePopup/issues/310
         if (p == null || this.popupGravity != Gravity.NO_GRAVITY) return;
         if (p instanceof LinearLayout.LayoutParams) {
             setPopupGravity(gravityMode, ((LinearLayout.LayoutParams) p).gravity);
@@ -426,13 +428,18 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     int getPopupGravity() {
-        return popupGravity;
+        return Gravity.getAbsoluteGravity(popupGravity, layoutDirection);
+    }
+
+    BasePopupHelper setLayoutDirection(int layoutDirection) {
+        this.layoutDirection = layoutDirection;
+        return this;
     }
 
     BasePopupHelper setPopupGravity(BasePopupWindow.GravityMode mode, int popupGravity) {
-        if (popupGravity == this.popupGravity && gravityMode == mode) return this;
         this.gravityMode = mode;
         this.popupGravity = popupGravity;
+        PopupLog.i("BasePopupHelper", "mode = " + mode, "gravity = " + PopupUtils.gravityToString(popupGravity));
         return this;
     }
 
@@ -588,10 +595,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         }
         this.contentRootId = contentRoot.getId();
         return this;
-    }
-
-    int getContentRootId() {
-        return contentRootId;
     }
 
     int getSoftInputMode() {

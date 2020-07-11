@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 
 import razerdp.util.KeyboardUtils;
 import razerdp.util.PopupUiUtils;
+import razerdp.util.PopupUtils;
 import razerdp.util.log.PopupLog;
 
 /**
@@ -91,7 +92,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         wp.copyFrom(params);
         wp.x = 0;
         wp.y = 0;
-        View contentView = findContentView(target);
+        View contentView = findSystemPopupContentView(target);
         if (contentView != null) {
             LayoutParams lp = contentView.getLayoutParams();
             if (lp == null) {
@@ -110,9 +111,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             View parent = (View) contentView.getParent();
             if (PopupUiUtils.isPopupBackgroundView(parent)) {
                 //可能被包裹了一个backgroundview
-                ViewGroup.LayoutParams p = parent.getLayoutParams();
+                LayoutParams p = parent.getLayoutParams();
                 if (p == null) {
-                    p = new ViewGroup.LayoutParams(lp);
+                    p = new LayoutParams(lp);
                 } else {
                     p.width = lp.width;
                     p.height = lp.height;
@@ -152,7 +153,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     /**
      * target或许不是contentview
      */
-    private View findContentView(View root) {
+    private View findSystemPopupContentView(View root) {
         if (root == null) return null;
         if (!(root instanceof ViewGroup)) return root;
         ViewGroup rootGroup = (ViewGroup) root;
@@ -328,6 +329,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             int parentHeight = getMeasuredHeight();
 
             int gravity = mHelper.getPopupGravity();
+            PopupLog.i(TAG, PopupUtils.gravityToString(gravity));
 
             int childLeft = l;
             int childTop = t;
