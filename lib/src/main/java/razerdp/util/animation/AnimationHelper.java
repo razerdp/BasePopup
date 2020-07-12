@@ -30,9 +30,9 @@ import razerdp.util.log.PopupLog;
  * Description：动画构建
  */
 @SuppressWarnings("rawtypes")
-public class PopupAnimationBuilder {
+public class AnimationHelper {
 
-    private PopupAnimationBuilder() {
+    private AnimationHelper() {
     }
 
 
@@ -48,7 +48,7 @@ public class PopupAnimationBuilder {
     public static class AnimationBuilder extends AnimationApi<AnimationBuilder> {
 
 
-        public Animation buildShown() {
+        public Animation toShow() {
             AnimationSet set = new AnimationSet(false);
             if (configs != null) {
                 for (int i = 0; i < configs.size(); i++) {
@@ -60,7 +60,7 @@ public class PopupAnimationBuilder {
         }
 
 
-        public Animation buildDismiss() {
+        public Animation toDismiss() {
             AnimationSet set = new AnimationSet(false);
             if (configs != null) {
                 for (int i = 0; i < configs.size(); i++) {
@@ -74,7 +74,7 @@ public class PopupAnimationBuilder {
 
     public static class AnimatorBuilder extends AnimationApi<AnimatorBuilder> {
 
-        public Animator buildShow() {
+        public Animator toShow() {
             AnimatorSet set = new AnimatorSet();
             if (configs != null) {
                 for (int i = 0; i < configs.size(); i++) {
@@ -85,7 +85,7 @@ public class PopupAnimationBuilder {
             return set;
         }
 
-        public Animator buildDismiss() {
+        public Animator toDismiss() {
             AnimatorSet set = new AnimatorSet();
             if (configs != null) {
                 for (int i = 0; i < configs.size(); i++) {

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.TextView;
 
 import com.pgyersdk.update.DownloadFileListener;
@@ -41,7 +42,7 @@ import razerdp.demo.utils.ViewUtil;
 import razerdp.demo.widget.DPRecyclerView;
 import razerdp.demo.widget.DPTextView;
 import razerdp.util.SimpleAnimationUtils;
-import razerdp.util.animation.PopupAnimationBuilder;
+import razerdp.util.animation.AnimationHelper;
 import razerdp.util.animation.TranslationConfig;
 
 import static razerdp.util.animation.Direction.BOTTOM;
@@ -183,32 +184,42 @@ public class DemoActivity extends BaseActivity {
             return createPopupById(R.layout.popup_demo);
         }
 
+
+        @Override
+        protected Animation onCreateShowAnimation() {
+            return AnimationHelper.asAnimation()
+                                  .withTranslation(new TranslationConfig()
+                                                           .from(BOTTOM)
+                                                           .to(CURRENT))
+                                  .toShow();
+        }
+
+        @Override
+        protected Animation onCreateDismissAnimation() {
+            return AnimationHelper.asAnimation()
+                                  .withTranslation(new TranslationConfig()
+                                                           .from(CURRENT)
+                                                           .to(BOTTOM))
+                                  .toDismiss();
+        }
+
 //        @Override
-//        protected Animation onCreateShowAnimation() {
-//            return PopupAnimationBuilder.asAnimation()
-//                    .withScale(new PopupAnimationBuilder.ScaleConfig()
-//                            .from(PopupAnimationBuilder.Direction.RIGHT, PopupAnimationBuilder.Direction.BOTTOM)
-//                            .to(PopupAnimationBuilder.Direction.TOP, PopupAnimationBuilder.Direction.LEFT))
-//                    .build();
+//        protected Animator onCreateShowAnimator() {
+//            return AnimationHelper.asAnimator()
+//                                  .withTranslation(new TranslationConfig()
+//                                                                 .from(BOTTOM)
+//                                                                 .to(CURRENT))
+//                                  .toShow();
 //        }
-
-        @Override
-        protected Animator onCreateShowAnimator() {
-            return PopupAnimationBuilder.asAnimator()
-                                        .withTranslation(new TranslationConfig()
-                                                                 .from(BOTTOM)
-                                                                 .to(CURRENT))
-                                        .buildShow();
-        }
-
-        @Override
-        protected Animator onCreateDismissAnimator() {
-            return PopupAnimationBuilder.asAnimator()
-                                        .withTranslation(new TranslationConfig()
-                                                                 .from(CURRENT)
-                                                                 .to(BOTTOM))
-                                        .buildDismiss();
-        }
+//
+//        @Override
+//        protected Animator onCreateDismissAnimator() {
+//            return AnimationHelper.asAnimator()
+//                                  .withTranslation(new TranslationConfig()
+//                                                                 .from(CURRENT)
+//                                                                 .to(BOTTOM))
+//                                  .toDismiss();
+//        }
     }
 
 
