@@ -157,6 +157,8 @@
     * RTL支持：
         * 增加`setLayoutDirection()`方法，允许您设置依附的窗口的layoutDirection，以适应RTL布局
         * **请务必注意，BasePopup遵循官方做法，当您需要RTL布局的时候，请使用START代替LEFT，使用END代替RIGHT**
+  * **【2.2.4.0713】**（2020/07/13）
+    * 修复设置最大/最小宽高下测量错误的问题
 
 
 
