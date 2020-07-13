@@ -22,7 +22,7 @@ import razerdp.util.log.PopupLog;
 /**
  * Created by 大灯泡 on 2017/12/25.
  * <p>
- * 旨在用来拦截keyevent、以及蒙层
+ * popupwindow的decorview代理，这里统筹位置、蒙层、事件等
  */
 final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKeyboardChangeListener, ViewTreeObserver.OnGlobalLayoutListener, ClearMemoryObject {
     private static final String TAG = "PopupDecorViewProxy";
@@ -227,6 +227,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 rr = anchorBound.right;
                 rb = anchorBound.bottom;
             }
+            //这里需要考虑覆盖导航栏的问题，如果没有设置允许覆盖，则蒙层可以覆盖，但实际内容可用空间需要减掉导航栏高度
+            rb -= mHelper.getNavigationBarHeight();
 
             switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
                 case Gravity.LEFT:
@@ -282,21 +284,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             heightMode = MeasureSpec.EXACTLY;
         }
 
-        if (mHelper.getMinWidth() > 0 && widthSize < mHelper.getMinWidth()) {
-            widthSize = mHelper.getMinWidth();
-        }
-
-        if (mHelper.getMaxWidth() > 0 && widthSize > mHelper.getMaxWidth()) {
-            widthSize = mHelper.getMaxWidth();
-        }
-
-        if (mHelper.getMinHeight() > 0 && heightSize < mHelper.getMinHeight()) {
-            heightSize = mHelper.getMinHeight();
-        }
-
-        if (mHelper.getMaxHeight() > 0 && heightSize > mHelper.getMaxHeight()) {
-            heightSize = mHelper.getMaxHeight();
-        }
+        /*
+         *limit size in {@link BasePopupHelper#getLayoutParams()}
+         */
 
         widthMeasureSpec = MeasureSpec.makeMeasureSpec(widthSize, widthMode);
         heightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, heightMode);
