@@ -11,27 +11,34 @@ import androidx.annotation.FloatRange;
 public class AlphaConfig extends BaseAnimationConfig<AlphaConfig> {
     float alphaFrom;
     float alphaTo;
+    boolean changed;
 
     public AlphaConfig() {
+        alphaFrom = 0f;
+        alphaTo = 1f;
     }
 
     public AlphaConfig from(@FloatRange(from = 0, to = 1) float from) {
         alphaFrom = from;
+        changed = true;
         return this;
     }
 
     public AlphaConfig to(@FloatRange(from = 0, to = 1) float to) {
         alphaTo = to;
+        changed = true;
         return this;
     }
 
     public AlphaConfig from(int from) {
-        alphaFrom = (float) (from / 255) + 0.5f;
+        alphaFrom = (float) (Math.max(0, Math.min(255, from)) / 255) + 0.5f;
+        changed = true;
         return this;
     }
 
     public AlphaConfig to(int to) {
-        alphaFrom = (float) (to / 255) + 0.5f;
+        alphaFrom = (float) (Math.max(0, Math.min(255, to)) / 255) + 0.5f;
+        changed = true;
         return this;
     }
 
@@ -45,14 +52,17 @@ public class AlphaConfig extends BaseAnimationConfig<AlphaConfig> {
 
     @Override
     protected Animation buildAnimation(boolean isRevert) {
-        AlphaAnimation animation = new AlphaAnimation(alphaFrom, alphaTo);
+        AlphaAnimation animation = new AlphaAnimation((isRevert && !changed) ? alphaTo : alphaFrom,
+                (isRevert && !changed) ? alphaFrom : alphaTo);
         deploy(animation);
         return animation;
     }
 
     @Override
     protected Animator buildAnimator(boolean isRevert) {
-        Animator animator = ObjectAnimator.ofFloat(null, View.ALPHA, alphaFrom, alphaTo);
+        Animator animator = ObjectAnimator.ofFloat(null,
+                View.ALPHA, (isRevert && !changed) ? alphaTo : alphaFrom,
+                (isRevert && !changed) ? alphaFrom : alphaTo);
         deploy(animator);
         return animator;
     }

@@ -2,6 +2,7 @@ package razerdp.demo.app;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.Gravity;
 
 import com.pgyersdk.crash.PgyCrashManager;
 

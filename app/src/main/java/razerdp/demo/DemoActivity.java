@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.TextView;
 
 import com.pgyersdk.update.DownloadFileListener;
@@ -42,11 +41,10 @@ import razerdp.demo.utils.ViewUtil;
 import razerdp.demo.widget.DPRecyclerView;
 import razerdp.demo.widget.DPTextView;
 import razerdp.util.SimpleAnimationUtils;
+import razerdp.util.animation.AlphaConfig;
 import razerdp.util.animation.AnimationHelper;
-import razerdp.util.animation.TranslationConfig;
-
-import static razerdp.util.animation.Direction.BOTTOM;
-import static razerdp.util.animation.Direction.CURRENT;
+import razerdp.util.animation.Direction;
+import razerdp.util.animation.ScaleConfig;
 
 
 public class DemoActivity extends BaseActivity {
@@ -84,14 +82,14 @@ public class DemoActivity extends BaseActivity {
 
 
         QuickPopupBuilder.with(this)
-                         .contentView(R.layout.popup_wj)
-                         .config(new QuickPopupConfig()
-                                         .withShowAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(true))
-                                         .withDismissAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(false))
-                                         .withClick(R.id.tv_go, null, true)
-                                         .blurBackground(true)
-                                         .outSideDismiss(false))
-                         .show();
+                .contentView(R.layout.popup_wj)
+                .config(new QuickPopupConfig()
+                        .withShowAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(true))
+                        .withDismissAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(false))
+                        .withClick(R.id.tv_go, null, true)
+                        .blurBackground(true)
+                        .outSideDismiss(false))
+                .show();
     }
 
     @Override
@@ -185,41 +183,55 @@ public class DemoActivity extends BaseActivity {
         }
 
 
-        @Override
-        protected Animation onCreateShowAnimation() {
-            return AnimationHelper.asAnimation()
-                                  .withTranslation(new TranslationConfig()
-                                                           .from(BOTTOM)
-                                                           .to(CURRENT))
-                                  .toShow();
-        }
-
-        @Override
-        protected Animation onCreateDismissAnimation() {
-            return AnimationHelper.asAnimation()
-                                  .withTranslation(new TranslationConfig()
-                                                           .from(CURRENT)
-                                                           .to(BOTTOM))
-                                  .toDismiss();
-        }
-
 //        @Override
-//        protected Animator onCreateShowAnimator() {
-//            return AnimationHelper.asAnimator()
-//                                  .withTranslation(new TranslationConfig()
-//                                                                 .from(BOTTOM)
-//                                                                 .to(CURRENT))
-//                                  .toShow();
+//        protected Animation onCreateShowAnimation() {
+//            return AnimationHelper.asAnimation()
+////                    .withTranslation(new TranslationConfig()
+////                            .from(BOTTOM)
+////                            .to(IDLE))
+//                    .withScale(new ScaleConfig()
+//                            .from(LEFT)
+//                            .to(RIGHT))
+//                    .toShow();
 //        }
 //
 //        @Override
-//        protected Animator onCreateDismissAnimator() {
-//            return AnimationHelper.asAnimator()
-//                                  .withTranslation(new TranslationConfig()
-//                                                                 .from(CURRENT)
-//                                                                 .to(BOTTOM))
-//                                  .toDismiss();
+//        protected Animation onCreateDismissAnimation() {
+//            return AnimationHelper.asAnimation()
+////                    .withTranslation(new TranslationConfig()
+////                            .from(TOP)
+////                            .to(BOTTOM))
+//                    .withScale(new ScaleConfig()
+//                            .from(LEFT)
+//                            .to(RIGHT))
+//                    .toDismiss();
 //        }
+
+        @Override
+        protected Animator onCreateShowAnimator() {
+            return AnimationHelper.asAnimator()
+//                    .withTranslation(new TranslationConfig()
+//                            .from(Direction.BOTTOM)
+//                            .to(Direction.IDLE))
+                    .withAlpha(new AlphaConfig().duration(300))
+                    .withScale(new ScaleConfig()
+                            .from(Direction.BOTTOM, Direction.CENTER_HORIZONTAL)
+                            .to(Direction.TOP))
+                    .toShow();
+        }
+
+        @Override
+        protected Animator onCreateDismissAnimator() {
+            return AnimationHelper.asAnimator()
+//                    .withTranslation(new TranslationConfig()
+//                            .from(Direction.IDLE)
+//                            .to(Direction.BOTTOM))
+                    .withAlpha(new AlphaConfig().duration(300))
+                    .withScale(new ScaleConfig()
+                            .from(Direction.TOP, Direction.CENTER_HORIZONTAL)
+                            .to(Direction.BOTTOM))
+                    .toDismiss();
+        }
     }
 
 

@@ -8,7 +8,7 @@ import android.view.Gravity;
  * 要不是gravity不太符合【方向】这个描述，我还真的想直接用它
  */
 public enum Direction {
-    CURRENT(Gravity.NO_GRAVITY),
+    IDLE(Gravity.NO_GRAVITY),
     LEFT(Gravity.LEFT),
     TOP(Gravity.TOP),
     RIGHT(Gravity.RIGHT),
@@ -17,9 +17,14 @@ public enum Direction {
     CENTER_HORIZONTAL(Gravity.CENTER_HORIZONTAL),
     CENTER_VERTICAL(Gravity.CENTER_VERTICAL);
 
-    final int gravity;
+    final int flag;
 
-    Direction(int gravity) {
-        this.gravity = gravity;
+    Direction(int flag) {
+        this.flag = flag;
+    }
+
+    public static boolean isDirectionFlag(Direction direction, int flag) {
+        return (flag & Gravity.HORIZONTAL_GRAVITY_MASK) == direction.flag ||
+                (flag & Gravity.VERTICAL_GRAVITY_MASK) == direction.flag;
     }
 }
