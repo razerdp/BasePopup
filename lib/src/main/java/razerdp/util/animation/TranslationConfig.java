@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.util.Property;
-import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -21,28 +20,27 @@ public class TranslationConfig extends BaseAnimationConfig<TranslationConfig> {
     public TranslationConfig from(Direction... directions) {
         if (directions != null) {
             fromX = fromY = 0;
-            int flag = Gravity.NO_GRAVITY;
+            int flag = 0;
             for (Direction direction : directions) {
-                flag |= direction.gravity;
+                flag |= direction.flag;
             }
-
             PopupLog.i(TAG, "from", PopupUtils.gravityToString(flag));
-            if (contains(flag, Gravity.LEFT)) {
+            if (Direction.isDirectionFlag(Direction.LEFT, flag)) {
                 fromX(fromX - 1, true);
             }
-            if (contains(flag, Gravity.RIGHT)) {
+            if (Direction.isDirectionFlag(Direction.RIGHT, flag)) {
                 fromX(fromX + 1, true);
             }
-            if (contains(flag, Gravity.CENTER_HORIZONTAL)) {
+            if (Direction.isDirectionFlag(Direction.CENTER_HORIZONTAL, flag)) {
                 fromX(fromX + 0.5f, true);
             }
-            if (contains(flag, Gravity.TOP)) {
+            if (Direction.isDirectionFlag(Direction.TOP, flag)) {
                 fromY(fromY - 1, true);
             }
-            if (contains(flag, Gravity.BOTTOM)) {
+            if (Direction.isDirectionFlag(Direction.BOTTOM, flag)) {
                 fromY(fromY + 1, true);
             }
-            if (contains(flag, Gravity.CENTER_VERTICAL)) {
+            if (Direction.isDirectionFlag(Direction.CENTER_VERTICAL, flag)) {
                 fromY(fromY + 0.5f, true);
             }
             isPercentageFromX = isPercentageFromY = isPercentageToX = isPercentageToY = true;
@@ -53,27 +51,27 @@ public class TranslationConfig extends BaseAnimationConfig<TranslationConfig> {
     public TranslationConfig to(Direction... directions) {
         if (directions != null) {
             toX = toY = 0;
-            int flag = Gravity.NO_GRAVITY;
+            int flag = 0;
             for (Direction direction : directions) {
-                flag |= direction.gravity;
+                flag |= direction.flag;
             }
             PopupLog.i(TAG, "to", PopupUtils.gravityToString(flag));
-            if (contains(flag, Gravity.LEFT)) {
+            if (Direction.isDirectionFlag(Direction.LEFT, flag)) {
                 toX += -1;
             }
-            if (contains(flag, Gravity.RIGHT)) {
+            if (Direction.isDirectionFlag(Direction.RIGHT, flag)) {
                 toX += 1;
             }
-            if (contains(flag, Gravity.CENTER_HORIZONTAL)) {
+            if (Direction.isDirectionFlag(Direction.CENTER_HORIZONTAL, flag)) {
                 toX += .5f;
             }
-            if (contains(flag, Gravity.TOP)) {
+            if (Direction.isDirectionFlag(Direction.TOP, flag)) {
                 toY += -1;
             }
-            if (contains(flag, Gravity.BOTTOM)) {
+            if (Direction.isDirectionFlag(Direction.BOTTOM, flag)) {
                 toY += 1;
             }
-            if (contains(flag, Gravity.CENTER_VERTICAL)) {
+            if (Direction.isDirectionFlag(Direction.CENTER_VERTICAL, flag)) {
                 toY += .5f;
             }
             isPercentageFromX = isPercentageFromY = isPercentageToX = isPercentageToY = true;
@@ -162,13 +160,13 @@ public class TranslationConfig extends BaseAnimationConfig<TranslationConfig> {
     @Override
     protected Animation buildAnimation(boolean isRevert) {
         Animation animation = new TranslateAnimation(isPercentageFromX ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
-                                                     fromX,
-                                                     isPercentageToX ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
-                                                     toX,
-                                                     isPercentageFromY ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
-                                                     fromY,
-                                                     isPercentageToY ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
-                                                     toY);
+                fromX,
+                isPercentageToX ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
+                toX,
+                isPercentageFromY ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
+                fromY,
+                isPercentageToY ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
+                toY);
         deploy(animation);
         return animation;
     }
@@ -204,10 +202,6 @@ public class TranslationConfig extends BaseAnimationConfig<TranslationConfig> {
         animatorSet.playTogether(translationX, translationY);
         deploy(animatorSet);
         return animatorSet;
-    }
-
-    boolean contains(int what, int flag) {
-        return (what & flag) == flag;
     }
 
 }

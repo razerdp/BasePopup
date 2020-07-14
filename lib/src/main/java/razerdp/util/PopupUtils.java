@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -182,10 +183,10 @@ public class PopupUtils {
         if ((gravity & CENTER) == CENTER) {
             result.append("CENTER").append(split);
         } else {
-            if ((gravity & CENTER_VERTICAL) == CENTER_VERTICAL) {
+            if ((gravity & Gravity.VERTICAL_GRAVITY_MASK) == CENTER_VERTICAL) {
                 result.append("CENTER_VERTICAL").append(split);
             }
-            if ((gravity & CENTER_HORIZONTAL) == CENTER_HORIZONTAL) {
+            if ((gravity & Gravity.HORIZONTAL_GRAVITY_MASK) == CENTER_HORIZONTAL) {
                 result.append("CENTER_HORIZONTAL").append(split);
             }
         }

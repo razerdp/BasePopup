@@ -4,48 +4,62 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 
 public class ScaleConfig extends BaseAnimationConfig<ScaleConfig> {
-    float scaleFromX = 1;
-    float scaleFromY = 1;
+    float scaleFromX = 0;
+    float scaleFromY = 0;
     float scaleToX = 1;
     float scaleToY = 1;
+    boolean changeFrom;
+    boolean changeTo;
 
+    public ScaleConfig() {
+        pivot(.5f, .5f);
+        pivot2(.5f, .5f);
+    }
 
     public ScaleConfig scale(float from, float to) {
         scaleFromX = scaleFromY = from;
         scaleToX = scaleToY = to;
+        changeFrom = changeTo = true;
         return this;
     }
 
     public ScaleConfig from(Direction... from) {
         if (from != null) {
-            pivotX = pivotY = 0;
-            int flag = Gravity.NO_GRAVITY;
+            if (!changeFrom) {
+                scaleFromX = scaleFromY = 1;
+            }
+            int flag = 0;
             for (Direction direction : from) {
-                flag |= direction.gravity;
+                flag |= direction.flag;
             }
-            if (contains(flag, Gravity.LEFT)) {
-                pivotX += 0;
+            if (Direction.isDirectionFlag(Direction.LEFT, flag)) {
+                pivotX = 0;
+                scaleFromX = changeFrom ? scaleFromX : 0;
             }
-            if (contains(flag, Gravity.RIGHT)) {
-                pivotX += 1;
+            if (Direction.isDirectionFlag(Direction.RIGHT, flag)) {
+                pivotX = 1;
+                scaleFromX = changeFrom ? scaleFromX : 0;
             }
-            if (contains(flag, Gravity.CENTER_HORIZONTAL)) {
-                pivotX += 0.5f;
+            if (Direction.isDirectionFlag(Direction.CENTER_HORIZONTAL, flag)) {
+                pivotX = 0.5f;
+                scaleFromX = changeFrom ? scaleFromX : 0;
             }
-            if (contains(flag, Gravity.TOP)) {
-                pivotY += 0;
+            if (Direction.isDirectionFlag(Direction.TOP, flag)) {
+                pivotY = 0;
+                scaleFromY = changeFrom ? scaleFromY : 0;
             }
-            if (contains(flag, Gravity.BOTTOM)) {
-                pivotY += 1;
+            if (Direction.isDirectionFlag(Direction.BOTTOM, flag)) {
+                pivotY = 1;
+                scaleFromY = changeFrom ? scaleFromY : 0;
             }
-            if (contains(flag, Gravity.CENTER_VERTICAL)) {
-                pivotY += 0.5f;
+            if (Direction.isDirectionFlag(Direction.CENTER_VERTICAL, flag)) {
+                pivotY = 0.5f;
+                scaleFromY = changeFrom ? scaleFromY : 0;
             }
         }
         return this;
@@ -53,34 +67,30 @@ public class ScaleConfig extends BaseAnimationConfig<ScaleConfig> {
 
     public ScaleConfig to(Direction... to) {
         if (to != null) {
-            if (scaleToX == 0) {
-                scaleToX = 1;
+            if (!changeTo) {
+                scaleToX = scaleToY = 1;
             }
-            if (scaleToY == 0) {
-                scaleToY = 1;
-            }
-            pivotX2 = pivotY2 = 0;
-            int flag = Gravity.NO_GRAVITY;
+            int flag = 0;
             for (Direction direction : to) {
-                flag |= direction.gravity;
+                flag |= direction.flag;
             }
-            if (contains(flag, Gravity.LEFT)) {
-                pivotX2 += 0;
+            if (Direction.isDirectionFlag(Direction.LEFT, flag)) {
+                pivotX2 = 0;
             }
-            if (contains(flag, Gravity.RIGHT)) {
-                pivotX2 += 1;
+            if (Direction.isDirectionFlag(Direction.RIGHT, flag)) {
+                pivotX2 = 1;
             }
-            if (contains(flag, Gravity.CENTER_HORIZONTAL)) {
-                pivotX2 += 0.5f;
+            if (Direction.isDirectionFlag(Direction.CENTER_HORIZONTAL, flag)) {
+                pivotX2 = 0.5f;
             }
-            if (contains(flag, Gravity.TOP)) {
-                pivotY2 += 0;
+            if (Direction.isDirectionFlag(Direction.TOP, flag)) {
+                pivotY2 = 0;
             }
-            if (contains(flag, Gravity.BOTTOM)) {
-                pivotY2 += 1;
+            if (Direction.isDirectionFlag(Direction.BOTTOM, flag)) {
+                pivotY2 = 1;
             }
-            if (contains(flag, Gravity.CENTER_VERTICAL)) {
-                pivotY2 += 0.5f;
+            if (Direction.isDirectionFlag(Direction.CENTER_VERTICAL, flag)) {
+                pivotY2 = 0.5f;
             }
         }
         return this;
@@ -89,12 +99,14 @@ public class ScaleConfig extends BaseAnimationConfig<ScaleConfig> {
     public ScaleConfig scaleX(float from, float to) {
         scaleFromX = from;
         scaleToX = to;
+        changeFrom = true;
         return this;
     }
 
     public ScaleConfig sclaeY(float from, float to) {
         scaleFromY = from;
         scaleToY = to;
+        changeTo = true;
         return this;
     }
 
@@ -131,8 +143,8 @@ public class ScaleConfig extends BaseAnimationConfig<ScaleConfig> {
     protected Animation buildAnimation(boolean isRevert) {
         float[] values = values(isRevert);
         Animation animation = new ScaleAnimation(values[0], values[1], values[2], values[3],
-                                                 Animation.RELATIVE_TO_PARENT, values[4],
-                                                 Animation.RELATIVE_TO_PARENT, values[5]);
+                Animation.RELATIVE_TO_PARENT, values[4],
+                Animation.RELATIVE_TO_PARENT, values[5]);
         deploy(animation);
         return animation;
     }
@@ -166,8 +178,5 @@ public class ScaleConfig extends BaseAnimationConfig<ScaleConfig> {
         return animatorSet;
     }
 
-    boolean contains(int what, int flag) {
-        return (what & flag) == flag;
-    }
 }
 

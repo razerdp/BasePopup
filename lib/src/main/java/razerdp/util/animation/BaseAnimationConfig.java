@@ -11,7 +11,7 @@ import razerdp.util.log.PopupLog;
 
 public abstract class BaseAnimationConfig<T> {
     protected String TAG = this.getClass().getSimpleName();
-    static final long DEFAULT_DURATION = Resources.getSystem().getInteger(android.R.integer.config_shortAnimTime);
+    static final long DEFAULT_DURATION = Resources.getSystem().getInteger(android.R.integer.config_mediumAnimTime);
     static final Interpolator DEFAULT_INTERPOLATOR = new AccelerateDecelerateInterpolator();
     Interpolator interpolator = DEFAULT_INTERPOLATOR;
     long duration = DEFAULT_DURATION;
@@ -35,6 +35,12 @@ public abstract class BaseAnimationConfig<T> {
     public T pivot(@FloatRange(from = 0, to = 1) float x, @FloatRange(from = 0, to = 1) float y) {
         pivotX = x;
         pivotY = y;
+        return (T) this;
+    }
+
+    T pivot2(@FloatRange(from = 0, to = 1) float x, @FloatRange(from = 0, to = 1) float y) {
+        pivotX2 = x;
+        pivotY2 = y;
         return (T) this;
     }
 
@@ -84,6 +90,8 @@ public abstract class BaseAnimationConfig<T> {
                 ", duration=" + duration +
                 ", pivotX=" + pivotX +
                 ", pivotY=" + pivotY +
+                ", fillBefore=" + fillBefore +
+                ", fillAfter=" + fillAfter +
                 '}';
     }
 
