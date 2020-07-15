@@ -712,7 +712,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     private void applyToPopupWindow() {
         if (mPopupWindow == null || mPopupWindow.mPopupWindowProxy == null) return;
-        mPopupWindow.mPopupWindowProxy.setSoftInputMode(isAutoShowInputMethod() ? WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE : WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED);
         mPopupWindow.mPopupWindowProxy.setSoftInputMode(mSoftInputMode);
         mPopupWindow.mPopupWindowProxy.setAnimationStyle(animationStyleRes);
     }
@@ -952,6 +951,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
                 int screenHeight = content == null ? decor.getHeight() : content.getHeight();
                 keyboardRect.set(rect.left, rect.bottom, rect.right, screenHeight);
                 boolean isVisible = keyboardRect.height() > (screenHeight >> 2) && KeyboardUtils.isOpen();
+                PopupLog.i("Issue277", screenHeight, keyboardRect.height(), isVisible);
                 if (isVisible == lastVisible && keyboardRect.height() == lastHeight) return;
                 lastVisible = isVisible;
                 lastHeight = keyboardRect.height();
