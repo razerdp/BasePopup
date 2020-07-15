@@ -91,6 +91,11 @@
         <activity android:name="razerdp.demo.ui.fullscreen.FullScreenActivity" />
         <activity android:name="razerdp.demo.ui.rtl.RTLActivity" />
 
+        <!--更改为 adjustPan 键盘不会遮挡弹窗输入框-->
+        <activity
+            android:name="razerdp.demo.ui.issuestest.Issue277TestActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
         <service android:name="razerdp.demo.services.DemoService" />
         <service android:name="razerdp.demo.services.DelayDemoService" />
 
