@@ -65,7 +65,8 @@ public class KeyboardUtils {
             InputMethodManager imm = (InputMethodManager) view.getContext()
                     .getSystemService(Context.INPUT_METHOD_SERVICE);
             if (imm != null) {
-                imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                imm.hideSoftInputFromWindow(view.getWindowToken(),
+                                            InputMethodManager.HIDE_NOT_ALWAYS);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,7 +90,8 @@ public class KeyboardUtils {
 
     public static boolean isOpen() {
         try {
-            InputMethodManager imm = (InputMethodManager) BasePopupSDK.getApplication().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) BasePopupSDK.getApplication().getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
             if (imm != null) {
                 return imm.isActive();
             }
@@ -101,7 +103,8 @@ public class KeyboardUtils {
 
     public static boolean isOpen(View view) {
         try {
-            InputMethodManager imm = (InputMethodManager) BasePopupSDK.getApplication().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) BasePopupSDK.getApplication().getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
             if (imm != null) {
                 return imm.isActive(view);
             }
@@ -158,9 +161,9 @@ public class KeyboardUtils {
                         parent = parent.getParent();
                     }
                     originalContentRect.set(((View) parent).getLeft(),
-                            ((View) parent).getTop(),
-                            ((View) parent).getRight(),
-                            ((View) parent).getBottom());
+                                            ((View) parent).getTop(),
+                                            ((View) parent).getRight(),
+                                            ((View) parent).getBottom());
                 }
                 decor.getWindowVisibleDisplayFrame(rect);
                 keyboardRect.set(rect.left, rect.bottom, rect.right, originalContentRect.bottom);
