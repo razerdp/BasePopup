@@ -2,9 +2,8 @@ package razerdp.demo.app;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.Gravity;
 
-import com.pgyersdk.crash.PgyCrashManager;
+import androidx.multidex.MultiDexApplication;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -12,7 +11,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import androidx.multidex.MultiDexApplication;
 import razerdp.basepopup.BasePopupFlag;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.util.log.PopupLog;
@@ -30,7 +28,6 @@ public class PopupDemoApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        PgyCrashManager.register();
         //检查popup flag
         new Thread(() -> {
             try {
