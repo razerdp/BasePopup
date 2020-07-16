@@ -2,11 +2,16 @@ package razerdp.demo.ui.issuestest;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import razerdp.basepopup.BaseLazyPopupWindow;
 import razerdp.basepopup.R;
@@ -21,25 +26,16 @@ import razerdp.util.animation.TranslationConfig;
  * <p>
  * https://github.com/razerdp/BasePopup/issues/277#issuecomment-658724674
  */
-public class Issue277TestActivity extends BaseActivity {
+public class Issue277TestActivity extends AppCompatActivity {
     @BindView(R.id.showPopBt)
     DPTextView mShowPopBt;
 
     @Override
-    protected void onHandleIntent(Intent intent) {
-
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_issue_277);
+        ButterKnife.bind(this);
     }
-
-    @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_issue_277;
-    }
-
-    @Override
-    protected void onInitView(View decorView) {
-
-    }
-
 
     @OnClick(R.id.showPopBt)
     public void onViewClicked() {
