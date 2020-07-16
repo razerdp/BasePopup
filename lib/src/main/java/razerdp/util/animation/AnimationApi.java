@@ -27,6 +27,12 @@ public abstract class AnimationApi<T> {
         return (T) this;
     }
 
+    //-----------rotation-------------
+    public T withRotation(@NonNull RotationConfig config) {
+        appendConfigs(config);
+        return (T) this;
+    }
+
     void appendConfigs(@NonNull BaseAnimationConfig config) {
         if (configs == null) {
             configs = new SparseArray<>();

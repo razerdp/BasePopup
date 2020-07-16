@@ -178,5 +178,30 @@ public class ScaleConfig extends BaseAnimationConfig<ScaleConfig> {
         return animatorSet;
     }
 
+    //------------------default
+    public static final ScaleConfig LEFT_TO_RIGHT = new ScaleConfig() {
+        {
+            from(Direction.LEFT);
+            to(Direction.RIGHT);
+        }
+    };
+    public static final ScaleConfig RIGHT_TO_LEFT = new ScaleConfig() {
+        {
+            from(Direction.RIGHT);
+            to(Direction.LEFT);
+        }
+    };
+    public static final ScaleConfig TOP_TO_BOTTOM = new ScaleConfig() {
+        {
+            from(Direction.TOP);
+            to(Direction.BOTTOM);
+        }
+    };
+    public static final ScaleConfig BOTTOM_TO_TOP = new ScaleConfig() {
+        {
+            from(Direction.BOTTOM);
+            to(Direction.TOP);
+        }
+    };
 }
 
