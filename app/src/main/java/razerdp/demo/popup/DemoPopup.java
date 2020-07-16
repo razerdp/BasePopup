@@ -11,6 +11,8 @@ import butterknife.BindView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.utils.ButterKnifeUtil;
+import razerdp.util.animation.AnimationHelper;
+import razerdp.util.animation.ScaleConfig;
 
 /**
  * Created by 大灯泡 on 2019/9/20.
@@ -38,12 +40,16 @@ public class DemoPopup extends BasePopupWindow {
 
     @Override
     protected Animation onCreateShowAnimation() {
-        return getDefaultScaleAnimation(true);
+        return AnimationHelper.asAnimation()
+                .withScale(ScaleConfig.CENTER)
+                .toShow();
     }
 
     @Override
     protected Animation onCreateDismissAnimation() {
-        return getDefaultScaleAnimation(false);
+        return AnimationHelper.asAnimation()
+                .withScale(ScaleConfig.CENTER)
+                .toDismiss();
     }
 
     @Override

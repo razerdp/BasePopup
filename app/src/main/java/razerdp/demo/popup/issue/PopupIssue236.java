@@ -11,6 +11,8 @@ import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.widget.DPTextView;
+import razerdp.util.animation.AnimationHelper;
+import razerdp.util.animation.TranslationConfig;
 
 /**
  * Created by 大灯泡 on 2020/02/11.
@@ -36,13 +38,17 @@ public class PopupIssue236 extends BasePopupWindow {
 
     @Override
     protected Animation onCreateShowAnimation() {
-        return getTranslateVerticalAnimation(-1f, 0f, 500);
+        return AnimationHelper.asAnimation()
+                .withTranslation(TranslationConfig.FROM_TOP)
+                .toShow();
     }
 
 
     @Override
     protected Animation onCreateDismissAnimation() {
-        return getTranslateVerticalAnimation(0f, -1f, 500);
+        return AnimationHelper.asAnimation()
+                .withTranslation(TranslationConfig.TO_TOP)
+                .toDismiss();
     }
 
     @OnClick(R.id.tv_go)

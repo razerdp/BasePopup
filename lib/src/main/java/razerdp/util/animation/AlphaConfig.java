@@ -13,9 +13,21 @@ public class AlphaConfig extends BaseAnimationConfig<AlphaConfig> {
     float alphaTo;
     boolean changed;
 
-    public AlphaConfig() {
+    @Override
+    void resetInternal() {
         alphaFrom = 0f;
         alphaTo = 1f;
+        changed = false;
+    }
+
+    public AlphaConfig() {
+        super(false, false);
+        resetInternal();
+    }
+
+    AlphaConfig(boolean resetParent, boolean resetInternal) {
+        super(resetParent, resetInternal);
+        resetInternal();
     }
 
     public AlphaConfig from(@FloatRange(from = 0, to = 1) float from) {
@@ -53,7 +65,7 @@ public class AlphaConfig extends BaseAnimationConfig<AlphaConfig> {
     @Override
     protected Animation buildAnimation(boolean isRevert) {
         AlphaAnimation animation = new AlphaAnimation((isRevert && !changed) ? alphaTo : alphaFrom,
-                (isRevert && !changed) ? alphaFrom : alphaTo);
+                                                      (isRevert && !changed) ? alphaFrom : alphaTo);
         deploy(animation);
         return animation;
     }
@@ -61,10 +73,28 @@ public class AlphaConfig extends BaseAnimationConfig<AlphaConfig> {
     @Override
     protected Animator buildAnimator(boolean isRevert) {
         Animator animator = ObjectAnimator.ofFloat(null,
-                View.ALPHA, (isRevert && !changed) ? alphaTo : alphaFrom,
-                (isRevert && !changed) ? alphaFrom : alphaTo);
+                                                   View.ALPHA,
+                                                   (isRevert && !changed) ? alphaTo : alphaFrom,
+                                                   (isRevert && !changed) ? alphaFrom : alphaTo);
         deploy(animator);
         return animator;
     }
+
+    //------------------default
+    public static final AlphaConfig IN = new AlphaConfig(true, true) {
+        {
+            from(0f);
+            to(1f);
+        }
+
+    };
+
+    public static final AlphaConfig OUT = new AlphaConfig(true, true) {
+        {
+            from(1f);
+            to(0f);
+        }
+
+    };
 }
 

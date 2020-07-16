@@ -11,8 +11,20 @@ public class RotationConfig extends BaseAnimationConfig<RotationConfig> {
     float from;
     float to;
 
-    public RotationConfig() {
+    @Override
+    void resetInternal() {
+        from = to = 0;
         pivot(.5f, .5f);
+    }
+
+    public RotationConfig() {
+        super(false, false);
+        resetInternal();
+    }
+
+    RotationConfig(boolean resetParent, boolean resetInternal) {
+        super(resetParent, resetInternal);
+        resetInternal();
     }
 
     public RotationConfig from(float from) {
@@ -27,7 +39,12 @@ public class RotationConfig extends BaseAnimationConfig<RotationConfig> {
 
     @Override
     protected Animation buildAnimation(boolean isRevert) {
-        RotateAnimation rotateAnimation = new RotateAnimation(from, to, Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, pivotY);
+        RotateAnimation rotateAnimation = new RotateAnimation(from,
+                                                              to,
+                                                              Animation.RELATIVE_TO_SELF,
+                                                              pivotX,
+                                                              Animation.RELATIVE_TO_SELF,
+                                                              pivotY);
         deploy(rotateAnimation);
         return rotateAnimation;
     }

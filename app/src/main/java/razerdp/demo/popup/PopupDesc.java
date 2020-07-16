@@ -12,6 +12,8 @@ import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.widget.DPTextView;
+import razerdp.util.animation.AnimationHelper;
+import razerdp.util.animation.ScaleConfig;
 
 /**
  * Created by 大灯泡 on 2019/9/26.
@@ -37,18 +39,16 @@ public class PopupDesc extends BasePopupWindow {
 
     @Override
     protected Animation onCreateShowAnimation() {
-        Animation animation = getDefaultScaleAnimation(true);
-        animation.setDuration(450);
-        animation.setInterpolator(new OvershootInterpolator(1.5f));
-        return animation;
+        return AnimationHelper.asAnimation()
+                .withScale(ScaleConfig.CENTER.interpolator(new OvershootInterpolator(1.5f)))
+                .toShow();
     }
 
     @Override
     protected Animation onCreateDismissAnimation() {
-        Animation animation = getDefaultScaleAnimation(false);
-        animation.setInterpolator(new OvershootInterpolator(-5.5f));
-        animation.setDuration(450);
-        return animation;
+        return AnimationHelper.asAnimation()
+                .withScale(ScaleConfig.CENTER.interpolator(new OvershootInterpolator(-5.5f)))
+                .toDismiss();
     }
 
     @Override

@@ -6,7 +6,8 @@ import android.view.View;
 import razerdp.demo.model.DemoCommonUsageInfo;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.demo.popup.options.PopupAlignBackgroundOption;
-import razerdp.util.SimpleAnimationUtils;
+import razerdp.util.animation.AnimationHelper;
+import razerdp.util.animation.TranslationConfig;
 
 /**
  * Created by 大灯泡 on 2019/9/21.
@@ -27,8 +28,12 @@ public class CommonBackgroundAlignInfo extends DemoCommonUsageInfo {
     public void toShow(View v) {
         if (mDemoPopup == null) {
             mDemoPopup = new DemoPopup(v.getContext()).setText("背景蒙层控制");
-            mDemoPopup.setShowAnimation(SimpleAnimationUtils.getTranslateVerticalAnimation(1f, 0f, 500))
-                    .setDismissAnimation(SimpleAnimationUtils.getTranslateVerticalAnimation(0f, 1f, 500));
+            mDemoPopup.setShowAnimation(AnimationHelper.asAnimation()
+                                                .withTranslation(TranslationConfig.FROM_BOTTOM)
+                                                .toShow())
+                    .setDismissAnimation(AnimationHelper.asAnimation()
+                                                 .withTranslation(TranslationConfig.FROM_BOTTOM)
+                                                 .toDismiss());
             mDemoPopup.setPopupGravity(Gravity.TOP);
         }
         mDemoPopup.setAlignBackground(align)

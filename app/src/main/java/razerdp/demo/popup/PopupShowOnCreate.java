@@ -6,6 +6,8 @@ import android.view.animation.Animation;
 
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
+import razerdp.util.animation.AnimationHelper;
+import razerdp.util.animation.ScaleConfig;
 
 /**
  * Created by 大灯泡 on 2020/2/3.
@@ -19,12 +21,16 @@ public class PopupShowOnCreate extends BasePopupWindow {
 
     @Override
     protected Animation onCreateShowAnimation() {
-        return getDefaultScaleAnimation(true);
+        return AnimationHelper.asAnimation()
+                .withScale(ScaleConfig.CENTER)
+                .toShow();
     }
 
     @Override
     protected Animation onCreateDismissAnimation() {
-        return getDefaultScaleAnimation(false);
+        return AnimationHelper.asAnimation()
+                .withScale(ScaleConfig.CENTER)
+                .toDismiss();
     }
 
     @Override

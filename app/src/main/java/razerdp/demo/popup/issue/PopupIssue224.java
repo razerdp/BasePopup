@@ -19,6 +19,8 @@ import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.UIHelper;
+import razerdp.util.animation.AnimationHelper;
+import razerdp.util.animation.TranslationConfig;
 
 /**
  * Created by 大灯泡 on 2020/4/6.
@@ -35,7 +37,8 @@ public class PopupIssue224 extends BasePopupWindow {
         mIntegers = new ArrayList<>();
         mAdapter = new SimpleRecyclerViewAdapter<>(context, mIntegers);
         mAdapter.setHolder(ViewHolder.class);
-        DividerItemDecoration divider = new DividerItemDecoration(context, DividerItemDecoration.VERTICAL);
+        DividerItemDecoration divider = new DividerItemDecoration(context,
+                                                                  DividerItemDecoration.VERTICAL);
         divider.setDrawable(UIHelper.getDrawable(R.drawable.divider));
         mAdapter.setOnItemClickListener((v, position, data) -> UIHelper.toast(String.valueOf(data)));
         mRvContent.setLayoutManager(new LinearLayoutManager(context));
@@ -50,12 +53,16 @@ public class PopupIssue224 extends BasePopupWindow {
 
     @Override
     protected Animation onCreateShowAnimation() {
-        return getTranslateVerticalAnimation(1f, 0f, 500);
+        return AnimationHelper.asAnimation()
+                .withTranslation(TranslationConfig.FROM_BOTTOM)
+                .toShow();
     }
 
     @Override
     protected Animation onCreateDismissAnimation() {
-        return getTranslateVerticalAnimation(0f, 1f, 500);
+        return AnimationHelper.asAnimation()
+                .withTranslation(TranslationConfig.TO_BOTTOM)
+                .toDismiss();
     }
 
     @Override

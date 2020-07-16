@@ -21,6 +21,25 @@ public abstract class BaseAnimationConfig<T> {
     float pivotY2;
     boolean fillBefore;
     boolean fillAfter = true;
+    final boolean mResetParent;
+    final boolean mResetInternal;
+
+    BaseAnimationConfig(boolean resetParent, boolean resetInternal) {
+        this.mResetParent = resetParent;
+        this.mResetInternal = resetInternal;
+    }
+
+    void reset() {
+        duration = DEFAULT_DURATION;
+        interpolator = DEFAULT_INTERPOLATOR;
+        pivotX = pivotY = pivotY2 = 0;
+        fillBefore = false;
+        fillAfter = true;
+    }
+
+    void resetInternal() {
+
+    }
 
     public T interpolator(Interpolator interpolator) {
         this.interpolator = interpolator;
@@ -81,7 +100,9 @@ public abstract class BaseAnimationConfig<T> {
     }
 
     void log() {
-        PopupLog.i(TAG, $toString(), this.toString());
+        if (PopupLog.isOpenLog()) {
+            PopupLog.i(TAG, $toString(), this.toString());
+        }
     }
 
     public String $toString() {
@@ -97,12 +118,26 @@ public abstract class BaseAnimationConfig<T> {
 
     final Animation $buildAnimation(boolean isRevert) {
         log();
-        return buildAnimation(isRevert);
+        Animation animation = buildAnimation(isRevert);
+        if (mResetParent) {
+            reset();
+        }
+        if (mResetInternal) {
+            resetInternal();
+        }
+        return animation;
     }
 
     final Animator $buildAnimator(boolean isRevert) {
         log();
-        return buildAnimator(isRevert);
+        Animator animator = buildAnimator(isRevert);
+        if (mResetParent) {
+            reset();
+        }
+        if (mResetInternal) {
+            resetInternal();
+        }
+        return animator;
     }
 
     protected abstract Animation buildAnimation(boolean isRevert);

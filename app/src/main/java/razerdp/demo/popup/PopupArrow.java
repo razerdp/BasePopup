@@ -14,6 +14,8 @@ import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.ViewUtil;
+import razerdp.util.animation.AlphaConfig;
+import razerdp.util.animation.AnimationHelper;
 
 /**
  * Created by 大灯泡 on 2020/5/6.
@@ -42,12 +44,16 @@ public class PopupArrow extends BasePopupWindow {
 
     @Override
     protected Animation onCreateShowAnimation(int width, int height) {
-        return getDefaultAlphaAnimation(true);
+        return AnimationHelper.asAnimation()
+                .withAlpha(AlphaConfig.IN)
+                .toShow();
     }
 
     @Override
     protected Animation onCreateDismissAnimation(int width, int height) {
-        return getDefaultAlphaAnimation(false);
+        return AnimationHelper.asAnimation()
+                .withAlpha(AlphaConfig.OUT)
+                .toDismiss();
     }
 
     @Override

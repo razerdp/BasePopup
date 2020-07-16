@@ -5,13 +5,14 @@ import android.view.View;
 import android.view.animation.Animation;
 
 import androidx.appcompat.widget.AppCompatCheckBox;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.model.common.CommonInputInfo;
 import razerdp.demo.widget.DPTextView;
+import razerdp.util.animation.AnimationHelper;
+import razerdp.util.animation.TranslationConfig;
 
 /**
  * Created by 大灯泡 on 2019/9/22.
@@ -43,13 +44,17 @@ public class PopupInputOption extends BaseOptionPopup<CommonInputInfo> {
 
     @Override
     protected Animation onCreateShowAnimation() {
-        return getTranslateVerticalAnimation(1f, 0f, 450);
+        return AnimationHelper.asAnimation()
+                .withTranslation(TranslationConfig.FROM_BOTTOM)
+                .toShow();
     }
 
 
     @Override
     protected Animation onCreateDismissAnimation() {
-        return getTranslateVerticalAnimation(0f, 1f, 450);
+        return AnimationHelper.asAnimation()
+                .withTranslation(TranslationConfig.TO_BOTTOM)
+                .toDismiss();
     }
 
     @OnClick(R.id.tv_go)

@@ -16,7 +16,6 @@ import android.widget.FrameLayout;
 
 import razerdp.util.KeyboardUtils;
 import razerdp.util.PopupUiUtils;
-import razerdp.util.PopupUtils;
 import razerdp.util.log.PopupLog;
 
 /**
@@ -319,7 +318,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             int parentHeight = getMeasuredHeight();
 
             int gravity = mHelper.getPopupGravity();
-            PopupLog.i(TAG, PopupUtils.gravityToString(gravity));
 
             int childLeft = l;
             int childTop = t;
