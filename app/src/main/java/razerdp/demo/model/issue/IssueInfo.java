@@ -1,5 +1,7 @@
 package razerdp.demo.model.issue;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +15,9 @@ public class IssueInfo {
     public String title;
     public String desc;
     public String url;
-    public List<String> pics;
-    public Class<? extends BaseActivity> activityClass;
-    public boolean finished;
+    public List<String>                       pics;
+    public Class<? extends AppCompatActivity> activityClass;
+    public boolean                            finished;
 
     public IssueInfo() {
         pics = new ArrayList<>();
@@ -47,7 +49,7 @@ public class IssueInfo {
         return this;
     }
 
-    public IssueInfo setActivityClass(Class<? extends BaseActivity> activityClass) {
+    public IssueInfo setActivityClass(Class<? extends AppCompatActivity> activityClass) {
         this.activityClass = activityClass;
         return this;
     }
