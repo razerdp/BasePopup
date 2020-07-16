@@ -204,4 +204,46 @@ public class TranslationConfig extends BaseAnimationConfig<TranslationConfig> {
         return animatorSet;
     }
 
+    //------------------default
+    public static final TranslationConfig FROM_LEFT = new TranslationConfig() {
+        {
+            from(Direction.LEFT);
+        }
+    };
+    public static final TranslationConfig FROM_TOP = new TranslationConfig() {
+        {
+            from(Direction.TOP);
+        }
+    };
+    public static final TranslationConfig FROM_RIGHT = new TranslationConfig() {
+        {
+            from(Direction.RIGHT);
+        }
+    };
+    public static final TranslationConfig FROM_BOTTOM = new TranslationConfig() {
+        {
+            from(Direction.BOTTOM);
+        }
+    };
+
+    public static final TranslationConfig TO_LEFT = new TranslationConfig() {
+        {
+            to(Direction.LEFT);
+        }
+    };
+    public static final TranslationConfig TO_TOP = new TranslationConfig() {
+        {
+            to(Direction.TOP);
+        }
+    };
+    public static final TranslationConfig TO_RIGHT = new TranslationConfig() {
+        {
+            to(Direction.RIGHT);
+        }
+    };
+    public static final TranslationConfig TO_BOTTOM = new TranslationConfig() {
+        {
+            to(Direction.BOTTOM);
+        }
+    };
 }
