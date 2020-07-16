@@ -29,13 +29,14 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+
+import java.util.Map;
+import java.util.WeakHashMap;
+
 import razerdp.blur.PopupBlurOption;
 import razerdp.library.R;
 import razerdp.util.KeyboardUtils;
@@ -143,7 +144,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     InnerShowInfo mShowInfo;
 
-    GlobalLayoutListener mGlobalLayoutListener;
+    ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener;
     LinkedViewLayoutChangeListenerWrapper mLinkedViewLayoutChangeListenerWrapper;
 
     View mLinkedTarget;
@@ -727,7 +728,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         }
 
         if (mGlobalLayoutListener != null) {
-            mGlobalLayoutListener.detach();
+            PopupUiUtils.safeRemoveGlobalLayoutListener(mPopupWindow.getContext().getWindow().getDecorView(), mGlobalLayoutListener);
         }
 
         if (mLinkedViewLayoutChangeListenerWrapper != null) {
@@ -807,9 +808,14 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     private void prepareShow() {
         if (mGlobalLayoutListener == null) {
-            mGlobalLayoutListener = new GlobalLayoutListener();
+            mGlobalLayoutListener = KeyboardUtils.observerKeyboardChange(mPopupWindow.getContext(), new KeyboardUtils.OnKeyboardChangeListener() {
+                @Override
+                public void onKeyboardChange(Rect keyboardBounds, boolean isVisible) {
+                    BasePopupHelper.this.onKeyboardChange(keyboardBounds, isVisible);
+                }
+            });
         }
-        mGlobalLayoutListener.attach();
+        PopupUiUtils.safeAddGlobalLayoutListener(mPopupWindow.getContext().getWindow().getDecorView(), mGlobalLayoutListener);
 
         if (mLinkedTarget != null) {
             if (mLinkedViewLayoutChangeListenerWrapper == null) {
@@ -909,56 +915,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         InnerShowInfo(View mAnchorView, boolean positionMode) {
             this.mAnchorView = mAnchorView;
             this.positionMode = positionMode;
-        }
-    }
-
-    class GlobalLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
-        Rect rect = new Rect();
-        Rect keyboardRect = new Rect();
-        boolean lastVisible;
-        int lastHeight;
-        boolean isAdded;
-
-        void attach() {
-            if (isAdded) return;
-            try {
-                PopupUiUtils.safeAddGlobalLayoutListener(mPopupWindow.getContext().getWindow().getDecorView(), this);
-                isAdded = true;
-            } catch (Exception e) {
-                PopupLog.e(e);
-            }
-        }
-
-        void detach() {
-            try {
-                isAdded = false;
-                rect.setEmpty();
-                keyboardRect.setEmpty();
-                lastVisible = false;
-                lastHeight = 0;
-                PopupUiUtils.safeRemoveGlobalLayoutListener(mPopupWindow.getContext().getWindow().getDecorView(), this);
-            } catch (Exception e) {
-                PopupLog.e(e);
-            }
-        }
-
-        @Override
-        public void onGlobalLayout() {
-            try {
-                View decor = mPopupWindow.getContext().getWindow().getDecorView();
-                View content = decor.findViewById(android.R.id.content);
-                decor.getWindowVisibleDisplayFrame(rect);
-                int screenHeight = content == null ? decor.getHeight() : content.getHeight();
-                keyboardRect.set(rect.left, rect.bottom, rect.right, screenHeight);
-                boolean isVisible = keyboardRect.height() > (screenHeight >> 2) && KeyboardUtils.isOpen();
-                PopupLog.i("Issue277", screenHeight, keyboardRect.height(), isVisible);
-                if (isVisible == lastVisible && keyboardRect.height() == lastHeight) return;
-                lastVisible = isVisible;
-                lastHeight = keyboardRect.height();
-                onKeyboardChange(keyboardRect, isVisible);
-            } catch (Exception e) {
-                PopupLog.e(e);
-            }
         }
     }
 
@@ -1136,7 +1092,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
             mShowInfo.mAnchorView = null;
         }
         if (mGlobalLayoutListener != null) {
-            mGlobalLayoutListener.detach();
+            PopupUiUtils.safeRemoveGlobalLayoutListener(mPopupWindow.getContext().getWindow().getDecorView(), mGlobalLayoutListener);
         }
 
         if (mLinkedViewLayoutChangeListenerWrapper != null) {
