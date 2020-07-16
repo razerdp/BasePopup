@@ -23,7 +23,6 @@ import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.model.DemoMainItem;
-import razerdp.demo.popup.update.PopupUpdate;
 import razerdp.demo.ui.ActivityLauncher;
 import razerdp.demo.ui.ApiListActivity;
 import razerdp.demo.ui.CommonUsageActivity;
