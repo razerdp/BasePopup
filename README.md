@@ -135,7 +135,7 @@
 <br>
 
 
-### 更新日志 ([历史更新](https://www.yuque.com/razerdp/basepopup/uyrsxx))
+### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
 **Candy开发日志请查看dev分支**[**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 

@@ -2,6 +2,7 @@ package razerdp.util;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.res.Resources;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
@@ -66,7 +67,7 @@ public class SimpleAnimationUtils {
         Animation scaleAnimation = new ScaleAnimation(fromX, toX, fromY, toY, pivotXType, pivotXValue, pivotYType,
                 pivotYValue
         );
-        scaleAnimation.setDuration(360);
+        scaleAnimation.setDuration(Resources.getSystem().getInteger(android.R.integer.config_mediumAnimTime));
         return scaleAnimation;
     }
 

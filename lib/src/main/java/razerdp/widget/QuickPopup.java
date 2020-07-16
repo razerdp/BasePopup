@@ -7,10 +7,12 @@ import android.util.Pair;
 import android.view.View;
 import android.view.animation.Animation;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import androidx.fragment.app.Fragment;
 import razerdp.basepopup.BaseLazyPopupWindow;
 import razerdp.basepopup.BasePopupFlag;
 import razerdp.basepopup.QuickPopupConfig;
@@ -73,6 +75,7 @@ public class QuickPopup extends BaseLazyPopupWindow {
 
         setOutSideDismiss((config.flag & BasePopupFlag.OUT_SIDE_DISMISS) != 0);
         setOutSideTouchable((config.flag & BasePopupFlag.OUT_SIDE_TOUCHABLE) != 0);
+        setBackPressEnable((config.flag & BasePopupFlag.BACKPRESS_ENABLE) != 0);
         setPopupGravity(config.getGravity());
         setAlignBackground((config.flag & BasePopupFlag.ALIGN_BACKGROUND) != 0);
         setAlignBackgroundGravity(config.getAlignBackgroundGravity());
@@ -85,6 +88,8 @@ public class QuickPopup extends BaseLazyPopupWindow {
         setMaxWidth(config.getMaxWidth());
         setMinHeight(config.getMinHeight());
         setMaxHeight(config.getMaxHeight());
+        setOnKeyboardChangeListener(config.getOnKeyboardChangeListener());
+        setKeyEventListener(config.getKeyEventListener());
     }
 
     private void applyClick() {
@@ -115,32 +120,51 @@ public class QuickPopup extends BaseLazyPopupWindow {
         }
     }
 
+    @Nullable
     public QuickPopupConfig getConfig() {
         return mConfig;
     }
 
     @Override
     protected Animation onCreateShowAnimation() {
+        if (isConfigDestroyed()) return null;
         return mConfig.getShowAnimation();
     }
 
     @Override
     protected Animation onCreateDismissAnimation() {
+        if (isConfigDestroyed()) return null;
         return mConfig.getDismissAnimation();
     }
 
     @Override
     protected Animator onCreateDismissAnimator() {
+        if (isConfigDestroyed()) return null;
         return mConfig.getDismissAnimator();
     }
 
     @Override
     protected Animator onCreateShowAnimator() {
+        if (isConfigDestroyed()) return null;
         return mConfig.getShowAnimator();
     }
 
     @Override
     public View onCreateContentView() {
+        if (isConfigDestroyed()) return null;
         return createPopupById(mConfig.getContentViewLayoutid());
+    }
+
+    boolean isConfigDestroyed() {
+        return mConfig == null || mConfig.isDestroyed();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mConfig != null) {
+            mConfig.clear(true);
+        }
+        mConfig = null;
+        super.onDestroy();
     }
 }

@@ -163,8 +163,13 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
 
     @Override
     public void onEvent(Message msg) {
-        if (msg.what == BasePopupEvent.EVENT_DISMISS) {
-            handleDismiss(msg.arg1 == 1 ? -2 : 0);
+        switch (msg.what) {
+            case BasePopupEvent.EVENT_SHOW:
+                handleShow();
+                break;
+            case BasePopupEvent.EVENT_DISMISS:
+                handleDismiss(msg.arg1 == 1 ? -2 : 0);
+                break;
         }
     }
 
@@ -172,7 +177,7 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (mPopupHelper != null && mPopupHelper.isOutSideTouchable()) {
             MotionEvent nEv = MotionEvent.obtain(ev);
-            if (!mPopupHelper.isOverlayStatusbar()){
+            if (!mPopupHelper.isOverlayStatusbar()) {
                 nEv.offsetLocation(0, PopupUiUtils.getStatusBarHeight());
             }
             mPopupHelper.dispatchOutSideEvent(nEv);
@@ -197,6 +202,15 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
         }
     }
 
+    /**
+     * 在decorview attach时调用，此时animator已经初始化
+     */
+    public void handleShow() {
+        if (mBackgroundViewHolder != null) {
+            mBackgroundViewHolder.handleShow();
+        }
+    }
+
     final class BackgroundViewHolder implements ClearMemoryObject {
 
         View mBackgroundView;
@@ -205,17 +219,6 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
         BackgroundViewHolder(View backgroundView, BasePopupHelper helper) {
             mBackgroundView = backgroundView;
             mHelper = helper;
-            if (!(mBackgroundView instanceof PopupBackgroundView)) {
-                if (mHelper.isPopupFadeEnable()) {
-                    Animation fadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.basepopup_fade_in);
-                    if (fadeIn != null) {
-                        long fadeInTime = mHelper.showDuration - 200;
-                        fadeIn.setDuration(Math.max(fadeIn.getDuration(), fadeInTime));
-                        fadeIn.setFillAfter(true);
-                        mBackgroundView.startAnimation(fadeIn);
-                    }
-                }
-            }
         }
 
         void addInLayout() {
@@ -236,17 +239,18 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
         }
 
         void dismiss() {
-            if (mBackgroundView instanceof PopupBackgroundView) {
-                ((PopupBackgroundView) mBackgroundView).handleAnimateDismiss();
-            } else {
-                if (mBackgroundView != null && mHelper != null && mHelper.isPopupFadeEnable()) {
-                    Animation fadeOut = AnimationUtils.loadAnimation(getContext(), R.anim.basepopup_fade_out);
-                    if (fadeOut != null) {
-                        long fadeDismissTime = mHelper.dismissDuration - 200;
-                        fadeOut.setDuration(Math.max(fadeOut.getDuration(), fadeDismissTime));
-                        fadeOut.setFillAfter(true);
-                        mBackgroundView.startAnimation(fadeOut);
+            if (mHelper != null &&
+                    mHelper.isPopupFadeEnable() &&
+                    mBackgroundView != null &&
+                    ((mBackgroundView instanceof PopupBackgroundView) || mBackgroundView.getAnimation() == null)) {
+                if (mHelper.mMaskViewDismissAnimation != null) {
+                    if (mHelper.isSyncMaskAnimationDuration()) {
+                        if (mHelper.dismissDuration > 0 && mHelper.mMaskViewDismissAnimation == mHelper.DEFAULT_MASK_DISMISS_ANIMATION) {
+                            //当动画时间大于0，且没有设置过蒙层动画，则修改时间为动画时间+50ms
+                            mHelper.mMaskViewDismissAnimation.setDuration(mHelper.dismissDuration + 50);
+                        }
                     }
+                    mBackgroundView.startAnimation(mHelper.mMaskViewDismissAnimation);
                 }
             }
         }
@@ -257,6 +261,24 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
                 mBackgroundView = null;
             } else {
                 mBackgroundView = null;
+            }
+        }
+
+        void handleShow() {
+            if (mHelper != null &&
+                    mHelper.isPopupFadeEnable() &&
+                    mBackgroundView != null &&
+                    ((mBackgroundView instanceof PopupBackgroundView) || mBackgroundView.getAnimation() == null)) {
+                //如果是自定义的backgroundview，同时有自己的动画，那就不使用我们的，而是使用开发者自定义的
+                if (mHelper.mMaskViewShowAnimation != null) {
+                    if (mHelper.isSyncMaskAnimationDuration()) {
+                        if (mHelper.showDuration > 0 && mHelper.mMaskViewShowAnimation == mHelper.DEFAULT_MASK_SHOW_ANIMATION) {
+                            //当动画时间大于0，且没有设置过蒙层动画，则修改时间为动画时间+50ms
+                            mHelper.mMaskViewShowAnimation.setDuration(mHelper.showDuration + 50);
+                        }
+                    }
+                    mBackgroundView.startAnimation(mHelper.mMaskViewShowAnimation);
+                }
             }
         }
 

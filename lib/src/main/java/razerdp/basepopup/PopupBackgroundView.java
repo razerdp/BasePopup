@@ -1,6 +1,7 @@
 package razerdp.basepopup;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
@@ -45,31 +46,10 @@ class PopupBackgroundView extends View {
         this.mHelper = mHelper;
         setVisibility(VISIBLE);
         PopupUiUtils.setBackground(this, mHelper.getPopupBackground());
-        if (mHelper.isPopupFadeEnable()) {
-            Animation fadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.basepopup_fade_in);
-            if (fadeIn != null) {
-                long fadeInTime = mHelper.showDuration - 200;
-                fadeIn.setDuration(Math.max(fadeIn.getDuration(), fadeInTime));
-                fadeIn.setFillAfter(true);
-                startAnimation(fadeIn);
-            }
-        }
     }
 
     public void destroy() {
         mHelper = null;
-    }
-
-    public void handleAnimateDismiss() {
-        if (mHelper != null && mHelper.isPopupFadeEnable()) {
-            Animation fadeOut = AnimationUtils.loadAnimation(getContext(), R.anim.basepopup_fade_out);
-            if (fadeOut != null) {
-                long fadeDismissTime = mHelper.dismissDuration - 200;
-                fadeOut.setDuration(Math.max(fadeOut.getDuration(), fadeDismissTime));
-                fadeOut.setFillAfter(true);
-                startAnimation(fadeOut);
-            }
-        }
     }
 
     public void update() {

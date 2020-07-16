@@ -35,6 +35,7 @@ public class TitleBarView extends FrameLayout implements View.OnClickListener, V
     private static final String TAG = "TitleBarView";
 
     View mRootView;
+    View mStatusBarHolderView;
     TextView mTitleBarTitle;
     ImageView mTitleBarIconLeft;
     TextView mTitleBarTextLeft;
@@ -73,6 +74,8 @@ public class TitleBarView extends FrameLayout implements View.OnClickListener, V
     int leftTextSize = 14;
     int rightTextSize = 14;
     int titleTextSize = 16;
+
+    boolean hideStatusbarHolder = false;
 
     OnTitleBarClickCallback mTitlebarClickCallback;
 
@@ -114,12 +117,15 @@ public class TitleBarView extends FrameLayout implements View.OnClickListener, V
         rightTextColor = a.getColor(R.styleable.TitleBarView_right_text_color, rightTextColor);
         titleTextColor = a.getColor(R.styleable.TitleBarView_title_text_color, titleTextColor);
 
+        hideStatusbarHolder = a.getBoolean(R.styleable.TitleBarView_hide_status_bar_holder, hideStatusbarHolder);
+
         a.recycle();
     }
 
     private void initView(Context context) {
         View.inflate(context, R.layout.widget_title_bar_view, this);
         this.mRootView = findViewById(R.id.title_bar_root);
+        this.mStatusBarHolderView = findViewById(R.id.statusbar_placeholder);
         this.mTitleBarTitle = findViewById(R.id.title_bar_title);
         this.mTitleBarIconLeft = findViewById(R.id.title_bar_icon_left);
         this.mTitleBarTextLeft = findViewById(R.id.title_bar_text_left);
@@ -153,6 +159,7 @@ public class TitleBarView extends FrameLayout implements View.OnClickListener, V
         setLeftIcon(leftIcon);
         setRightIcon(rightIcon);
         setMode(mode);
+        hideStatusbarHolder(hideStatusbarHolder);
     }
 
 
@@ -262,6 +269,11 @@ public class TitleBarView extends FrameLayout implements View.OnClickListener, V
 
     public TitleBarView setRightTextEnable(boolean enable) {
         this.mTitleBarTextRight.setEnabled(enable);
+        return this;
+    }
+
+    public TitleBarView hideStatusbarHolder(boolean hide) {
+        this.mStatusBarHolderView.setVisibility(hide ? View.GONE : View.VISIBLE);
         return this;
     }
 
