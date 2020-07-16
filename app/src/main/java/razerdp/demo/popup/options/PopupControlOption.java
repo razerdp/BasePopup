@@ -10,6 +10,8 @@ import butterknife.OnClick;
 import razerdp.basepopup.R;
 import razerdp.demo.model.common.CommonControllerInfo;
 import razerdp.demo.widget.DPTextView;
+import razerdp.util.animation.AnimationHelper;
+import razerdp.util.animation.TranslationConfig;
 
 /**
  * Created by 大灯泡 on 2020/02/23.
@@ -40,13 +42,17 @@ public class PopupControlOption extends BaseOptionPopup<CommonControllerInfo> {
 
     @Override
     protected Animation onCreateShowAnimation() {
-        return getTranslateVerticalAnimation(1f, 0f, 450);
+        return AnimationHelper.asAnimation()
+                .withTranslation(TranslationConfig.FROM_BOTTOM)
+                .toShow();
     }
 
 
     @Override
     protected Animation onCreateDismissAnimation() {
-        return getTranslateVerticalAnimation(0f, 1f, 450);
+        return AnimationHelper.asAnimation()
+                .withTranslation(TranslationConfig.TO_BOTTOM)
+                .toDismiss();
     }
 
     @OnClick(R.id.tv_go)

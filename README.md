@@ -49,24 +49,6 @@
 
 ---
 
-### 开发计划 & 需求投票
-
-当前开发：动画迭代
-
-当前需求投票：[允许蒙层高亮一个或多个其依附的View](https://github.com/razerdp/BasePopup/issues/300)
-
-需求提单：[【BasePopup需求提单】](https://github.com/razerdp/BasePopup/issues/299)
-
-讨论：[【关于MIUI小白条及类似的“全面屏手势提示线”覆盖问题描述】](https://github.com/razerdp/BasePopup/issues/307)
-
-有奖调查问卷：
-
-<a href ="https://wj.qq.com/s2/5468287/c24f">
-    <img src="./img/qrcode.png"/>
-</a>
-
-<br>
-
 ### 导航
  
  - [特性](#特性)
@@ -137,49 +119,45 @@
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-**Candy开发日志请查看dev分支**[**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
-
-* **【Release】2.2.3**(2020/05/07)
-  * 我们针对2.2.2系列问题进行了修复，同时增加了一些新的功能，欢迎更新到最新版本~
-  * **新增功能/方法：**
-    * 新增`setPopupGravityMode()`：您可以单独设置BasePopup对齐方式而不需要始终带上Gravity
-    * 新增`OnPopupWindowShowListener`接口：在BasePopup显示后回调该接口，当回调该方法时意味着弹窗已经完成，此时ui已经显示在屏幕上
-    * 新增`bindLifecycleOwner()`：您现在可以自由绑定您的LifecycleOwner
-    * 新增`onPreShow()`回调：在BasePopup弹出之前回调该方法，如果返回false，则不会弹出
-    * 新增`onShowing()`回调：在BasePopup显示后回调该方法，当回调该方法时意味着弹窗已经完成，此时ui已经显示在屏幕上
-    * 新增`onPopupLayout()`回调：如果弹窗与锚点View关联，当BasePopup在布局的时候回调该方法，分别返回BasePopup在屏幕上的位置和锚点View在屏幕上的位置
-    * 新增`computeGravity()`：配套`onPopupLayout()`回调，计算BasePopup中心点在锚点View的方位。
-  * **弃用方法及更替：**
-    * `BasePopupWindow#dismissWithOutAnimate()`，请使用**dismiss(false)**
-    * `BasePopupWindow#setPopupWindowFullScreen()`，请使用**setOverlayStatusbar()**
-    * `QuickPopupConfig#dismissOnOutSideTouch()`，请使用**outSideDismiss()**
-    * `QuickPopupConfig#allowInterceptTouchEvent()`，请使用**outSideTouchable()**
-  * **优化：**
-    * 优化DecorView的查询方式，原逻辑会缓存下查询后的DecorView，但可能会因为该DecorView宿主已经销毁或者变更而导致显示错误
-    * 支持的最低版本降至Api 16
-    * 放弃反射WindowManager的方式，采取ContextWrapper代理，不再担心遭遇黑灰名单封锁了~感谢[@xchengDroid](https://github.com/xchengDroid)提供的方案
-  * **bug修复：**
-    * 修复覆盖状态栏时事件传递存在偏移的情况
-    * 修复`isShowing()`存在空指针的情况(issue：[#267](https://github.com/razerdp/BasePopup/issues/267))
-    * 修复`setOverlayStatusbar(false)`情况下与Anchor关联时显示位置错误的问题
-    * 修复部分引用没有置空导致**可能**存在的内存泄漏问题（事实上并没发现泄漏）
-    * 修复BasePopup弹出时，Activity弹出的输入法显示在BasePopup下层的问题
-    * 修复全屏Activity判断错误的问题
-    * 修复QuickPopupConfig配置缺漏的问题
-    * 修复未弹窗时直接调用dismiss(),然后首次调用showPopupWindow()失效的问题
-    * fixed issue：[#224](https://github.com/razerdp/BasePopup/issues/224)
-
-* **【Release】2.2.2.2**(2020/03/01)
-  * 修复一个很严重的可能会导致崩溃的问题
-    * 重现方式：dismiss动画没执行完的情况下finish了activity，会引发空指针崩溃
-    * 该问题在此之前的版本中是无法被 **try & catch**的
-  * 修复了finish的时候没有强制dismiss的问题
-  * 修复了一些flag的问题
-  * 修复outsideTouch在非全屏下位置偏离的问题
-  * **非常抱歉，因为自身原因没有查到此类错误，在收到反馈后我第一时间排查了所有类似的地方并逐一修复，这次重构的周期跨度较长，涉及板块较多，测试周期也很长，但因为个人精力有限仍然会有遗漏的地方。在此希望能够得到您的支持，尽量在Candy测试期及时反馈问题，减少此类问题的发生。**
-
-* **【Release】2.2.2.1**(2020/02/26)
-  * 修复输入法自动弹出后不能再次弹出的问题
+* **【Candy】2.2.4**
+  * **【2.2.4.0512】**
+    * 修复全屏activity下focusable没有恢复的问题
+  * **【2.2.4.0517】**
+    * 修复全屏Activity下SystemUiVisibility被强制修改的问题
+    * 添加线程检查
+  * **【2.2.4.0618】**
+    * 修复Quickpopupbuilder中backpressenable设置失效的问题([#296](https://github.com/razerdp/BasePopup/issues/296))
+  * **【未发布版本】**（2020/06/19）
+    * 修复非BasePopup内EditText弹出键盘时挡住EditText的问题([#297](https://github.com/razerdp/BasePopup/issues/297))
+  * **【2.2.4.0702】** （2020/07/02）
+    * 优化BasePopupHelper代码
+    * 增加`OnKeyboardChangeListener`，该监听允许用户监听键盘显示、关闭事件，同时回调键盘大小
+    * 增加`KeyEventListener`，允许用户外部监听并处理传递到BasePopup的KeyEvent [#296](https://github.com/razerdp/BasePopup/issues/296)
+    * 动画优化（进度70%）
+    * 增加BasePopup覆盖导航栏的功能：`setOverlayNavigationBar`，相关讨论：[关于MIUI小白条及类似的“全面屏手势提示线”覆盖问题描述](https://github.com/razerdp/BasePopup/issues/307)
+  * **【2.2.4.0703】** （2020/07/03）
+    * 修复lazypopup中gravity覆盖的问题 [#310](https://github.com/razerdp/BasePopup/issues/310)
+    * 增加`setWidthAsAnchorView`：该方法将会设置Popup的宽度为AnchorView的宽度
+    * 增加`setHeightAsAnchorView`：该方法将会设置Popup的高度为AnchorView的高度
+  * **【2.2.4.0705】** （2020/07/05）
+    * 修复onCreate()下关联锚点View时因未完成测量过程而导致的位置获取不成功问题。[#313](https://github.com/razerdp/BasePopup/issues/313)
+  * **【2.2.4.0711】** （2020/07/11）
+    * RTL支持：
+        * 增加`setLayoutDirection()`方法，允许您设置依附的窗口的layoutDirection，以适应RTL布局
+        * **请务必注意，BasePopup遵循官方做法，当您需要RTL布局的时候，请使用START代替LEFT，使用END代替RIGHT**
+  * **【2.2.4.0713】**（2020/07/13）
+    * 修复设置最大/最小宽高下测量错误的问题
+  * **【2.2.4.0716】**（2020/07/16）
+    * 动画重构完成，添加动画创建类 `AnimationHelper`
+    * **删除类/方法**：
+        * SimpleAnimationUtils.java
+        * BasePopupWindow#getTranslateVerticalAnimation
+        * BasePopupWindow#getScaleAnimation
+        * BasePopupWindow#getDefaultScaleAnimation
+        * BasePopupWindow#getDefaultAlphaAnimation
+        * BasePopupWindow#getDefaultSlideFromBottomAnimationSet
+    * 修复键盘监听在adjustResize下可能会出现的问题：[#315](https://github.com/razerdp/BasePopup/issues/315)
+    * 修复设置softInputMode重复的问题：[#314](https://github.com/razerdp/BasePopup/issues/314)
 
 <br>
 

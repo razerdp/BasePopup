@@ -21,6 +21,10 @@ import razerdp.demo.utils.ToolUtil;
 import razerdp.demo.utils.UIHelper;
 import razerdp.demo.widget.DPTextView;
 import razerdp.demo.widget.FlowLayout;
+import razerdp.util.animation.AlphaConfig;
+import razerdp.util.animation.AnimationHelper;
+import razerdp.util.animation.ScaleConfig;
+import razerdp.util.animation.TranslationConfig;
 
 /**
  * Created by 大灯泡 on 2019/9/20
@@ -54,12 +58,16 @@ public class PopupSelectShowAnimate extends BasePopupWindow {
     private void generateAnimation() {
         Info info = new Info();
         info.name = "AlphaIn";
-        info.animation = getDefaultAlphaAnimation(true);
+        info.animation = AnimationHelper.asAnimation()
+                .withAlpha(AlphaConfig.IN)
+                .toShow();
         animations.add(info);
 
         info = new Info();
         info.name = "ScaleIn";
-        info.animation = getDefaultScaleAnimation(true);
+        info.animation = AnimationHelper.asAnimation()
+                .withScale(ScaleConfig.CENTER)
+                .toShow();
         animations.add(info);
 
         info = new Info();
@@ -104,7 +112,9 @@ public class PopupSelectShowAnimate extends BasePopupWindow {
 
         info = new Info();
         info.name = "TranslateFromTop";
-        info.animation = getTranslateVerticalAnimation(-1f, 0f, 500);
+        info.animation = AnimationHelper.asAnimation()
+                .withTranslation(TranslationConfig.FROM_TOP)
+                .toShow();
         animations.add(info);
 
         info = new Info();
@@ -119,7 +129,9 @@ public class PopupSelectShowAnimate extends BasePopupWindow {
 
         info = new Info();
         info.name = "TranslateFromBottom";
-        info.animation = getTranslateVerticalAnimation(1f, 0f, 500);
+        info.animation = AnimationHelper.asAnimation()
+                .withTranslation(TranslationConfig.FROM_BOTTOM)
+                .toShow();
         animations.add(info);
 
         info = new Info();
@@ -151,36 +163,54 @@ public class PopupSelectShowAnimate extends BasePopupWindow {
 
     @Override
     protected Animation onCreateShowAnimation() {
-        return getTranslateVerticalAnimation(1f, 0f, 500);
+        return AnimationHelper.asAnimation()
+                .withTranslation(TranslationConfig.FROM_BOTTOM)
+                .toShow();
     }
 
     @Override
     protected Animation onCreateDismissAnimation() {
-        return getTranslateVerticalAnimation(0f, 1f, 500);
+        return AnimationHelper.asAnimation()
+                .withTranslation(TranslationConfig.TO_BOTTOM)
+                .toDismiss();
     }
 
 
     Animation getHorizontalAnimation(float start, float end, int durationMillis) {
-        Animation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, start, Animation.RELATIVE_TO_PARENT, end, Animation.RELATIVE_TO_PARENT, 0, Animation.RELATIVE_TO_PARENT, 0);
+        Animation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_PARENT,
+                                                              start,
+                                                              Animation.RELATIVE_TO_PARENT,
+                                                              end,
+                                                              Animation.RELATIVE_TO_PARENT,
+                                                              0,
+                                                              Animation.RELATIVE_TO_PARENT,
+                                                              0);
         translateAnimation.setDuration(durationMillis);
         return translateAnimation;
     }
 
     Animation createTranslateAnimation(float fromX, float toX, float fromY, float toY) {
         Animation animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF,
-                fromX,
-                Animation.RELATIVE_TO_SELF,
-                toX,
-                Animation.RELATIVE_TO_SELF,
-                fromY,
-                Animation.RELATIVE_TO_SELF,
-                toY);
+                                                     fromX,
+                                                     Animation.RELATIVE_TO_SELF,
+                                                     toX,
+                                                     Animation.RELATIVE_TO_SELF,
+                                                     fromY,
+                                                     Animation.RELATIVE_TO_SELF,
+                                                     toY);
         animation.setDuration(500);
         return animation;
     }
 
     Animation createScaleAnimation(float fromX, float toX, float fromY, float toY, float pivotXValue, float pivotYValue) {
-        Animation scaleAnimation = new ScaleAnimation(fromX, toX, fromY, toY, Animation.RELATIVE_TO_SELF, pivotXValue, Animation.RELATIVE_TO_SELF, pivotYValue);
+        Animation scaleAnimation = new ScaleAnimation(fromX,
+                                                      toX,
+                                                      fromY,
+                                                      toY,
+                                                      Animation.RELATIVE_TO_SELF,
+                                                      pivotXValue,
+                                                      Animation.RELATIVE_TO_SELF,
+                                                      pivotYValue);
         scaleAnimation.setDuration(500);
         return scaleAnimation;
     }
@@ -217,7 +247,8 @@ public class PopupSelectShowAnimate extends BasePopupWindow {
         final int childCount = layoutAnimation.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View v = layoutAnimation.getChildAt(i);
-            InnerViewHolder holder = ToolUtil.cast(FillViewUtil.getHolder(v), InnerViewHolder.class);
+            InnerViewHolder holder = ToolUtil.cast(FillViewUtil.getHolder(v),
+                                                   InnerViewHolder.class);
             if (holder != null) {
                 holder.update();
             }

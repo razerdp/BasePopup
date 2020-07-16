@@ -15,6 +15,8 @@ import razerdp.demo.model.common.CommonBlurInfo;
 import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.NumberFormatUtil;
 import razerdp.demo.widget.DPTextView;
+import razerdp.util.animation.AnimationHelper;
+import razerdp.util.animation.TranslationConfig;
 
 /**
  * Created by 大灯泡 on 2020/3/12.
@@ -60,7 +62,8 @@ public class PopupBlurDemoOption extends BaseOptionPopup<CommonBlurInfo> {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 blurRadius = progress;
-                mTvBlur.setText(String.format("模糊度：%s%%", NumberFormatUtil.format2(((float) progress / seekBar.getMax()) * 100)));
+                mTvBlur.setText(String.format("模糊度：%s%%",
+                                              NumberFormatUtil.format2(((float) progress / seekBar.getMax()) * 100)));
             }
 
             @Override
@@ -128,13 +131,17 @@ public class PopupBlurDemoOption extends BaseOptionPopup<CommonBlurInfo> {
 
     @Override
     protected Animation onCreateShowAnimation() {
-        return getTranslateVerticalAnimation(-1f, 0f, 450);
+        return AnimationHelper.asAnimation()
+                .withTranslation(TranslationConfig.FROM_TOP)
+                .toShow();
     }
 
 
     @Override
     protected Animation onCreateDismissAnimation() {
-        return getTranslateVerticalAnimation(0f, -1f, 450);
+        return AnimationHelper.asAnimation()
+                .withTranslation(TranslationConfig.TO_TOP)
+                .toDismiss();
     }
 
     @Override

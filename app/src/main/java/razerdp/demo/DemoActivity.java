@@ -1,21 +1,17 @@
 package razerdp.demo;
 
-import android.animation.Animator;
-import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
-import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.QuickPopupBuilder;
 import razerdp.basepopup.QuickPopupConfig;
 import razerdp.basepopup.R;
@@ -34,10 +30,7 @@ import razerdp.demo.utils.UIHelper;
 import razerdp.demo.utils.ViewUtil;
 import razerdp.demo.widget.DPRecyclerView;
 import razerdp.demo.widget.DPTextView;
-import razerdp.util.SimpleAnimationUtils;
-import razerdp.util.animation.AlphaConfig;
 import razerdp.util.animation.AnimationHelper;
-import razerdp.util.animation.Direction;
 import razerdp.util.animation.ScaleConfig;
 
 
@@ -71,16 +64,7 @@ public class DemoActivity extends BaseActivity {
         rvContent.setAdapter(mAdapter);
 
 
-
-        QuickPopupBuilder.with(this)
-                .contentView(R.layout.popup_wj)
-                .config(new QuickPopupConfig()
-                        .withShowAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(true))
-                        .withDismissAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(false))
-                        .withClick(R.id.tv_go, null, true)
-                        .blurBackground(true)
-                        .outSideDismiss(false))
-                .show();
+        showWjPopup();
     }
 
     private List<DemoMainItem> generateItem() {
@@ -93,79 +77,24 @@ public class DemoActivity extends BaseActivity {
         return result;
     }
 
-    void onHeaderClick() {
-/*        QuickPopupBuilder.with(DemoActivity.this)
-                .contentView(R.layout.popup_demo)
+    void showWjPopup() {
+        QuickPopupBuilder.with(this)
+                .contentView(R.layout.popup_wj)
                 .config(new QuickPopupConfig()
-                        .withShowAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(true))
-                        .withDismissAnimation(SimpleAnimationUtils.getDefaultAlphaAnimation(false))
-                        .backpressEnable(false)
-                        .blurBackground(true))
-                .show();*/
-        new T(this).showPopupWindow();
+                        .withShowAnimation(AnimationHelper.asAnimation()
+                                .withScale(ScaleConfig.CENTER)
+                                .toShow())
+                        .withDismissAnimation(AnimationHelper.asAnimation()
+                                .withScale(ScaleConfig.CENTER)
+                                .toDismiss())
+                        .withClick(R.id.tv_go, null, true)
+                        .blurBackground(true)
+                        .outSideDismiss(false))
+                .show();
     }
 
-    class T extends BasePopupWindow {
-
-        public T(Context context) {
-            super(context);
-        }
-
-        @Override
-        public View onCreateContentView() {
-            return createPopupById(R.layout.popup_demo);
-        }
-
-
-//        @Override
-//        protected Animation onCreateShowAnimation() {
-//            return AnimationHelper.asAnimation()
-////                    .withTranslation(new TranslationConfig()
-////                            .from(BOTTOM)
-////                            .to(IDLE))
-//                    .withScale(new ScaleConfig()
-//                            .from(LEFT)
-//                            .to(RIGHT))
-//                    .toShow();
-//        }
-//
-//        @Override
-//        protected Animation onCreateDismissAnimation() {
-//            return AnimationHelper.asAnimation()
-////                    .withTranslation(new TranslationConfig()
-////                            .from(TOP)
-////                            .to(BOTTOM))
-//                    .withScale(new ScaleConfig()
-//                            .from(LEFT)
-//                            .to(RIGHT))
-//                    .toDismiss();
-//        }
-
-        @Override
-        protected Animator onCreateShowAnimator() {
-            return AnimationHelper.asAnimator()
-//                    .withTranslation(new TranslationConfig()
-//                            .from(Direction.BOTTOM)
-//                            .to(Direction.IDLE))
-                    .withAlpha(new AlphaConfig().duration(300))
-                    .withScale(new ScaleConfig()
-                            .from(Direction.BOTTOM, Direction.CENTER_HORIZONTAL)
-                            .to(Direction.TOP))
-                    .toShow();
-        }
-
-        @Override
-        protected Animator onCreateDismissAnimator() {
-            return AnimationHelper.asAnimator()
-//                    .withTranslation(new TranslationConfig()
-//                            .from(Direction.IDLE)
-//                            .to(Direction.BOTTOM))
-                    .withAlpha(new AlphaConfig().duration(300))
-                    .withScale(new ScaleConfig()
-                            .from(Direction.TOP, Direction.CENTER_HORIZONTAL)
-                            .to(Direction.BOTTOM))
-                    .toDismiss();
-        }
+    void onHeaderClick() {
+        showWjPopup();
     }
 
 

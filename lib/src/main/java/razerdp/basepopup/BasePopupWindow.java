@@ -205,7 +205,6 @@
 package razerdp.basepopup;
 
 import android.animation.Animator;
-import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -234,11 +233,9 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.OnLifecycleEvent;
-
 import razerdp.blur.PopupBlurOption;
 import razerdp.util.KeyboardUtils;
 import razerdp.util.PopupUiUtils;
-import razerdp.util.SimpleAnimationUtils;
 import razerdp.util.log.PopupLog;
 
 import static razerdp.basepopup.BasePopupFlag.AUTO_INPUT_METHOD;
@@ -466,7 +463,9 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         setHeight(height);
 
         //默认占满全屏
-        mPopupWindowProxy = new PopupWindowProxy(new PopupWindowProxy.BasePopupContextWrapper(getContext(), mHelper));
+        mPopupWindowProxy = new PopupWindowProxy(new PopupWindowProxy.BasePopupContextWrapper(
+                getContext(),
+                mHelper));
         mPopupWindowProxy.setContentView(mContentView);
         mPopupWindowProxy.setOnDismissListener(this);
         setPopupAnimationStyle(0);
@@ -494,9 +493,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * <p>
      * 本类提供一些简单的动画方法：
      * <ul>
-     * <li>{@link #getDefaultAlphaAnimation()}：得到一个默认进入的渐变动画</li>
-     * <li>{@link #getDefaultScaleAnimation()}：得到一个默认的放大缩小动画</li>
-     * <li>{@link #getTranslateVerticalAnimation(float, float, int)} ()}：快速获取垂直方向的动画</li>
+     * <li>{@link razerdp.util.animation.AnimationHelper}：快速创建动画</li>
      * </ul>
      * <p>
      * 如果需要用到属性动画，请覆写{@link #onCreateShowAnimator()}
@@ -521,9 +518,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * <p>
      * 本类提供一些简单的动画方法：
      * <ul>
-     * <li>{@link #getDefaultAlphaAnimation(boolean)} ()}：得到一个默认进入的渐变动画</li>
-     * <li>{@link #getDefaultScaleAnimation(boolean)} ()}：得到一个默认的放大缩小动画</li>
-     * <li>{@link #getTranslateVerticalAnimation(float, float, int)} ()}：快速获取垂直方向的动画</li>
+     * <li>{@link razerdp.util.animation.AnimationHelper}：快速创建动画</li>
      * </ul>
      * </p>
      * <p>
@@ -968,10 +963,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public BasePopupWindow setAdjustInputMode(int viewId, int flag) {
         mHelper.keybaordAlignViewId = viewId;
         mHelper.setFlag(FLAG_KEYBOARD_ALIGN_TO_ROOT
-                | FLAG_KEYBOARD_ALIGN_TO_VIEW
-                | FLAG_KEYBOARD_IGNORE_OVER
-                | FLAG_KEYBOARD_ANIMATE_ALIGN
-                | FLAG_KEYBOARD_FORCE_ADJUST, false);
+                                | FLAG_KEYBOARD_ALIGN_TO_VIEW
+                                | FLAG_KEYBOARD_IGNORE_OVER
+                                | FLAG_KEYBOARD_ANIMATE_ALIGN
+                                | FLAG_KEYBOARD_FORCE_ADJUST, false);
         mHelper.setFlag(flag, true);
         return this;
     }
@@ -1444,8 +1439,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </ul>
      *
      * @param mode <ul><li>GravityMode.RELATIVE_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup处于该Anchor的哪个位置</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 </ul>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     </ul>
      */
     public BasePopupWindow setPopupGravity(GravityMode mode, int popupGravity) {
         mHelper.setPopupGravity(mode, popupGravity);
@@ -1845,7 +1840,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         boolean result = true;
         if (mHelper.mOnBeforeShowCallback != null) {
             result = mHelper.mOnBeforeShowCallback.onBeforeShow(mContentView, v,
-                    mHelper.mShowAnimation != null || mHelper.mShowAnimator != null);
+                                                                mHelper.mShowAnimation != null || mHelper.mShowAnimator != null);
         }
         return result;
     }
@@ -1990,85 +1985,6 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
 
     public static void setDebugMode(boolean debugMode) {
         PopupLog.setOpenLog(debugMode);
-    }
-
-    /**
-     * 生成TranslateAnimation
-     *
-     * @param durationMillis 动画显示时间
-     * @param start          初始百分比
-     * @param end            结束百分比
-     */
-    protected Animation getTranslateVerticalAnimation(int start, int end, int durationMillis) {
-        return SimpleAnimationUtils.getTranslateVerticalAnimation(start, end, durationMillis);
-    }
-
-    /**
-     * 生成TranslateAnimation（相对于parent）
-     *
-     * @param durationMillis 动画显示时间
-     * @param start          初始百分比(0f~1f)
-     * @param end            结束百分比(0f~1f)
-     */
-    protected Animation getTranslateVerticalAnimation(float start, float end, int durationMillis) {
-        return SimpleAnimationUtils.getTranslateVerticalAnimation(start, end, durationMillis);
-    }
-
-    /**
-     * 生成ScaleAnimation
-     * <p>
-     * time=300
-     */
-    protected Animation getScaleAnimation(float fromX,
-                                          float toX,
-                                          float fromY,
-                                          float toY,
-                                          int pivotXType,
-                                          float pivotXValue,
-                                          int pivotYType,
-                                          float pivotYValue) {
-        return SimpleAnimationUtils.getScaleAnimation(fromX, toX, fromY, toY, pivotXType, pivotXValue, pivotYType, pivotYValue);
-    }
-
-
-    /**
-     * 生成自定义ScaleAnimation
-     */
-    protected Animation getDefaultScaleAnimation() {
-        return getDefaultScaleAnimation(true);
-    }
-
-    /**
-     * 生成自定义ScaleAnimation
-     *
-     * @param in true for scale in
-     */
-    protected Animation getDefaultScaleAnimation(boolean in) {
-        return SimpleAnimationUtils.getDefaultScaleAnimation(in);
-    }
-
-
-    /**
-     * 生成默认的AlphaAnimation
-     */
-    protected Animation getDefaultAlphaAnimation() {
-        return getDefaultAlphaAnimation(true);
-    }
-
-    /**
-     * 生成默认的AlphaAnimation
-     *
-     * @param in true for alpha in
-     */
-    protected Animation getDefaultAlphaAnimation(boolean in) {
-        return SimpleAnimationUtils.getDefaultAlphaAnimation(in);
-    }
-
-    /**
-     * 从下方滑动上来
-     */
-    protected AnimatorSet getDefaultSlideFromBottomAnimationSet() {
-        return SimpleAnimationUtils.getDefaultSlideFromBottomAnimationSet(mDisplayAnimateView);
     }
 
     /**

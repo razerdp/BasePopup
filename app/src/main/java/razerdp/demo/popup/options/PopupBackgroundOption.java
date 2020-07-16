@@ -22,6 +22,8 @@ import razerdp.demo.utils.ToolUtil;
 import razerdp.demo.utils.UIHelper;
 import razerdp.demo.widget.DPTextView;
 import razerdp.demo.widget.SquareFrameLayout;
+import razerdp.util.animation.AnimationHelper;
+import razerdp.util.animation.TranslationConfig;
 
 /**
  * Created by 大灯泡 on 2019/9/20.
@@ -129,9 +131,11 @@ public class PopupBackgroundOption extends BaseOptionPopup<CommonBackgroundInfo>
     @OnClick(R.id.tv_refresh_color)
     void randomColors() {
         for (int i = 0; i < colorViews.length; i++) {
-            ColorDrawable drawable = ToolUtil.cast(colorViews[i].getBackground(), ColorDrawable.class);
+            ColorDrawable drawable = ToolUtil.cast(colorViews[i].getBackground(),
+                                                   ColorDrawable.class);
             if (drawable == null) {
-                drawable = new ColorDrawable(ColorUtil.alphaColor((float) mProgressAlpha.getProgress() / 100, randomColor()));
+                drawable = new ColorDrawable(ColorUtil.alphaColor((float) mProgressAlpha.getProgress() / 100,
+                                                                  randomColor()));
                 colorViews[i].setBackground(drawable);
             } else {
                 drawable.setColor(randomColor());
@@ -141,13 +145,17 @@ public class PopupBackgroundOption extends BaseOptionPopup<CommonBackgroundInfo>
 
     @Override
     protected Animation onCreateShowAnimation() {
-        return getTranslateVerticalAnimation(1f, 0f, 450);
+        return AnimationHelper.asAnimation()
+                .withTranslation(TranslationConfig.FROM_BOTTOM)
+                .toShow();
     }
 
 
     @Override
     protected Animation onCreateDismissAnimation() {
-        return getTranslateVerticalAnimation(0f, 1f, 450);
+        return AnimationHelper.asAnimation()
+                .withTranslation(TranslationConfig.TO_BOTTOM)
+                .toDismiss();
     }
 
     @Override

@@ -16,9 +16,26 @@ public class ScaleConfig extends BaseAnimationConfig<ScaleConfig> {
     boolean changeFrom;
     boolean changeTo;
 
-    public ScaleConfig() {
+    @Override
+    void resetInternal() {
+        scaleFromX = 0;
+        scaleFromY = 0;
+        scaleToX = 1;
+        scaleToY = 1;
+        changeFrom = false;
+        changeTo = false;
         pivot(.5f, .5f);
         pivot2(.5f, .5f);
+    }
+
+    public ScaleConfig() {
+        super(false, false);
+        resetInternal();
+    }
+
+    ScaleConfig(boolean resetParent, boolean resetInternal) {
+        super(resetParent, resetInternal);
+        resetInternal();
     }
 
     public ScaleConfig scale(float from, float to) {
@@ -143,8 +160,8 @@ public class ScaleConfig extends BaseAnimationConfig<ScaleConfig> {
     protected Animation buildAnimation(boolean isRevert) {
         float[] values = values(isRevert);
         Animation animation = new ScaleAnimation(values[0], values[1], values[2], values[3],
-                Animation.RELATIVE_TO_PARENT, values[4],
-                Animation.RELATIVE_TO_PARENT, values[5]);
+                                                 Animation.RELATIVE_TO_SELF, values[4],
+                                                 Animation.RELATIVE_TO_SELF, values[5]);
         deploy(animation);
         return animation;
     }
@@ -179,28 +196,37 @@ public class ScaleConfig extends BaseAnimationConfig<ScaleConfig> {
     }
 
     //------------------default
-    public static final ScaleConfig LEFT_TO_RIGHT = new ScaleConfig() {
+    public static final ScaleConfig LEFT_TO_RIGHT = new ScaleConfig(true, true) {
         {
             from(Direction.LEFT);
             to(Direction.RIGHT);
         }
+
+
     };
-    public static final ScaleConfig RIGHT_TO_LEFT = new ScaleConfig() {
+    public static final ScaleConfig RIGHT_TO_LEFT = new ScaleConfig(true, true) {
         {
             from(Direction.RIGHT);
             to(Direction.LEFT);
         }
     };
-    public static final ScaleConfig TOP_TO_BOTTOM = new ScaleConfig() {
+    public static final ScaleConfig TOP_TO_BOTTOM = new ScaleConfig(true, true) {
         {
             from(Direction.TOP);
             to(Direction.BOTTOM);
         }
     };
-    public static final ScaleConfig BOTTOM_TO_TOP = new ScaleConfig() {
+    public static final ScaleConfig BOTTOM_TO_TOP = new ScaleConfig(true, true) {
         {
             from(Direction.BOTTOM);
             to(Direction.TOP);
+        }
+    };
+
+    public static final ScaleConfig CENTER = new ScaleConfig(true, true) {
+        {
+            from(Direction.CENTER);
+            to(Direction.CENTER);
         }
     };
 }

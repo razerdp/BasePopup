@@ -13,7 +13,8 @@ import java.util.HashMap;
 
 import razerdp.blur.PopupBlurOption;
 import razerdp.util.KeyboardUtils;
-import razerdp.util.SimpleAnimationUtils;
+import razerdp.util.animation.AnimationHelper;
+import razerdp.util.animation.ScaleConfig;
 
 /**
  * Created by 大灯泡 on 2018/8/23.
@@ -64,8 +65,12 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
     public static QuickPopupConfig generateDefault() {
         //https://github.com/razerdp/BasePopup/issues/152
         return new QuickPopupConfig()
-                .withShowAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(true))
-                .withDismissAnimation(SimpleAnimationUtils.getDefaultScaleAnimation(false))
+                .withShowAnimation(AnimationHelper.asAnimation()
+                                           .withScale(ScaleConfig.CENTER)
+                                           .toShow())
+                .withDismissAnimation(AnimationHelper.asAnimation()
+                                              .withScale(ScaleConfig.CENTER)
+                                              .toDismiss())
                 .fadeInAndOut(Build.VERSION.SDK_INT != Build.VERSION_CODES.M);
     }
 

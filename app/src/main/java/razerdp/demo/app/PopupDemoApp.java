@@ -3,14 +3,13 @@ package razerdp.demo.app;
 import android.content.Context;
 import android.text.TextUtils;
 
-import androidx.multidex.MultiDexApplication;
-
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import androidx.multidex.MultiDexApplication;
 import razerdp.basepopup.BasePopupFlag;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.util.log.PopupLog;

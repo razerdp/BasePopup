@@ -16,6 +16,21 @@ public class TranslationConfig extends BaseAnimationConfig<TranslationConfig> {
     float fromX, toX, fromY, toY;
     boolean isPercentageFromX, isPercentageToX, isPercentageFromY, isPercentageToY;
 
+    @Override
+    void resetInternal() {
+        fromX = toX = fromY = toY = 0;
+        isPercentageFromX = isPercentageToX = isPercentageFromY = isPercentageToY = false;
+    }
+
+    public TranslationConfig() {
+        super(false, false);
+        resetInternal();
+    }
+
+    TranslationConfig(boolean resetParent, boolean resetInternal) {
+        super(resetParent, resetInternal);
+        resetInternal();
+    }
 
     public TranslationConfig from(Direction... directions) {
         if (directions != null) {
@@ -160,13 +175,13 @@ public class TranslationConfig extends BaseAnimationConfig<TranslationConfig> {
     @Override
     protected Animation buildAnimation(boolean isRevert) {
         Animation animation = new TranslateAnimation(isPercentageFromX ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
-                fromX,
-                isPercentageToX ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
-                toX,
-                isPercentageFromY ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
-                fromY,
-                isPercentageToY ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
-                toY);
+                                                     fromX,
+                                                     isPercentageToX ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
+                                                     toX,
+                                                     isPercentageFromY ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
+                                                     fromY,
+                                                     isPercentageToY ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
+                                                     toY);
         deploy(animation);
         return animation;
     }
@@ -175,7 +190,8 @@ public class TranslationConfig extends BaseAnimationConfig<TranslationConfig> {
     protected Animator buildAnimator(boolean isRevert) {
         AnimatorSet animatorSet = new AnimatorSet();
 
-        Property<View, Float> TRANSLATION_X = (isPercentageFromX && isPercentageToY) ? new FloatPropertyCompat<View>(View.TRANSLATION_X.getName()) {
+        Property<View, Float> TRANSLATION_X = (isPercentageFromX && isPercentageToY) ? new FloatPropertyCompat<View>(
+                View.TRANSLATION_X.getName()) {
             @Override
             public void setValue(View object, float value) {
                 object.setTranslationX(object.getWidth() * value);
@@ -186,7 +202,8 @@ public class TranslationConfig extends BaseAnimationConfig<TranslationConfig> {
                 return object.getTranslationX();
             }
         } : View.TRANSLATION_X;
-        Property<View, Float> TRANSLATION_Y = (isPercentageFromY && isPercentageToY) ? new FloatPropertyCompat<View>(View.TRANSLATION_Y.getName()) {
+        Property<View, Float> TRANSLATION_Y = (isPercentageFromY && isPercentageToY) ? new FloatPropertyCompat<View>(
+                View.TRANSLATION_Y.getName()) {
             @Override
             public void setValue(View object, float value) {
                 object.setTranslationY(object.getHeight() * value);
@@ -205,43 +222,43 @@ public class TranslationConfig extends BaseAnimationConfig<TranslationConfig> {
     }
 
     //------------------default
-    public static final TranslationConfig FROM_LEFT = new TranslationConfig() {
+    public static final TranslationConfig FROM_LEFT = new TranslationConfig(true, true) {
         {
             from(Direction.LEFT);
         }
     };
-    public static final TranslationConfig FROM_TOP = new TranslationConfig() {
+    public static final TranslationConfig FROM_TOP = new TranslationConfig(true, true) {
         {
             from(Direction.TOP);
         }
     };
-    public static final TranslationConfig FROM_RIGHT = new TranslationConfig() {
+    public static final TranslationConfig FROM_RIGHT = new TranslationConfig(true, true) {
         {
             from(Direction.RIGHT);
         }
     };
-    public static final TranslationConfig FROM_BOTTOM = new TranslationConfig() {
+    public static final TranslationConfig FROM_BOTTOM = new TranslationConfig(true, true) {
         {
             from(Direction.BOTTOM);
         }
     };
 
-    public static final TranslationConfig TO_LEFT = new TranslationConfig() {
+    public static final TranslationConfig TO_LEFT = new TranslationConfig(true, true) {
         {
             to(Direction.LEFT);
         }
     };
-    public static final TranslationConfig TO_TOP = new TranslationConfig() {
+    public static final TranslationConfig TO_TOP = new TranslationConfig(true, true) {
         {
             to(Direction.TOP);
         }
     };
-    public static final TranslationConfig TO_RIGHT = new TranslationConfig() {
+    public static final TranslationConfig TO_RIGHT = new TranslationConfig(true, true) {
         {
             to(Direction.RIGHT);
         }
     };
-    public static final TranslationConfig TO_BOTTOM = new TranslationConfig() {
+    public static final TranslationConfig TO_BOTTOM = new TranslationConfig(true, true) {
         {
             to(Direction.BOTTOM);
         }
