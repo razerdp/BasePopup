@@ -11,6 +11,7 @@ import razerdp.demo.ui.issuestest.Issue230TestActivity;
 import razerdp.demo.ui.issuestest.Issue236TestActivity;
 import razerdp.demo.ui.issuestest.Issue238TestActivity;
 import razerdp.demo.ui.issuestest.Issue242TestActivity;
+import razerdp.demo.ui.issuestest.Issue277TestActivity;
 import razerdp.demo.utils.DescBuilder;
 import razerdp.demo.utils.StringUtil;
 
@@ -27,6 +28,7 @@ class IssueHelper {
         add_236(result);
         add_238(result);
         add_242(result);
+        add_277(result);
 
         sort(result);
 
@@ -41,8 +43,25 @@ class IssueHelper {
         });
     }
 
+    private static void add_277(List<IssueInfo> result) {
+        IssueInfo issue277 = new IssueInfo();
+        issue277.setActivityClass(Issue277TestActivity.class)
+                .setIssue("277")
+                .setFixed(false)
+                .setTitle("BasePopupHelper#GlobalLayoutListener#onGlobalLayout键盘检测问题")
+                .setDesc(DescBuilder.get()
+                        .append("系统版本：UnKnown")
+                        .append("库版本：unknown")
+                        .append("键盘可以正常弹出，但是在 BasePopupHelper#GlobalLayoutListener#onGlobalLayout 的上述判断位置存在问题\n设置 adjustResize 会导致 Activity content 高度减小，从而得出的键盘高度会为负值或者比content 高度的 1/4 小。因此\n" +
+                                "boolean isVisible = keyboardRect.height() > (screenHeight >> 2) && isOpen();\n" +
+                                "会出错，导致弹窗不会上移从而键盘遮挡弹窗的输入框。")
+                        .build());
+
+        result.add(issue277);
+    }
+
     private static void add_224(List<IssueInfo> result) {
-         IssueInfo issue224 = new IssueInfo();
+        IssueInfo issue224 = new IssueInfo();
         issue224.setActivityClass(Issue224TestActivity.class)
                 .setIssue("224")
                 .setFixed(true)

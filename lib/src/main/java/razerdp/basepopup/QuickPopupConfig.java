@@ -9,16 +9,16 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 import razerdp.blur.PopupBlurOption;
+import razerdp.util.KeyboardUtils;
 import razerdp.util.SimpleAnimationUtils;
 
 /**
  * Created by 大灯泡 on 2018/8/23.
  */
-public class QuickPopupConfig implements BasePopupFlag {
+public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
     protected int contentViewLayoutid;
 
     protected Animation mShowAnimation;
@@ -30,8 +30,9 @@ public class QuickPopupConfig implements BasePopupFlag {
     public int flag = IDLE;
 
     protected BasePopupWindow.OnDismissListener mDismissListener;
-
-    protected WeakReference<BasePopupWindow.OnBlurOptionInitListener> mOnBlurOptionInitListener;
+    protected KeyboardUtils.OnKeyboardChangeListener mOnKeyboardChangeListener;
+    protected BasePopupWindow.KeyEventListener mKeyEventListener;
+    protected BasePopupWindow.OnBlurOptionInitListener mOnBlurOptionInitListener;
     protected PopupBlurOption mPopupBlurOption;
     protected int gravity = Gravity.CENTER;
     protected int alignBackgroundGravity = Gravity.TOP;
@@ -49,6 +50,8 @@ public class QuickPopupConfig implements BasePopupFlag {
     protected View mLinkedView;
 
     HashMap<Integer, Pair<View.OnClickListener, Boolean>> mListenersHolderMap;
+
+    volatile boolean destroyed;
 
 
     public QuickPopupConfig() {
@@ -97,7 +100,7 @@ public class QuickPopupConfig implements BasePopupFlag {
 
     public QuickPopupConfig blurBackground(boolean blurBackground, BasePopupWindow.OnBlurOptionInitListener mInitListener) {
         setFlag(BLUR_BACKGROUND, blurBackground);
-        this.mOnBlurOptionInitListener = new WeakReference<>(mInitListener);
+        this.mOnBlurOptionInitListener = mInitListener;
         return this;
     }
 
@@ -240,6 +243,16 @@ public class QuickPopupConfig implements BasePopupFlag {
         setFlag(OUT_SIDE_DISMISS, outsideDismiss);
         return this;
     }
+
+    public QuickPopupConfig keyEventListener(BasePopupWindow.KeyEventListener keyEventListener) {
+        this.mKeyEventListener = keyEventListener;
+        return this;
+    }
+
+    public QuickPopupConfig keyBoardChangeListener(KeyboardUtils.OnKeyboardChangeListener listener) {
+        this.mOnKeyboardChangeListener = listener;
+        return this;
+    }
     //-----------------------------------------getter-----------------------------------------
 
     public Animation getShowAnimation() {
@@ -276,8 +289,7 @@ public class QuickPopupConfig implements BasePopupFlag {
     }
 
     public BasePopupWindow.OnBlurOptionInitListener getOnBlurOptionInitListener() {
-        if (mOnBlurOptionInitListener == null) return null;
-        return mOnBlurOptionInitListener.get();
+        return mOnBlurOptionInitListener;
     }
 
     public int getAlignBackgroundGravity() {
@@ -326,5 +338,39 @@ public class QuickPopupConfig implements BasePopupFlag {
         } else {
             this.flag |= flag;
         }
+    }
+
+    public KeyboardUtils.OnKeyboardChangeListener getOnKeyboardChangeListener() {
+        return mOnKeyboardChangeListener;
+    }
+
+    public BasePopupWindow.KeyEventListener getKeyEventListener() {
+        return mKeyEventListener;
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
+    }
+
+    @Override
+    public void clear(boolean destroy) {
+        this.destroyed = true;
+        if (mPopupBlurOption != null) {
+            mPopupBlurOption.clear();
+        }
+        mShowAnimation = null;
+        mDismissAnimation = null;
+        mShowAnimator = null;
+        mDismissAnimator = null;
+        mDismissListener = null;
+        mOnBlurOptionInitListener = null;
+        background = null;
+        mLinkedView = null;
+        if (mListenersHolderMap != null) {
+            mListenersHolderMap.clear();
+        }
+        mKeyEventListener = null;
+        mOnKeyboardChangeListener = null;
+        mListenersHolderMap = null;
     }
 }

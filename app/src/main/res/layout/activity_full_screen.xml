@@ -3,17 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
     android:orientation="vertical">
 
     <razerdp.demo.widget.TitleBarView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title_text="历史更新" />
+        app:hide_status_bar_holder="true"
+        app:title_text="全屏Activity" />
 
-    <FrameLayout
-        android:id="@+id/web_view_container"
+    <TextView
+        android:id="@+id/tv_test"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="click me"
+        android:textSize="18sp" />
 
 </LinearLayout>

@@ -17,9 +17,10 @@ public interface BasePopupFlag {
     int DISPLAY_SHIFT = 3;
     int OVERLAY_STATUS_BAR = 0x1 << DISPLAY_SHIFT;//允许覆盖状态栏
     int CLIP_CHILDREN = 0x2 << DISPLAY_SHIFT;//裁剪子控件
+    int OVERLAY_NAVIGATION_BAR = 0x4 << DISPLAY_SHIFT;//允许覆盖导航栏
 
     //popup控制 6 bit
-    int CONTROL_SHIFT = 6;
+    int CONTROL_SHIFT = 7;
     int FADE_ENABLE = 0X1 << CONTROL_SHIFT;// 淡入淡出
     int AUTO_LOCATED = 0x2 << CONTROL_SHIFT;//自动定位
     int WITH_ANCHOR = 0x4 << CONTROL_SHIFT;//关联Anchor
@@ -28,21 +29,25 @@ public interface BasePopupFlag {
     int FITSIZE = 0x20 << CONTROL_SHIFT;//允许popup重设大小
 
     //quick popup config
-    int QUICK_POPUP_CONFIG_SHIFT = 13;
+    int QUICK_POPUP_CONFIG_SHIFT = 14;
     int BLUR_BACKGROUND = 0x1 << QUICK_POPUP_CONFIG_SHIFT;//blur background
 
     //键盘
-    int KEYBOARD_CONTROL_SHIFT = 15;
+    int KEYBOARD_CONTROL_SHIFT = 16;
     int KEYBOARD_ALIGN_TO_VIEW = 0x1 << KEYBOARD_CONTROL_SHIFT;
     int KEYBOARD_ALIGN_TO_ROOT = 0x2 << KEYBOARD_CONTROL_SHIFT;
     int KEYBOARD_IGNORE_OVER_KEYBOARD = 0x4 << KEYBOARD_CONTROL_SHIFT;
     int KEYBOARD_ANIMATE_ALIGN = 0x8 << KEYBOARD_CONTROL_SHIFT;
     int KEYBOARD_FORCE_ADJUST = 0x10 << KEYBOARD_CONTROL_SHIFT;
 
-    //内部使用 高8位
-    int INNER_USAGE_SHIFT = 24;
-    int CUSTOM_ON_UPDATE = 0x4 << INNER_USAGE_SHIFT;
-    int CUSTOM_ON_ANIMATE_DISMISS = 0x8 << INNER_USAGE_SHIFT;
+
+    //其他用
+    int OTHER_SHIFT = 22;
+    int CUSTOM_ON_UPDATE = 0x1 << OTHER_SHIFT;
+    int CUSTOM_ON_ANIMATE_DISMISS = 0x2 << OTHER_SHIFT;
+    int SYNC_MASK_ANIMATION_DURATION = 0x4 << OTHER_SHIFT;//同步蒙层和用户动画的时间
+    int AS_WIDTH_AS_ANCHOR = 0x8 << OTHER_SHIFT;//宽度与anchor一致
+    int AS_HEIGHT_AS_ANCHOR = 0x10 << OTHER_SHIFT;//高度与anchor一致
 
 
     int IDLE = OUT_SIDE_DISMISS
@@ -52,6 +57,7 @@ public interface BasePopupFlag {
             | FADE_ENABLE
             | KEYBOARD_ALIGN_TO_ROOT
             | KEYBOARD_IGNORE_OVER_KEYBOARD
-            | KEYBOARD_ANIMATE_ALIGN;
+            | KEYBOARD_ANIMATE_ALIGN
+            | SYNC_MASK_ANIMATION_DURATION;
 
 }

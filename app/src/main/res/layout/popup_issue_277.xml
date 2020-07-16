@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:focusedByDefault="true">
+
+
+    <TextView
+        android:id="@+id/c"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="16dp"
+        android:text="取消"
+        android:textColor="#ff4381ff"
+        android:textSize="17sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/b"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="20dp"
+        android:text="完成"
+        android:textColor="#ff4381ff"
+        android:textSize="17sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/a"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical|left"
+        android:text="==============："
+        android:textColor="#ff252525"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/c" />
+
+    <EditText
+        android:id="@+id/d"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="14dp"
+        android:background="@null"
+        android:hint="0.00"
+        android:inputType="numberDecimal"
+        android:textColor="#ff252525"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/a"
+        app:layout_constraintLeft_toRightOf="@+id/a"
+        app:layout_constraintRight_toLeftOf="@+id/e"
+        app:layout_constraintTop_toTopOf="@+id/a"
+        tools:text="" />
+
+    <ImageView
+        android:id="@+id/e"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginRight="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/a"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/a" />
+    <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+    <ImageView
+        android:id="@+id/feedbackImg"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginBottom="25dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/feedbackTv"
+        app:layout_constraintTop_toBottomOf="@+id/a" />
+
+    <TextView
+        android:id="@+id/feedbackTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="意见反馈"
+        android:textColor="#ff4381ff"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/feedbackImg"
+        app:layout_constraintLeft_toRightOf="@+id/feedbackImg"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/feedbackImg" />
+
+    <View
+        android:id="@+id/f"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/feedbackImg"
+        app:layout_constraintLeft_toLeftOf="@+id/feedbackImg"
+        app:layout_constraintRight_toRightOf="@+id/feedbackTv"
+        app:layout_constraintTop_toTopOf="@+id/feedbackImg" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
