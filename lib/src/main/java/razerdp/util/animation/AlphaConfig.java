@@ -65,7 +65,7 @@ public class AlphaConfig extends BaseAnimationConfig<AlphaConfig> {
     @Override
     protected Animation buildAnimation(boolean isRevert) {
         AlphaAnimation animation = new AlphaAnimation((isRevert && !changed) ? alphaTo : alphaFrom,
-                                                      (isRevert && !changed) ? alphaFrom : alphaTo);
+                (isRevert && !changed) ? alphaFrom : alphaTo);
         deploy(animation);
         return animation;
     }
@@ -73,16 +73,18 @@ public class AlphaConfig extends BaseAnimationConfig<AlphaConfig> {
     @Override
     protected Animator buildAnimator(boolean isRevert) {
         Animator animator = ObjectAnimator.ofFloat(null,
-                                                   View.ALPHA,
-                                                   (isRevert && !changed) ? alphaTo : alphaFrom,
-                                                   (isRevert && !changed) ? alphaFrom : alphaTo);
+                View.ALPHA,
+                (isRevert && !changed) ? alphaTo : alphaFrom,
+                (isRevert && !changed) ? alphaFrom : alphaTo);
         deploy(animator);
         return animator;
     }
 
     //------------------default
     public static final AlphaConfig IN = new AlphaConfig(true, true) {
-        {
+        @Override
+        void resetInternal() {
+            super.resetInternal();
             from(0f);
             to(1f);
         }
@@ -90,7 +92,9 @@ public class AlphaConfig extends BaseAnimationConfig<AlphaConfig> {
     };
 
     public static final AlphaConfig OUT = new AlphaConfig(true, true) {
-        {
+        @Override
+        void resetInternal() {
+            super.resetInternal();
             from(1f);
             to(0f);
         }

@@ -160,8 +160,8 @@ public class ScaleConfig extends BaseAnimationConfig<ScaleConfig> {
     protected Animation buildAnimation(boolean isRevert) {
         float[] values = values(isRevert);
         Animation animation = new ScaleAnimation(values[0], values[1], values[2], values[3],
-                                                 Animation.RELATIVE_TO_SELF, values[4],
-                                                 Animation.RELATIVE_TO_SELF, values[5]);
+                Animation.RELATIVE_TO_SELF, values[4],
+                Animation.RELATIVE_TO_SELF, values[5]);
         deploy(animation);
         return animation;
     }
@@ -197,34 +197,42 @@ public class ScaleConfig extends BaseAnimationConfig<ScaleConfig> {
 
     //------------------default
     public static final ScaleConfig LEFT_TO_RIGHT = new ScaleConfig(true, true) {
-        {
+        @Override
+        void resetInternal() {
+            super.resetInternal();
             from(Direction.LEFT);
             to(Direction.RIGHT);
         }
-
-
     };
     public static final ScaleConfig RIGHT_TO_LEFT = new ScaleConfig(true, true) {
-        {
+        @Override
+        void resetInternal() {
+            super.resetInternal();
             from(Direction.RIGHT);
             to(Direction.LEFT);
         }
     };
     public static final ScaleConfig TOP_TO_BOTTOM = new ScaleConfig(true, true) {
-        {
+        @Override
+        void resetInternal() {
+            super.resetInternal();
             from(Direction.TOP);
             to(Direction.BOTTOM);
         }
     };
     public static final ScaleConfig BOTTOM_TO_TOP = new ScaleConfig(true, true) {
-        {
+        @Override
+        void resetInternal() {
+            super.resetInternal();
             from(Direction.BOTTOM);
             to(Direction.TOP);
         }
     };
 
     public static final ScaleConfig CENTER = new ScaleConfig(true, true) {
-        {
+        @Override
+        void resetInternal() {
+            super.resetInternal();
             from(Direction.CENTER);
             to(Direction.CENTER);
         }

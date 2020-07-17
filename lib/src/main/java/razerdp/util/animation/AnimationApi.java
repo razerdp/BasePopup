@@ -4,6 +4,8 @@ import android.util.SparseArray;
 
 import androidx.annotation.NonNull;
 
+import razerdp.util.log.PopupLog;
+
 @SuppressWarnings({"unchecked", "rawtypes"})
 public abstract class AnimationApi<T> {
     SparseArray<BaseAnimationConfig> configs;

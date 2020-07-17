@@ -1,17 +1,21 @@
 package razerdp.demo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
+import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.QuickPopupBuilder;
 import razerdp.basepopup.QuickPopupConfig;
 import razerdp.basepopup.R;
@@ -32,6 +36,7 @@ import razerdp.demo.widget.DPRecyclerView;
 import razerdp.demo.widget.DPTextView;
 import razerdp.util.animation.AnimationHelper;
 import razerdp.util.animation.ScaleConfig;
+import razerdp.util.animation.TranslationConfig;
 
 
 public class DemoActivity extends BaseActivity {
@@ -94,7 +99,27 @@ public class DemoActivity extends BaseActivity {
     }
 
     void onHeaderClick() {
-        showWjPopup();
+        new Demo(this).showPopupWindow();
+    }
+
+    class Demo extends BasePopupWindow {
+
+        public Demo(Context context) {
+            super(context);
+        }
+
+        @Override
+        public View onCreateContentView() {
+            return createPopupById(R.layout.popup_demo);
+        }
+
+        @Override
+        protected Animation onCreateShowAnimation() {
+            return AnimationHelper.asAnimation()
+                    .withTranslation(TranslationConfig.FROM_BOTTOM)
+                    .withScale(ScaleConfig.TOP_TO_BOTTOM)
+                    .toShow();
+        }
     }
 
 
