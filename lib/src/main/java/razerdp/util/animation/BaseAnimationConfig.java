@@ -7,6 +7,7 @@ import android.view.animation.Animation;
 import android.view.animation.Interpolator;
 
 import androidx.annotation.FloatRange;
+
 import razerdp.util.log.PopupLog;
 
 public abstract class BaseAnimationConfig<T> {
@@ -145,7 +146,7 @@ public abstract class BaseAnimationConfig<T> {
     protected abstract Animator buildAnimator(boolean isRevert);
 
     protected int key() {
-        return this.getClass().getSimpleName().hashCode();
+        return String.valueOf(this.getClass()).hashCode();
     }
 
 

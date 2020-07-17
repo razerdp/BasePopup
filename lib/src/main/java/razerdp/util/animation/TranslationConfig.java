@@ -175,13 +175,13 @@ public class TranslationConfig extends BaseAnimationConfig<TranslationConfig> {
     @Override
     protected Animation buildAnimation(boolean isRevert) {
         Animation animation = new TranslateAnimation(isPercentageFromX ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
-                                                     fromX,
-                                                     isPercentageToX ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
-                                                     toX,
-                                                     isPercentageFromY ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
-                                                     fromY,
-                                                     isPercentageToY ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
-                                                     toY);
+                fromX,
+                isPercentageToX ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
+                toX,
+                isPercentageFromY ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
+                fromY,
+                isPercentageToY ? Animation.RELATIVE_TO_SELF : Animation.ABSOLUTE,
+                toY);
         deploy(animation);
         return animation;
     }
@@ -223,43 +223,59 @@ public class TranslationConfig extends BaseAnimationConfig<TranslationConfig> {
 
     //------------------default
     public static final TranslationConfig FROM_LEFT = new TranslationConfig(true, true) {
-        {
+        @Override
+        void resetInternal() {
+            super.resetInternal();
             from(Direction.LEFT);
         }
     };
     public static final TranslationConfig FROM_TOP = new TranslationConfig(true, true) {
-        {
+        @Override
+        void resetInternal() {
+            super.resetInternal();
             from(Direction.TOP);
         }
     };
     public static final TranslationConfig FROM_RIGHT = new TranslationConfig(true, true) {
-        {
+        @Override
+        void resetInternal() {
+            super.resetInternal();
             from(Direction.RIGHT);
         }
     };
     public static final TranslationConfig FROM_BOTTOM = new TranslationConfig(true, true) {
-        {
+        @Override
+        void resetInternal() {
+            super.resetInternal();
             from(Direction.BOTTOM);
         }
     };
 
     public static final TranslationConfig TO_LEFT = new TranslationConfig(true, true) {
-        {
+        @Override
+        void resetInternal() {
+            super.resetInternal();
             to(Direction.LEFT);
         }
     };
     public static final TranslationConfig TO_TOP = new TranslationConfig(true, true) {
-        {
+        @Override
+        void resetInternal() {
+            super.resetInternal();
             to(Direction.TOP);
         }
     };
     public static final TranslationConfig TO_RIGHT = new TranslationConfig(true, true) {
-        {
+        @Override
+        void resetInternal() {
+            super.resetInternal();
             to(Direction.RIGHT);
         }
     };
     public static final TranslationConfig TO_BOTTOM = new TranslationConfig(true, true) {
-        {
+        @Override
+        void resetInternal() {
+            super.resetInternal();
             to(Direction.BOTTOM);
         }
     };

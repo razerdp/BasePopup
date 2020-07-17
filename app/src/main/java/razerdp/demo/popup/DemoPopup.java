@@ -7,12 +7,14 @@ import android.view.animation.Animation;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+
 import butterknife.BindView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.util.animation.AnimationHelper;
 import razerdp.util.animation.ScaleConfig;
+import razerdp.util.animation.TranslationConfig;
 
 /**
  * Created by 大灯泡 on 2019/9/20.
@@ -41,7 +43,7 @@ public class DemoPopup extends BasePopupWindow {
     @Override
     protected Animation onCreateShowAnimation() {
         return AnimationHelper.asAnimation()
-                .withScale(ScaleConfig.CENTER)
+                .withTranslation(TranslationConfig.FROM_BOTTOM)
                 .toShow();
     }
 
