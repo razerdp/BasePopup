@@ -124,21 +124,21 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 * **【Release】2.2.4**(2020/07/19)
   * 在2.2.4版本中，我们添加了非常棒的 `AnimationHelper`，在它的帮助下，创建BasePopup动画将会变得十分简单易懂，同时我们也增加了很多很棒的功能，欢迎更新到2.2.4版本~
   * **新增功能/方法：**
-    * 添加弹窗线程检查：非主线程下我们将会抛出异常 `CalledFromWrongThreadException` 异常
+    * 添加弹窗线程检查：非主线程下我们将会抛出异常 `CalledFromWrongThreadException`
     * 开放 `OnKeyboardChangeListener`：现在您可以监听键盘显示、关闭事件，同时该回调会返回键盘的大小
     * 增加 `KeyEventListener`：现在允许您在外部添加事件监听，感谢issue：[#296](https://github.com/razerdp/BasePopup/issues/296)
     * 增加 `setOverlayNavigationBar`：通过该方法，您可以让您的BasePopup覆盖到导航栏，默认情况下不允许覆盖，如果您确实有需要，可以通过该api配置覆盖
       * 相关讨论：[《关于MIUI小白条及类似的“全面屏手势提示线”覆盖问题描述》](https://github.com/razerdp/BasePopup/issues/307)
     * 增加 `setWidthAsAnchorView`：您可以调用该Api决定BasePopup的宽度是否设置为AnchorView的宽度
     * 增加 `setHeightAsAnchorView`：您可以调用该Api决定BasePopup的高度是否设置为AnchorView的高度
-    * 增加RTL布局支持：该需求早在几个月前就有群友在群里提出了，一直没去弄，直到最近才有空去写，得益于BasePopup根据Gravity来左方向判断，我们修改了极少的代码完成了RTL适配
+    * 增加RTL布局支持：该需求早在几个月前就有群友在群里提出了，一直没去弄，直到最近才有空去写，得益于BasePopup根据Gravity来做方向判断，我们修改了极少的代码完成了RTL适配
       * 如果使用RTL，请务必设置 `setLayoutDirection`方向，告诉BasePopup宿主布局方向
       * RTL仅对`showPopupWindow(View anchorView)`和`showPopupWindow(int x,int y)`有效
       * **请务必注意，BasePopup遵循官方做法，当您需要RTL布局的时候，请使用START代替LEFT，使用END代替RIGHT**
-    * 增加 `syncMaskAnimationDuration`：您可以设置蒙层动画的事件是否同步您的动画时间（取最长时间），默认同步
+    * 增加 `syncMaskAnimationDuration`：您可以设置蒙层动画的时间是否同步您的动画时间（取最长时间），默认同步
     * 增加AnimationHelper：我们希望能减少动画的代码量，同时让动画的创建更加的易懂，因此我们在本版本中正式推出AnimationHelper，相信你一定会喜欢他的
       * 关于AnimationHelper的资料，受篇幅限制，请查阅文档：[【进阶指引-动画-AnimationHelper】](https://www.yuque.com/razerdp/basepopup/zcgtm5)
-      * AnimationHelper在2.2.4版本新推出，可能会存在我没测出来的Bug，不过他只是创建动画的辅助类，因此不影响主体流程，所以如果您发现他不好用或者不满足您的功能，您可以更换为原生的动画创建，同时欢迎提交issue
+      * AnimationHelper在2.2.4版本新推出，可能会存在我们没测出来的Bug，不过它只是创建动画的辅助类，因此不影响主体流程，所以如果您发现它不好用或者不满足您的功能，您可以更换为原生的动画创建，同时欢迎提交issue
   * **优化**
     * 优化BasePopupHelper代码
     * 优化蒙层动画：

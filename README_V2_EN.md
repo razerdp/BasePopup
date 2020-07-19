@@ -120,47 +120,46 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 **Candy dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **【Release】2.2.3**(2020/05/07)
-  * We have fixed the 2.2.2 series of problems and added some new features.
+* **【Release】2.2.4**(2020/07/19)
+  * In version 2.2.4, we added the awesome `AnimationHelper`, which helps with the Creating BasePopup animations will be very easy to understand, and we've added a lot of great features, too. Welcome to update to version 2.2.4~!
   * **New features/methods added:**
-    * Added `setPopupGravityMode()`: You can set BasePopup alignment individually instead of always bringing the gravity params.
-    * Added `OnPopupWindowShowListener` interface: Notify this interface after BasePopup is displayed, when this method is called back, it means the popup window has been completed and ui has been displayed on the screen.
-    * Added `bindLifecycleOwner()` method: You can now freely bind your LifecycleOwner.
-    * Added `onPreShow()` method: call this method before BasePopup popup, if it returns **false**, it won't show.
-    * Added `onShowing()` method: Same as `OnPopupWindowShowListener`, but this is the protect method in BasePopup.
-    * Added `onPopupLayout()` method: If the popup is associated with an anchor View, the method will be called when BasePopup is in layout(). And return the position of BasePopup on the screen and the position of the anchor View on the screen respectively.
-    * Added `computeGravity()`: Equipped with `onPopupLayout()` callback to calculate the BasePopup center point's orientation at the anchor View.
-  * **Method of abandonment and replacement:**
-    * `BasePopupWindow#dismissWithOutAnimate()` is Deprecated，please use **dismiss(false)** instead.
-    * `BasePopupWindow#setPopupWindowFullScreen()` is Deprecated，please use **setOverlayStatusbar()** instead.
-    * `QuickPopupConfig#dismissOnOutSideTouch()` is Deprecated，please use **outSideDismiss()** instead.
-    * `QuickPopupConfig#allowInterceptTouchEvent()` is Deprecated，please use **outSideTouchable()** instead.
-  * **Optimisation:**
-    * Optimize the query of the DecorView, the original logic will cache the query of the DecorView, but the display error may be caused by the destruction or change of the DecorView host.
-    * The lowest supported version is down to Api 16.
-    * Abandon the reflective WindowManager approach, take the ContextWrapper proxy, no longer Worried about experiencing a black ash list block ~ thanks [@xchengDroid](https://github.com/xchengDroid).
-  * **Bug fixes:**
-    * Fix offsets in event delivery when overriding the status bar
-    * Fix `isShowing()` with NullPointerException.[#267](https://github.com/razerdp/BasePopup/issues/267)
-    * Fix position error when associated with Anchor in case of `setOverlayStatusbar(false)`.
-    * Fix memory leaks that **might** exist due to some references not being empty (no leaks were actually detected).
-    * Fix the problem that the input method of Activity popup is displayed under BasePopup when BasePopup is showing.
-    * Fix the problem of error in judging full-screen Activity.
-    * Fix the missing QuickPopupConfig configuration issue.
-    * Fix the problem of invoking dismiss() directly when there is no popup window, and then call showPopupWindow() for the first time when it is invalid.
-    * fixed issue:[#224](https://github.com/razerdp/BasePopup/issues/224)
-
-* **【Release】2.2.2.2**(2020/03/01)
-  * Fix a serious problem that may cause a crash
-    * Reappearance: Finishing the activity when the dismiss animation is not completed will cause the null pointer to crash
-    * This issue cannot be **try & catch** in previous versions
-  * Fixed an issue that did not force dismiss when finished
-  * Fixed some flags wrong
-  * Fix the problem that the position of outsideTouch deviates in non-full screen
-  * **I feel very sorry, I did not find such errors for my own reasons. After receiving the feedback, I immediately checked all similar places and fixed them one by one. This time the reconfiguration cycle is longer, involving more plates, and the test cycle It is also long, but there are still omissions due to limited personal energy. I hope that I can get your support and try to report any problems during the Candy test period to reduce such problems.**
-
-* **【Release】2.2.2.1**(2020/02/26)
-  * Fix the problem that the input method can not pop up again automatically.
+    * Add popup thread check: in a non-main thread we will throw an exception `CalledFromWrongThreadException`.
+    * Add `OnKeyboardChangeListener`: Now you can listen to the keyboard display, close events, and the callback will return the size of the keyboard.
+    * Added `KeyEventListener`: now allows you to add external event listener. issue:[#296](https://github.com/razerdp/BasePopup/issues/296)
+    * Add ``setOverlayNavigationBar``: Through this method, you can make your BasePopup overlay to the navigation bar, the default is not allowed to overlay, if you really need, you can configure the overlay through this api.
+      * Related discussion:[《关于MIUI小白条及类似的“全面屏手势提示线”覆盖问题描述》](https://github.com/razerdp/BasePopup/issues/307)
+    * Add `setWidthAsAnchorView`: You can call this Api to determine whether the width of BasePopup is set to the width of AnchorView or not.
+    * Add `setHeightAsAnchorView`: You can call this Api to determine whether the height of BasePopup is set to the height of AnchorView or not.
+    * Add RTL layout support:
+      * If using RTL, be sure to set `setLayoutDirection` to tell the BasePopup host the layout direction.
+      * RTL仅对`showPopupWindow(View anchorView)`和`showPopupWindow(int x,int y)`有效
+      * **Be sure to note that BasePopup follows the official practice of using START instead of LEFT and END instead of RIGHT when you need an RTL layout**.
+    * Add `syncMaskAnimationDuration`: You can set whether the time of the mask animation is synchronized with your animation (take the longest time) or not, the default is synchronized.
+    * Add AnimationHelper: We want to reduce the amount of code for animations and make it easier to create them, so we've officially released AnimationHelper in this version, and we're sure you'll love it!
+      * For information on AnimationHelper, subject to space limitations, please consult the documentation:[【进阶指引-动画-AnimationHelper】](https://www.yuque.com/razerdp/basepopup/zcgtm5)
+  * **Optimisation**
+    * Optimized BasePopupHelper code
+    * Optimize mask animation：
+      * Now the fade-in and fade-out time of the mask will be synchronized with the maximum time you set for the animation. We expect the mask animation to complete at the same time as your show/exit animation, not earlier or later!
+      * You can configure whether or not to synchronize via `syncMaskAnimationDuration`.
+  * **Delete class/method**
+    * **Please note that this time we didn't mark it as @Deprecated and just removed the code, so be sure to change it if you use these methods**
+    * **Deleted class:** SimpleAnimationUtils.java，We recommend that you use [AnimationHelper](https://www.yuque.com/razerdp/basepopup/zcgtm5) instead.
+    * **Deleted Method:** BasePopupWindow#getTranslateVerticalAnimation
+    * **Deleted Method:** BasePopupWindow#getScaleAnimation
+    * **Deleted Method:** BasePopupWindow#getDefaultScaleAnimation
+    * **Deleted Method:** BasePopupWindow#getDefaultAlphaAnimation
+    * **Deleted Method:** BasePopupWindow#getDefaultSlideFromBottomAnimationSet
+  * **Bug fixes**
+    * Fix the problem that focusable is not restored in fullscreen Activity.
+    * Fix the problem of forced modification of SystemUiVisibility in full-screen Activity.
+    * Fix the problem that backpressenable settings in Quickpopupbuilder don't work.[#296](https://github.com/razerdp/BasePopup/issues/296)
+    * Fix the issue where EditText is blocked by keyboard in non-BasePopup.[#297](https://github.com/razerdp/BasePopup/issues/297)
+    * Fix gravity overlays in lazypopups[#310](https://github.com/razerdp/BasePopup/issues/310)
+    * Fix the problem of unsuccessful position acquisition due to incomplete measurement process when associating anchor View under onCreate().[#313](https://github.com/razerdp/BasePopup/issues/313)
+    * Fix measurement error with max/min width/height setting
+    * Fix a problem with keyboard monitoring that may occur with adjustResize softInput mode.[#315](https://github.com/razerdp/BasePopup/issues/315)
+    * Fix the problem of setting softInputMode duplicate.[#314](https://github.com/razerdp/BasePopup/issues/314)
 
 <br>
 
