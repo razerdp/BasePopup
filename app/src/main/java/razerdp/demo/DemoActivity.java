@@ -1,21 +1,17 @@
 package razerdp.demo;
 
-import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
-import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.QuickPopupBuilder;
 import razerdp.basepopup.QuickPopupConfig;
 import razerdp.basepopup.R;
@@ -36,7 +32,6 @@ import razerdp.demo.widget.DPRecyclerView;
 import razerdp.demo.widget.DPTextView;
 import razerdp.util.animation.AnimationHelper;
 import razerdp.util.animation.ScaleConfig;
-import razerdp.util.animation.TranslationConfig;
 
 
 public class DemoActivity extends BaseActivity {
@@ -65,7 +60,8 @@ public class DemoActivity extends BaseActivity {
         rvContent.addHeaderView(header);
         mAdapter = new SimpleRecyclerViewAdapter<>(this, generateItem());
         mAdapter.setHolder(InnerViewHolder.class);
-        mAdapter.setOnItemClickListener((v, position, data) -> ActivityLauncher.start(self(), data.toClass));
+        mAdapter.setOnItemClickListener((v, position, data) -> ActivityLauncher.start(self(),
+                                                                                      data.toClass));
         rvContent.setAdapter(mAdapter);
 
 
@@ -75,10 +71,19 @@ public class DemoActivity extends BaseActivity {
     private List<DemoMainItem> generateItem() {
         List<DemoMainItem> result = new ArrayList<>();
         result.add(new DemoMainItem(GuideActivity.class, "简介", GuideActivity.DESC, null));
-        result.add(new DemoMainItem(CommonUsageActivity.class, "快速入门", CommonUsageActivity.DESC, "入门推荐"));
+        result.add(new DemoMainItem(CommonUsageActivity.class,
+                                    "快速入门",
+                                    CommonUsageActivity.DESC,
+                                    "入门推荐"));
         result.add(new DemoMainItem(ApiListActivity.class, "Api列表", ApiListActivity.DESC, "Api"));
-        result.add(new DemoMainItem(IssueHomeActivity.class, "Issue测试Demo", IssueHomeActivity.DESC, "issue"));
-        result.add(new DemoMainItem(UpdateLogActivity.class, "历史更新", UpdateLogActivity.DESC, "ChangeLog"));
+        result.add(new DemoMainItem(IssueHomeActivity.class,
+                                    "Issue测试Demo",
+                                    IssueHomeActivity.DESC,
+                                    "issue"));
+        result.add(new DemoMainItem(UpdateLogActivity.class,
+                                    "历史更新",
+                                    UpdateLogActivity.DESC,
+                                    "ChangeLog"));
         return result;
     }
 
@@ -86,40 +91,20 @@ public class DemoActivity extends BaseActivity {
         QuickPopupBuilder.with(this)
                 .contentView(R.layout.popup_wj)
                 .config(new QuickPopupConfig()
-                        .withShowAnimation(AnimationHelper.asAnimation()
-                                .withScale(ScaleConfig.CENTER)
-                                .toShow())
-                        .withDismissAnimation(AnimationHelper.asAnimation()
-                                .withScale(ScaleConfig.CENTER)
-                                .toDismiss())
-                        .withClick(R.id.tv_go, null, true)
-                        .blurBackground(true)
-                        .outSideDismiss(false))
+                                .withShowAnimation(AnimationHelper.asAnimation()
+                                                           .withScale(ScaleConfig.CENTER)
+                                                           .toShow())
+                                .withDismissAnimation(AnimationHelper.asAnimation()
+                                                              .withScale(ScaleConfig.CENTER)
+                                                              .toDismiss())
+                                .withClick(R.id.tv_go, null, true)
+                                .blurBackground(true)
+                                .outSideDismiss(false))
                 .show();
     }
 
     void onHeaderClick() {
-        new Demo(this).showPopupWindow();
-    }
-
-    class Demo extends BasePopupWindow {
-
-        public Demo(Context context) {
-            super(context);
-        }
-
-        @Override
-        public View onCreateContentView() {
-            return createPopupById(R.layout.popup_demo);
-        }
-
-        @Override
-        protected Animation onCreateShowAnimation() {
-            return AnimationHelper.asAnimation()
-                    .withTranslation(TranslationConfig.FROM_BOTTOM)
-                    .withScale(ScaleConfig.TOP_TO_BOTTOM)
-                    .toShow();
-        }
+        showWjPopup();
     }
 
 
