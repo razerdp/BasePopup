@@ -51,9 +51,7 @@
 
 ### 有奖调查问卷：
 
-    <a href ="https://wj.qq.com/s2/5468287/c24f">
-        <img src="./img/qrcode.png"/>
-    </a>
+<a href ="https://wj.qq.com/s2/5468287/c24f"><img src="./img/qrcode.png"/></a>
 
 ### 导航
  
