@@ -119,45 +119,10 @@
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Candy】2.2.4**
-  * **【2.2.4.0512】**
-    * 修复全屏activity下focusable没有恢复的问题
-  * **【2.2.4.0517】**
-    * 修复全屏Activity下SystemUiVisibility被强制修改的问题
-    * 添加线程检查
-  * **【2.2.4.0618】**
-    * 修复Quickpopupbuilder中backpressenable设置失效的问题([#296](https://github.com/razerdp/BasePopup/issues/296))
-  * **【未发布版本】**（2020/06/19）
-    * 修复非BasePopup内EditText弹出键盘时挡住EditText的问题([#297](https://github.com/razerdp/BasePopup/issues/297))
-  * **【2.2.4.0702】** （2020/07/02）
-    * 优化BasePopupHelper代码
-    * 增加`OnKeyboardChangeListener`，该监听允许用户监听键盘显示、关闭事件，同时回调键盘大小
-    * 增加`KeyEventListener`，允许用户外部监听并处理传递到BasePopup的KeyEvent [#296](https://github.com/razerdp/BasePopup/issues/296)
-    * 动画优化（进度70%）
-    * 增加BasePopup覆盖导航栏的功能：`setOverlayNavigationBar`，相关讨论：[关于MIUI小白条及类似的“全面屏手势提示线”覆盖问题描述](https://github.com/razerdp/BasePopup/issues/307)
-  * **【2.2.4.0703】** （2020/07/03）
-    * 修复lazypopup中gravity覆盖的问题 [#310](https://github.com/razerdp/BasePopup/issues/310)
-    * 增加`setWidthAsAnchorView`：该方法将会设置Popup的宽度为AnchorView的宽度
-    * 增加`setHeightAsAnchorView`：该方法将会设置Popup的高度为AnchorView的高度
-  * **【2.2.4.0705】** （2020/07/05）
-    * 修复onCreate()下关联锚点View时因未完成测量过程而导致的位置获取不成功问题。[#313](https://github.com/razerdp/BasePopup/issues/313)
-  * **【2.2.4.0711】** （2020/07/11）
-    * RTL支持：
-        * 增加`setLayoutDirection()`方法，允许您设置依附的窗口的layoutDirection，以适应RTL布局
-        * **请务必注意，BasePopup遵循官方做法，当您需要RTL布局的时候，请使用START代替LEFT，使用END代替RIGHT**
-  * **【2.2.4.0713】**（2020/07/13）
-    * 修复设置最大/最小宽高下测量错误的问题
-  * **【2.2.4.0717】**（2020/07/16提交，17号发布）
-    * 动画重构完成，添加动画创建类 `AnimationHelper`
-    * **删除类/方法**：
-        * SimpleAnimationUtils.java
-        * BasePopupWindow#getTranslateVerticalAnimation
-        * BasePopupWindow#getScaleAnimation
-        * BasePopupWindow#getDefaultScaleAnimation
-        * BasePopupWindow#getDefaultAlphaAnimation
-        * BasePopupWindow#getDefaultSlideFromBottomAnimationSet
-    * 修复键盘监听在adjustResize下可能会出现的问题：[#315](https://github.com/razerdp/BasePopup/issues/315)
-    * 修复设置softInputMode重复的问题：[#314](https://github.com/razerdp/BasePopup/issues/314)
+* **【Candy】2.2.5**
+  * 未发布版本（2020/07/20）
+    * log多语言
+
 
 <br>
 
