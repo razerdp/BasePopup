@@ -3,8 +3,8 @@
 
 <br>
 
-### 提issue前请务必参考以下格式填写，否则该问题我看都不会看直接关闭
-### Please be sure to refer to the following format before submitting an issue, otherwise the question will be closed without my even reading it!
+### 提issue前请务必参考以下格式填写，否则该问题极大概率会被我主动忽略
+### Please be sure to follow the format below before submitting the issue, otherwise the question will be actively ignored by me!
 
  - 系统版本（必须）/ System version (required)：
  - 库版本（必须）/ Library version (required)：
