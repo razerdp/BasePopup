@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="basepopup_error_non_act_context">cannot get the Activity from the context, please make sure the context is instance of Activity.</string>
+    <string name="basepopup_error_thread">Please operate in the main thread.</string>
+    <string name="basepopup_error_destroyed">The BasePopup has been Destroyed and cannot continue to perform show.</string>
+    <string name="basepopup_error_decorview">PopupWindow needs %s of DecorView\'s WindowToken, please check if DecorView exists.</string>
+    <string name="basepopup_window_not_prepare">The %s window is not ready, wait for it to pop up when ready</string>
+    <string name="basepopup_window_prepared">The %s window is ready to execute the popup.</string>
+    <string name="basepopup_has_been_shown">BasePopup has been shown.</string>
+    <string name="basepopup_shown_successful">Show successful</string>
+    <string name="basepopup_host">popupwindow host (%s)</string>
+
+</resources>
