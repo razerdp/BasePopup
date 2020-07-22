@@ -8,7 +8,7 @@
     <razerdp.demo.widget.TitleBarView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title_text="Issue #230" />
+        app:title_text="Issue #236" />
 
     <TextView
         android:layout_width="match_parent"

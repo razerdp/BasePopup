@@ -32,7 +32,7 @@ public class CommonBackgroundAlignInfo extends DemoCommonUsageInfo {
                                                 .withTranslation(TranslationConfig.FROM_BOTTOM)
                                                 .toShow())
                     .setDismissAnimation(AnimationHelper.asAnimation()
-                                                 .withTranslation(TranslationConfig.FROM_BOTTOM)
+                                                 .withTranslation(TranslationConfig.TO_BOTTOM)
                                                  .toDismiss());
             mDemoPopup.setPopupGravity(Gravity.TOP);
         }
