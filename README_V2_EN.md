@@ -120,7 +120,8 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 **Candy dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **【Release】2.2.4**(2020/07/19)
+* **【Release】2.2.4.1**(2020/07/19)
+  * 【Note】：In **2.2.4** we found an error in `setMaxWidth/setMaxHeight`, so we urgently release **2.2.4.1**, please update to **2.2.4.1** as soon as possible if you are using **2.2.4**.
   * In version 2.2.4, we added the awesome `AnimationHelper`, which helps with the Creating BasePopup animations will be very easy to understand, and we've added a lot of great features, too. Welcome to update to version 2.2.4~!
   * **New features/methods added:**
     * Add popup thread check: in a non-main thread we will throw an exception `CalledFromWrongThreadException`.
