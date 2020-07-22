@@ -121,7 +121,8 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 **正在开发日志（Candy版本）请查看dev分支：** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **【Release】2.2.4**(2020/07/19)
+* **【Release】2.2.4.1**(2020/07/19)
+  * 【注意】：在**2.2.4**中我们发现`setMaxWidth/setMaxHeight`出现错误，因此我们紧急发布**2.2.4.1**，请使用**2.2.4**的用户尽快升级到**2.2.4.1**
   * 在2.2.4版本中，我们添加了非常棒的 `AnimationHelper`，在它的帮助下，创建BasePopup动画将会变得十分简单易懂，同时我们也增加了很多很棒的功能，欢迎更新到2.2.4版本~
   * **新增功能/方法：**
     * 添加弹窗线程检查：非主线程下我们将会抛出异常 `CalledFromWrongThreadException`
