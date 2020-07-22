@@ -66,8 +66,12 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         mHelper.mKeyboardStateChangeListener = this;
         setClipChildren(mHelper.isClipChildren());
         mMaskLayout = new PopupMaskLayout(getContext(), mHelper);
-        setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        addViewInLayout(mMaskLayout, -1, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
+                                                   LayoutParams.MATCH_PARENT));
+        addViewInLayout(mMaskLayout,
+                        -1,
+                        new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
+                                                   LayoutParams.MATCH_PARENT));
         changedGravity = Gravity.NO_GRAVITY;
     }
 
@@ -91,7 +95,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         wp.copyFrom(params);
         wp.x = 0;
         wp.y = 0;
-        View contentView = findSystemPopupContentView(target);
+        View contentView = target.findViewById(mHelper.contentRootId);
         if (contentView != null) {
             LayoutParams lp = contentView.getLayoutParams();
             if (lp == null) {
@@ -149,35 +153,18 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         addView(target, wp);
     }
 
-    /**
-     * target或许不是contentview
-     */
-    private View findSystemPopupContentView(View root) {
-        if (root == null) return null;
-        if (!(root instanceof ViewGroup)) return root;
-        ViewGroup rootGroup = (ViewGroup) root;
-        if (rootGroup.getChildCount() <= 0) return root;
-        View result = root;
-        while (!isContentView(result)) {
-            result = rootGroup.getChildAt(0);
-            if (result instanceof ViewGroup) {
-                rootGroup = ((ViewGroup) result);
-            } else {
-                break;
-            }
-        }
-        return result;
-    }
 
-    private boolean isContentView(View v) {
-        return !PopupUiUtils.isPopupDecorView(v) &&
-                !PopupUiUtils.isPopupBackgroundView(v) &&
-                !PopupUiUtils.isPopupViewContainer(v);
+    private boolean isSystemPopupContainer(View v) {
+        return PopupUiUtils.isPopupDecorView(v) &&
+                PopupUiUtils.isPopupBackgroundView(v) &&
+                PopupUiUtils.isPopupViewContainer(v);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        PopupLog.i("onMeasure", MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
+        PopupLog.i("onMeasure",
+                   MeasureSpec.getSize(widthMeasureSpec),
+                   MeasureSpec.getSize(heightMeasureSpec));
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
@@ -283,9 +270,25 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             heightMode = MeasureSpec.EXACTLY;
         }
 
-        /*
-         *limit size in {@link BasePopupHelper#getLayoutParams()}
-         */
+        if (mHelper.getMinWidth() > 0 && widthSize < mHelper.getMinWidth()) {
+            widthSize = mHelper.getMinWidth();
+            widthMode = MeasureSpec.EXACTLY;
+        }
+
+        if (mHelper.getMaxWidth() > 0 && widthSize > mHelper.getMaxWidth()) {
+            widthSize = mHelper.getMaxWidth();
+            widthMode = MeasureSpec.EXACTLY;
+        }
+
+        if (mHelper.getMinHeight() > 0 && heightSize < mHelper.getMinHeight()) {
+            heightSize = mHelper.getMinHeight();
+            heightMode = MeasureSpec.EXACTLY;
+        }
+
+        if (mHelper.getMaxHeight() > 0 && heightSize > mHelper.getMaxHeight()) {
+            heightSize = mHelper.getMaxHeight();
+            heightMode = MeasureSpec.EXACTLY;
+        }
 
         widthMeasureSpec = MeasureSpec.makeMeasureSpec(widthSize, widthMode);
         heightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, heightMode);
@@ -477,7 +480,11 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 }
                 child.layout(left, top, right, bottom);
                 if (delayLayoutMask) {
-                    mMaskLayout.handleAlignBackground(mHelper.getAlignBackgroundGravity(), left, top, right, bottom);
+                    mMaskLayout.handleAlignBackground(mHelper.getAlignBackgroundGravity(),
+                                                      left,
+                                                      top,
+                                                      right,
+                                                      bottom);
                 }
                 if (isRelativeToAnchor) {
                     popupRect.set(left, top, right, bottom);
