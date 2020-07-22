@@ -2,9 +2,6 @@ package razerdp.demo.app;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.Gravity;
-
-import com.pgyersdk.crash.PgyCrashManager;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -30,7 +27,6 @@ public class PopupDemoApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        PgyCrashManager.register();
         //检查popup flag
         new Thread(() -> {
             try {
