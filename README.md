@@ -122,8 +122,6 @@
 * **【Candy】2.2.5**
   * 未发布版本（2020/07/20）
     * log多语言
-  * 修复setMaxWidth/setMaxHeight
-
 
 <br>
 
