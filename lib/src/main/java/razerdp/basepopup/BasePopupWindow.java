@@ -233,9 +233,12 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.OnLifecycleEvent;
+
 import razerdp.blur.PopupBlurOption;
+import razerdp.library.R;
 import razerdp.util.KeyboardUtils;
 import razerdp.util.PopupUiUtils;
+import razerdp.util.PopupUtils;
 import razerdp.util.log.PopupLog;
 
 import static razerdp.basepopup.BasePopupFlag.AUTO_INPUT_METHOD;
@@ -410,7 +413,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         Activity act = BasePopupHelper.findActivity(ownerAnchorParent);
         //double check
         if (act == null) {
-            throw new NullPointerException("无法从context处获得Activity，请确保您的Context是否为Activity");
+            throw new NullPointerException(PopupUtils.getString(R.string.basepopup_error_non_act_context));
         }
 
         if (act instanceof LifecycleOwner) {
@@ -662,7 +665,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             View v = act.findViewById(anchorViewResid);
             showPopupWindow(v);
         } else {
-            onShowError(new NullPointerException("无法从context处获得WindowToken，请确保您的Context是否为Activity"));
+            onShowError(new NullPointerException(PopupUtils.getString(R.string.basepopup_error_non_act_context)));
         }
     }
 
@@ -796,29 +799,29 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     void tryToShowPopup(View v, boolean positionMode) {
         if (Looper.myLooper() != Looper.getMainLooper()) {
-            throw new CalledFromWrongThreadException("请在主线程操作哦~");
+            throw new CalledFromWrongThreadException(PopupUtils.getString(R.string.basepopup_error_thread));
         }
         if (isShowing() || mContentView == null) return;
         if (isDestroyed) {
-            onShowError(new IllegalAccessException("该BasePopup已经被Destroy，不可以继续show了哦~"));
+            onShowError(new IllegalAccessException(PopupUtils.getString(R.string.basepopup_error_destroyed)));
             return;
         }
         View decorView = getDecorView();
         if (decorView == null) {
-            onShowError(new NullPointerException("PopupWindow需要" + ownerParentLog() + "的DecorView的WindowToken，请检查是否存在DecorView"));
+            onShowError(new NullPointerException(PopupUtils.getString(R.string.basepopup_error_decorview, ownerParentLog())));
             return;
         }
         if (decorView.getWindowToken() == null) {
-            onShowError(new IllegalStateException(ownerParentLog() + "窗口尚未准备好，等待准备就绪后弹出"));
+            onShowError(new IllegalStateException(PopupUtils.getString(R.string.basepopup_window_not_prepare, ownerParentLog())));
             pendingPopupWindow(decorView, v, positionMode);
             return;
         }
-        onLogInternal(ownerParentLog() + "窗口已经准备好，执行弹出");
+        onLogInternal(PopupUtils.getString(R.string.basepopup_window_prepared, ownerParentLog()));
         if (!onPreShow()) return;
         mHelper.prepare(v, positionMode);
         try {
             if (isShowing()) {
-                onShowError(new IllegalStateException("BasePopup已经显示了"));
+                onShowError(new IllegalStateException(PopupUtils.getString(R.string.basepopup_has_been_shown)));
                 return;
             }
             mHelper.onShow();
@@ -828,7 +831,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
             } else {
                 mPopupWindowProxy.showAtLocation(decorView, Gravity.NO_GRAVITY, 0, 0);
             }
-            onLogInternal("弹窗执行成功");
+            onLogInternal(PopupUtils.getString(R.string.basepopup_shown_successful));
         } catch (Exception e) {
             e.printStackTrace();
             onShowError(e);
@@ -963,10 +966,10 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     public BasePopupWindow setAdjustInputMode(int viewId, int flag) {
         mHelper.keybaordAlignViewId = viewId;
         mHelper.setFlag(FLAG_KEYBOARD_ALIGN_TO_ROOT
-                                | FLAG_KEYBOARD_ALIGN_TO_VIEW
-                                | FLAG_KEYBOARD_IGNORE_OVER
-                                | FLAG_KEYBOARD_ANIMATE_ALIGN
-                                | FLAG_KEYBOARD_FORCE_ADJUST, false);
+                | FLAG_KEYBOARD_ALIGN_TO_VIEW
+                | FLAG_KEYBOARD_IGNORE_OVER
+                | FLAG_KEYBOARD_ANIMATE_ALIGN
+                | FLAG_KEYBOARD_FORCE_ADJUST, false);
         mHelper.setFlag(flag, true);
         return this;
     }
@@ -1439,8 +1442,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      * </ul>
      *
      * @param mode <ul><li>GravityMode.RELATIVE_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup处于该Anchor的哪个位置</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     </ul>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             </ul>
      */
     public BasePopupWindow setPopupGravity(GravityMode mode, int popupGravity) {
         mHelper.setPopupGravity(mode, popupGravity);
@@ -1801,7 +1804,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
      */
     public void dismiss(boolean animateDismiss) {
         if (Looper.myLooper() != Looper.getMainLooper()) {
-            throw new CalledFromWrongThreadException("请在主线程操作哦~");
+            throw new CalledFromWrongThreadException(PopupUtils.getString(R.string.basepopup_error_thread));
         }
         if (!isShowing() || mContentView == null) return;
         mHelper.dismiss(animateDismiss);
@@ -1840,7 +1843,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
         boolean result = true;
         if (mHelper.mOnBeforeShowCallback != null) {
             result = mHelper.mOnBeforeShowCallback.onBeforeShow(mContentView, v,
-                                                                mHelper.mShowAnimation != null || mHelper.mShowAnimator != null);
+                    mHelper.mShowAnimation != null || mHelper.mShowAnimator != null);
         }
         return result;
     }
@@ -1995,7 +1998,7 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
     }
 
     private String ownerParentLog() {
-        return "宿主（" + String.valueOf(ownerAnchorParent) + "）";
+        return PopupUtils.getString(R.string.basepopup_host, String.valueOf(ownerAnchorParent));
     }
 //endregion
 

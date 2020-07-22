@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="basepopup_error_non_act_context">无法从context处获得Activity，请确保您的Context是否为Activity</string>
+    <string name="basepopup_error_thread">请在主线程操作</string>
+    <string name="basepopup_error_destroyed">该BasePopup已经被Destroy，无法继续执行show</string>
+    <string name="basepopup_error_decorview">PopupWindow需要%s的DecorView的WindowToken，请检查是否存在DecorView</string>
+    <string name="basepopup_window_not_prepare">%s窗口尚未准备好，等待准备就绪后弹出</string>
+    <string name="basepopup_window_prepared">%s窗口已经准备好，执行弹出</string>
+    <string name="basepopup_has_been_shown">BasePopup已经显示了</string>
+    <string name="basepopup_shown_successful">弹窗成功</string>
+    <string name="basepopup_host">宿主（%s）</string>
+
+</resources>
