@@ -10,7 +10,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
@@ -23,13 +22,12 @@ import razerdp.util.log.PopupLog;
  * <p>
  * popupwindow的decorview代理，这里统筹位置、蒙层、事件等
  */
-final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKeyboardChangeListener, ViewTreeObserver.OnGlobalLayoutListener, ClearMemoryObject {
+final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKeyboardChangeListener, ClearMemoryObject {
     private static final String TAG = "PopupDecorViewProxy";
     //蒙层
     private PopupMaskLayout mMaskLayout;
     private BasePopupHelper mHelper;
     private View mTarget;
-    private int changedGravity = Gravity.NO_GRAVITY;
     private Rect popupRect = new Rect();
     private Rect anchorRect = new Rect();
 
@@ -40,8 +38,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
     private int[] location = new int[2];
     private Rect lastKeyboardBounds = new Rect();
-    private boolean isFirstLayoutComplete = false;
-    private int layoutCount = 0;
     private OnClickListener emptyInterceptClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -56,7 +52,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
     PopupDecorViewProxy(Context context, BasePopupHelper helper) {
         this(context);
-        getViewTreeObserver().addOnGlobalLayoutListener(this);
         init(helper);
     }
 
@@ -72,7 +67,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                         -1,
                         new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
                                                    LayoutParams.MATCH_PARENT));
-        changedGravity = Gravity.NO_GRAVITY;
     }
 
     public void wrapPopupDecorView(final View target, WindowManager.LayoutParams params) {
@@ -153,18 +147,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         addView(target, wp);
     }
 
-
-    private boolean isSystemPopupContainer(View v) {
-        return PopupUiUtils.isPopupDecorView(v) &&
-                PopupUiUtils.isPopupBackgroundView(v) &&
-                PopupUiUtils.isPopupViewContainer(v);
-    }
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        PopupLog.i("onMeasure",
-                   MeasureSpec.getSize(widthMeasureSpec),
-                   MeasureSpec.getSize(heightMeasureSpec));
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
@@ -298,14 +282,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        PopupLog.i("onLayout", changed, l, t, r, b);
-        changedGravity = Gravity.NO_GRAVITY;
         layoutInternal(l, t, r, b);
-        layoutCount++;
-        if (layoutCount >= 2) {
-            isFirstLayoutComplete = true;
-            layoutCount = 0;
-        }
     }
 
     @SuppressLint("RtlHardcoded")
@@ -424,7 +401,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                                 //需要移位
                                 offsetY += isAlignAnchorMode ? 0 : anchorBound.bottom - childTop;
                                 //如果自动定位到下方，则可显示的window区域为[anchor底部，屏幕底部]
-                                changedGravity = Gravity.BOTTOM;
                             }
                             break;
                         case Gravity.BOTTOM:
@@ -435,7 +411,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                                 //需要移位
                                 offsetY -= isAlignAnchorMode ? 0 : tBottom - anchorBound.top;
                                 //如果是自动定位到上方，则可显示的window区域为[0,anchor顶部]
-                                changedGravity = Gravity.TOP;
                             }
                             break;
                     }
@@ -591,14 +566,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     }
 
 
-    //layout之后
-    @Override
-    public void onGlobalLayout() {
-        if (changedGravity != Gravity.NO_GRAVITY && mHelper.isAutoLocatePopup() && isFirstLayoutComplete) {
-            mHelper.onAutoLocationChange(mHelper.popupGravity, changedGravity);
-        }
-    }
-
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -694,9 +661,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         if (mTarget != null) {
             mTarget.setOnClickListener(null);
         }
-        isFirstLayoutComplete = false;
-        layoutCount = 0;
-        getViewTreeObserver().removeOnGlobalLayoutListener(this);
         mHelper = null;
         mTarget = null;
     }
