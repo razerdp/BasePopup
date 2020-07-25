@@ -41,7 +41,6 @@ import razerdp.library.R;
 import razerdp.util.KeyboardUtils;
 import razerdp.util.PopupUiUtils;
 import razerdp.util.PopupUtils;
-import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2017/12/12.
@@ -885,10 +884,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         if (dismissAnimationDelayRunnable != null) {
             dismissAnimationDelayRunnable.run();
         }
-    }
-
-    void onAutoLocationChange(int oldGravity, int newGravity) {
-        PopupLog.i("onAutoLocationChange", oldGravity, newGravity);
     }
 
     void onAnchorTop() {

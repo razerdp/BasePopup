@@ -47,7 +47,7 @@ class IssueHelper {
         IssueInfo issue277 = new IssueInfo();
         issue277.setActivityClass(Issue277TestActivity.class)
                 .setIssue("277")
-                .setFixed(false)
+                .setFixed(true)
                 .setTitle("BasePopupHelper#GlobalLayoutListener#onGlobalLayout键盘检测问题")
                 .setDesc(DescBuilder.get()
                         .append("系统版本：UnKnown")
