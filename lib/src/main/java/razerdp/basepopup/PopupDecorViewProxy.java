@@ -312,7 +312,10 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             } else {
                 //由于可以布局到navigationbar上，因此在layout的时候对于contentView需要减去navigationbar的高度
                 parentHeight -= mHelper.getNavigationBarHeight();
-                Rect anchorBound = mHelper.getAnchorViewBound();
+                anchorRect.set(mHelper.getAnchorViewBound());
+                getLocationOnScreen(location);
+                anchorRect.offset(-location[0], -location[1]);
+                Rect anchorBound = anchorRect;
                 boolean isRelativeToAnchor = mHelper.isWithAnchor();
                 boolean isAlignAnchorMode = mHelper.getGravityMode() == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE;
 
@@ -463,7 +466,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 }
                 if (isRelativeToAnchor) {
                     popupRect.set(left, top, right, bottom);
-                    anchorRect.set(mHelper.getAnchorViewBound());
                     mHelper.onPopupLayout(popupRect, anchorRect);
                 }
             }
