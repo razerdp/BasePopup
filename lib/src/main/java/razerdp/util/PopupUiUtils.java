@@ -100,7 +100,7 @@ public class PopupUiUtils {
         if (statusBarHeight != 0) return;
         int result = 0;
         //获取状态栏高度的资源id
-        Resources resources = BasePopupSDK.getApplication().getResources();
+        Resources resources = Resources.getSystem();
         int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
             result = resources.getDimensionPixelSize(resourceId);
