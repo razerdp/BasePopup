@@ -29,13 +29,14 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+
+import java.util.Map;
+import java.util.WeakHashMap;
+
 import razerdp.blur.PopupBlurOption;
 import razerdp.library.R;
 import razerdp.util.KeyboardUtils;
@@ -104,7 +105,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     BasePopupWindow.OnPopupWindowShowListener mOnPopupWindowShowListener;
 
     //option
-    BasePopupWindow.GravityMode gravityMode = BasePopupWindow.GravityMode.RELATIVE_TO_ANCHOR;
+    BasePopupWindow.GravityMode horizontalGravityMode = BasePopupWindow.GravityMode.RELATIVE_TO_ANCHOR;
+    BasePopupWindow.GravityMode verticalGravityMode = BasePopupWindow.GravityMode.RELATIVE_TO_ANCHOR;
+
     int popupGravity = Gravity.NO_GRAVITY;
     int offsetX;
     int offsetY;
@@ -208,9 +211,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     void preMeasurePopupView(View mContentView, int w, int h) {
         if (mContentView != null) {
             int measureWidth = View.MeasureSpec.makeMeasureSpec(Math.max(w, 0),
-                                                                w == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
+                    w == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
             int measureHeight = View.MeasureSpec.makeMeasureSpec(Math.max(w, h),
-                                                                 h == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
+                    h == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
             mContentView.measure(measureWidth, measureHeight);
             preMeasureWidth = mContentView.getMeasuredWidth();
             preMeasureHeight = mContentView.getMeasuredHeight();
@@ -223,9 +226,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         //https://github.com/razerdp/BasePopup/issues/310
         if (p == null || this.popupGravity != Gravity.NO_GRAVITY) return;
         if (p instanceof LinearLayout.LayoutParams) {
-            setPopupGravity(gravityMode, ((LinearLayout.LayoutParams) p).gravity);
+            this.popupGravity = ((LinearLayout.LayoutParams) p).gravity;
         } else if (p instanceof FrameLayout.LayoutParams) {
-            setPopupGravity(gravityMode, ((FrameLayout.LayoutParams) p).gravity);
+            this.popupGravity = ((FrameLayout.LayoutParams) p).gravity;
         }
     }
 
@@ -423,9 +426,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return this;
     }
 
-    BasePopupWindow.GravityMode getGravityMode() {
-        return gravityMode;
-    }
 
     int getPopupGravity() {
         return Gravity.getAbsoluteGravity(popupGravity, layoutDirection);
@@ -437,8 +437,15 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     BasePopupHelper setPopupGravity(BasePopupWindow.GravityMode mode, int popupGravity) {
-        this.gravityMode = mode;
+        setPopupGravityMode(mode, mode);
         this.popupGravity = popupGravity;
+        return this;
+    }
+
+    BasePopupHelper setPopupGravityMode(BasePopupWindow.GravityMode horizontalGravityMode,
+                                        BasePopupWindow.GravityMode verticalGravityMode) {
+        this.horizontalGravityMode = horizontalGravityMode;
+        this.verticalGravityMode = verticalGravityMode;
         return this;
     }
 
@@ -472,9 +479,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         int[] location = new int[2];
         v.getLocationInWindow(location);
         mAnchorViewBound.set(location[0],
-                             location[1],
-                             location[0] + v.getWidth(),
-                             location[1] + v.getHeight());
+                location[1],
+                location[0] + v.getWidth(),
+                location[1] + v.getHeight());
         return this;
     }
 
@@ -733,8 +740,10 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         }
 
         if (mGlobalLayoutListener != null) {
-            PopupUiUtils.safeRemoveGlobalLayoutListener(mPopupWindow.getContext().getWindow().getDecorView(),
-                                                        mGlobalLayoutListener);
+            PopupUiUtils.safeRemoveGlobalLayoutListener(mPopupWindow.getContext()
+                            .getWindow()
+                            .getDecorView(),
+                    mGlobalLayoutListener);
         }
 
         if (mLinkedViewLayoutChangeListenerWrapper != null) {
@@ -780,18 +789,20 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         prepareShow();
         if ((flag & CUSTOM_ON_UPDATE) != 0) return;
         if (mShowAnimation == null || mShowAnimator == null) {
-            mPopupWindow.mDisplayAnimateView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    mPopupWindow.mDisplayAnimateView.getViewTreeObserver().removeOnGlobalLayoutListener(
-                            this);
-                    startShowAnimate(mPopupWindow.mDisplayAnimateView.getWidth(),
-                                     mPopupWindow.mDisplayAnimateView.getHeight());
-                }
-            });
+            mPopupWindow.mDisplayAnimateView.getViewTreeObserver()
+                    .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            mPopupWindow.mDisplayAnimateView.getViewTreeObserver()
+                                    .removeOnGlobalLayoutListener(
+                                            this);
+                            startShowAnimate(mPopupWindow.mDisplayAnimateView.getWidth(),
+                                    mPopupWindow.mDisplayAnimateView.getHeight());
+                        }
+                    });
         } else {
             startShowAnimate(mPopupWindow.mDisplayAnimateView.getWidth(),
-                             mPopupWindow.mDisplayAnimateView.getHeight());
+                    mPopupWindow.mDisplayAnimateView.getHeight());
         }
         //针对官方的坑（两个popup切换页面后重叠）
         if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP ||
@@ -818,17 +829,19 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     private void prepareShow() {
         if (mGlobalLayoutListener == null) {
             mGlobalLayoutListener = KeyboardUtils.observerKeyboardChange(mPopupWindow.getContext(),
-                                                                         new KeyboardUtils.OnKeyboardChangeListener() {
-                                                                             @Override
-                                                                             public void onKeyboardChange(Rect keyboardBounds, boolean isVisible) {
-                                                                                 BasePopupHelper.this.onKeyboardChange(
-                                                                                         keyboardBounds,
-                                                                                         isVisible);
-                                                                             }
-                                                                         });
+                    new KeyboardUtils.OnKeyboardChangeListener() {
+                        @Override
+                        public void onKeyboardChange(Rect keyboardBounds, boolean isVisible) {
+                            BasePopupHelper.this.onKeyboardChange(
+                                    keyboardBounds,
+                                    isVisible);
+                        }
+                    });
         }
-        PopupUiUtils.safeAddGlobalLayoutListener(mPopupWindow.getContext().getWindow().getDecorView(),
-                                                 mGlobalLayoutListener);
+        PopupUiUtils.safeAddGlobalLayoutListener(mPopupWindow.getContext()
+                        .getWindow()
+                        .getDecorView(),
+                mGlobalLayoutListener);
 
         if (mLinkedTarget != null) {
             if (mLinkedViewLayoutChangeListenerWrapper == null) {
@@ -852,11 +865,11 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         Message msg = BasePopupEvent.getMessage(BasePopupEvent.EVENT_DISMISS);
         if (animateDismiss) {
             startDismissAnimate(mPopupWindow.mDisplayAnimateView.getWidth(),
-                                mPopupWindow.mDisplayAnimateView.getHeight());
+                    mPopupWindow.mDisplayAnimateView.getHeight());
             msg.arg1 = 1;
             mPopupWindow.mDisplayAnimateView.removeCallbacks(dismissAnimationDelayRunnable);
             mPopupWindow.mDisplayAnimateView.postDelayed(dismissAnimationDelayRunnable,
-                                                         Math.max(dismissDuration, 0));
+                    Math.max(dismissDuration, 0));
         } else {
             msg.arg1 = 0;
             mPopupWindow.superDismiss();
@@ -1105,8 +1118,10 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
             mShowInfo.mAnchorView = null;
         }
         if (mGlobalLayoutListener != null) {
-            PopupUiUtils.safeRemoveGlobalLayoutListener(mPopupWindow.getContext().getWindow().getDecorView(),
-                                                        mGlobalLayoutListener);
+            PopupUiUtils.safeRemoveGlobalLayoutListener(mPopupWindow.getContext()
+                            .getWindow()
+                            .getDecorView(),
+                    mGlobalLayoutListener);
         }
 
         if (mLinkedViewLayoutChangeListenerWrapper != null) {
