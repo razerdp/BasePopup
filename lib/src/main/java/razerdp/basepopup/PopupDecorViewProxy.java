@@ -390,7 +390,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                             contentRect.left = anchorBound.left;
                             offsetX += anchorBound.centerX() - (contentRect.left + (width >> 1));
                         } else {
-                            contentRect.left = ((contentBounds.width() - width) >> 1);
+                            contentRect.left = contentBounds.left + ((contentBounds.width() - width) >> 1);
                         }
                         break;
                     default:
@@ -424,7 +424,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                             contentRect.top = anchorBound.bottom;
                             offsetY += anchorBound.centerY() - (contentRect.top + (height >> 1));
                         } else {
-                            contentRect.top = ((contentBounds.height() - height) >> 1);
+                            contentRect.top = contentBounds.top + ((contentBounds.height() - height) >> 1);
                         }
                         break;
                     default:
