@@ -131,6 +131,9 @@
     * AnchorView获取位置方法修改，对齐参考系
   * **2.2.5.0810** (2020/08/10)
     * PopupGravityMode分离，现在支持水平方向与垂直方向分开设置对边、对位模式了~
+  * **2.2.5.0811** (2020/08/11)
+    * 重构layout逻辑，针对NavigationBar奇怪的方向适配 [#336](https://github.com/razerdp/BasePopup/issues/336)
+    * 修复键盘GlobalListener提前被remove，导致popup在第二次弹出才能适配键盘的问题 [#338](https://github.com/razerdp/BasePopup/issues/338)
 
 
 <br>
