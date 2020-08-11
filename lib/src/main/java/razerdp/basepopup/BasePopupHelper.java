@@ -150,11 +150,11 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     View mLinkedTarget;
 
-    int navigationBarHeight;
+    Rect navigationBarBounds;
 
     BasePopupHelper(BasePopupWindow popupWindow) {
         mAnchorViewBound = new Rect();
-        navigationBarHeight = PopupUiUtils.getNavigationBarHeight(popupWindow.getContext());
+        navigationBarBounds = new Rect();
         this.mPopupWindow = popupWindow;
         this.eventObserverMap = new WeakHashMap<>();
         this.mMaskViewShowAnimation = DEFAULT_MASK_SHOW_ANIMATION;
@@ -510,8 +510,20 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return (flag & OVERLAY_NAVIGATION_BAR) != 0;
     }
 
-    int getNavigationBarHeight() {
-        return isOverlayNavigationBar() ? 0 : navigationBarHeight;
+    void refreshNavigationBarBounds() {
+        PopupUiUtils.getNavigationBarBounds(navigationBarBounds, mPopupWindow.getContext());
+    }
+
+    int getNavigationBarSize() {
+        if (isOverlayNavigationBar()) {
+            return 0;
+        } else {
+            return Math.min(navigationBarBounds.width(), navigationBarBounds.height());
+        }
+    }
+
+    int getNavigationBarGravity() {
+        return PopupUiUtils.getNavigationBarGravity(navigationBarBounds);
     }
 
     BasePopupHelper overlayStatusbar(boolean overlay) {
@@ -739,13 +751,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
             KeyboardUtils.close(mPopupWindow.getContext());
         }
 
-        if (mGlobalLayoutListener != null) {
-            PopupUiUtils.safeRemoveGlobalLayoutListener(mPopupWindow.getContext()
-                            .getWindow()
-                            .getDecorView(),
-                    mGlobalLayoutListener);
-        }
-
         if (mLinkedViewLayoutChangeListenerWrapper != null) {
             mLinkedViewLayoutChangeListenerWrapper.detach();
         }
@@ -835,6 +840,13 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
                             BasePopupHelper.this.onKeyboardChange(
                                     keyboardBounds,
                                     isVisible);
+                            if (!mPopupWindow.isShowing()) {
+                                PopupUiUtils.safeRemoveGlobalLayoutListener(mPopupWindow.getContext()
+                                                .getWindow()
+                                                .getDecorView(),
+                                        mGlobalLayoutListener);
+                                return;
+                            }
                         }
                     });
         }
