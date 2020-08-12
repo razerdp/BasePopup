@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Message;
 import android.util.LayoutDirection;
 import android.util.Log;
+import android.view.DisplayCutout;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -42,6 +43,7 @@ import razerdp.library.R;
 import razerdp.util.KeyboardUtils;
 import razerdp.util.PopupUiUtils;
 import razerdp.util.PopupUtils;
+import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2017/12/12.
@@ -151,10 +153,12 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     View mLinkedTarget;
 
     Rect navigationBarBounds;
+    Rect cutoutSafeRect;
 
     BasePopupHelper(BasePopupWindow popupWindow) {
         mAnchorViewBound = new Rect();
         navigationBarBounds = new Rect();
+        cutoutSafeRect = new Rect();
         this.mPopupWindow = popupWindow;
         this.eventObserverMap = new WeakHashMap<>();
         this.mMaskViewShowAnimation = DEFAULT_MASK_SHOW_ANIMATION;
@@ -524,6 +528,46 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     int getNavigationBarGravity() {
         return PopupUiUtils.getNavigationBarGravity(navigationBarBounds);
+    }
+
+    public int getCutoutGravity() {
+        getSafeInsetBounds(cutoutSafeRect);
+        if (cutoutSafeRect.left > 0) {
+            return Gravity.LEFT;
+        }
+        if (cutoutSafeRect.top > 0) {
+            return Gravity.TOP;
+        }
+        if (cutoutSafeRect.right > 0) {
+            return Gravity.RIGHT;
+        }
+        if (cutoutSafeRect.bottom > 0) {
+            return Gravity.BOTTOM;
+        }
+        return Gravity.NO_GRAVITY;
+    }
+
+    void getSafeInsetBounds(Rect r) {
+        if (r == null) return;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            r.setEmpty();
+            return;
+        }
+        try {
+            DisplayCutout cutout = mPopupWindow.getContext()
+                    .getWindow()
+                    .getDecorView()
+                    .getRootWindowInsets()
+                    .getDisplayCutout();
+            if (cutout == null) {
+                r.setEmpty();
+                return;
+            }
+            r.set(cutout.getSafeInsetLeft(), cutout.getSafeInsetTop(),
+                    cutout.getSafeInsetRight(), cutout.getSafeInsetBottom());
+        } catch (Exception e) {
+            PopupLog.e(e);
+        }
     }
 
     BasePopupHelper overlayStatusbar(boolean overlay) {
