@@ -134,6 +134,8 @@
   * **2.2.5.0811** (2020/08/11)
     * 重构layout逻辑，针对NavigationBar奇怪的方向适配 [#336](https://github.com/razerdp/BasePopup/issues/336)
     * 修复键盘GlobalListener提前被remove，导致popup在第二次弹出才能适配键盘的问题 [#338](https://github.com/razerdp/BasePopup/issues/338)
+  * **2.2.5.0812** (2020/08/12)
+    * 针对刘海屏适配
 
 
 <br>
