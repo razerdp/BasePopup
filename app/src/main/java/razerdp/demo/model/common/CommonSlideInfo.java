@@ -24,7 +24,9 @@ public class CommonSlideInfo extends DemoCommonUsageInfo {
     public int gravity = Gravity.BOTTOM;
     public boolean withAnchor;
     public boolean blur;
-    public BasePopupWindow.GravityMode gravityMode = BasePopupWindow.GravityMode.RELATIVE_TO_ANCHOR;
+    public BasePopupWindow.GravityMode horizontalGravityMode = BasePopupWindow.GravityMode.RELATIVE_TO_ANCHOR;
+    public BasePopupWindow.GravityMode verticalGravityMode = BasePopupWindow.GravityMode.RELATIVE_TO_ANCHOR;
+
 
     PopupSlideOption mPopupOption;
     PopupSlide mPopupSlide;
@@ -82,7 +84,8 @@ public class CommonSlideInfo extends DemoCommonUsageInfo {
         }
 
         popupWindow.setBlurBackgroundEnable(blur);
-        popupWindow.setPopupGravity(gravityMode, gravity);
+        popupWindow.setPopupGravityMode(horizontalGravityMode, verticalGravityMode);
+        popupWindow.setPopupGravity(gravity);
         popupWindow.setShowAnimation(showAnimation);
         popupWindow.setDismissAnimation(dismissAnimation);
         if (withAnchor) {
@@ -95,13 +98,13 @@ public class CommonSlideInfo extends DemoCommonUsageInfo {
 
     private Animation createTranslateAnimation(float fromX, float toX, float fromY, float toY) {
         Animation animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF,
-                                                     fromX,
-                                                     Animation.RELATIVE_TO_SELF,
-                                                     toX,
-                                                     Animation.RELATIVE_TO_SELF,
-                                                     fromY,
-                                                     Animation.RELATIVE_TO_SELF,
-                                                     toY);
+                fromX,
+                Animation.RELATIVE_TO_SELF,
+                toX,
+                Animation.RELATIVE_TO_SELF,
+                fromY,
+                Animation.RELATIVE_TO_SELF,
+                toY);
         animation.setDuration(500);
         animation.setInterpolator(new DecelerateInterpolator());
         return animation;
