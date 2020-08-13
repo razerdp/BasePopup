@@ -121,48 +121,22 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 **正在开发日志（Candy版本）请查看dev分支：** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **【Release】2.2.4.1**(2020/07/19)
-  * 【注意】：在**2.2.4**中我们发现`setMaxWidth/setMaxHeight`出现错误，因此我们紧急发布**2.2.4.1**，请使用**2.2.4**的用户尽快升级到**2.2.4.1**
-  * 在2.2.4版本中，我们添加了非常棒的 `AnimationHelper`，在它的帮助下，创建BasePopup动画将会变得十分简单易懂，同时我们也增加了很多很棒的功能，欢迎更新到2.2.4版本~
+* **【Release】2.2.5**(2020/08/13)
+  * 我们针对2.2.4.1所出现的问题进行了修复，2.2.4.1在横屏的时候出现较多的bug，这些问题我们在2.2.5中集中修复并发布正式版，我们建议您更新到 **2.2.5**
   * **新增功能/方法：**
-    * 添加弹窗线程检查：非主线程下我们将会抛出异常 `CalledFromWrongThreadException`
-    * 开放 `OnKeyboardChangeListener`：现在您可以监听键盘显示、关闭事件，同时该回调会返回键盘的大小
-    * 增加 `KeyEventListener`：现在允许您在外部添加事件监听，感谢issue：[#296](https://github.com/razerdp/BasePopup/issues/296)
-    * 增加 `setOverlayNavigationBar`：通过该方法，您可以让您的BasePopup覆盖到导航栏，默认情况下不允许覆盖，如果您确实有需要，可以通过该api配置覆盖
-      * 相关讨论：[《关于MIUI小白条及类似的“全面屏手势提示线”覆盖问题描述》](https://github.com/razerdp/BasePopup/issues/307)
-    * 增加 `setWidthAsAnchorView`：您可以调用该Api决定BasePopup的宽度是否设置为AnchorView的宽度
-    * 增加 `setHeightAsAnchorView`：您可以调用该Api决定BasePopup的高度是否设置为AnchorView的高度
-    * 增加RTL布局支持：该需求早在几个月前就有群友在群里提出了，一直没去弄，直到最近才有空去写，得益于BasePopup根据Gravity来做方向判断，我们修改了极少的代码完成了RTL适配
-      * 如果使用RTL，请务必设置 `setLayoutDirection`方向，告诉BasePopup宿主布局方向
-      * RTL仅对`showPopupWindow(View anchorView)`和`showPopupWindow(int x,int y)`有效
-      * **请务必注意，BasePopup遵循官方做法，当您需要RTL布局的时候，请使用START代替LEFT，使用END代替RIGHT**
-    * 增加 `syncMaskAnimationDuration`：您可以设置蒙层动画的时间是否同步您的动画时间（取最长时间），默认同步
-    * 增加AnimationHelper：我们希望能减少动画的代码量，同时让动画的创建更加的易懂，因此我们在本版本中正式推出AnimationHelper，相信你一定会喜欢他的
-      * 关于AnimationHelper的资料，受篇幅限制，请查阅文档：[【进阶指引-动画-AnimationHelper】](https://www.yuque.com/razerdp/basepopup/zcgtm5)
-      * AnimationHelper在2.2.4版本新推出，可能会存在我们没测出来的Bug，不过它只是创建动画的辅助类，因此不影响主体流程，所以如果您发现它不好用或者不满足您的功能，您可以更换为原生的动画创建，同时欢迎提交issue
+    * PopupGravityMode分离：现在我们可以分别指定水平方向上和垂直方向上的GravityMode
+      * 对应方法：`setPopupGravityMode(GravityMode horizontalMode, GravityMode verticalMode)`
+      * 我们可以轻松的实现诸如“右边缘对齐AnchorView右边缘，同时在AnchorView顶部展示”等逻辑
   * **优化**
-    * 优化BasePopupHelper代码
-    * 优化蒙层动画：
-      * 我们针对蒙层的动画进行了优化，现在蒙层的渐入渐出时间将会跟您设置的动画最长时间同步，我们期望在您的展示/退出动画完成的一刹那，蒙层动画也同步完成，而不希望其提前或延后
-      * 您可以通过 `syncMaskAnimationDuration`配置是否同步
-  * **删除类/方法**
-    * **请注意，这次我们没有标记为@Deprecated，直接删除了代码，如果您使用到这些方法，请务必进行更改**
-    * **删除类：** SimpleAnimationUtils.java，我们建议您使用 [AnimationHelper](https://www.yuque.com/razerdp/basepopup/zcgtm5) 代替
-    * **删除方法：** BasePopupWindow#getTranslateVerticalAnimation
-    * **删除方法：** BasePopupWindow#getScaleAnimation
-    * **删除方法：** BasePopupWindow#getDefaultScaleAnimation
-    * **删除方法：** BasePopupWindow#getDefaultAlphaAnimation
-    * **删除方法：** BasePopupWindow#getDefaultSlideFromBottomAnimationSet
+    * 优化BasePopup的内部log，支持中英文
+    * 获取状态栏高度更替为System Resource，防止因为改了density导致获取不准确的问题
+    * AnchorView获取位置方法修改，对齐参考系
   * **bug修复**
-    * 修复全屏Activity下focusable没有恢复的问题
-    * 修复全屏Activity下SystemUiVisibility被强制修改的问题
-    * 修复Quickpopupbuilder中backpressenable设置失效的问题[#296](https://github.com/razerdp/BasePopup/issues/296)
-    * 修复非BasePopup内EditText弹出键盘时挡住EditText的问题[#297](https://github.com/razerdp/BasePopup/issues/297)
-    * 修复lazypopup中gravity覆盖的问题[#310](https://github.com/razerdp/BasePopup/issues/310)
-    * 修复onCreate()下关联锚点View时因未完成测量过程而导致的位置获取不成功问题[#313](https://github.com/razerdp/BasePopup/issues/313)
-    * 修复设置最大/最小宽高下测量错误的问题
-    * 修复键盘监听在adjustResize下可能会出现的问题[#315](https://github.com/razerdp/BasePopup/issues/315)
-    * 修复设置softInputMode重复的问题[#314](https://github.com/razerdp/BasePopup/issues/314)
+    * 修复隐藏NavigationBar下键盘无法弹出的问题
+    * 修复showpopup出现异常时没有dismiss的问题
+    * 重构layout逻辑，针对NavigationBar奇怪的方向适配[#336](https://github.com/razerdp/BasePopup/issues/336)
+    * 修复键盘GlobalListener提前被remove，导致popup在第二次弹出才能适配键盘的问题[#338](https://github.com/razerdp/BasePopup/issues/338)
+    * 修复刘海屏适配错乱的问题
 
 
 <br>

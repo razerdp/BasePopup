@@ -120,47 +120,22 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 **Candy dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **【Release】2.2.4.1**(2020/07/19)
-  * 【Note】：In **2.2.4** we found an error in `setMaxWidth/setMaxHeight`, so we urgently release **2.2.4.1**, please update to **2.2.4.1** as soon as possible if you are using **2.2.4**.
-  * In version 2.2.4, we added the awesome `AnimationHelper`, which helps with the Creating BasePopup animations will be very easy to understand, and we've added a lot of great features, too. Welcome to update to version 2.2.4~!
+* **【Release】2.2.5**(2020/08/13)
+  * We have fixed the bug in 2.2.4.1, there are more bugs in landscape in 2.2.4.1, these bugs are fixed in 2.2.5.
   * **New features/methods added:**
-    * Add popup thread check: in a non-main thread we will throw an exception `CalledFromWrongThreadException`.
-    * Add `OnKeyboardChangeListener`: Now you can listen to the keyboard display, close events, and the callback will return the size of the keyboard.
-    * Added `KeyEventListener`: now allows you to add external event listener. issue:[#296](https://github.com/razerdp/BasePopup/issues/296)
-    * Add ``setOverlayNavigationBar``: Through this method, you can make your BasePopup overlay to the navigation bar, the default is not allowed to overlay, if you really need, you can configure the overlay through this api.
-      * Related discussion:[《关于MIUI小白条及类似的“全面屏手势提示线”覆盖问题描述》](https://github.com/razerdp/BasePopup/issues/307)
-    * Add `setWidthAsAnchorView`: You can call this Api to determine whether the width of BasePopup is set to the width of AnchorView or not.
-    * Add `setHeightAsAnchorView`: You can call this Api to determine whether the height of BasePopup is set to the height of AnchorView or not.
-    * Add RTL layout support:
-      * If using RTL, be sure to set `setLayoutDirection` to tell the BasePopup host the layout direction.
-      * RTL仅对`showPopupWindow(View anchorView)`和`showPopupWindow(int x,int y)`有效
-      * **Be sure to note that BasePopup follows the official practice of using START instead of LEFT and END instead of RIGHT when you need an RTL layout**.
-    * Add `syncMaskAnimationDuration`: You can set whether the time of the mask animation is synchronized with your animation (take the longest time) or not, the default is synchronized.
-    * Add AnimationHelper: We want to reduce the amount of code for animations and make it easier to create them, so we've officially released AnimationHelper in this version, and we're sure you'll love it!
-      * For information on AnimationHelper, subject to space limitations, please consult the documentation:[【进阶指引-动画-AnimationHelper】](https://www.yuque.com/razerdp/basepopup/zcgtm5)
+    * PopupGravityMode Separation: Now we can specify the GravityMode horizontally and vertically respectively.
+      * api:`setPopupGravityMode(GravityMode horizontalMode, GravityMode verticalMode)`
+      * We can easily implement logic such as "align right edge of AnchorView right edge and show on top of AnchorView".
   * **Optimisation**
-    * Optimized BasePopupHelper code
-    * Optimize mask animation：
-      * Now the fade-in and fade-out time of the mask will be synchronized with the maximum time you set for the animation. We expect the mask animation to complete at the same time as your show/exit animation, not earlier or later!
-      * You can configure whether or not to synchronize via `syncMaskAnimationDuration`.
-  * **Delete class/method**
-    * **Please note that this time we didn't mark it as @Deprecated and just removed the code, so be sure to change it if you use these methods**
-    * **Deleted class:** SimpleAnimationUtils.java，We recommend that you use [AnimationHelper](https://www.yuque.com/razerdp/basepopup/zcgtm5) instead.
-    * **Deleted Method:** BasePopupWindow#getTranslateVerticalAnimation
-    * **Deleted Method:** BasePopupWindow#getScaleAnimation
-    * **Deleted Method:** BasePopupWindow#getDefaultScaleAnimation
-    * **Deleted Method:** BasePopupWindow#getDefaultAlphaAnimation
-    * **Deleted Method:** BasePopupWindow#getDefaultSlideFromBottomAnimationSet
-  * **Bug fixes**
-    * Fix the problem that focusable is not restored in fullscreen Activity.
-    * Fix the problem of forced modification of SystemUiVisibility in full-screen Activity.
-    * Fix the problem that backpressenable settings in Quickpopupbuilder don't work.[#296](https://github.com/razerdp/BasePopup/issues/296)
-    * Fix the issue where EditText is blocked by keyboard in non-BasePopup.[#297](https://github.com/razerdp/BasePopup/issues/297)
-    * Fix gravity overlays in lazypopups[#310](https://github.com/razerdp/BasePopup/issues/310)
-    * Fix the problem of unsuccessful position acquisition due to incomplete measurement process when associating anchor View under onCreate().[#313](https://github.com/razerdp/BasePopup/issues/313)
-    * Fix measurement error with max/min width/height setting
-    * Fix a problem with keyboard monitoring that may occur with adjustResize softInput mode.[#315](https://github.com/razerdp/BasePopup/issues/315)
-    * Fix the problem of setting softInputMode duplicate.[#314](https://github.com/razerdp/BasePopup/issues/314)
+    * Optimize BasePopup's internal log, support Chinese and English.
+    * Change the height of the get status bar to System Resource to prevent inaccurate getting due to a change in density.
+    * The AnchorView get position method is modified to align the reference system.
+  * **Bugs fixed**
+    * Fix the problem that the keyboard does not pop up under the hidden NavigationBar.
+    * Fix the problem that there is no dismiss when `showPopupWindow` has an exception.
+    * Refactoring layout logic to fit the NavigationBar's strange orientation.[#336](https://github.com/razerdp/BasePopup/issues/336)
+    * Fix the problem that keyboard GlobalListener was removed early, which caused the popup to adapt to the keyboard only after the second popup.[#338](https://github.com/razerdp/BasePopup/issues/338)
+    * Fix the cutout check problem
 
 <br>
 
