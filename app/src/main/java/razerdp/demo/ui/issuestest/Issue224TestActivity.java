@@ -53,7 +53,8 @@ public class Issue224TestActivity extends BaseActivity {
             mPopupIssue224.setPopupGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL)
                     .setBackground(0)
                     .setOutSideDismiss(false)
-                    .setOutSideTouchable(true);
+                    .setOutSideTouchable(true)
+                    .linkTo(testLayout);
             mPopupIssue224.getPopupWindow().setFocusable(false);
         }
 

@@ -2,6 +2,7 @@
 
 buildscript {
     repositories {
+        maven { url "https://raw.githubusercontent.com/Pgyer/mvn_repo_pgyer/master" }
         maven { url "https://maven.google.com" }
         maven { url "https://jitpack.io" }
         jcenter()
@@ -19,6 +20,7 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url "https://raw.githubusercontent.com/Pgyer/mvn_repo_pgyer/master" }
         maven { url "https://maven.google.com" }
         maven { url "https://jitpack.io" }
         jcenter()
@@ -36,10 +38,10 @@ ext {
     minSdkVersion = 19
     minLibSdkVersion = 16
     targetSdkVersion = 29
-    versionCode = 118
-    versionName = '2.2.4.1'
+    versionCode = 125
+    versionName = '2.2.5.0812'
 
-    candy = false
+    candy = true
     group = 'com.github.razerdp'
 
     pkg_name = 'BasePopup'

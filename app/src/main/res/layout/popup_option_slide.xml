@@ -34,6 +34,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="@dimen/default_padding">
 
@@ -57,15 +58,30 @@
                     android:textSize="@dimen/text_small"
                     android:theme="@style/MyCheckBox" />
 
-                <androidx.appcompat.widget.AppCompatCheckBox
-                    android:id="@+id/check_align_to_side"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
-                    android:text="对边模式"
-                    android:textColor="@color/text_black2"
-                    android:textSize="@dimen/text_small"
-                    android:theme="@style/MyCheckBox" />
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/check_horizontal_align_to_side"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="水平对边模式"
+                        android:textColor="@color/text_black2"
+                        android:textSize="@dimen/text_small"
+                        android:theme="@style/MyCheckBox" />
+
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/check_vertical_align_to_side"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="垂直对边模式"
+                        android:textColor="@color/text_black2"
+                        android:textSize="@dimen/text_small"
+                        android:theme="@style/MyCheckBox" />
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>
