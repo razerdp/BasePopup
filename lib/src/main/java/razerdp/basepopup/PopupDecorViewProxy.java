@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Rect;
+import android.util.LayoutDirection;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -64,11 +65,11 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         setClipChildren(mHelper.isClipChildren());
         mMaskLayout = new PopupMaskLayout(getContext(), mHelper);
         setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
-                LayoutParams.MATCH_PARENT));
+                                                   LayoutParams.MATCH_PARENT));
         addViewInLayout(mMaskLayout,
-                -1,
-                new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
-                        LayoutParams.MATCH_PARENT));
+                        -1,
+                        new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
+                                                   LayoutParams.MATCH_PARENT));
     }
 
     public void wrapPopupDecorView(final View target, WindowManager.LayoutParams params) {
@@ -358,9 +359,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
             if (child == mMaskLayout) {
                 child.layout(contentBounds.left,
-                        contentBounds.top,
-                        contentBounds.left + getMeasuredWidth(),
-                        contentBounds.top + getMeasuredHeight());
+                             contentBounds.top,
+                             contentBounds.left + getMeasuredWidth(),
+                             contentBounds.top + getMeasuredHeight());
             } else {
                 Rect anchorBound = mHelper.getAnchorViewBound();
                 boolean isRelativeToAnchor = mHelper.isWithAnchor();
@@ -372,10 +373,12 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
                     case Gravity.LEFT:
                         if (isRelativeToAnchor) {
-                            contentRect.left = isHorizontalAlignAnchorSlide ? anchorBound.left : anchorBound.left - contentRect
-                                    .width();
+                            contentRect.left = isHorizontalAlignAnchorSlide ? anchorBound.left : anchorBound.left - width;
                         } else {
                             contentRect.left = contentBounds.left;
+                        }
+                        if (mHelper.layoutDirection == LayoutDirection.RTL) {
+                            offsetX = ~offsetX + 1;
                         }
                         break;
                     case Gravity.RIGHT:
@@ -466,9 +469,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 }
 
                 contentRect.set(contentRect.left,
-                        contentRect.top,
-                        contentRect.left + width,
-                        contentRect.top + height);
+                                contentRect.top,
+                                contentRect.left + width,
+                                contentRect.top + height);
 
                 contentRect.offset(offsetX, offsetY);
 
@@ -506,7 +509,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 child.layout(contentRect.left, contentRect.top, contentRect.right, contentRect.bottom);
                 if (delayLayoutMask) {
                     mMaskLayout.handleAlignBackground(mHelper.getAlignBackgroundGravity(),
-                            contentRect.left, contentRect.top, contentRect.right, contentRect.bottom);
+                                                      contentRect.left, contentRect.top, contentRect.right, contentRect.bottom);
                 }
                 if (isRelativeToAnchor) {
                     popupRect.set(contentRect);
