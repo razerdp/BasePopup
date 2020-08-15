@@ -120,6 +120,14 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 **Candy dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
+* **【Release Urgent Fix】2.2.6**(2020/08/15)
+  * We found a serious issue in version 2.2.5 that could cause location failure, we urgently fixed it and released version 2.2.6, please upgrade to version 2.2.6 as soon as possible!
+  * **Optimisation**
+    * RTL layout adaptation offset
+  * **Bugs fixed**
+    * **Fix the positioning error when PopupGravity = Gravity.Left**
+    * **Fix the problem of non-full screen Dialog positioning error.**
+
 * **【Release】2.2.5**(2020/08/13)
   * We have fixed the bug in 2.2.4.1, there are more bugs in landscape in 2.2.4.1, these bugs are fixed in 2.2.5.
   * **New features/methods added:**
