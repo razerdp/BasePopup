@@ -119,23 +119,10 @@
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Candy】2.2.5**
-  * 未发布版本
-    * log多语言 （2020/07/20）
-    * 获取状态栏高度更替为System Resource，防止因为改了density导致获取不准确的问题 (2020/08/06)
-  * **2.2.5.0725** (2020/07/25)
-    * 修复隐藏navigationbar下键盘无法弹出的问题
-  * 未发布版本（2020/07/29）
-    * 修复showpopup出现异常时没有dismiss的问题
-  * **2.2.5.0806** (2020/08/06)
-    * AnchorView获取位置方法修改，对齐参考系
-  * **2.2.5.0810** (2020/08/10)
-    * PopupGravityMode分离，现在支持水平方向与垂直方向分开设置对边、对位模式了~
-  * **2.2.5.0811** (2020/08/11)
-    * 重构layout逻辑，针对NavigationBar奇怪的方向适配 [#336](https://github.com/razerdp/BasePopup/issues/336)
-    * 修复键盘GlobalListener提前被remove，导致popup在第二次弹出才能适配键盘的问题 [#338](https://github.com/razerdp/BasePopup/issues/338)
-  * **2.2.5.0812** (2020/08/12)
-    * 针对刘海屏适配
+* **【Candy】2.2.6**
+  * 修复PopupGravity = Gravity.Left时定位错误的问题
+  * RTL布局适配offset
+  * 针对非全屏Dialog定位出错的问题
 
 
 <br>
