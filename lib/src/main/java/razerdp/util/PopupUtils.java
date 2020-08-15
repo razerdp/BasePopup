@@ -69,6 +69,10 @@ public class PopupUtils {
 
 
     public static Activity getActivity(Context from) {
+        return getActivity(from, true);
+    }
+
+    public static Activity getActivity(Context from, boolean returnTopIfNull) {
         final int limit = 20;
         Context result = from;
         if (result instanceof Activity) {
@@ -81,12 +85,12 @@ public class PopupUtils {
             }
             if (tryCount > limit) {
                 //break endless loop
-                return BasePopupSDK.getInstance().getTopActivity();
+                break;
             }
             result = ((ContextWrapper) result).getBaseContext();
             tryCount++;
         }
-        return BasePopupSDK.getInstance().getTopActivity();
+        return returnTopIfNull ? BasePopupSDK.getInstance().getTopActivity() : null;
     }
 
     public static float range(float value, float min, float max) {
