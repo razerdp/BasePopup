@@ -42,11 +42,11 @@ public class CommonBottomSheetDialogInfo extends DemoCommonUsageInfo {
         if (mPopupDesc == null) {
             mPopupDesc = new PopupDesc(v.getContext());
             mPopupDesc.setTitle("BottomSheetDialog中弹出BasePopup")
-                    .setDesc(new StringBuilder("问题描述：")
-                            .append('\n')
-                            .append("在BottomSheetDialog或Fragment中弹出BasePopup时，由于默认取Activity的DecorView的WindowToken的缘故，因此会默认显示在BottomSheetDialog或Fragment的下层。")
-                            .append('\n')
-                            .append("BasePopup为了解决该问题，提供了BasePopup-Compat组件，用于适配此类兼容性问题。"));
+                      .setDesc(new StringBuilder("问题描述：")
+                                       .append('\n')
+                                       .append("在BottomSheetDialog或Fragment中弹出BasePopup时，由于默认取Activity的DecorView的WindowToken的缘故，因此会默认显示在BottomSheetDialog或Fragment的下层。")
+                                       .append('\n')
+                                       .append("BasePopup为了解决该问题，提供了BasePopup-Compat组件，用于适配此类兼容性问题。"));
         }
         mPopupDesc.showPopupWindow();
     }
@@ -71,7 +71,7 @@ public class CommonBottomSheetDialogInfo extends DemoCommonUsageInfo {
             if (mDemoPopup == null) {
                 mDemoPopup = new DemoPopup(this).setText("兼容性测试\n\nBttomSheetDialog内弹出BasePopup");
             }
-            mDemoPopup.setPopupGravity(BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE, Gravity.TOP | Gravity.CENTER_HORIZONTAL);
+            mDemoPopup.setPopupGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
             mDemoPopup.showPopupWindow(tvShow);
         }
     }
