@@ -121,22 +121,13 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 **正在开发日志（Candy版本）请查看dev分支：** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **【Release】2.2.5**(2020/08/13)
-  * 我们针对2.2.4.1所出现的问题进行了修复，2.2.4.1在横屏的时候出现较多的bug，这些问题我们在2.2.5中集中修复并发布正式版，我们建议您更新到 **2.2.5**
-  * **新增功能/方法：**
-    * PopupGravityMode分离：现在我们可以分别指定水平方向上和垂直方向上的GravityMode
-      * 对应方法：`setPopupGravityMode(GravityMode horizontalMode, GravityMode verticalMode)`
-      * 我们可以轻松的实现诸如“右边缘对齐AnchorView右边缘，同时在AnchorView顶部展示”等逻辑
+* **【Release紧急修复】2.2.6**(2020/08/15)
+  * 在2.2.5中，我们发现一个可能导致定位失效的严重问题，对此我们紧急修复并发布了2.2.6版本，请尽快升级到2.2.6版本
   * **优化**
-    * 优化BasePopup的内部log，支持中英文
-    * 获取状态栏高度更替为System Resource，防止因为改了density导致获取不准确的问题
-    * AnchorView获取位置方法修改，对齐参考系
+    * RTL布局适配offset
   * **bug修复**
-    * 修复隐藏NavigationBar下键盘无法弹出的问题
-    * 修复showpopup出现异常时没有dismiss的问题
-    * 重构layout逻辑，针对NavigationBar奇怪的方向适配[#336](https://github.com/razerdp/BasePopup/issues/336)
-    * 修复键盘GlobalListener提前被remove，导致popup在第二次弹出才能适配键盘的问题[#338](https://github.com/razerdp/BasePopup/issues/338)
-    * 修复刘海屏适配错乱的问题
+    * **修复PopupGravity = Gravity.Left时定位错误的问题**
+    * **修复非全屏Dialog定位出错的问题**
 
 
 <br>
