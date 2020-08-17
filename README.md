@@ -119,10 +119,8 @@
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Candy】2.2.6**
-  * 修复PopupGravity = Gravity.Left时定位错误的问题
-  * RTL布局适配offset
-  * 针对非全屏Dialog定位出错的问题
+* **【Candy】2.2.7.1**
+  * 修复RTL布局适配offset时以View作为参考系的问题，实际上应该是以系统坐标系作为参考
 
 
 <br>
