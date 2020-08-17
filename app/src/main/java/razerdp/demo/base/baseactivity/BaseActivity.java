@@ -13,19 +13,21 @@ import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import pub.devrel.easypermissions.EasyPermissions;
 import razerdp.basepopup.R;
 import razerdp.demo.base.StatusBarHelper;
 import razerdp.demo.base.interfaces.ClearMemoryObject;
@@ -73,8 +75,15 @@ public abstract class BaseActivity<T extends BaseActivity.IntentData>
         super.onActivityReenter(resultCode, data);
         LiveDataBus.INSTANCE.getActivityReenterLiveData().send(Pair.create(resultCode, data));
     }
+
     protected void onStartCreate(Bundle savedInstanceState) {
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     //region ===============================abstract===============================

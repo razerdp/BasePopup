@@ -5,11 +5,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
 import razerdp.basepopup.R;
@@ -29,6 +30,7 @@ import razerdp.demo.model.common.CommonBackgroundInfo;
 import razerdp.demo.model.common.CommonBlurInfo;
 import razerdp.demo.model.common.CommonBottomSheetDialogInfo;
 import razerdp.demo.model.common.CommonControllerInfo;
+import razerdp.demo.model.common.CommonDialogActivityInfo;
 import razerdp.demo.model.common.CommonFriendCircleInfo;
 import razerdp.demo.model.common.CommonFullScreenActivityInfo;
 import razerdp.demo.model.common.CommonGestureNavInfo;
@@ -87,7 +89,8 @@ public class CommonUsageActivity extends BaseActivity {
             }
         });
         rvContent.setLayoutManager(gridLayoutManager);
-        rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(UIHelper.DP8).build()));
+        rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(UIHelper.DP8)
+                .build()));
         mAdapter = new MultiRecyclerViewAdapter(this, createItem());
         mAdapter.appendHolder(InnerTitleViewHolder.class, 0)
                 .appendHolder(InnerItemViewHolder.class, 1);
@@ -132,6 +135,7 @@ public class CommonUsageActivity extends BaseActivity {
         result.add(new CommonBottomSheetDialogInfo());
         result.add(new CommonGestureNavInfo());
         result.add(new CommonFullScreenActivityInfo());
+        result.add(new CommonDialogActivityInfo());
         result.add(new CommonRTLInfo());
 
         return result;

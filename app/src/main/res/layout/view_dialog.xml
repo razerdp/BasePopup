@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingBottom="@dimen/default_padding"
-        android:text="这是一个Dialog"
+        android:text="这是一个BottomSheet"
         android:textColor="@color/text_black2"
         android:textSize="@dimen/text_large" />
 
@@ -19,7 +19,7 @@
     <TextView
         android:id="@+id/tv_show"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="150dp"
         android:gravity="center"
         android:text="请点击我弹出BasePopup"
         android:textColor="@color/text_black2_60" />
