@@ -47,10 +47,6 @@
 
 </div>
 
-<p align="center"> 
-  浏览量（从2020/08/19起计算）<br>
-  <img src="https://profile-counter.glitch.me/razerdp-basepopup/count.svg" />
-</p>
 
 ---
 
@@ -175,3 +171,9 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 ### License
 
 [Apache-2.0](./LICENSE)
+
+
+<p align="center">
+  Visit Count（from 2020/08/19）<br>
+  <img src="https://profile-counter.glitch.me/razerdp-basepopup/count.svg" />
+</p>
