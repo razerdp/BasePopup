@@ -126,6 +126,8 @@
   * 修复模糊背景在不覆盖状态栏下模糊范围出错的问题
 * **【Candy】2.2.7.3** (2020/08/20)
   * 修复存在Margin的情况下，点击ContentView外无法传递到MaskLayout的问题 [#317](https://github.com/razerdp/BasePopup/issues/317)
+* **【Candy】2.2.7.4** (2020/08/20)
+  * DecorView适配margin下的大小
 
 
 <br>
