@@ -147,7 +147,24 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         childBottomMargin = mHelper.getLayoutParams().bottomMargin;
 
         mHelper.refreshNavigationBarBounds();
+        switch (MeasureSpec.getMode(wp.width)) {
+            case MeasureSpec.EXACTLY:
+                PopupLog.i("aaa");
+                break;
+            case MeasureSpec.AT_MOST:
+                PopupLog.i("bbb");
+                break;
+            case MeasureSpec.UNSPECIFIED:
+                PopupLog.i("ccc");
+                break;
+        }
         //添加decorView作为自己的子控件
+        if (wp.width > 0) {
+            wp.width += childLeftMargin + childRightMargin;
+        }
+        if (wp.height > 0) {
+            wp.height += childTopMargin + childBottomMargin;
+        }
         addView(target, wp);
     }
 
