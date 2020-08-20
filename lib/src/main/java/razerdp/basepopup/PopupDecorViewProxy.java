@@ -33,6 +33,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     private Rect anchorRect = new Rect();
     private Rect contentRect = new Rect();
     private Rect contentBounds = new Rect();
+    private Rect touchableRect = new Rect();
 
     private int childLeftMargin;
     private int childTopMargin;
@@ -115,8 +116,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 if (p == null) {
                     p = new LayoutParams(lp);
                 } else {
-                    p.width = lp.width;
-                    p.height = lp.height;
+                    p.width = p.height = LayoutParams.MATCH_PARENT;
                 }
                 parent.setLayoutParams(p);
             }
@@ -266,11 +266,15 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             switch (navigationBarGravity) {
                 case Gravity.LEFT:
                 case Gravity.RIGHT:
-                    widthSize -= navigationBarSize;
+                    if (lp.width == LayoutParams.WRAP_CONTENT || lp.width == LayoutParams.MATCH_PARENT) {
+                        widthSize -= navigationBarSize;
+                    }
                     break;
                 case Gravity.TOP:
                 case Gravity.BOTTOM:
-                    heightSize -= navigationBarSize;
+                    if (lp.height == LayoutParams.WRAP_CONTENT || lp.height == LayoutParams.MATCH_PARENT) {
+                        heightSize -= navigationBarSize;
+                    }
                     break;
             }
         }
@@ -508,6 +512,13 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                         }
                     }
                 }
+                //可点击区域
+                touchableRect.set(contentRect);
+                touchableRect.left += childLeftMargin;
+                touchableRect.top += childTopMargin;
+                touchableRect.right -= childRightMargin;
+                touchableRect.bottom -= childBottomMargin;
+
                 child.layout(contentRect.left, contentRect.top, contentRect.right, contentRect.bottom);
                 if (delayLayoutMask) {
                     mMaskLayout.handleAlignBackground(mHelper.getAlignBackgroundGravity(),
@@ -537,6 +548,25 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         boolean intercept = mHelper != null && mHelper.onInterceptTouchEvent(ev);
         if (intercept) return true;
         return super.onInterceptTouchEvent(ev);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        //由于margin的情况会导致contentView的parent(decorView)会消耗该事件，因此我们这里手动分发给mask
+        if (childLeftMargin > 0 ||
+                childTopMargin > 0 ||
+                childRightMargin > 0 ||
+                childBottomMargin > 0) {
+            if (mMaskLayout == null) {
+                return super.dispatchTouchEvent(ev);
+            }
+            int x = (int) ev.getX();
+            int y = (int) ev.getY();
+            if (contentRect.contains(x, y) && !touchableRect.contains(x, y)) {
+                return mMaskLayout.dispatchTouchEvent(ev);
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override
