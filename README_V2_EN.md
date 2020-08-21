@@ -120,30 +120,15 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 **Candy dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **【Release Urgent Fix】2.2.6**(2020/08/15)
-  * We found a serious issue in version 2.2.5 that could cause location failure, we urgently fixed it and released version 2.2.6, please upgrade to version 2.2.6 as soon as possible!
-  * **Optimisation**
-    * RTL layout adaptation offset
+* **【Release】2.2.7**(2020/08/21)
+  * In 2.2.7, we refactored Layout's logic, fixed existing issues, and tested all test cases in landscape and portrait in the demo.
   * **Bugs fixed**
-    * **Fix the positioning error when PopupGravity = Gravity.Left**
-    * **Fix the problem of non-full screen Dialog positioning error.**
-
-* **【Release】2.2.5**(2020/08/13)
-  * We have fixed the bug in 2.2.4.1, there are more bugs in landscape in 2.2.4.1, these bugs are fixed in 2.2.5.
-  * **New features/methods added:**
-    * PopupGravityMode Separation: Now we can specify the GravityMode horizontally and vertically respectively.
-      * api:`setPopupGravityMode(GravityMode horizontalMode, GravityMode verticalMode)`
-      * We can easily implement logic such as "align right edge of AnchorView right edge and show on top of AnchorView".
-  * **Optimisation**
-    * Optimize BasePopup's internal log, support Chinese and English.
-    * Change the height of the get status bar to System Resource to prevent inaccurate getting due to a change in density.
-    * The AnchorView get position method is modified to align the reference system.
-  * **Bugs fixed**
-    * Fix the problem that the keyboard does not pop up under the hidden NavigationBar.
-    * Fix the problem that there is no dismiss when `showPopupWindow` has an exception.
-    * Refactoring layout logic to fit the NavigationBar's strange orientation.[#336](https://github.com/razerdp/BasePopup/issues/336)
-    * Fix the problem that keyboard GlobalListener was removed early, which caused the popup to adapt to the keyboard only after the second popup.[#338](https://github.com/razerdp/BasePopup/issues/338)
-    * Fix the cutout check problem
+    * Popup in non-full-screen Dialog location display still has anomalies, after troubleshooting found that version 2.2.6 from `getLocationOnScreen` to `getLocationInWindow` reasons, after discussion in the group, decided to take the original program, a unified Screen as a reference to solve the Window location is not Popups are not displayed correctly due to the same problem.
+    * The offset in the RTL layout is referenced to the View in 2.2.6, but should actually be referenced to the system coordinate system, as modified in 2.2.7.
+    * Blurred background in `overlayStatusBar(false)` still contains the status bar, causing the blurred image to be wrong, fixed in 2.2.7.
+    * When the ContentView contains Margin, clicks within the range of Margin are not responsive, we have adapted it for this problem and now it works.
+    * ContentView will have a crop problem if given `width>0` or `height>0` when it contains Margin.This is because its parent class, DecorView, is set to the same size. 2.2.7 takes margin into account and adapts the size of DecorView accordingly.
+    * When ContentView is given `width>0` or `height>0` and no AnchorView is associated with it, there will be a crop problem, the crop size is just the size of NavigationBar. 2.2.7 fixes this problem.
 
 <br>
 
