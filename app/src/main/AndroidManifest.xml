@@ -95,6 +95,9 @@
         <activity
             android:name="razerdp.demo.ui.issuestest.Issue277TestActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name="razerdp.demo.ui.dialog.DialogActivity"
+            android:theme="@style/DialogTheme" />
 
         <service android:name="razerdp.demo.services.DemoService" />
         <service android:name="razerdp.demo.services.DelayDemoService" />

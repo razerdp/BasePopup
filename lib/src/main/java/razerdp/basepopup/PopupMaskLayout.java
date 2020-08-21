@@ -7,12 +7,9 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
 import razerdp.blur.BlurImageView;
-import razerdp.library.R;
 import razerdp.util.PopupUiUtils;
 import razerdp.util.PopupUtils;
 
@@ -63,6 +60,8 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
         mHelper.observerEvent(this, this);
         if (mHelper.isAllowToBlur()) {
             mBlurImageView = new BlurImageView(context);
+            mBlurImageView.setCutoutX(mHelper.getTempOffset().x);
+            mBlurImageView.setCutoutY(mHelper.getTempOffset().y);
             mBlurImageView.applyBlurOption(mHelper.getBlurOption());
             addViewInLayout(mBlurImageView, -1, generateDefaultLayoutParams());
         }

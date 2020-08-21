@@ -36,6 +36,8 @@ public class BlurImageView extends ImageView {
     private CacheAction mCacheAction;
     private CacheAction mAttachedCache;
     private boolean isAttachedToWindow = false;
+    private int cutoutX;
+    private int cutoutY;
 
 
     public BlurImageView(Context context) {
@@ -62,6 +64,16 @@ public class BlurImageView extends ImageView {
         }
     }
 
+    public BlurImageView setCutoutX(int cutoutX) {
+        this.cutoutX = cutoutX;
+        return this;
+    }
+
+    public BlurImageView setCutoutY(int cutoutY) {
+        this.cutoutY = cutoutY;
+        return this;
+    }
+
     public void applyBlurOption(PopupBlurOption option) {
         applyBlurOption(option, false);
     }
@@ -85,7 +97,8 @@ public class BlurImageView extends ImageView {
                 if (!BlurHelper.renderScriptSupported()) {
                     PopupLog.e(TAG, "不支持脚本模糊。。。最低支持api 17(Android 4.2.2)，将采用fastblur");
                 }
-                setImageBitmapOnUiThread(BlurHelper.blur(getContext(), anchorView, option.getBlurPreScaleRatio(), option.getBlurRadius(), option.isFullScreen()), isOnUpdate);
+                setImageBitmapOnUiThread(BlurHelper.blur(getContext(), anchorView, option.getBlurPreScaleRatio(), option
+                        .getBlurRadius(), option.isFullScreen(), cutoutX, cutoutY), isOnUpdate);
             } catch (Exception e) {
                 PopupLog.e(TAG, "模糊异常", e);
                 e.printStackTrace();
@@ -302,7 +315,8 @@ public class BlurImageView extends ImageView {
         CreateBlurBitmapRunnable(View target) {
             outWidth = target.getWidth();
             outHeight = target.getHeight();
-            mBitmap = BlurHelper.getViewBitmap(target, mBlurOption.getBlurPreScaleRatio(), mBlurOption.isFullScreen());
+            mBitmap = BlurHelper.getViewBitmap(target, mBlurOption.getBlurPreScaleRatio(), mBlurOption
+                    .isFullScreen(), cutoutX, cutoutY);
         }
 
         @Override
