@@ -158,3 +158,8 @@ Please refer to [**Basepopup manual: Frequently QA**](https://www.yuque.com/raze
 ### License
 
 [Apache-2.0](./LICENSE)
+
+<p align="center">
+  Visit Count（from 2020/08/21）<br>
+  <img src="https://profile-counter.glitch.me/razerdp-basepopup-en/count.svg" />
+</p>
