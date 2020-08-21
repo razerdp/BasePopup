@@ -119,15 +119,9 @@
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Candy】2.2.7.1** (2020/08/17)
-  * 修复RTL布局适配offset时以View作为参考系的问题，实际上应该是以系统坐标系作为参考
-* **【Candy】2.2.7.2** (2020/08/17)
-  * 获取AnchorView位置重新采用screen
-  * 修复模糊背景在不覆盖状态栏下模糊范围出错的问题
-* **【Candy】2.2.7.3** (2020/08/20)
-  * 修复存在Margin的情况下，点击ContentView外无法传递到MaskLayout的问题 [#317](https://github.com/razerdp/BasePopup/issues/317)
-* **【Candy】2.2.7.4** (2020/08/20)
-  * DecorView适配margin下的大小
+* **【Candy】2.2.8.0817** (2020/08/17)
+  * 支持BasePopup使用BasePopup内的AnchorView弹窗
+
 
 
 <br>

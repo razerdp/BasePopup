@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
 
+import razerdp.library.R;
 import razerdp.util.PopupUtils;
 
 /**
@@ -68,9 +69,9 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
     @Override
     public void showAtLocation(View parent, int gravity, int x, int y) {
         if (isShowing()) return;
-        Activity activity = PopupUtils.getActivity(parent.getContext());
+        Activity activity = PopupUtils.getActivity(parent.getContext(), false);
         if (activity == null) {
-            Log.e(TAG, "please make sure that context is instance of activity");
+            Log.e(TAG, PopupUtils.getString(R.string.basepopup_error_non_act_context));
             return;
         }
         onBeforeShowExec(activity);
