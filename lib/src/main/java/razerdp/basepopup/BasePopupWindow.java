@@ -827,12 +827,8 @@ public abstract class BasePopupWindow implements BasePopup, PopupWindow.OnDismis
                 return;
             }
             mHelper.onShow();
-            //传递了view
-            if (v != null) {
-                mPopupWindowProxy.showAtLocation(v, getPopupGravity(), 0, 0);
-            } else {
-                mPopupWindowProxy.showAtLocation(decorView, Gravity.NO_GRAVITY, 0, 0);
-            }
+            //这里传参没啥意义的，，反正代理类会解决
+            mPopupWindowProxy.showAtLocation(decorView, Gravity.NO_GRAVITY, 0, 0);
             onLogInternal(PopupUtils.getString(R.string.basepopup_shown_successful));
         } catch (Exception e) {
             e.printStackTrace();
