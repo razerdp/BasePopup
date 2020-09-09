@@ -30,14 +30,13 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import java.util.Map;
+import java.util.WeakHashMap;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import razerdp.blur.PopupBlurOption;
 import razerdp.library.R;
 import razerdp.util.KeyboardUtils;
@@ -930,6 +929,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
             msg.arg1 = 0;
             mPopupWindow.superDismiss();
         }
+        BasePopupUnsafe.StackFetcher.remove(mPopupWindow);
         sendEvent(msg);
     }
 

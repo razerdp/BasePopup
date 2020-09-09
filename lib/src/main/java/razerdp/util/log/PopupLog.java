@@ -130,7 +130,7 @@ public class PopupLog {
         return trace[stackOffset];
     }
 
-    private static int getStackOffset(StackTraceElement[] trace, Class cla) {
+    public static int getStackOffset(StackTraceElement[] trace, Class cla) {
         int logIndex = -1;
         for (int i = 0; i < trace.length; i++) {
             StackTraceElement element = trace[i];
