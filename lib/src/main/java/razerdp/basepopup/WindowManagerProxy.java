@@ -10,11 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import androidx.annotation.Nullable;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import androidx.annotation.Nullable;
 import razerdp.util.PopupUiUtils;
 import razerdp.util.log.PopupLog;
 
@@ -27,7 +26,7 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
     private static final String TAG = "WindowManagerProxy";
     private WindowManager mWindowManager;
     PopupDecorViewProxy mPopupDecorViewProxy;
-    private BasePopupHelper mPopupHelper;
+    BasePopupHelper mPopupHelper;
     boolean isAddedToQueue;
 
     WindowManagerProxy(WindowManager windowManager, BasePopupHelper helper) {
@@ -43,8 +42,8 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
     @Override
     public void removeViewImmediate(View view) {
         PopupLog.i(TAG,
-                "WindowManager.removeViewImmediate  >>>  " + (view == null ? null : view.getClass()
-                        .getSimpleName()));
+                   "WindowManager.removeViewImmediate  >>>  " + (view == null ? null : view.getClass()
+                           .getSimpleName()));
         PopupWindowQueueManager.getInstance().remove(this);
         if (mWindowManager == null || view == null) return;
         if (isPopupInnerDecorView(view) && mPopupDecorViewProxy != null) {
@@ -63,7 +62,7 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
     @Override
     public void addView(View view, ViewGroup.LayoutParams params) {
         PopupLog.i(TAG,
-                "WindowManager.addView  >>>  " + (view == null ? null : view.getClass().getName()));
+                   "WindowManager.addView  >>>  " + (view == null ? null : view.getClass().getName()));
         PopupWindowQueueManager.getInstance().put(this);
         if (mWindowManager == null || view == null) return;
         if (isPopupInnerDecorView(view)) {
@@ -132,8 +131,8 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
     @Override
     public void updateViewLayout(View view, ViewGroup.LayoutParams params) {
         PopupLog.i(TAG,
-                "WindowManager.updateViewLayout  >>>  " + (view == null ? null : view.getClass()
-                        .getName()));
+                   "WindowManager.updateViewLayout  >>>  " + (view == null ? null : view.getClass()
+                           .getName()));
         if (mWindowManager == null || view == null) return;
         if (isPopupInnerDecorView(view) && mPopupDecorViewProxy != null || view == mPopupDecorViewProxy) {
             mWindowManager.updateViewLayout(mPopupDecorViewProxy, fitLayoutParamsPosition(params));
@@ -168,8 +167,8 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
     @Override
     public void removeView(View view) {
         PopupLog.i(TAG,
-                "WindowManager.removeView  >>>  " + (view == null ? null : view.getClass()
-                        .getSimpleName()));
+                   "WindowManager.removeView  >>>  " + (view == null ? null : view.getClass()
+                           .getSimpleName()));
         PopupWindowQueueManager.getInstance().remove(this);
         if (mWindowManager == null || view == null) return;
         if (isPopupInnerDecorView(view) && mPopupDecorViewProxy != null) {
@@ -216,7 +215,7 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
 
     static class PopupWindowQueueManager {
 
-        private static final HashMap<String, LinkedList<WindowManagerProxy>> sQueueMap = new HashMap<>();
+        static final HashMap<String, LinkedList<WindowManagerProxy>> sQueueMap = new HashMap<>();
 
         private static class SingleTonHolder {
             private static PopupWindowQueueManager INSTANCE = new PopupWindowQueueManager();

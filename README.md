@@ -121,6 +121,9 @@
 
 * **【Candy】2.2.8.0817** (2020/08/17)
   * 支持BasePopup使用BasePopup内的AnchorView弹窗
+* **待发布** (2020/09/09)
+  * 添加BasePopupUnsafe，这个工具类是个核弹，请谨慎使用
+  * 去掉BasePopup接口
 
 
 
