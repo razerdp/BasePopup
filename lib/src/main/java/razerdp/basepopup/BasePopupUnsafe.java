@@ -1,13 +1,14 @@
 package razerdp.basepopup;
 
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
-import android.view.View;
+
+import androidx.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import androidx.annotation.Nullable;
 import razerdp.util.log.PopupLog;
 
 /**
@@ -17,6 +18,8 @@ import razerdp.util.log.PopupLog;
  * <p>
  * 该类及其所有方法将会标记为过时，但那只是唬你的哈哈，只是想说尽可能不要用到它
  */
+@SuppressLint("All")
+@SuppressWarnings("all")
 @Deprecated
 public enum BasePopupUnsafe {
     INSTANCE;
@@ -39,46 +42,17 @@ public enum BasePopupUnsafe {
     }
 
     /**
-     * 记录堆栈的show操作
+     * 记录堆栈
      */
     @Deprecated
     @Nullable
-    public StackDumpInfo dumpShow(BasePopupWindow p, boolean doShow, Object... obj) {
+    public StackDumpInfo dump(BasePopupWindow p) {
         if (p == null) return null;
-        StackDumpInfo result = null;
-        if (obj == null || obj.length == 0) {
-            result = StackFetcher.record(p);
-            if (doShow) {
-                p.showPopupWindow();
-            }
-        } else if (obj.length == 1) {
-            Object element = obj[0];
-            if (element instanceof View) {
-                result = StackFetcher.record(p);
-                if (doShow) {
-                    p.showPopupWindow((View) element);
-                }
-            } else if (element instanceof Integer) {
-                result = StackFetcher.record(p);
-                if (doShow) {
-                    p.showPopupWindow((Integer) element);
-                }
-            }
-        } else if (obj.length == 2) {
-            Object v1 = obj[0];
-            Object v2 = obj[1];
-            if (v1 instanceof Integer && v2 instanceof Integer) {
-                result = StackFetcher.record(p);
-                if (doShow) {
-                    p.showPopupWindow((Integer) v1, (Integer) v2);
-                }
-            }
-        }
-        return result;
+        return StackFetcher.record(p);
     }
 
     /**
-     * 获取用{@link #dumpShow(BasePopupWindow, boolean, Object...)}弹窗时记录的堆栈信息
+     * 获取用{@link #dump(BasePopupWindow)}记录的堆栈信息
      */
     @Deprecated
     @Nullable
