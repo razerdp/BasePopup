@@ -20,9 +20,10 @@ import razerdp.util.PopupUtils;
  */
 class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserver, ClearMemoryObject {
 
-    private BlurImageView mBlurImageView;
+    BlurImageView mBlurImageView;
     private BackgroundViewHolder mBackgroundViewHolder;
     private BasePopupHelper mPopupHelper;
+    private int[] location = null;
 
     private PopupMaskLayout(Context context) {
         super(context);
@@ -52,6 +53,7 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
 
     private void init(Context context, BasePopupHelper mHelper) {
         this.mPopupHelper = mHelper;
+        location = null;
         setLayoutAnimation(null);
         if (mHelper == null) {
             setBackgroundColor(Color.TRANSPARENT);
@@ -60,9 +62,6 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
         mHelper.observerEvent(this, this);
         if (mHelper.isAllowToBlur()) {
             mBlurImageView = new BlurImageView(context);
-            mBlurImageView.setCutoutX(mHelper.getTempOffset().x);
-            mBlurImageView.setCutoutY(mHelper.getTempOffset().y);
-            mBlurImageView.applyBlurOption(mHelper.getBlurOption());
             addViewInLayout(mBlurImageView, -1, generateDefaultLayoutParams());
         }
         if (mHelper.getBackgroundView() != null) {
@@ -77,6 +76,17 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
         }
     }
 
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        if (location == null && mPopupHelper != null && mPopupHelper.isAllowToBlur() && mBlurImageView != null) {
+            location = new int[2];
+            getLocationOnScreen(location);
+            mBlurImageView.setCutoutX(location[0]);
+            mBlurImageView.setCutoutY(location[1]);
+            mBlurImageView.applyBlurOption(mPopupHelper.getBlurOption());
+        }
+        super.onLayout(changed, left, top, right, bottom);
+    }
 
     public void handleAlignBackground(int gravity, int contentLeft, int contentTop, int contentRight, int contentBottom) {
         int left = getLeft();

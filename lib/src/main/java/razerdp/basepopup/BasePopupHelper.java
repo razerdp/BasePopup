@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -30,13 +29,14 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+
+import java.util.Map;
+import java.util.WeakHashMap;
+
 import razerdp.blur.PopupBlurOption;
 import razerdp.library.R;
 import razerdp.util.KeyboardUtils;
@@ -138,7 +138,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     int mSoftInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
     ViewGroup.MarginLayoutParams layoutParams;
-    Point mTempOffset = new Point();
 
     int maxWidth, maxHeight, minWidth, minHeight;
 
@@ -490,15 +489,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     public Rect getAnchorViewBound() {
         return mAnchorViewBound;
-    }
-
-    Point getTempOffset() {
-        return mTempOffset;
-    }
-
-    Point setTempOffset(int x, int y) {
-        mTempOffset.set(x, y);
-        return mTempOffset;
     }
 
     boolean isBackPressEnable() {
