@@ -34,12 +34,12 @@ task clean(type: Delete) {
 
 ext {
     //Android
-    compileSdkVersion = 29
+    compileSdkVersion = 30
     minSdkVersion = 19
     minLibSdkVersion = 16
-    targetSdkVersion = 29
-    versionCode = 137
-    versionName = '2.2.8.0909'
+    targetSdkVersion = 30
+    versionCode = 138
+    versionName = '2.2.8.0916'
 
     candy = true
     group = 'com.github.razerdp'

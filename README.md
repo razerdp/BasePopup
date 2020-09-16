@@ -124,6 +124,8 @@
 * **【Candy】2.2.8.0909** (2020/09/09)
   * 添加BasePopupUnsafe，这个工具类是个核弹，请谨慎使用
   * 去掉BasePopup接口
+* **【Candy】2.2.8.0916** (2020/09/16)
+  * 适配Api30 [#349](https://github.com/razerdp/BasePopup/issues/349)
 
 
 
