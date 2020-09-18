@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -139,7 +138,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     int mSoftInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
     ViewGroup.MarginLayoutParams layoutParams;
-    Point mTempOffset = new Point();
 
     int maxWidth, maxHeight, minWidth, minHeight;
 
@@ -491,15 +489,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     public Rect getAnchorViewBound() {
         return mAnchorViewBound;
-    }
-
-    Point getTempOffset() {
-        return mTempOffset;
-    }
-
-    Point setTempOffset(int x, int y) {
-        mTempOffset.set(x, y);
-        return mTempOffset;
     }
 
     boolean isBackPressEnable() {
@@ -930,6 +919,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
             msg.arg1 = 0;
             mPopupWindow.superDismiss();
         }
+        BasePopupUnsafe.StackFetcher.remove(mPopupWindow);
         sendEvent(msg);
     }
 

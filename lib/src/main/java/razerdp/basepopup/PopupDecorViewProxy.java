@@ -65,12 +65,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         mHelper.mKeyboardStateChangeListener = this;
         setClipChildren(mHelper.isClipChildren());
         mMaskLayout = new PopupMaskLayout(getContext(), mHelper);
-        setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
-                LayoutParams.MATCH_PARENT));
-        addViewInLayout(mMaskLayout,
-                -1,
-                new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
-                        LayoutParams.MATCH_PARENT));
+        setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        addViewInLayout(mMaskLayout, -1, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     }
 
     public void wrapPopupDecorView(final View target, WindowManager.LayoutParams params) {
@@ -336,7 +332,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         getLocationOnScreen(location);
-        mHelper.setTempOffset(location[0], location[1]);
         layoutInternal(l, t, r, b);
     }
 

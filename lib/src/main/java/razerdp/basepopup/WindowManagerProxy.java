@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
@@ -27,8 +28,17 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
     private static final String TAG = "WindowManagerProxy";
     private WindowManager mWindowManager;
     PopupDecorViewProxy mPopupDecorViewProxy;
-    private BasePopupHelper mPopupHelper;
+    BasePopupHelper mPopupHelper;
     boolean isAddedToQueue;
+    static final WindowFlagCompat FLAG_COMPAT;
+
+    static {
+        if (Build.VERSION.SDK_INT >= 30) {
+            FLAG_COMPAT = new WindowFlagCompat.Api30Impl();
+        } else {
+            FLAG_COMPAT = new WindowFlagCompat.BeforeApi30Impl();
+        }
+    }
 
     WindowManagerProxy(WindowManager windowManager, BasePopupHelper helper) {
         mWindowManager = windowManager;
@@ -71,43 +81,13 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
              * 此时的params是WindowManager.LayoutParams，需要留意强转问题
              * popup内部有scrollChangeListener，会有params强转为WindowManager.LayoutParams的情况
              */
-            applyHelper(params, mPopupHelper);
+            FLAG_COMPAT.setupFlag(params, mPopupHelper);
             //添加popup主体
             mPopupDecorViewProxy = new PopupDecorViewProxy(view.getContext(), mPopupHelper);
             mPopupDecorViewProxy.wrapPopupDecorView(view, (LayoutParams) params);
             mWindowManager.addView(mPopupDecorViewProxy, fitLayoutParamsPosition(params));
         } else {
             mWindowManager.addView(view, params);
-        }
-    }
-
-    private void applyHelper(ViewGroup.LayoutParams params, BasePopupHelper helper) {
-        if (params instanceof LayoutParams && helper != null) {
-            LayoutParams p = (LayoutParams) params;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                Activity decorAct = mPopupHelper.mPopupWindow.getContext();
-                if (decorAct != null) {
-                    WindowManager.LayoutParams lp = decorAct.getWindow().getAttributes();
-                    p.layoutInDisplayCutoutMode = lp.layoutInDisplayCutoutMode;
-                }
-            }
-            if (helper.isOverlayStatusbar()) {
-                PopupLog.i(TAG, "applyHelper  >>>  覆盖状态栏");
-                p.flags |= LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    PopupLog.i(TAG, "applyHelper  >>>  覆盖导航栏");
-                    p.flags |= LayoutParams.FLAG_LAYOUT_IN_OVERSCAN;
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    int cutoutGravity = mPopupHelper.getCutoutGravity();
-                    if (cutoutGravity == Gravity.TOP || cutoutGravity == Gravity.BOTTOM) {
-                        //垂直方向允许占用刘海
-                        p.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-                    }
-
-                }
-                p.flags |= LayoutParams.FLAG_LAYOUT_NO_LIMITS;
-            }
         }
     }
 
@@ -124,7 +104,7 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
                 p.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 p.height = ViewGroup.LayoutParams.MATCH_PARENT;
             }
-            applyHelper(p, mPopupHelper);
+            FLAG_COMPAT.setupFlag(p, mPopupHelper);
         }
         return params;
     }
@@ -216,7 +196,7 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
 
     static class PopupWindowQueueManager {
 
-        private static final HashMap<String, LinkedList<WindowManagerProxy>> sQueueMap = new HashMap<>();
+        static final HashMap<String, LinkedList<WindowManagerProxy>> sQueueMap = new HashMap<>();
 
         private static class SingleTonHolder {
             private static PopupWindowQueueManager INSTANCE = new PopupWindowQueueManager();
@@ -286,6 +266,77 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
                 return queue.get(index);
             }
             return null;
+        }
+    }
+
+
+    interface WindowFlagCompat {
+        void setupFlag(ViewGroup.LayoutParams params, BasePopupHelper helper);
+
+        class BeforeApi30Impl implements WindowFlagCompat {
+
+            @Override
+            public void setupFlag(ViewGroup.LayoutParams params, BasePopupHelper helper) {
+                if (params instanceof LayoutParams && helper != null) {
+                    LayoutParams p = (LayoutParams) params;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        Activity decorAct = helper.mPopupWindow.getContext();
+                        if (decorAct != null) {
+                            WindowManager.LayoutParams lp = decorAct.getWindow().getAttributes();
+                            p.layoutInDisplayCutoutMode = lp.layoutInDisplayCutoutMode;
+                        }
+                    }
+                    if (helper.isOverlayStatusbar()) {
+                        PopupLog.i(TAG, "applyHelper  >>>  覆盖状态栏");
+                        p.flags |= LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            int cutoutGravity = helper.getCutoutGravity();
+                            if (cutoutGravity == Gravity.TOP || cutoutGravity == Gravity.BOTTOM) {
+                                //垂直方向允许占用刘海
+                                p.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+                            }
+
+                        }
+                        p.flags |= LayoutParams.FLAG_LAYOUT_NO_LIMITS;
+                    }
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                        p.flags |= LayoutParams.FLAG_LAYOUT_IN_OVERSCAN;
+                    }
+                }
+            }
+        }
+
+        class Api30Impl implements WindowFlagCompat {
+
+            @Override
+            public void setupFlag(ViewGroup.LayoutParams params, BasePopupHelper helper) {
+                if (params instanceof LayoutParams && helper != null) {
+                    LayoutParams p = (LayoutParams) params;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        Activity decorAct = helper.mPopupWindow.getContext();
+                        if (decorAct != null) {
+                            WindowManager.LayoutParams lp = decorAct.getWindow().getAttributes();
+                            p.layoutInDisplayCutoutMode = lp.layoutInDisplayCutoutMode;
+                        }
+                    }
+                    int insetsType = p.getFitInsetsTypes();
+                    if (helper.isOverlayStatusbar()) {
+                        PopupLog.i(TAG, "applyHelper  >>>  覆盖状态栏");
+                        insetsType &= ~WindowInsets.Type.statusBars();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            int cutoutGravity = helper.getCutoutGravity();
+                            if (cutoutGravity == Gravity.TOP || cutoutGravity == Gravity.BOTTOM) {
+                                //垂直方向允许占用刘海
+                                p.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+                            }
+                        }
+                    }
+                    insetsType &= ~WindowInsets.Type.navigationBars();
+                    p.setFitInsetsTypes(insetsType);
+                }
+
+            }
         }
     }
 }
