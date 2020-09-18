@@ -104,15 +104,11 @@
 
 <br>
 
-### 快速入门
+### 文档
 
-请参考文档：[**BasePopup手册**](https://www.yuque.com/razerdp/basepopup)
+BasePopup配备完善的文档，建议您优先查阅文档。
 
-<br>
-
-### Api
-
-请参考文档：[**BasePopup手册-Api**](https://www.yuque.com/razerdp/basepopup/api)
+[**BasePopup手册**](https://www.yuque.com/razerdp/basepopup)
 
 <br>
 
