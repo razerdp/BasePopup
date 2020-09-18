@@ -122,16 +122,16 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 **正在开发日志（Candy版本）请查看dev分支：** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **【Release】2.2.7**(2020/08/21)
-  * 在2.2.7中，我们重构了Layout的逻辑，同时对现有issue进行了修复，并对Demo内所有的测试用例在横屏和竖屏中进行了测试，全部都已经通过测试，现发布2.2.7稳定版，建议您尽快更新到2.2.7
-  * **bug修复**
-    * Popup在非全屏Dialog的位置显示仍然有异常，经过排查发现是2.2.6版本从`getLocationOnScreen`改为`getLocationInWindow`的原因，在群里讨论过后，决定采取原方案，统一以Screen作为参考，解决Window位置不一样而带来的Popup显示位置不正确的问题
-    * RTL布局中的offset在2.2.6版本中以View作为参考系，实际上应该以系统坐标系为参考，2.2.7已修改
-    * 背景模糊在`overlayStatusBar(false)`下模糊的图像仍然包含了状态栏，导致模糊的图像是错误的，2.2.7已修复
-    * ContentView在含有Margin的时候，Margin范围内点击是无法响应的，我们针对这个问题做了适配，现在已经正常了 [#317](https://github.com/razerdp/BasePopup/issues/317)
-    * ContentView在含有Margin的时候，如果是给定`width>0`或者`height>0`，会发生裁剪问题，这是因为其父类DecorView也被设置为一样的大小，2.2.7将Margin一并考虑，对DecorView大小做出相应的适配
-    * ContentView在给定`width>0`或者`height>0`，同时没有关联AnchorView时，会发生裁剪问题，裁剪大小刚好是NavigationBar的大小，2.2.7修复了这个问题
-
+* **【Release】2.2.8**(2020/09/18)
+  * 在2.2.8中，我们针对Api30进行了适配（beta），同时添加了一些【不安全】的工具类，对于2.2.7来说只是锦上添花，但也没有巨大的优化或者bug修复
+  * **优化**
+    * 支持BasePopup使用BasePopup内的AnchorView弹窗
+    * 添加BasePopupUnsafe，这个工具类初步定义为【不安全】的工具类，请谨慎使用
+      * dismissAllPopup(boolean animateDismiss)：关闭所有已经显示的BasePopup
+      * dump(BasePopupWindow p)：记录最后调用dump()方法的调用堆栈
+      * getDump(BasePopupWindow p)：获取最后调用dump()方法的调用堆栈
+    * 去掉BasePopup接口，其方法移动到BasePopupWindow类中
+    * 适配Api30（初步适配，可能会有不稳定的情况或引发其他非致命的bug）[#349](https://github.com/razerdp/BasePopup/issues/349)
 
 
 <br>
