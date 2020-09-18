@@ -120,15 +120,16 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 **Candy dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **【Release】2.2.7**(2020/08/21)
-  * In 2.2.7, we refactored Layout's logic, fixed existing issues, and tested all test cases in landscape and portrait in the demo.
-  * **Bugs fixed**
-    * Popup in non-full-screen Dialog location display still has anomalies, after troubleshooting found that version 2.2.6 from `getLocationOnScreen` to `getLocationInWindow` reasons, after discussion in the group, decided to take the original program, a unified Screen as a reference to solve the Window location is not Popups are not displayed correctly due to the same problem.
-    * The offset in the RTL layout is referenced to the View in 2.2.6, but should actually be referenced to the system coordinate system, as modified in 2.2.7.
-    * Blurred background in `overlayStatusBar(false)` still contains the status bar, causing the blurred image to be wrong, fixed in 2.2.7.
-    * When the ContentView contains Margin, clicks within the range of Margin are not responsive, we have adapted it for this problem and now it works.
-    * ContentView will have a crop problem if given `width>0` or `height>0` when it contains Margin.This is because its parent class, DecorView, is set to the same size. 2.2.7 takes margin into account and adapts the size of DecorView accordingly.
-    * When ContentView is given `width>0` or `height>0` and no AnchorView is associated with it, there will be a crop problem, the crop size is just the size of NavigationBar. 2.2.7 fixes this problem.
+* **【Release】2.2.8**(2020/09/18)
+  * In 2.2.8, we adapted (beta) Api30 and added some [insecure] tool classes, which are just a bonus for 2.2.7, but no huge optimizations or bug fixes!
+  * **Optimisation**
+    * Support for BasePopup using AnchorView popup in BasePopup.
+    * Add BasePopupUnsafe, a tool class initially defined as [unsafe], please use caution!
+      * dismissAllPopup(boolean animateDismiss): Dismiss all the BasePopups that have been displayed.
+      * dump(BasePopupWindow p): records the call stack of the last call to the dump() method
+      * getDump(BasePopupWindow p): get the stack of the last call to the dump() method
+    * Remove the BasePopup interface and move its methods to the BasePopupWindow class.
+    * Adaptation to Api30 (beta, may be unstable or cause other non-fatal bugs)[#349](https://github.com/razerdp/BasePopup/issues/349)
 
 <br>
 
