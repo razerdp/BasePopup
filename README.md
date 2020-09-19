@@ -115,13 +115,14 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Candy】2.2.8.0817** (2020/08/17)
-  * 支持BasePopup使用BasePopup内的AnchorView弹窗
-* **【Candy】2.2.8.0909** (2020/09/09)
-  * 添加BasePopupUnsafe，这个工具类是个核弹，请谨慎使用
-  * 去掉BasePopup接口
-* **【Candy】2.2.8.0916** (2020/09/16)
-  * 适配Api30 [#349](https://github.com/razerdp/BasePopup/issues/349)
+* **【Candy】2.2.9.0919** (2020/09/19)
+  * 方法更名：`onPreShow`-> `onBeforeShow`
+  * 增加方法：`onBeforeDismiss`，作用同OnDismissListener#onBeforeDismiss()
+  * 增加方法：`setTouchable`，该方法用于设置是否允Popup是否响应事件，如果不响应，则事件会穿透Popup
+  * BasePopupUnsafe增加方法：
+    * `getWindowManager`：获取BasePopup的WindowManager代理
+    * `getBasePopupDecorViewProxy`：获取BasePopup最终的DecorView代理
+    * `getDecorViewLayoutParams`：获取BasePopup最终DecorView的LayoutParams
 
 
 
