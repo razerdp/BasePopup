@@ -2,7 +2,6 @@ package razerdp.demo.app;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.Gravity;
 
 import com.pgyersdk.crash.PgyCrashManager;
 
@@ -62,7 +61,7 @@ public class PopupDemoApp extends MultiDexApplication {
         }
         for (Map.Entry<Integer, CheckFlagInfo> entry : map.entrySet()) {
             if (entry.getValue().size() > 1) {
-                PopupLog.i("checkFlag", entry.getValue());
+                PopupLog.e("checkFlag", entry.getValue());
             }
         }
     }
@@ -85,14 +84,13 @@ public class PopupDemoApp extends MultiDexApplication {
 
         @Override
         public String toString() {
-            String builder = "重复flag:" + '\n' +
+            return "重复flag:" + '\n' +
                     "names = {" +
                     TextUtils.join(" , ", names) +
                     " }" +
                     '\n' +
                     "value = " +
                     value;
-            return builder;
         }
     }
 }

@@ -53,8 +53,8 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
     @Override
     public void removeViewImmediate(View view) {
         PopupLog.i(TAG,
-                "WindowManager.removeViewImmediate  >>>  " + (view == null ? null : view.getClass()
-                        .getSimpleName()));
+                   "WindowManager.removeViewImmediate  >>>  " + (view == null ? null : view.getClass()
+                           .getSimpleName()));
         PopupWindowQueueManager.getInstance().remove(this);
         if (mWindowManager == null || view == null) return;
         if (isPopupInnerDecorView(view) && mPopupDecorViewProxy != null) {
@@ -73,7 +73,7 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
     @Override
     public void addView(View view, ViewGroup.LayoutParams params) {
         PopupLog.i(TAG,
-                "WindowManager.addView  >>>  " + (view == null ? null : view.getClass().getName()));
+                   "WindowManager.addView  >>>  " + (view == null ? null : view.getClass().getName()));
         PopupWindowQueueManager.getInstance().put(this);
         if (mWindowManager == null || view == null) return;
         if (isPopupInnerDecorView(view)) {
@@ -112,8 +112,8 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
     @Override
     public void updateViewLayout(View view, ViewGroup.LayoutParams params) {
         PopupLog.i(TAG,
-                "WindowManager.updateViewLayout  >>>  " + (view == null ? null : view.getClass()
-                        .getName()));
+                   "WindowManager.updateViewLayout  >>>  " + (view == null ? null : view.getClass()
+                           .getName()));
         if (mWindowManager == null || view == null) return;
         if (isPopupInnerDecorView(view) && mPopupDecorViewProxy != null || view == mPopupDecorViewProxy) {
             mWindowManager.updateViewLayout(mPopupDecorViewProxy, fitLayoutParamsPosition(params));
@@ -122,7 +122,7 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
         }
     }
 
-    public void updateFocus(boolean focus) {
+    void updateFocus(boolean focus) {
         if (mWindowManager != null && mPopupDecorViewProxy != null) {
             PopupDecorViewProxy popupDecorViewProxy = mPopupDecorViewProxy;
             ViewGroup.LayoutParams params = popupDecorViewProxy.getLayoutParams();
@@ -138,6 +138,28 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
         }
     }
 
+
+    void updateFlag(int mode, boolean updateImmediately, int... flags) {
+        if (flags == null || flags.length == 0) return;
+        if (mWindowManager != null && mPopupDecorViewProxy != null) {
+            PopupDecorViewProxy popupDecorViewProxy = mPopupDecorViewProxy;
+            ViewGroup.LayoutParams params = popupDecorViewProxy.getLayoutParams();
+            if (params instanceof LayoutParams) {
+                for (int flag : flags) {
+                    if (mode == BasePopupFlag.MODE_ADD) {
+                        ((LayoutParams) params).flags |= flag;
+                    } else if (mode == BasePopupFlag.MODE_REMOVE) {
+                        ((LayoutParams) params).flags &= ~flag;
+                    }
+                }
+            }
+            if (updateImmediately) {
+                mWindowManager.updateViewLayout(popupDecorViewProxy, params);
+            }
+        }
+    }
+
+
     public void update() {
         if (mWindowManager == null) return;
         if (mPopupDecorViewProxy != null) {
@@ -148,8 +170,8 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
     @Override
     public void removeView(View view) {
         PopupLog.i(TAG,
-                "WindowManager.removeView  >>>  " + (view == null ? null : view.getClass()
-                        .getSimpleName()));
+                   "WindowManager.removeView  >>>  " + (view == null ? null : view.getClass()
+                           .getSimpleName()));
         PopupWindowQueueManager.getInstance().remove(this);
         if (mWindowManager == null || view == null) return;
         if (isPopupInnerDecorView(view) && mPopupDecorViewProxy != null) {
