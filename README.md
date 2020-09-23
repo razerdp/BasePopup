@@ -123,6 +123,9 @@ BasePopup配备完善的文档，建议您优先查阅文档。
     * `getWindowManager`：获取BasePopup的WindowManager代理
     * `getBasePopupDecorViewProxy`：获取BasePopup最终的DecorView代理
     * `getDecorViewLayoutParams`：获取BasePopup最终DecorView的LayoutParams
+* **【Candy】2.2.9.0923** (2020/09/23)
+  * 优化onBeforeDismiss()判断顺序 [#352](https://github.com/razerdp/BasePopup/issues/352)
+
 
 
 
