@@ -902,10 +902,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
 
     void dismiss(boolean animateDismiss) {
-        if (mPopupWindow == null ||
-                mOnDismissListener != null &&
-                        (!mOnDismissListener.onBeforeDismiss() ||
-                                !mPopupWindow.onBeforeDismiss())) {
+        if (mPopupWindow == null || !mPopupWindow.onBeforeDismissInternal(mOnDismissListener)) {
             return;
         }
         if (mPopupWindow.mDisplayAnimateView == null || animateDismiss && (flag & CUSTOM_ON_ANIMATE_DISMISS) != 0) {
