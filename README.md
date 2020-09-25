@@ -1,3 +1,5 @@
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frazerdp%2FBasePopup.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Frazerdp%2FBasePopup?ref=badge_shield)
+
  **中文** | [**English**](./README_V2_EN.md)
 
 <p align="center"><img src="./img/logo.png" alt="Logo图片似乎加载不出来" height="360"/></p>
@@ -49,6 +51,9 @@
 
 
 ---
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frazerdp%2FBasePopup.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Frazerdp%2FBasePopup?ref=badge_large)
 
 ### 有奖调查问卷：
 
