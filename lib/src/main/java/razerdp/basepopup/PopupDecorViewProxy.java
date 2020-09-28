@@ -686,7 +686,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 mHelper.getSoftInputMode() == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE));
 
         if (!process) return;
-        View alignWhat = null;
+        View alignWhat = mHelper.keybaordAlignView;
 
         if ((mHelper.flag & BasePopupFlag.KEYBOARD_ALIGN_TO_VIEW) != 0) {
             if (mHelper.keybaordAlignViewId != 0) {
