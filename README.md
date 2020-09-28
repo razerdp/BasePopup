@@ -125,6 +125,8 @@ BasePopup配备完善的文档，建议您优先查阅文档。
     * `getDecorViewLayoutParams`：获取BasePopup最终DecorView的LayoutParams
 * **【Candy】2.2.9.0923** (2020/09/23)
   * 优化onBeforeDismiss()判断顺序 [#352](https://github.com/razerdp/BasePopup/issues/352)
+* **【Candy】2.2.9.0928** (2020/09/28)
+  * 添加键盘对齐View的方法 `setAdjustInputMode(View,flag)` [#358](https://github.com/razerdp/BasePopup/issues/358)
 
 
 

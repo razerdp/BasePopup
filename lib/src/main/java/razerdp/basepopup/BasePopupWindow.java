@@ -1000,6 +1000,31 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
 
     /**
      * <p>
+     * 设置PopupWindow适配输入法的适配模式
+     * </p>
+     *
+     * @param alignTarget keyboard对齐的Vie
+     * @param flag   <ul>
+     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_ROOT}，键盘适配对齐到整个popup content view</li>
+     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_VIEW}，键盘适配对齐到指定的view，需要传入view，传入view的时候将会优先于传入viewid</li>
+     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_IGNORE_OVER}，键盘适配仅作用于无法完整显示的情况</li>
+     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_ANIMATE_ALIGN}，键盘是否动画适配</li>
+     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_FORCE_ADJUST}，是否强制适配输入法</li>
+     *               </ul>
+     */
+    public BasePopupWindow setAdjustInputMode(View alignTarget, int flag) {
+        mHelper.keybaordAlignView = alignTarget;
+        mHelper.setFlag(FLAG_KEYBOARD_ALIGN_TO_ROOT
+                | FLAG_KEYBOARD_ALIGN_TO_VIEW
+                | FLAG_KEYBOARD_IGNORE_OVER
+                | FLAG_KEYBOARD_ANIMATE_ALIGN
+                | FLAG_KEYBOARD_FORCE_ADJUST, false);
+        mHelper.setFlag(flag, true);
+        return this;
+    }
+
+    /**
+     * <p>
      * PopupWindow在展示的时候自动打开输入法
      * </p>
      */
