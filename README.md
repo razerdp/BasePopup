@@ -136,6 +136,9 @@ BasePopup配备完善的文档，建议您优先查阅文档。
   * 方法修改
     * `getWidth()`，只能在PopupWindow显示后才能正确获取宽度
     * `getHeight()`，只能在PopupWindow显示后才能正确获取高度
+* **【Candy】2.2.9.0930** (2020/09/30)
+  * 添加`onWindowFocusChanged`回调
+  * 添加`updateKeyboardAlign`方法，该方法允许您手动通知BasePopup根据键盘对齐模式对齐键盘
 
 
 
