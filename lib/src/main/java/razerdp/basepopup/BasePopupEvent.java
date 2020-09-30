@@ -10,6 +10,7 @@ import android.os.Message;
 class BasePopupEvent {
     public static final int EVENT_SHOW = 1;
     public static final int EVENT_DISMISS = 2;
+    public static final int EVENT_ALIGN_KEYBOARD = 3;
 
 
     static Message getMessage(int event) {
