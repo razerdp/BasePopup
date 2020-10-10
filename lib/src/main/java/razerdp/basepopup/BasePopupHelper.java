@@ -142,6 +142,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     int maxWidth, maxHeight, minWidth, minHeight;
 
     int keybaordAlignViewId;
+    View keybaordAlignView;
 
     InnerShowInfo mShowInfo;
 
@@ -772,6 +773,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         if (mPopupWindow == null || mPopupWindow.mPopupWindowProxy == null) return;
         mPopupWindow.mPopupWindowProxy.setSoftInputMode(mSoftInputMode);
         mPopupWindow.mPopupWindowProxy.setAnimationStyle(animationStyleRes);
+        mPopupWindow.mPopupWindowProxy.setTouchable((flag & TOUCHABLE) != 0);
     }
 
     void onDismiss() {
@@ -874,7 +876,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
                                     keyboardBounds,
                                     isVisible);
                             if (!mPopupWindow.isShowing()) {
-                                PopupUiUtils.safeRemoveGlobalLayoutListener(mPopupWindow.getContext()
+                                PopupUiUtils.safeRemoveGlobalLayoutListener(
+                                        mPopupWindow.getContext()
                                                 .getWindow()
                                                 .getDecorView(),
                                         mGlobalLayoutListener);
@@ -901,7 +904,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
 
     void dismiss(boolean animateDismiss) {
-        if (mPopupWindow == null || mOnDismissListener != null && !mOnDismissListener.onBeforeDismiss()) {
+        if (mPopupWindow == null || !mPopupWindow.onBeforeDismissInternal(mOnDismissListener)) {
             return;
         }
         if (mPopupWindow.mDisplayAnimateView == null || animateDismiss && (flag & CUSTOM_ON_ANIMATE_DISMISS) != 0) {
@@ -1194,5 +1197,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         mGlobalLayoutListener = null;
         mUserKeyboardStateChangeListener = null;
         mKeyEventListener = null;
+        keybaordAlignView = null;
     }
 }

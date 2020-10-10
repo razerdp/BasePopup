@@ -12,6 +12,7 @@ import razerdp.demo.ui.issuestest.Issue236TestActivity;
 import razerdp.demo.ui.issuestest.Issue238TestActivity;
 import razerdp.demo.ui.issuestest.Issue242TestActivity;
 import razerdp.demo.ui.issuestest.Issue277TestActivity;
+import razerdp.demo.ui.issuestest.Issue358TestActivity;
 import razerdp.demo.utils.DescBuilder;
 import razerdp.demo.utils.StringUtil;
 
@@ -29,6 +30,7 @@ class IssueHelper {
         add_238(result);
         add_242(result);
         add_277(result);
+        add_358(result);
 
         sort(result);
 
@@ -41,6 +43,21 @@ class IssueHelper {
             int issue2 = StringUtil.toInt(o2.issue);
             return Integer.compare(issue, issue2);
         });
+    }
+
+    private static void add_358(List<IssueInfo> result) {
+        IssueInfo issue358 = new IssueInfo();
+        issue358.setActivityClass(Issue358TestActivity.class)
+                .setIssue("358")
+                .setFixed(true)
+                .setTitle("让键盘跟随recyclerview中的edittext")
+                .setDesc(DescBuilder.get()
+                        .append("系统版本：10.0")
+                        .append("库版本：2.2.8")
+                        .append("Popup内包含RecyclerView，希望在键盘弹出之前能够定位到RecyclerView内的某个View")
+                        .build());
+
+        result.add(issue358);
     }
 
     private static void add_277(List<IssueInfo> result) {

@@ -21,7 +21,7 @@ import razerdp.util.animation.TranslationConfig;
  */
 public class DemoPopup extends BasePopupWindow {
     @BindView(R.id.tv_desc)
-    TextView mTvDesc;
+    public TextView mTvDesc;
 
     public DemoPopup(Context context) {
         super(context);

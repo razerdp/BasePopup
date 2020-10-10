@@ -21,7 +21,7 @@ import razerdp.util.PopupUtils;
 
 class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
     private static final String TAG = "PopupWindowProxy";
-    private BasePopupContextWrapper mBasePopupContextWrapper;
+    BasePopupContextWrapper mBasePopupContextWrapper;
 
     private boolean oldFocusable = true;
     private boolean isHandledFullScreen;
@@ -59,11 +59,21 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
     }
 
     private void restoreFocusable() {
-        if (mBasePopupContextWrapper != null && mBasePopupContextWrapper.mWindowManagerProxy != null) {
-            mBasePopupContextWrapper.mWindowManagerProxy.updateFocus(oldFocusable);
-        }
+        updateFocusable(oldFocusable);
         setFocusable(oldFocusable);
         isHandledFullScreen = false;
+    }
+
+    void updateFocusable(boolean focusable) {
+        if (mBasePopupContextWrapper != null && mBasePopupContextWrapper.mWindowManagerProxy != null) {
+            mBasePopupContextWrapper.mWindowManagerProxy.updateFocus(focusable);
+        }
+    }
+
+    void updateFlag(int mode, boolean updateImmediately, int... flags) {
+        if (mBasePopupContextWrapper != null && mBasePopupContextWrapper.mWindowManagerProxy != null) {
+            mBasePopupContextWrapper.mWindowManagerProxy.updateFlag(mode, updateImmediately, flags);
+        }
     }
 
     @Override

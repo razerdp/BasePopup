@@ -2,13 +2,16 @@ package razerdp.basepopup;
 
 import android.annotation.SuppressLint;
 import android.text.TextUtils;
-
-import androidx.annotation.Nullable;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Objects;
 
+import androidx.annotation.Nullable;
 import razerdp.util.log.PopupLog;
 
 /**
@@ -58,6 +61,46 @@ public enum BasePopupUnsafe {
     @Nullable
     public StackDumpInfo getDump(BasePopupWindow p) {
         return StackFetcher.get(p);
+    }
+
+
+    /**
+     * 获取BasePopup的WindowManager代理
+     */
+    @Deprecated
+    @Nullable
+    public WindowManager getWindowManager(BasePopupWindow p) {
+        try {
+            return Objects.requireNonNull(p.mPopupWindowProxy.mBasePopupContextWrapper.mWindowManagerProxy);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 获取BasePopup最终的DecorView代理
+     */
+    @Deprecated
+    @Nullable
+    public View getBasePopupDecorViewProxy(BasePopupWindow p) {
+        try {
+            return Objects.requireNonNull(((WindowManagerProxy) getWindowManager(p)).mPopupDecorViewProxy);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 获取BasePopup最终DecorView的LayoutParams
+     */
+    @Deprecated
+    @Nullable
+    public ViewGroup.LayoutParams getDecorViewLayoutParams(BasePopupWindow p) {
+        try {
+            return getBasePopupDecorViewProxy(p).getLayoutParams();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     //============================================================= helper
