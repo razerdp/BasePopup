@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Rect;
+import android.os.Message;
 import android.util.LayoutDirection;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -23,7 +24,7 @@ import razerdp.util.log.PopupLog;
  * <p>
  * popupwindow的decorview代理，这里统筹位置、蒙层、事件等
  */
-final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKeyboardChangeListener, ClearMemoryObject {
+final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKeyboardChangeListener, BasePopupEvent.EventObserver, ClearMemoryObject {
     private static final String TAG = "PopupDecorViewProxy";
     //蒙层
     private PopupMaskLayout mMaskLayout;
@@ -62,6 +63,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     @SuppressLint("ClickableViewAccessibility")
     private void init(BasePopupHelper helper) {
         mHelper = helper;
+        mHelper.observerEvent(this, this);
         mHelper.mKeyboardStateChangeListener = this;
         setClipChildren(mHelper.isClipChildren());
         mMaskLayout = new PopupMaskLayout(getContext(), mHelper);
@@ -674,7 +676,24 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         });
     }
 
+    @Override
+    public void onEvent(Message msg) {
+        if (msg.what == BasePopupEvent.EVENT_ALIGN_KEYBOARD && keyboardBoundsCache != null) {
+            onKeyboardChange(keyboardBoundsCache, keyboardVisibleCache);
+        }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasWindowFocus) {
+        super.onWindowFocusChanged(hasWindowFocus);
+        if (mHelper != null && mHelper.mPopupWindow != null) {
+            mHelper.mPopupWindow.onWindowFocusChanged(this, hasWindowFocus);
+        }
+    }
+
     //-----------------------------------------keyboard-----------------------------------------
+    Rect keyboardBoundsCache;
+    boolean keyboardVisibleCache = false;
 
     @Override
     public void onKeyboardChange(Rect keyboardBounds, boolean isVisible) {
@@ -686,7 +705,12 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 mHelper.getSoftInputMode() == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE));
 
         if (!process) return;
-        View alignWhat = null;
+        if (keyboardBoundsCache == null) {
+            keyboardBoundsCache = new Rect();
+        }
+        keyboardBoundsCache.set(keyboardBounds);
+        keyboardVisibleCache = isVisible;
+        View alignWhat = mHelper.keybaordAlignView;
 
         if ((mHelper.flag & BasePopupFlag.KEYBOARD_ALIGN_TO_VIEW) != 0) {
             if (mHelper.keybaordAlignViewId != 0) {
@@ -747,6 +771,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     public void clear(boolean destroy) {
         if (mHelper != null) {
             mHelper.mKeyboardStateChangeListener = null;
+            mHelper.removeEventObserver(this);
         }
         if (mMaskLayout != null) {
             mMaskLayout.clear(destroy);

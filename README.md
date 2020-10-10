@@ -120,6 +120,32 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
+* **【Candy】2.2.9.0919** (2020/09/19)
+  * 方法更名：`onPreShow`-> `onBeforeShow`
+  * 增加方法：`onBeforeDismiss`，作用同OnDismissListener#onBeforeDismiss()
+  * 增加方法：`setTouchable`，该方法用于设置是否允Popup是否响应事件，如果不响应，则事件会穿透Popup
+  * BasePopupUnsafe增加方法：
+    * `getWindowManager`：获取BasePopup的WindowManager代理
+    * `getBasePopupDecorViewProxy`：获取BasePopup最终的DecorView代理
+    * `getDecorViewLayoutParams`：获取BasePopup最终DecorView的LayoutParams
+* **【Candy】2.2.9.0923** (2020/09/23)
+  * 优化onBeforeDismiss()判断顺序 [#352](https://github.com/razerdp/BasePopup/issues/352)
+* **【Candy】2.2.9.0928** (2020/09/28)
+  * 添加键盘对齐View的方法 `setAdjustInputMode(View,flag)` [#358](https://github.com/razerdp/BasePopup/issues/358)
+* **【Candy】2.2.9.0929** (2020/09/29)
+  * 去除init时预测量的方法，该方法是历史遗留下来的，用于定位用，现在定位都已经代理到View里面了，因此该方法被启用
+    * 但不排除部分用户需要这个，因此保留并改为允许用户触发
+  * 添加方法：`preMeasure()`，预测兰contentView，该方法将会进行measure，但是不能保证能够准确测量（如recyclerview未设置adapter时）
+  * 添加方法：`getPreMeasureWidth()`，获取预测量后的宽度
+  * 添加方法：`getPreMeasureHeight()`，获取预测量后的高度
+  * 方法修改
+    * `getWidth()`，只能在PopupWindow显示后才能正确获取宽度
+    * `getHeight()`，只能在PopupWindow显示后才能正确获取高度
+* **【Candy】2.2.9.0930** (2020/09/30)
+  * 添加`onWindowFocusChanged`回调
+  * 添加`updateKeyboardAlign`方法，该方法允许您手动通知BasePopup根据键盘对齐模式对齐键盘
+
+
 **正在开发日志（Candy版本）请查看dev分支：** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
 * **【Release】2.2.8**(2020/09/18)

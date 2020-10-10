@@ -7,6 +7,9 @@ package razerdp.basepopup;
  */
 public interface BasePopupFlag {
 
+    int MODE_ADD = -1;
+    int MODE_REMOVE = -2;
+
     //事件控制 3 bit
     int EVENT_SHIFT = 0;
     int OUT_SIDE_DISMISS = 0x1 << EVENT_SHIFT;//点击外部消失
@@ -48,6 +51,7 @@ public interface BasePopupFlag {
     int SYNC_MASK_ANIMATION_DURATION = 0x4 << OTHER_SHIFT;//同步蒙层和用户动画的时间
     int AS_WIDTH_AS_ANCHOR = 0x8 << OTHER_SHIFT;//宽度与anchor一致
     int AS_HEIGHT_AS_ANCHOR = 0x10 << OTHER_SHIFT;//高度与anchor一致
+    int TOUCHABLE = 0x20 << OTHER_SHIFT;
 
 
     int IDLE = OUT_SIDE_DISMISS
@@ -58,6 +62,7 @@ public interface BasePopupFlag {
             | KEYBOARD_ALIGN_TO_ROOT
             | KEYBOARD_IGNORE_OVER_KEYBOARD
             | KEYBOARD_ANIMATE_ALIGN
-            | SYNC_MASK_ANIMATION_DURATION;
+            | SYNC_MASK_ANIMATION_DURATION
+            | TOUCHABLE;
 
 }
