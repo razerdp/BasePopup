@@ -55,9 +55,8 @@
  - [Feature](#Feature)
  - [Precautions](#Precautions)
  - [Download](#Download)
- - [Quick start](#quick-start)
+ - [Document](#Document)
    - [BasePopup manual](https://www.yuque.com/razerdp/basepopup)
- - [Api(Wiki)](#api)
  - [ChangeLog](#changelog-historical-update)
    - [Historical update](https://www.yuque.com/razerdp/basepopup/uyrsxx)
  - [Preview](#Preview)
@@ -103,33 +102,39 @@ Please replace **{$latestVersion}** with the version shown in the Jcenter tab ab
 
 <br>
 
-### Quick start
+### Document
 
 Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/basepopup)
 
 <br>
 
-### Api
-
-**Link👉**[WIKI](https://github.com/razerdp/BasePopup/wiki)
-
-<br>
-
-
 ### ChangeLog ([Historical update](https://www.yuque.com/razerdp/basepopup/uyrsxx))
 
 **Candy dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **【Release】2.2.8**(2020/09/18)
-  * In 2.2.8, we adapted (beta) Api30 and added some [insecure] tool classes, which are just a bonus for 2.2.7, but no huge optimizations or bug fixes!
-  * **Optimisation**
-    * Support for BasePopup using AnchorView popup in BasePopup.
-    * Add BasePopupUnsafe, a tool class initially defined as [unsafe], please use caution!
-      * dismissAllPopup(boolean animateDismiss): Dismiss all the BasePopups that have been displayed.
-      * dump(BasePopupWindow p): records the call stack of the last call to the dump() method
-      * getDump(BasePopupWindow p): get the stack of the last call to the dump() method
-    * Remove the BasePopup interface and move its methods to the BasePopupWindow class.
-    * Adaptation to Api30 (beta, may be unstable or cause other non-fatal bugs)[#349](https://github.com/razerdp/BasePopup/issues/349)
+* **【Release】2.2.9**(2020/10/10)
+  * 2.2.9 Major updates: Some optimizations and callbacks added.
+  * 【New Feature】
+    * Add method:`onBeforeDismiss`，works the same as `OnDismissListener#onBeforeDismiss()`.
+    * Add method:`setTouchable`，set whether Popup is allowed to respond to the event or not, if not, the event will penetrate through Popup.
+    * Add method: `setAdjustInputMode(View,flag)` [#358](https://github.com/razerdp/BasePopup/issues/358)
+    * Add method:`preMeasure()`，to pre-measure the contentView, this method will measure, but there is no guarantee that it will measure accurately (e.g. if the cyclerview does not have an adapter).
+    * Add method:`getPreMeasureWidth()`，get pre-measured width
+    * Add method:`getPreMeasureHeight()`，get pre-measured height
+    * Add method:`updateKeyboardAlign()`，this method allows you to manually notify BasePopup to align the keyboard according to the keyboard alignment mode.
+    * Add Callback：`onWindowFocusChanged()`
+    * BasePopupUnsafe：
+      * Add method:`getWindowManager`,get the WindowManager proxy for BasePopup.
+      * Add method:`getBasePopupDecorViewProxy`,get the final DecorView proxy for BasePopup.
+      * Add method:`getDecorViewLayoutParams`,get the LayoutParams of the BasePopup final DecorView.
+  * 【Optimization】
+    * Method change:`onPreShow`-> `onBeforeShow`
+    * Optimizing the order of onBeforeDismiss() judgments [#352](https://github.com/razerdp/BasePopup/issues/352)
+    * The method to remove the predicted amount of init, which is a legacy method for positioning, is deprecated because positioning is now proxied in the View.
+      * However, it does not preclude some users from needing this, so it is retained and changed to allow users to trigger the
+    * Method change:
+      * `getWidth()`，get the correct width after the PopupWindow is displayed.
+      * `getHeight()`，get the correct height after the PopupWindow is displayed.
 
 <br>
 
