@@ -1057,7 +1057,7 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
 
     /**
      * <p>
-     * 禁止PopupWindow返回键dismiss
+     * 是否允许PopupWindow响应返回键并dismiss
      * </p>
      * <p>
      */
@@ -1651,7 +1651,7 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
 
     /**
      * <p>
-     * 是否允许点击PopupWindow拦截事件。
+     * 是否允许PopupWindow外部响应事件
      * <br>
      * <br>
      * 如果允许拦截事件，则PopupWindow外部无法响应事件。
