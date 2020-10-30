@@ -59,6 +59,7 @@ public interface BasePopupFlag {
     int IDLE = OUT_SIDE_DISMISS
             | BACKPRESS_ENABLE
             | OVERLAY_STATUS_BAR
+            | OVERLAY_NAVIGATION_BAR
             | CLIP_CHILDREN
             | FADE_ENABLE
             | KEYBOARD_ALIGN_TO_ROOT

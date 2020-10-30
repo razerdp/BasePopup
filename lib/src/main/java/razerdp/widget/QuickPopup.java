@@ -70,6 +70,9 @@ public class QuickPopup extends BaseLazyPopupWindow {
 
         setOffsetX(config.getOffsetX());
         setOffsetY(config.getOffsetY());
+        setMaskOffsetX(config.getMaskOffsetX());
+        setMaskOffsetY(config.getMaskOffsetY());
+
 
         setClipChildren((config.flag & BasePopupFlag.CLIP_CHILDREN) != 0);
 
@@ -81,6 +84,9 @@ public class QuickPopup extends BaseLazyPopupWindow {
         setAlignBackgroundGravity(config.getAlignBackgroundGravity());
         setAutoLocatePopup((config.flag & BasePopupFlag.AUTO_LOCATED) != 0);
         setOverlayStatusbar((config.flag & BasePopupFlag.OVERLAY_STATUS_BAR) != 0);
+        setOverlayNavigationBar((config.flag & BasePopupFlag.OVERLAY_NAVIGATION_BAR) != 0);
+        setOverlayStatusbarMode(config.getOverlayStatusBarMode());
+        setOverlayNavigationBarMode(config.getOverlayNavigationBarMode());
         setOnDismissListener(config.getDismissListener());
         setBackground(config.getBackground());
         linkTo(config.getLinkedView());
