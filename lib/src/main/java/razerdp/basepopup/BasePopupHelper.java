@@ -62,6 +62,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         POSITION
     }
 
+    static final int DEFAULT_OVERLAY_STATUS_BAR_MODE = OVERLAY_MASK | OVERLAY_CONTENT;
+    static final int DEFAULT_OVERLAY_NAVIGATION_BAR_MODE = OVERLAY_MASK;
     private static final int CONTENT_VIEW_ID = R.id.base_popup_content_root;
     Animation DEFAULT_MASK_SHOW_ANIMATION = new AlphaAnimation(0f, 1f) {
         {
@@ -112,6 +114,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     int popupGravity = Gravity.NO_GRAVITY;
     int offsetX;
     int offsetY;
+    int maskOffsetX;
+    int maskOffsetY;
     int preMeasureWidth;
     int preMeasureHeight;
 
@@ -154,8 +158,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     Rect navigationBarBounds;
     Rect cutoutSafeRect;
 
-    int overlayStatusMode = OVERLAY_MASK | OVERLAY_CONTENT;
-    int overlayNavigationBarMode = OVERLAY_MASK;
+    int lastOverLayStatusBarMode, overlayStatusBarMode = DEFAULT_OVERLAY_STATUS_BAR_MODE;
+    int lastOverlayNavigationBarMode, overlayNavigationBarMode = DEFAULT_OVERLAY_NAVIGATION_BAR_MODE;
 
     BasePopupHelper(BasePopupWindow popupWindow) {
         mAnchorViewBound = new Rect();
@@ -217,9 +221,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     void preMeasurePopupView(View mContentView, int w, int h) {
         if (mContentView != null) {
             int measureWidth = View.MeasureSpec.makeMeasureSpec(Math.max(w, 0),
-                                                                w == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
+                    w == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
             int measureHeight = View.MeasureSpec.makeMeasureSpec(Math.max(w, h),
-                                                                 h == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
+                    h == ViewGroup.LayoutParams.WRAP_CONTENT ? View.MeasureSpec.UNSPECIFIED : View.MeasureSpec.EXACTLY);
             mContentView.measure(measureWidth, measureHeight);
             preMeasureWidth = mContentView.getMeasuredWidth();
             preMeasureHeight = mContentView.getMeasuredHeight();
@@ -485,9 +489,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         int[] location = new int[2];
         v.getLocationOnScreen(location);
         mAnchorViewBound.set(location[0],
-                             location[1],
-                             location[0] + v.getWidth(),
-                             location[1] + v.getHeight());
+                location[1],
+                location[0] + v.getWidth(),
+                location[1] + v.getHeight());
         return this;
     }
 
@@ -512,11 +516,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     int getNavigationBarSize() {
-        if (isOverlayNavigationBar()) {
-            return 0;
-        } else {
-            return Math.min(navigationBarBounds.width(), navigationBarBounds.height());
-        }
+        return Math.min(navigationBarBounds.width(), navigationBarBounds.height());
     }
 
     int getNavigationBarGravity() {
@@ -548,16 +548,16 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         }
         try {
             DisplayCutout cutout = mPopupWindow.getContext()
-                                               .getWindow()
-                                               .getDecorView()
-                                               .getRootWindowInsets()
-                                               .getDisplayCutout();
+                    .getWindow()
+                    .getDecorView()
+                    .getRootWindowInsets()
+                    .getDisplayCutout();
             if (cutout == null) {
                 r.setEmpty();
                 return;
             }
             r.set(cutout.getSafeInsetLeft(), cutout.getSafeInsetTop(),
-                  cutout.getSafeInsetRight(), cutout.getSafeInsetBottom());
+                    cutout.getSafeInsetRight(), cutout.getSafeInsetBottom());
         } catch (Exception e) {
             PopupLog.e(e);
         }
@@ -569,11 +569,41 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
             overlay = true;
         }
         setFlag(OVERLAY_STATUS_BAR, overlay);
+        if (!overlay) {
+            lastOverLayStatusBarMode = overlayStatusBarMode;
+            overlayStatusBarMode = 0;
+        } else {
+            overlayStatusBarMode = lastOverLayStatusBarMode;
+        }
+        return this;
+    }
+
+    BasePopupHelper setOverlayStatusbarMode(int mode) {
+        if (!isOverlayStatusbar()) {
+            lastOverLayStatusBarMode = mode;
+        } else {
+            lastOverLayStatusBarMode = overlayStatusBarMode = mode;
+        }
         return this;
     }
 
     BasePopupHelper overlayNavigationBar(boolean overlay) {
         setFlag(OVERLAY_NAVIGATION_BAR, overlay);
+        if (!overlay) {
+            lastOverlayNavigationBarMode = overlayNavigationBarMode;
+            overlayNavigationBarMode = 0;
+        } else {
+            overlayNavigationBarMode = lastOverlayNavigationBarMode;
+        }
+        return this;
+    }
+
+    BasePopupHelper setOverlayNavigationBarMode(int mode) {
+        if (!isOverlayNavigationBar()) {
+            lastOverlayNavigationBarMode = mode;
+        } else {
+            lastOverlayNavigationBarMode = overlayNavigationBarMode = mode;
+        }
         return this;
     }
 
@@ -833,19 +863,19 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         if ((flag & CUSTOM_ON_UPDATE) != 0) return;
         if (mShowAnimation == null || mShowAnimator == null) {
             mPopupWindow.mDisplayAnimateView.getViewTreeObserver()
-                                            .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                                                @Override
-                                                public void onGlobalLayout() {
-                                                    mPopupWindow.mDisplayAnimateView.getViewTreeObserver()
-                                                                                    .removeOnGlobalLayoutListener(
-                                                                                            this);
-                                                    startShowAnimate(mPopupWindow.mDisplayAnimateView.getWidth(),
-                                                                     mPopupWindow.mDisplayAnimateView.getHeight());
-                                                }
-                                            });
+                    .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            mPopupWindow.mDisplayAnimateView.getViewTreeObserver()
+                                    .removeOnGlobalLayoutListener(
+                                            this);
+                            startShowAnimate(mPopupWindow.mDisplayAnimateView.getWidth(),
+                                    mPopupWindow.mDisplayAnimateView.getHeight());
+                        }
+                    });
         } else {
             startShowAnimate(mPopupWindow.mDisplayAnimateView.getWidth(),
-                             mPopupWindow.mDisplayAnimateView.getHeight());
+                    mPopupWindow.mDisplayAnimateView.getHeight());
         }
         //针对官方的坑（两个popup切换页面后重叠）
         if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP ||
@@ -872,27 +902,27 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     private void prepareShow() {
         if (mGlobalLayoutListener == null) {
             mGlobalLayoutListener = KeyboardUtils.observerKeyboardChange(mPopupWindow.getContext(),
-                                                                         new KeyboardUtils.OnKeyboardChangeListener() {
-                                                                             @Override
-                                                                             public void onKeyboardChange(Rect keyboardBounds, boolean isVisible) {
-                                                                                 BasePopupHelper.this.onKeyboardChange(
-                                                                                         keyboardBounds,
-                                                                                         isVisible);
-                                                                                 if (!mPopupWindow.isShowing()) {
-                                                                                     PopupUiUtils.safeRemoveGlobalLayoutListener(
-                                                                                             mPopupWindow.getContext()
-                                                                                                         .getWindow()
-                                                                                                         .getDecorView(),
-                                                                                             mGlobalLayoutListener);
-                                                                                     return;
-                                                                                 }
-                                                                             }
-                                                                         });
+                    new KeyboardUtils.OnKeyboardChangeListener() {
+                        @Override
+                        public void onKeyboardChange(Rect keyboardBounds, boolean isVisible) {
+                            BasePopupHelper.this.onKeyboardChange(
+                                    keyboardBounds,
+                                    isVisible);
+                            if (!mPopupWindow.isShowing()) {
+                                PopupUiUtils.safeRemoveGlobalLayoutListener(
+                                        mPopupWindow.getContext()
+                                                .getWindow()
+                                                .getDecorView(),
+                                        mGlobalLayoutListener);
+                                return;
+                            }
+                        }
+                    });
         }
         PopupUiUtils.safeAddGlobalLayoutListener(mPopupWindow.getContext()
-                                                             .getWindow()
-                                                             .getDecorView(),
-                                                 mGlobalLayoutListener);
+                        .getWindow()
+                        .getDecorView(),
+                mGlobalLayoutListener);
 
         if (mLinkedTarget != null) {
             if (mLinkedViewLayoutChangeListenerWrapper == null) {
@@ -916,11 +946,11 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         Message msg = BasePopupEvent.getMessage(BasePopupEvent.EVENT_DISMISS);
         if (animateDismiss) {
             startDismissAnimate(mPopupWindow.mDisplayAnimateView.getWidth(),
-                                mPopupWindow.mDisplayAnimateView.getHeight());
+                    mPopupWindow.mDisplayAnimateView.getHeight());
             msg.arg1 = 1;
             mPopupWindow.mDisplayAnimateView.removeCallbacks(dismissAnimationDelayRunnable);
             mPopupWindow.mDisplayAnimateView.postDelayed(dismissAnimationDelayRunnable,
-                                                         Math.max(dismissDuration, 0));
+                    Math.max(dismissDuration, 0));
         } else {
             msg.arg1 = 0;
             mPopupWindow.superDismiss();
@@ -1170,9 +1200,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         }
         if (mGlobalLayoutListener != null) {
             PopupUiUtils.safeRemoveGlobalLayoutListener(mPopupWindow.getContext()
-                                                                    .getWindow()
-                                                                    .getDecorView(),
-                                                        mGlobalLayoutListener);
+                            .getWindow()
+                            .getDecorView(),
+                    mGlobalLayoutListener);
         }
 
         if (mLinkedViewLayoutChangeListenerWrapper != null) {

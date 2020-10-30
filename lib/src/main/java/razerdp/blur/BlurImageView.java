@@ -315,7 +315,6 @@ public class BlurImageView extends ImageView {
         CreateBlurBitmapRunnable(View target) {
             outWidth = target.getWidth();
             outHeight = target.getHeight();
-            PopupLog.i("aaadf", cutoutX, cutoutY);
             mBitmap = BlurHelper.getViewBitmap(target, mBlurOption.getBlurPreScaleRatio(), mBlurOption
                     .isFullScreen(), cutoutX, cutoutY);
         }

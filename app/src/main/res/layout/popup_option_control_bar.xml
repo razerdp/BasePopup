@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_padding"
+                    android:text="Gravity选择"
+                    android:textColor="@color/text_black2"
+                    android:textSize="@dimen/text_normal" />
+
+                <View style="@style/divider" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/default_padding">
+
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/check_match_horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="width = match_parent"
+                        android:textColor="@color/text_black2"
+                        android:textSize="@dimen/text_small"
+                        android:theme="@style/MyCheckBox" />
+
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/check_match_vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="height = match_parent"
+                        android:textColor="@color/text_black2"
+                        android:textSize="@dimen/text_small"
+                        android:theme="@style/MyCheckBox" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/default_padding">
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/check_overlay_status"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+                    android:checked="true"
+                    android:text="覆盖状态栏"
+                    android:textColor="@color/text_black2"
+                    android:textSize="@dimen/text_small"
+                    android:theme="@style/MyCheckBox" />
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/color_6F7082" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/default_padding"
+                    android:paddingRight="@dimen/default_padding"
+                    android:text="覆盖模式：" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/check_status_mask"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="OVERLAY_MASK\n(只覆盖蒙层)"
+                        android:textColor="@color/text_black2"
+                        android:textSize="@dimen/text_small"
+                        android:theme="@style/MyCheckBox" />
+
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/check_status_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:checked="true"
+                        android:text="OVERLAY_CONTENT\n(只覆盖ContentView)"
+                        android:textColor="@color/text_black2"
+                        android:textSize="@dimen/text_small"
+                        android:theme="@style/MyCheckBox" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/default_padding">
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/check_overlay_nav"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+                    android:checked="true"
+                    android:text="覆盖导航栏"
+                    android:textColor="@color/text_black2"
+                    android:textSize="@dimen/text_small"
+                    android:theme="@style/MyCheckBox" />
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/color_6F7082" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/default_padding"
+                    android:paddingRight="@dimen/default_padding"
+                    android:text="覆盖模式：" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/check_nav_mask"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="OVERLAY_MASK\n(只覆盖蒙层)"
+                        android:textColor="@color/text_black2"
+                        android:textSize="@dimen/text_small"
+                        android:theme="@style/MyCheckBox" />
+
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/check_nav_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="OVERLAY_CONTENT\n(只覆盖ContentView)"
+                        android:textColor="@color/text_black2"
+                        android:textSize="@dimen/text_small"
+                        android:theme="@style/MyCheckBox" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+    <razerdp.demo.widget.DPTextView
+        android:id="@+id/tv_go"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/default_padding"
+        android:text="确定"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_small"
+        app:backgroundColor="@color/color_link"
+        app:textPressedColor="@color/white_70" />
+
+
+</LinearLayout>

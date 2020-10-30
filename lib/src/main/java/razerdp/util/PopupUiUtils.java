@@ -48,7 +48,7 @@ public class PopupUiUtils {
             return true;
         }
         try {
-            return (act.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0;
+            return (act.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == 0;
         } catch (Exception e) {
             PopupLog.e(e);
             return true;
