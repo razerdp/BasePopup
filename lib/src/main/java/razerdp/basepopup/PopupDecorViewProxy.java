@@ -50,6 +50,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             //主要是为了解决透传到蒙层的问题
         }
     };
+    private boolean isStatusBarVisible = true;
 
     private PopupDecorViewProxy(Context context) {
         super(context);
@@ -57,6 +58,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
     PopupDecorViewProxy(Context context, BasePopupHelper helper) {
         this(context);
+        isStatusBarVisible = PopupUiUtils.isStatusBarVisible(context);
         init(helper);
     }
 
@@ -173,12 +175,57 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             View child = getChildAt(i);
             //蒙层给最大值
             if (child == mMaskLayout) {
-                measureChild(child, widthMeasureSpec, heightMeasureSpec);
+                measureChild(child,
+                             adjustWidthMeasureSpec(widthMeasureSpec, BasePopupFlag.OVERLAY_MASK),
+                             adjustHeightMeasureSpec(heightMeasureSpec, BasePopupFlag.OVERLAY_MASK));
             } else {
-                measureWrappedDecorView(child, widthMeasureSpec, heightMeasureSpec);
+                measureWrappedDecorView(child,
+                                        adjustWidthMeasureSpec(widthMeasureSpec, BasePopupFlag.OVERLAY_CONTENT),
+                                        adjustHeightMeasureSpec(heightMeasureSpec, BasePopupFlag.OVERLAY_CONTENT));
             }
         }
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    private int adjustWidthMeasureSpec(int widthMeasureSpec, int overlayTarget) {
+        if ((overlayTarget & (BasePopupFlag.OVERLAY_MASK | BasePopupFlag.OVERLAY_CONTENT)) == 0) {
+            return widthMeasureSpec;
+        }
+        //由于statusbar只会出现在顶部，不会出现在左右，因此宽度跟statusbar没啥关系
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+
+        if (!mHelper.isOverlayNavigationBar() ||
+                (mHelper.overlayNavigationBarMode & overlayTarget) == 0) {
+            int navigationBarGravity = mHelper.getNavigationBarGravity();
+            int navigationBarSize = mHelper.getNavigationBarSize();
+            if (navigationBarGravity == Gravity.LEFT || navigationBarGravity == Gravity.RIGHT) {
+                widthSize -= navigationBarSize;
+            }
+        }
+        return MeasureSpec.makeMeasureSpec(widthSize, widthMode);
+    }
+
+    private int adjustHeightMeasureSpec(int heightMeasureSpec, int overlayTarget) {
+        if ((overlayTarget & (BasePopupFlag.OVERLAY_MASK | BasePopupFlag.OVERLAY_CONTENT)) == 0) {
+            return heightMeasureSpec;
+        }
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        if (!mHelper.isOverlayStatusbar() ||
+                (mHelper.overlayStatusMode & BasePopupFlag.OVERLAY_MASK) == 0 && isStatusBarVisible) {
+            //mask不覆盖状态栏
+            heightSize -= PopupUiUtils.getStatusBarHeight();
+        }
+        if (!mHelper.isOverlayNavigationBar() ||
+                (mHelper.overlayNavigationBarMode & overlayTarget) == 0) {
+            int navigationBarGravity = mHelper.getNavigationBarGravity();
+            int navigationBarSize = mHelper.getNavigationBarSize();
+            if (navigationBarGravity == Gravity.TOP || navigationBarGravity == Gravity.BOTTOM) {
+                heightSize -= navigationBarSize;
+            }
+        }
+        return MeasureSpec.makeMeasureSpec(heightSize, heightMode);
     }
 
     private void measureWrappedDecorView(View mTarget, int widthMeasureSpec, int heightMeasureSpec) {
@@ -379,9 +426,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
             if (child == mMaskLayout) {
                 child.layout(contentBounds.left,
-                        contentBounds.top,
-                        contentBounds.left + getMeasuredWidth(),
-                        contentBounds.top + getMeasuredHeight());
+                             contentBounds.top,
+                             contentBounds.left + getMeasuredWidth(),
+                             contentBounds.top + getMeasuredHeight());
             } else {
                 anchorRect.set(mHelper.getAnchorViewBound());
                 anchorRect.offset(-location[0], -location[1]);
@@ -489,9 +536,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 }
 
                 contentRect.set(contentRect.left,
-                        contentRect.top,
-                        contentRect.left + width,
-                        contentRect.top + height);
+                                contentRect.top,
+                                contentRect.left + width,
+                                contentRect.top + height);
 
                 contentRect.offset(offsetX, offsetY);
 
@@ -536,7 +583,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 child.layout(contentRect.left, contentRect.top, contentRect.right, contentRect.bottom);
                 if (delayLayoutMask) {
                     mMaskLayout.handleAlignBackground(mHelper.getAlignBackgroundGravity(),
-                            contentRect.left, contentRect.top, contentRect.right, contentRect.bottom);
+                                                      contentRect.left, contentRect.top, contentRect.right, contentRect.bottom);
                 }
                 if (isRelativeToAnchor) {
                     popupRect.set(contentRect);

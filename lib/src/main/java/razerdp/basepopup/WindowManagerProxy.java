@@ -319,9 +319,9 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
                             }
 
                         }
-                        p.flags |= LayoutParams.FLAG_LAYOUT_NO_LIMITS;
                     }
-
+                    // 状态栏和导航栏相关处理交给decorview proxy，这里永远占用
+                    p.flags |= LayoutParams.FLAG_LAYOUT_NO_LIMITS;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                         p.flags |= LayoutParams.FLAG_LAYOUT_IN_OVERSCAN;
                     }
@@ -345,7 +345,6 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
                     int insetsType = p.getFitInsetsTypes();
                     if (helper.isOverlayStatusbar()) {
                         PopupLog.i(TAG, "applyHelper  >>>  覆盖状态栏");
-                        insetsType &= ~WindowInsets.Type.statusBars();
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                             int cutoutGravity = helper.getCutoutGravity();
                             if (cutoutGravity == Gravity.TOP || cutoutGravity == Gravity.BOTTOM) {
@@ -354,6 +353,8 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
                             }
                         }
                     }
+                    // 状态栏和导航栏相关处理交给decorview proxy，这里永远占用
+                    insetsType &= ~WindowInsets.Type.statusBars();
                     insetsType &= ~WindowInsets.Type.navigationBars();
                     p.setFitInsetsTypes(insetsType);
                 }
