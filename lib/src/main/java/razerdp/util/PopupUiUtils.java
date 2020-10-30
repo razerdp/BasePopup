@@ -42,6 +42,19 @@ public class PopupUiUtils {
         NAVIGATION_BAR_NAMES.put(id, null);
     }
 
+    public static boolean isStatusBarVisible(Context context) {
+        Activity act = PopupUtils.getActivity(context);
+        if (act == null) {
+            return true;
+        }
+        try {
+            return (act.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0;
+        } catch (Exception e) {
+            PopupLog.e(e);
+            return true;
+        }
+    }
+
     public static boolean isPopupDecorView(View view) {
         return view != null && TextUtils.equals(view.getClass().getName(), POPUP_DECORVIEW);
     }
@@ -157,7 +170,7 @@ public class PopupUiUtils {
     public static boolean isActivityFullScreen(Activity act) {
         if (act == null || act.getWindow() == null) return false;
         return (act.getWindow()
-                .getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
+                   .getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
 
     }
 
