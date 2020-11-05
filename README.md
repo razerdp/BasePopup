@@ -127,10 +127,10 @@ BasePopup配备完善的文档，建议您优先查阅文档。
         * `setOverlayNavigationBarMode` -> `overlayNavigationBarMode`
         * `setMaskOffsetX` -> `maskOffsetX`
         * `setMaskOffsetY` -> `maskOffsetY`
-  **【Candy】2.2.10.1030** (2020/10/30)
-    * 修复BaseLazyPopupWindow中键盘不自动弹出的问题 [#363](https://github.com/razerdp/BasePopup/issues/363)
-   **【Candy】2.2.10.1105** (2020/11/05)
-    * 修复覆盖状态栏时ContentView布局错误的问题
+**【Candy】2.2.10.1030** (2020/10/30)
+  * 修复BaseLazyPopupWindow中键盘不自动弹出的问题 [#363](https://github.com/razerdp/BasePopup/issues/363)
+**【Candy】2.2.10.1105** (2020/11/05)
+  * 修复覆盖状态栏时ContentView布局错误的问题
 
 
 <br>
