@@ -147,17 +147,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         childBottomMargin = mHelper.getLayoutParams().bottomMargin;
 
         mHelper.refreshNavigationBarBounds();
-        switch (MeasureSpec.getMode(wp.width)) {
-            case MeasureSpec.EXACTLY:
-                PopupLog.i("aaa");
-                break;
-            case MeasureSpec.AT_MOST:
-                PopupLog.i("bbb");
-                break;
-            case MeasureSpec.UNSPECIFIED:
-                PopupLog.i("ccc");
-                break;
-        }
         //添加decorView作为自己的子控件
         if (wp.width > 0) {
             wp.width += childLeftMargin + childRightMargin;
@@ -376,9 +365,10 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             PopupLog.i("lllay", child, t);
 
             //不覆盖状态栏
-            if (t == 0 &&
-                    (mHelper.overlayStatusBarMode & (child == mMaskLayout ? BasePopupFlag.OVERLAY_MASK : BasePopupFlag.OVERLAY_CONTENT)) == 0) {
-                t += PopupUiUtils.getStatusBarHeight();
+            if ((mHelper.overlayStatusBarMode & (child == mMaskLayout ? BasePopupFlag.OVERLAY_MASK : BasePopupFlag.OVERLAY_CONTENT)) == 0) {
+                t = t == 0 ? t + PopupUiUtils.getStatusBarHeight() : t;
+            } else {
+                t = 0;
             }
 
             int width = child.getMeasuredWidth();
