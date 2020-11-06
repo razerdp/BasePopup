@@ -50,6 +50,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             //主要是为了解决透传到蒙层的问题
         }
     };
+    private boolean isStatusBarVisible = true;
 
     private PopupDecorViewProxy(Context context) {
         super(context);
@@ -57,6 +58,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
     PopupDecorViewProxy(Context context, BasePopupHelper helper) {
         this(context);
+        isStatusBarVisible = PopupUiUtils.isStatusBarVisible(context);
         init(helper);
     }
 
@@ -145,17 +147,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         childBottomMargin = mHelper.getLayoutParams().bottomMargin;
 
         mHelper.refreshNavigationBarBounds();
-        switch (MeasureSpec.getMode(wp.width)) {
-            case MeasureSpec.EXACTLY:
-                PopupLog.i("aaa");
-                break;
-            case MeasureSpec.AT_MOST:
-                PopupLog.i("bbb");
-                break;
-            case MeasureSpec.UNSPECIFIED:
-                PopupLog.i("ccc");
-                break;
-        }
         //添加decorView作为自己的子控件
         if (wp.width > 0) {
             wp.width += childLeftMargin + childRightMargin;
@@ -173,12 +164,53 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             View child = getChildAt(i);
             //蒙层给最大值
             if (child == mMaskLayout) {
-                measureChild(child, widthMeasureSpec, heightMeasureSpec);
+                measureChild(child,
+                        adjustWidthMeasureSpec(widthMeasureSpec, BasePopupFlag.OVERLAY_MASK),
+                        adjustHeightMeasureSpec(heightMeasureSpec, BasePopupFlag.OVERLAY_MASK));
             } else {
-                measureWrappedDecorView(child, widthMeasureSpec, heightMeasureSpec);
+                measureWrappedDecorView(child,
+                        adjustWidthMeasureSpec(widthMeasureSpec, BasePopupFlag.OVERLAY_CONTENT),
+                        adjustHeightMeasureSpec(heightMeasureSpec, BasePopupFlag.OVERLAY_CONTENT));
             }
         }
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    private int adjustWidthMeasureSpec(int widthMeasureSpec, int overlayTarget) {
+        if ((overlayTarget & (BasePopupFlag.OVERLAY_MASK | BasePopupFlag.OVERLAY_CONTENT)) == 0) {
+            return widthMeasureSpec;
+        }
+        //由于statusbar只会出现在顶部，不会出现在左右，因此宽度跟statusbar没啥关系
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+
+        if ((mHelper.overlayNavigationBarMode & overlayTarget) == 0) {
+            int navigationBarGravity = mHelper.getNavigationBarGravity();
+            int navigationBarSize = mHelper.getNavigationBarSize();
+            if (navigationBarGravity == Gravity.LEFT || navigationBarGravity == Gravity.RIGHT) {
+                widthSize -= navigationBarSize;
+            }
+        }
+        return MeasureSpec.makeMeasureSpec(widthSize, widthMode);
+    }
+
+    private int adjustHeightMeasureSpec(int heightMeasureSpec, int overlayTarget) {
+        if ((overlayTarget & (BasePopupFlag.OVERLAY_MASK | BasePopupFlag.OVERLAY_CONTENT)) == 0) {
+            return heightMeasureSpec;
+        }
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        if ((mHelper.overlayStatusBarMode & overlayTarget) == 0 && isStatusBarVisible) {
+            heightSize -= PopupUiUtils.getStatusBarHeight();
+        }
+        if ((mHelper.overlayNavigationBarMode & overlayTarget) == 0) {
+            int navigationBarGravity = mHelper.getNavigationBarGravity();
+            int navigationBarSize = mHelper.getNavigationBarSize();
+            if (navigationBarGravity == Gravity.TOP || navigationBarGravity == Gravity.BOTTOM) {
+                heightSize -= navigationBarSize;
+            }
+        }
+        return MeasureSpec.makeMeasureSpec(heightSize, heightMode);
     }
 
     private void measureWrappedDecorView(View mTarget, int widthMeasureSpec, int heightMeasureSpec) {
@@ -197,7 +229,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
         int gravity = mHelper.getPopupGravity();
 
-        //这里需要考虑覆盖导航栏的问题，如果没有设置允许覆盖，则蒙层可以覆盖，但实际内容可用空间需要减掉导航栏高度
+        //这里需要根据overlayNavigationbarMode来考虑覆盖导航栏的问题
         int navigationBarGravity = mHelper.getNavigationBarGravity();
         int navigationBarSize = mHelper.getNavigationBarSize();
 
@@ -220,20 +252,22 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 rt = heightSize - anchorRect.top;
                 rb = anchorRect.bottom;
             }
-
-            switch (navigationBarGravity) {
-                case Gravity.LEFT:
-                    rl -= navigationBarSize;
-                    break;
-                case Gravity.TOP:
-                    rt -= navigationBarSize;
-                    break;
-                case Gravity.RIGHT:
-                    rr -= navigationBarSize;
-                    break;
-                case Gravity.BOTTOM:
-                    rb -= navigationBarSize;
-                    break;
+            //anchor是有算navigation的(getLocationOnScreen)
+            if ((mHelper.overlayNavigationBarMode & BasePopupFlag.OVERLAY_CONTENT) == 0) {
+                switch (navigationBarGravity) {
+                    case Gravity.LEFT:
+                        rl -= navigationBarSize;
+                        break;
+                    case Gravity.TOP:
+                        rt -= navigationBarSize;
+                        break;
+                    case Gravity.RIGHT:
+                        rr -= navigationBarSize;
+                        break;
+                    case Gravity.BOTTOM:
+                        rb -= navigationBarSize;
+                        break;
+                }
             }
 
             switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
@@ -275,21 +309,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                     }
                     break;
                 default:
-                    break;
-            }
-        } else {
-            switch (navigationBarGravity) {
-                case Gravity.LEFT:
-                case Gravity.RIGHT:
-                    if (lp.width == LayoutParams.WRAP_CONTENT || lp.width == LayoutParams.MATCH_PARENT) {
-                        widthSize -= navigationBarSize;
-                    }
-                    break;
-                case Gravity.TOP:
-                case Gravity.BOTTOM:
-                    if (lp.height == LayoutParams.WRAP_CONTENT || lp.height == LayoutParams.MATCH_PARENT) {
-                        heightSize -= navigationBarSize;
-                    }
                     break;
             }
         }
@@ -343,6 +362,14 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
             if (child.getVisibility() == GONE) continue;
+            PopupLog.i("lllay", child, t);
+
+            //不覆盖状态栏
+            if ((mHelper.overlayStatusBarMode & (child == mMaskLayout ? BasePopupFlag.OVERLAY_MASK : BasePopupFlag.OVERLAY_CONTENT)) == 0) {
+                t = t == 0 ? t + PopupUiUtils.getStatusBarHeight() : t;
+            } else {
+                t = 0;
+            }
 
             int width = child.getMeasuredWidth();
             int height = child.getMeasuredHeight();
@@ -353,7 +380,12 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             //由于可以布局到navigationbar上，因此在layout的时候对于contentView需要减去navigationbar的高度
             //同时需要判断navigationbar的方向，在蛋疼的模拟器或者某些rom上，横屏的时候navigationbar能在左右
             final int navigationBarGravity = mHelper.getNavigationBarGravity();
-            final int navigationBarSize = mHelper.getNavigationBarSize();
+            final int navigationBarSize;
+            if ((mHelper.overlayNavigationBarMode & (child == mMaskLayout ? BasePopupFlag.OVERLAY_MASK : BasePopupFlag.OVERLAY_CONTENT)) == 0) {
+                navigationBarSize = mHelper.getNavigationBarSize();
+            } else {
+                navigationBarSize = 0;
+            }
 
             switch (navigationBarGravity) {
                 case Gravity.LEFT:
@@ -378,6 +410,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             boolean delayLayoutMask = mHelper.isAlignBackground() && mHelper.getAlignBackgroundGravity() != Gravity.NO_GRAVITY;
 
             if (child == mMaskLayout) {
+                contentBounds.offset(mHelper.maskOffsetX, mHelper.maskOffsetY);
                 child.layout(contentBounds.left,
                         contentBounds.top,
                         contentBounds.left + getMeasuredWidth(),

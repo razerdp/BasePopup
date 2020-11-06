@@ -62,6 +62,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         POSITION
     }
 
+    static final int DEFAULT_OVERLAY_STATUS_BAR_MODE = OVERLAY_MASK | OVERLAY_CONTENT;
+    static final int DEFAULT_OVERLAY_NAVIGATION_BAR_MODE = OVERLAY_MASK;
     private static final int CONTENT_VIEW_ID = R.id.base_popup_content_root;
     Animation DEFAULT_MASK_SHOW_ANIMATION = new AlphaAnimation(0f, 1f) {
         {
@@ -112,6 +114,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     int popupGravity = Gravity.NO_GRAVITY;
     int offsetX;
     int offsetY;
+    int maskOffsetX;
+    int maskOffsetY;
     int preMeasureWidth;
     int preMeasureHeight;
 
@@ -153,6 +157,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     Rect navigationBarBounds;
     Rect cutoutSafeRect;
+
+    int lastOverLayStatusBarMode, overlayStatusBarMode = DEFAULT_OVERLAY_STATUS_BAR_MODE;
+    int lastOverlayNavigationBarMode, overlayNavigationBarMode = DEFAULT_OVERLAY_NAVIGATION_BAR_MODE;
 
     BasePopupHelper(BasePopupWindow popupWindow) {
         mAnchorViewBound = new Rect();
@@ -509,11 +516,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     int getNavigationBarSize() {
-        if (isOverlayNavigationBar()) {
-            return 0;
-        } else {
-            return Math.min(navigationBarBounds.width(), navigationBarBounds.height());
-        }
+        return Math.min(navigationBarBounds.width(), navigationBarBounds.height());
     }
 
     int getNavigationBarGravity() {
@@ -566,11 +569,41 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
             overlay = true;
         }
         setFlag(OVERLAY_STATUS_BAR, overlay);
+        if (!overlay) {
+            lastOverLayStatusBarMode = overlayStatusBarMode;
+            overlayStatusBarMode = 0;
+        } else {
+            overlayStatusBarMode = lastOverLayStatusBarMode;
+        }
+        return this;
+    }
+
+    BasePopupHelper setOverlayStatusbarMode(int mode) {
+        if (!isOverlayStatusbar()) {
+            lastOverLayStatusBarMode = mode;
+        } else {
+            lastOverLayStatusBarMode = overlayStatusBarMode = mode;
+        }
         return this;
     }
 
     BasePopupHelper overlayNavigationBar(boolean overlay) {
         setFlag(OVERLAY_NAVIGATION_BAR, overlay);
+        if (!overlay) {
+            lastOverlayNavigationBarMode = overlayNavigationBarMode;
+            overlayNavigationBarMode = 0;
+        } else {
+            overlayNavigationBarMode = lastOverlayNavigationBarMode;
+        }
+        return this;
+    }
+
+    BasePopupHelper setOverlayNavigationBarMode(int mode) {
+        if (!isOverlayNavigationBar()) {
+            lastOverlayNavigationBarMode = mode;
+        } else {
+            lastOverlayNavigationBarMode = overlayNavigationBarMode = mode;
+        }
         return this;
     }
 

@@ -52,11 +52,14 @@ public interface BasePopupFlag {
     int AS_WIDTH_AS_ANCHOR = 0x8 << OTHER_SHIFT;//宽度与anchor一致
     int AS_HEIGHT_AS_ANCHOR = 0x10 << OTHER_SHIFT;//高度与anchor一致
     int TOUCHABLE = 0x20 << OTHER_SHIFT;
+    int OVERLAY_MASK = 0x40 << OTHER_SHIFT; //用于overlay status/navigation 覆盖mask层
+    int OVERLAY_CONTENT = 0x80 << OTHER_SHIFT;//用于overlay status/navigation覆盖content层
 
 
     int IDLE = OUT_SIDE_DISMISS
             | BACKPRESS_ENABLE
             | OVERLAY_STATUS_BAR
+            | OVERLAY_NAVIGATION_BAR
             | CLIP_CHILDREN
             | FADE_ENABLE
             | KEYBOARD_ALIGN_TO_ROOT
