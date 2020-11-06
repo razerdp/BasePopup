@@ -122,29 +122,22 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 **正在开发日志（Candy版本）请查看dev分支：** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **【Release】2.2.9**(2020/10/10)
-  * 2.2.9主要更新内容：部分优化及回调增加
-  * 【新增方法】
-    * 增加方法：`onBeforeDismiss`，作用同OnDismissListener#onBeforeDismiss()
-    * 增加方法：`setTouchable`，该方法用于设置是否允Popup是否响应事件，如果不响应，则事件会穿透Popup
-    * 增加键盘对齐View的方法 `setAdjustInputMode(View,flag)` [#358](https://github.com/razerdp/BasePopup/issues/358)
-    * 增加方法：`preMeasure()`，预测量contentView，该方法将会进行measure，但是不能保证能够准确测量（如recyclerview未设置adapter时）
-    * 增加方法：`getPreMeasureWidth()`，获取预测量后的宽度
-    * 增加方法：`getPreMeasureHeight()`，获取预测量后的高度
-    * 增加方法：`updateKeyboardAlign()`，该方法允许您手动通知BasePopup根据键盘对齐模式对齐键盘
-    * 增加回调：`onWindowFocusChanged`回调
-    * BasePopupUnsafe增加方法：
-      * `getWindowManager`：获取BasePopup的WindowManager代理
-      * `getBasePopupDecorViewProxy`：获取BasePopup最终的DecorView代理
-      * `getDecorViewLayoutParams`：获取BasePopup最终DecorView的LayoutParams
-  * 【功能优化】
-    * 方法更名：`onPreShow`-> `onBeforeShow`
-    * 优化onBeforeDismiss()判断顺序 [#352](https://github.com/razerdp/BasePopup/issues/352)
-    * 去除init时预测量的方法，该方法是历史遗留下来的，用于定位用，现在定位都已经代理到View里面了，因此该方法被弃用
-      * 但不排除部分用户需要这个，因此保留并改为允许用户触发
-    * 方法修改：
-      * `getWidth()`，只能在PopupWindow显示后才能正确获取宽度
-      * `getHeight()`，只能在PopupWindow显示后才能正确获取高度
+* **【Release】2.2.10**(2020/11/06)
+  * 【优化】
+    * 优化状态栏、导航栏的覆盖：
+        * 增加方法：`setOverlayStatusbarMode`，设置BasePopupFlag.OVERLAY_CONTENT或者BasePopupFlag.OVERLAY_MASK其一或相加的时候，将允许蒙层或内容层覆盖状态栏
+        * 增加方法：`setOverlayNavigationBarMode`，设置BasePopupFlag.OVERLAY_CONTENT或者BasePopupFlag.OVERLAY_MASK其一或相加的时候，将允许蒙层或内容层覆盖导航栏
+        * 文档请查看：[**【SystemBar覆盖控制】**](https://www.yuque.com/razerdp/basepopup/rtzsx3)
+    * 增加方法：`setMaskOffsetX`，设置蒙层水平方向上的偏移
+    * 增加方法：`setMaskOffsetY`，设置蒙层垂直方向上的偏移
+    * QuickPopupConfig：
+        * 增加上述方法，为配合Builder语法，上述方法稍作更名：
+            * `setOverlayStatusbarMode` -> `overlayStatusbarMode`
+            * `setOverlayNavigationBarMode` -> `overlayNavigationBarMode`
+            * `setMaskOffsetX` -> `maskOffsetX`
+            * `setMaskOffsetY` -> `maskOffsetY`
+  * 【修复】
+    * 修复BaseLazyPopupWindow中键盘不自动弹出的问题 [#363](https://github.com/razerdp/BasePopup/issues/363)
 
 <br>
 

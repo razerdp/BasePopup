@@ -112,29 +112,22 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 **Candy dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **【Release】2.2.9**(2020/10/10)
-  * 2.2.9 Major updates: Some optimizations and callbacks added.
-  * 【New Feature】
-    * Add method:`onBeforeDismiss`，works the same as `OnDismissListener#onBeforeDismiss()`.
-    * Add method:`setTouchable`，set whether Popup is allowed to respond to the event or not, if not, the event will penetrate through Popup.
-    * Add method: `setAdjustInputMode(View,flag)` [#358](https://github.com/razerdp/BasePopup/issues/358)
-    * Add method:`preMeasure()`，to pre-measure the contentView, this method will measure, but there is no guarantee that it will measure accurately (e.g. if the cyclerview does not have an adapter).
-    * Add method:`getPreMeasureWidth()`，get pre-measured width
-    * Add method:`getPreMeasureHeight()`，get pre-measured height
-    * Add method:`updateKeyboardAlign()`，this method allows you to manually notify BasePopup to align the keyboard according to the keyboard alignment mode.
-    * Add Callback：`onWindowFocusChanged()`
-    * BasePopupUnsafe：
-      * Add method:`getWindowManager`,get the WindowManager proxy for BasePopup.
-      * Add method:`getBasePopupDecorViewProxy`,get the final DecorView proxy for BasePopup.
-      * Add method:`getDecorViewLayoutParams`,get the LayoutParams of the BasePopup final DecorView.
+* **【Release】2.2.10**(2020/11/06)
   * 【Optimization】
-    * Method change:`onPreShow`-> `onBeforeShow`
-    * Optimizing the order of onBeforeDismiss() judgments [#352](https://github.com/razerdp/BasePopup/issues/352)
-    * The method to remove the predicted amount of init, which is a legacy method for positioning, is deprecated because positioning is now proxied in the View.
-      * However, it does not preclude some users from needing this, so it is retained and changed to allow users to trigger the
-    * Method change:
-      * `getWidth()`，get the correct width after the PopupWindow is displayed.
-      * `getHeight()`，get the correct height after the PopupWindow is displayed.
+    * Optimize status bar, navigation bar coverage.
+        * Add Method:`setOverlayStatusbarMode`，When BasePopupFlag.OVERLAY_CONTENT or BasePopupFlag.OVERLAY_MASK is set, a mask or content layer will be allowed to overwrite the status bar.
+        * Add Method:`setOverlayNavigationBarMode`，When BasePopupFlag.OVERLAY_CONTENT or BasePopupFlag.OVERLAY_MASK is set, a mask or content layer will be allowed to overwrite the navigation bar.
+        * Documentation can be found at [**[SystemBar Override Control]**](https://www.yuque.com/razerdp/basepopup/rtzsx3)
+    * Add Method:`setMaskOffsetX`，Set the horizontal offset of the mask layer.
+    * Add Method:`setMaskOffsetY`，Set the vertical offset of the mask layer.
+    * QuickPopupConfig：
+        * Add the above method, which has been slightly renamed to match the Builder syntax.
+            * `setOverlayStatusbarMode` -> `overlayStatusbarMode`
+            * `setOverlayNavigationBarMode` -> `overlayNavigationBarMode`
+            * `setMaskOffsetX` -> `maskOffsetX`
+            * `setMaskOffsetY` -> `maskOffsetY`
+  * 【Bug fixed】
+    * Fix the problem that the keyboard doesn't pop up automatically in BaseLazyPopupWindow. [#363](https://github.com/razerdp/BasePopup/issues/363)
 
 <br>
 
