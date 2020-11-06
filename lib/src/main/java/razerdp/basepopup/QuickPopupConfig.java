@@ -40,6 +40,10 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
 
     protected int offsetX;
     protected int offsetY;
+    protected int maskOffsetX;
+    protected int maskOffsetY;
+    protected int overlayStatusBarMode = BasePopupHelper.DEFAULT_OVERLAY_STATUS_BAR_MODE;
+    protected int overlayNavigationBarMode = BasePopupHelper.DEFAULT_OVERLAY_NAVIGATION_BAR_MODE;
 
     protected int minWidth;
     protected int maxWidth;
@@ -66,11 +70,11 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
         //https://github.com/razerdp/BasePopup/issues/152
         return new QuickPopupConfig()
                 .withShowAnimation(AnimationHelper.asAnimation()
-                                           .withScale(ScaleConfig.CENTER)
-                                           .toShow())
+                        .withScale(ScaleConfig.CENTER)
+                        .toShow())
                 .withDismissAnimation(AnimationHelper.asAnimation()
-                                              .withScale(ScaleConfig.CENTER)
-                                              .toDismiss())
+                        .withScale(ScaleConfig.CENTER)
+                        .toDismiss())
                 .fadeInAndOut(Build.VERSION.SDK_INT != Build.VERSION_CODES.M);
     }
 
@@ -136,8 +140,47 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
         return this;
     }
 
+    public QuickPopupConfig maskOffsetX(int offsetX) {
+        this.maskOffsetX = offsetX;
+        return this;
+    }
+
+
     public QuickPopupConfig offsetY(int offsetY) {
         this.offsetY = offsetY;
+        return this;
+    }
+
+    public QuickPopupConfig maskOffsetY(int offsetY) {
+        this.maskOffsetY = offsetY;
+        return this;
+    }
+
+    public QuickPopupConfig overlayStatusbarMode(int mode) {
+        this.overlayStatusBarMode = mode;
+        return this;
+    }
+
+    public QuickPopupConfig overlayNavigationBarMode(int mode) {
+        this.overlayNavigationBarMode = mode;
+        return this;
+    }
+
+    public QuickPopupConfig overlayStatusbar(boolean overlay) {
+        if (!overlay) {
+            this.flag &= ~BasePopupFlag.OVERLAY_STATUS_BAR;
+        } else {
+            this.flag |= BasePopupFlag.OVERLAY_STATUS_BAR;
+        }
+        return this;
+    }
+
+    public QuickPopupConfig overlayNavigationBar(boolean overlay) {
+        if (!overlay) {
+            this.flag &= ~BasePopupFlag.OVERLAY_NAVIGATION_BAR;
+        } else {
+            this.flag |= BasePopupFlag.OVERLAY_NAVIGATION_BAR;
+        }
         return this;
     }
 
@@ -343,6 +386,22 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
         } else {
             this.flag |= flag;
         }
+    }
+
+    public int getMaskOffsetX() {
+        return maskOffsetX;
+    }
+
+    public int getMaskOffsetY() {
+        return maskOffsetY;
+    }
+
+    public int getOverlayStatusBarMode() {
+        return overlayStatusBarMode;
+    }
+
+    public int getOverlayNavigationBarMode() {
+        return overlayNavigationBarMode;
     }
 
     public KeyboardUtils.OnKeyboardChangeListener getOnKeyboardChangeListener() {

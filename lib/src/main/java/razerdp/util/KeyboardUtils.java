@@ -20,7 +20,10 @@ public class KeyboardUtils {
      */
     public static void open(View view) {
         if (view == null) return;
-        view.requestFocus();
+        if (!view.hasFocus()) {
+            view.requestFocus();
+            view = view.findFocus();
+        }
         InputMethodManager imm = (InputMethodManager) view.getContext()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
