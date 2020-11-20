@@ -115,23 +115,8 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Candy】2.2.10** (2020/10/30)
-  * 优化状态栏、导航栏的覆盖：
-    * 增加方法：`setOverlayStatusbarMode`：设置BasePopupFlag.OVERLAY_CONTENT或者BasePopupFlag.OVERLAY_MASK其一或相加的时候，将允许蒙层或内容层覆盖状态栏
-    * 增加方法：`setOverlayNavigationBarMode`：设置BasePopupFlag.OVERLAY_CONTENT或者BasePopupFlag.OVERLAY_MASK其一或相加的时候，将允许蒙层或内容层覆盖导航栏
-  * 增加方法：`setMaskOffsetX`，设置蒙层水平方向上的位移
-  * 增加方法：`setMaskOffsetY`，设置蒙层垂直方向上的位移
-  * QuickPopupConfig：
-    * 增加上述方法，为配合Builder语法，上述方法稍作更名：
-        * `setOverlayStatusbarMode` -> `overlayStatusbarMode`
-        * `setOverlayNavigationBarMode` -> `overlayNavigationBarMode`
-        * `setMaskOffsetX` -> `maskOffsetX`
-        * `setMaskOffsetY` -> `maskOffsetY`
-* **【Candy】2.2.10.1030** (2020/10/30)
-  * 修复BaseLazyPopupWindow中键盘不自动弹出的问题 [#363](https://github.com/razerdp/BasePopup/issues/363)
-* **【Candy】2.2.10.1105** (2020/11/05)
-  * 修复覆盖状态栏时ContentView布局错误的问题
-  * 增加方法：`setMaskOffsetX`\`setMaskOffsetY`，该方法允许您设置蒙层的水平偏移和垂直偏移
+* **【Candy】2.2.11.1120** (2020/11/20)
+  * 给BasePopupUnsafe增加`setFitWindowManagerLayoutParamsCallback`方法
 
 
 <br>
