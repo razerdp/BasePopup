@@ -5,9 +5,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.pgyersdk.update.DownloadFileListener;
 import com.pgyersdk.update.PgyUpdateManager;
 import com.pgyersdk.update.UpdateManagerListener;
@@ -17,6 +14,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
 import razerdp.basepopup.QuickPopupBuilder;

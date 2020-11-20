@@ -351,7 +351,7 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
     private View mAnchorDecorView;
     private boolean isDestroyed;
 
-    private BasePopupHelper mHelper;
+    BasePopupHelper mHelper;
     Activity mContext;
 
     Object ownerAnchorParent;
