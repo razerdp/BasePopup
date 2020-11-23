@@ -117,6 +117,8 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 * **【Candy】2.2.11.1120** (2020/11/20)
   * 给BasePopupUnsafe增加`setFitWindowManagerLayoutParamsCallback`方法
+* **【Candy】2.2.11.1123** (2020/11/23)
+  * 修复MaxHeight测量模式强制为Exactly的问题：[#371](https://github.com/razerdp/BasePopup/issues/371)
 
 
 <br>
