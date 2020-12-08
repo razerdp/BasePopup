@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import razerdp.util.log.PopupLog;
 
@@ -25,6 +26,7 @@ import razerdp.util.log.PopupLog;
 @SuppressWarnings("all")
 @Deprecated
 public enum BasePopupUnsafe {
+    @Deprecated
     INSTANCE;
 
     /**
@@ -100,6 +102,18 @@ public enum BasePopupUnsafe {
             return getBasePopupDecorViewProxy(p).getLayoutParams();
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    /**
+     * 设置windowmanagerproxy对WindowManager#LayoutParams处理后的监听，您可以在这里修改LayoutParams，但我并不推荐您这么做
+     */
+    @Deprecated
+    public void setFitWindowManagerLayoutParamsCallback(BasePopupWindow p, OnFitWindowManagerLayoutParamsCallback cb) {
+        try {
+            p.mHelper.mOnFitWindowManagerLayoutParamsCallback = cb;
+        } catch (Exception e) {
+            PopupLog.e(e);
         }
     }
 
@@ -186,5 +200,10 @@ public enum BasePopupUnsafe {
                     ", popupAddress='" + popupAddress + '\'' +
                     '}';
         }
+    }
+
+    @Deprecated
+    public interface OnFitWindowManagerLayoutParamsCallback {
+        void onFitLayoutParams(@NonNull WindowManager.LayoutParams p);
     }
 }
