@@ -110,24 +110,13 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 ### ChangeLog ([Historical update](https://www.yuque.com/razerdp/basepopup/uyrsxx))
 
-**Candy dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
+**Candy dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97-%E5%8E%86%E5%8F%B2%E6%9B%B4%E6%96%B0)
 
-* **【Release】2.2.10**(2020/11/06)
-  * 【Optimization】
-    * Optimize status bar, navigation bar coverage.
-        * Add Method:`setOverlayStatusbarMode`，When BasePopupFlag.OVERLAY_CONTENT or BasePopupFlag.OVERLAY_MASK is set, a mask or content layer will be allowed to overwrite the status bar.
-        * Add Method:`setOverlayNavigationBarMode`，When BasePopupFlag.OVERLAY_CONTENT or BasePopupFlag.OVERLAY_MASK is set, a mask or content layer will be allowed to overwrite the navigation bar.
-        * Documentation can be found at [**[SystemBar Override Control]**](https://www.yuque.com/razerdp/basepopup/rtzsx3)
-    * Add Method:`setMaskOffsetX`，Set the horizontal offset of the mask layer.
-    * Add Method:`setMaskOffsetY`，Set the vertical offset of the mask layer.
-    * QuickPopupConfig：
-        * Add the above method, which has been slightly renamed to match the Builder syntax.
-            * `setOverlayStatusbarMode` -> `overlayStatusbarMode`
-            * `setOverlayNavigationBarMode` -> `overlayNavigationBarMode`
-            * `setMaskOffsetX` -> `maskOffsetX`
-            * `setMaskOffsetY` -> `maskOffsetY`
-  * 【Bug fixed】
-    * Fix the problem that the keyboard doesn't pop up automatically in BaseLazyPopupWindow. [#363](https://github.com/razerdp/BasePopup/issues/363)
+* **【Release】2.2.11**(2020/12/08)
+  * 【Optimize】
+    * Add the `setFitWindowManagerLayoutParamsCallback` method to BasePopupUnsafe.
+  * 【Fixed】
+    * Fix the problem that MaxHeight measurement mode is forced to be Exactly.[#371](https://github.com/razerdp/BasePopup/issues/371)
 
 <br>
 

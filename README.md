@@ -120,29 +120,13 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-**正在开发日志（Candy版本）请查看dev分支：** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
+**正在开发日志（Candy版本）请查看dev分支：** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97-%E5%8E%86%E5%8F%B2%E6%9B%B4%E6%96%B0)
 
-* **【Release】2.2.10**(2020/11/06)
+* **【Release】2.2.11**(2020/12/08)
   * 【优化】
-    * 优化状态栏、导航栏的覆盖：
-        * 增加方法：`setOverlayStatusbarMode`，设置BasePopupFlag.OVERLAY_CONTENT或者BasePopupFlag.OVERLAY_MASK其一或相加的时候，将允许蒙层或内容层覆盖状态栏
-        * 增加方法：`setOverlayNavigationBarMode`，设置BasePopupFlag.OVERLAY_CONTENT或者BasePopupFlag.OVERLAY_MASK其一或相加的时候，将允许蒙层或内容层覆盖导航栏
-        * 文档请查看：[**【SystemBar覆盖控制】**](https://www.yuque.com/razerdp/basepopup/rtzsx3)
-    * 增加方法：`setMaskOffsetX`，设置蒙层水平方向上的偏移
-    * 增加方法：`setMaskOffsetY`，设置蒙层垂直方向上的偏移
-    * QuickPopupConfig：
-        * 增加上述方法，为配合Builder语法，上述方法稍作更名：
-            * `setOverlayStatusbarMode` -> `overlayStatusbarMode`
-            * `setOverlayNavigationBarMode` -> `overlayNavigationBarMode`
-            * `setMaskOffsetX` -> `maskOffsetX`
-            * `setMaskOffsetY` -> `maskOffsetY`
+    * 给BasePopupUnsafe增加`setFitWindowManagerLayoutParamsCallback`方法
   * 【修复】
-    * 修复BaseLazyPopupWindow中键盘不自动弹出的问题 [#363](https://github.com/razerdp/BasePopup/issues/363)
-* **【Candy】2.2.11.1120** (2020/11/20)
-  * 给BasePopupUnsafe增加`setFitWindowManagerLayoutParamsCallback`方法
-* **【Candy】2.2.11.1123** (2020/11/23)
-  * 修复MaxHeight测量模式强制为Exactly的问题：[#371](https://github.com/razerdp/BasePopup/issues/371)
-
+    * 修复MaxHeight测量模式强制为Exactly的问题：[#371](https://github.com/razerdp/BasePopup/issues/371)
 
 <br>
 
