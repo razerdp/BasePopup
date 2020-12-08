@@ -227,6 +227,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 
+
+        PopupLog.i("aaaaad",MeasureSpec.toString(heightMeasureSpec));
+
         int gravity = mHelper.getPopupGravity();
 
         //这里需要根据overlayNavigationbarMode来考虑覆盖导航栏的问题
@@ -316,12 +319,10 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         //如果跟anchor对齐大小
         if (mHelper.isAlignAnchorWidth()) {
             widthSize = mHelper.getAnchorViewBound().width();
-            widthMode = MeasureSpec.EXACTLY;
         }
 
         if (mHelper.isAlignAnchorHeight()) {
             heightSize = mHelper.getAnchorViewBound().height();
-            heightMode = MeasureSpec.EXACTLY;
         }
 
         if (mHelper.getMinWidth() > 0 && widthSize < mHelper.getMinWidth()) {
@@ -331,7 +332,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
         if (mHelper.getMaxWidth() > 0 && widthSize > mHelper.getMaxWidth()) {
             widthSize = mHelper.getMaxWidth();
-            widthMode = MeasureSpec.EXACTLY;
         }
 
         if (mHelper.getMinHeight() > 0 && heightSize < mHelper.getMinHeight()) {
@@ -341,7 +341,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
         if (mHelper.getMaxHeight() > 0 && heightSize > mHelper.getMaxHeight()) {
             heightSize = mHelper.getMaxHeight();
-            heightMode = MeasureSpec.EXACTLY;
         }
 
         widthMeasureSpec = MeasureSpec.makeMeasureSpec(widthSize, widthMode);

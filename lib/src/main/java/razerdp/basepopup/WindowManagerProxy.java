@@ -105,6 +105,9 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
                 p.height = ViewGroup.LayoutParams.MATCH_PARENT;
             }
             FLAG_COMPAT.setupFlag(p, mPopupHelper);
+            if (mPopupHelper.mOnFitWindowManagerLayoutParamsCallback != null) {
+                mPopupHelper.mOnFitWindowManagerLayoutParamsCallback.onFitLayoutParams(p);
+            }
         }
         return params;
     }
