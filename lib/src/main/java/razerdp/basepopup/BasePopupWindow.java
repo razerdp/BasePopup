@@ -911,7 +911,8 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
 
             @Override
             public void onViewDetachedFromWindow(View v) {
-
+                pendingPopupWindow = false;
+                v.removeOnAttachStateChangeListener(this);
             }
         });
     }
