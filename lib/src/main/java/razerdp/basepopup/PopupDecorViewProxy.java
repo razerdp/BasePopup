@@ -135,7 +135,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 if (focusTarget == null) {
                     focusTarget = contentView.findFocus();
                 }
-                KeyboardUtils.open(focusTarget == null ? contentView : focusTarget, 350);
+                KeyboardUtils.open(focusTarget == null ? contentView : focusTarget, mHelper.showKeybaordDelay);
             }
         }
 

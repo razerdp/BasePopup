@@ -115,10 +115,8 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Candy】2.2.11.1120** (2020/11/20)
-  * 给BasePopupUnsafe增加`setFitWindowManagerLayoutParamsCallback`方法
-* **【Candy】2.2.11.1123** (2020/11/23)
-  * 修复MaxHeight测量模式强制为Exactly的问题：[#371](https://github.com/razerdp/BasePopup/issues/371)
+* **【Candy】2.2.11.1216** (2020/12/16)
+  * 增加`setShowKeybaordDelay()`：该方法允许您设置键盘弹出延时，默认350ms
 
 
 <br>
