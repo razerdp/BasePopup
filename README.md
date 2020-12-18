@@ -115,8 +115,10 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Candy】2.2.11.1216** (2020/12/16)
+* **【Candy】2.2.12.1216** (2020/12/16)
   * 增加`setShowKeybaordDelay()`：该方法允许您设置键盘弹出延时，默认350ms
+* **【Candy】2.2.12.1218** (2020/12/18)
+  * 修复关联AnchorView时，底部导航栏偏移计算了两次而导致底部留空的问题
 
 
 <br>

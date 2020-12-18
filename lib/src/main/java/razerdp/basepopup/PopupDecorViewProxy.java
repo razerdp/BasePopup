@@ -232,10 +232,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
         int gravity = mHelper.getPopupGravity();
 
-        //这里需要根据overlayNavigationbarMode来考虑覆盖导航栏的问题
-        int navigationBarGravity = mHelper.getNavigationBarGravity();
-        int navigationBarSize = mHelper.getNavigationBarSize();
-
         //针对关联anchorView和对齐模式的测量（如果允许resize）
         if (mHelper.isWithAnchor()) {
             final Rect anchorRect = mHelper.getAnchorViewBound();
@@ -254,23 +250,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             if (mHelper.verticalGravityMode == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE) {
                 rt = heightSize - anchorRect.top;
                 rb = anchorRect.bottom;
-            }
-            //anchor是有算navigation的(getLocationOnScreen)
-            if ((mHelper.overlayNavigationBarMode & BasePopupFlag.OVERLAY_CONTENT) == 0) {
-                switch (navigationBarGravity) {
-                    case Gravity.LEFT:
-                        rl -= navigationBarSize;
-                        break;
-                    case Gravity.TOP:
-                        rt -= navigationBarSize;
-                        break;
-                    case Gravity.RIGHT:
-                        rr -= navigationBarSize;
-                        break;
-                    case Gravity.BOTTOM:
-                        rb -= navigationBarSize;
-                        break;
-                }
             }
 
             switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
