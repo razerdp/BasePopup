@@ -8,9 +8,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 
-import razerdp.util.PopupUtils;
-import razerdp.util.log.PopupLog;
-
 public class TranslationConfig extends BaseAnimationConfig<TranslationConfig> {
     private static final String TAG = "TranslationConfig";
     float fromX, toX, fromY, toY;
@@ -39,7 +36,7 @@ public class TranslationConfig extends BaseAnimationConfig<TranslationConfig> {
             for (Direction direction : directions) {
                 flag |= direction.flag;
             }
-            PopupLog.i(TAG, "from", PopupUtils.gravityToString(flag));
+
             if (Direction.isDirectionFlag(Direction.LEFT, flag)) {
                 fromX(fromX - 1, true);
             }
@@ -70,7 +67,6 @@ public class TranslationConfig extends BaseAnimationConfig<TranslationConfig> {
             for (Direction direction : directions) {
                 flag |= direction.flag;
             }
-            PopupLog.i(TAG, "to", PopupUtils.gravityToString(flag));
             if (Direction.isDirectionFlag(Direction.LEFT, flag)) {
                 toX += -1;
             }
