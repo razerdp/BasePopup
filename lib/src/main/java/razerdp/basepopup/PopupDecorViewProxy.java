@@ -227,9 +227,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 
-
-        PopupLog.i("aaaaad",MeasureSpec.toString(heightMeasureSpec));
-
         int gravity = mHelper.getPopupGravity();
 
         //针对关联anchorView和对齐模式的测量（如果允许resize）
@@ -340,7 +337,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
             if (child.getVisibility() == GONE) continue;
-            PopupLog.i("lllay", child, t);
 
             //不覆盖状态栏
             if ((mHelper.overlayStatusBarMode & (child == mMaskLayout ? BasePopupFlag.OVERLAY_MASK : BasePopupFlag.OVERLAY_CONTENT)) == 0) {
@@ -613,7 +609,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 final KeyEvent.DispatcherState state = getKeyDispatcherState();
                 if (state != null && state.isTracking(event) && !event.isCanceled()) {
                     if (mHelper != null) {
-                        PopupLog.i(TAG, "dispatchKeyEvent: >>> onBackPressed");
                         return mHelper.onBackPressed();
                     }
                 }
@@ -637,12 +632,10 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         if ((event.getAction() == MotionEvent.ACTION_DOWN)
                 && ((x < 0) || (x >= getWidth()) || (y < 0) || (y >= getHeight()))) {
             if (mHelper != null) {
-                PopupLog.i(TAG, "onTouchEvent:[ACTION_DOWN] >>> onOutSideTouch");
                 return mHelper.onOutSideTouch();
             }
         } else if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
             if (mHelper != null) {
-                PopupLog.i(TAG, "onTouchEvent:[ACTION_OUTSIDE] >>> onOutSideTouch");
                 return mHelper.onOutSideTouch();
             }
         }
