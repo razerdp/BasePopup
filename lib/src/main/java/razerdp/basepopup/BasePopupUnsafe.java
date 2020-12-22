@@ -6,13 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import razerdp.util.log.PopupLog;
 
 /**
@@ -44,6 +45,29 @@ public enum BasePopupUnsafe {
                 }
             }
         }
+    }
+
+    /**
+     * 获取显示中Popup的队列
+     * 【注意】：该操作会直接返回WindowManagerProxy.PopupWindowQueueManager.sQueueMap，您修改该对象可能会造成不可挽回的bug，请慎重修改。
+     */
+    @Deprecated
+    @Nullable
+    public HashMap<String, LinkedList<WindowManagerProxy>> getPopupQueueMap() {
+        return WindowManagerProxy.PopupWindowQueueManager.sQueueMap;
+    }
+
+    /**
+     * 获取WindowManagerProxy中的popupwindow
+     */
+    @Deprecated
+    @Nullable
+    public BasePopupWindow getPopupFromWindowManagerProxy(WindowManagerProxy proxy) {
+        if (proxy == null) return null;
+        if (proxy.mPopupHelper != null) {
+            return proxy.mPopupHelper.mPopupWindow;
+        }
+        return null;
     }
 
     /**
