@@ -810,6 +810,7 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
      * 感谢@xchengDroid(https://github.com/xchengDroid)在#263(https://github.com/razerdp/BasePopup/issues/263)中提出的建议
      */
     void tryToShowPopup(View v, boolean positionMode) {
+        mHelper.isStartShowing = true;
         if (Looper.myLooper() != Looper.getMainLooper()) {
             throw new CalledFromWrongThreadException(PopupUtils.getString(R.string.basepopup_error_thread));
         }
@@ -1308,6 +1309,10 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
     }
 
     //region ------------------------------------------Getter/Setter-----------------------------------------------
+
+    boolean isShowingInternal() {
+        return isShowing() || mHelper.isStartShowing;
+    }
 
     /**
      * PopupWindow是否处于展示状态
@@ -1976,7 +1981,7 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
         if (Looper.myLooper() != Looper.getMainLooper()) {
             throw new CalledFromWrongThreadException(PopupUtils.getString(R.string.basepopup_error_thread));
         }
-        if (!isShowing() || mContentView == null) return;
+        if (!isShowingInternal() || mContentView == null) return;
         mHelper.dismiss(animateDismiss);
     }
 

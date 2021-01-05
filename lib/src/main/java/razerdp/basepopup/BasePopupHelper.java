@@ -104,6 +104,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     int animationStyleRes;
 
+    boolean isStartShowing = false;
     //callback
     BasePopupWindow.OnDismissListener mOnDismissListener;
     BasePopupWindow.OnBeforeShowCallback mOnBeforeShowCallback;
@@ -891,6 +892,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     void onAttachToWindow() {
+        isStartShowing = false;
         if (mPopupWindow != null) {
             mPopupWindow.onShowing();
         }
@@ -949,6 +951,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         if (mPopupWindow.mDisplayAnimateView == null || animateDismiss && (flag & CUSTOM_ON_ANIMATE_DISMISS) != 0) {
             return;
         }
+        isStartShowing = false;
         Message msg = BasePopupEvent.getMessage(BasePopupEvent.EVENT_DISMISS);
         if (animateDismiss) {
             startDismissAnimate(mPopupWindow.mDisplayAnimateView.getWidth(),

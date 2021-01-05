@@ -119,6 +119,8 @@ BasePopup配备完善的文档，建议您优先查阅文档。
   * 增加`setShowKeybaordDelay()`：该方法允许您设置键盘弹出延时，默认350ms
 * **【Candy】2.2.12.1218** (2020/12/18)
   * 修复关联AnchorView时，底部导航栏偏移计算了两次而导致底部留空的问题
+* **【Candy】2.2.13.210105** (2020/01/05)
+  * 修复onCreate下弹窗后立马dismiss不执行的问题 [#381](https://github.com/razerdp/BasePopup/issues/381)
 
 
 <br>
