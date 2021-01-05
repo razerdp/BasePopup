@@ -95,6 +95,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         if (contentView != null) {
             if (!contentView.hasOnClickListeners()) {
                 mTarget.setOnClickListener(emptyInterceptClickListener);
+            }else {
+                mTarget.setOnClickListener(null);
             }
             LayoutParams lp = contentView.getLayoutParams();
             if (lp == null) {
