@@ -17,7 +17,6 @@ import android.widget.FrameLayout;
 
 import razerdp.util.KeyboardUtils;
 import razerdp.util.PopupUiUtils;
-import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2017/12/25.
@@ -88,13 +87,15 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
 
         mTarget = target;
-        target.setOnClickListener(emptyInterceptClickListener);
         WindowManager.LayoutParams wp = new WindowManager.LayoutParams();
         wp.copyFrom(params);
         wp.x = 0;
         wp.y = 0;
         View contentView = target.findViewById(mHelper.contentRootId);
         if (contentView != null) {
+            if (!contentView.hasOnClickListeners()) {
+                mTarget.setOnClickListener(emptyInterceptClickListener);
+            }
             LayoutParams lp = contentView.getLayoutParams();
             if (lp == null) {
                 lp = new FrameLayout.LayoutParams(mHelper.getLayoutParams());
@@ -574,18 +575,13 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         //由于margin的情况会导致contentView的parent(decorView)会消耗该事件，因此我们这里手动分发给mask
-        if (childLeftMargin > 0 ||
-                childTopMargin > 0 ||
-                childRightMargin > 0 ||
-                childBottomMargin > 0) {
-            if (mMaskLayout == null) {
-                return super.dispatchTouchEvent(ev);
-            }
-            int x = (int) ev.getX();
-            int y = (int) ev.getY();
-            if (contentRect.contains(x, y) && !touchableRect.contains(x, y)) {
-                return mMaskLayout.dispatchTouchEvent(ev);
-            }
+        if (mMaskLayout == null) {
+            return super.dispatchTouchEvent(ev);
+        }
+        int x = (int) ev.getX();
+        int y = (int) ev.getY();
+        if (!touchableRect.contains(x, y)) {
+            return mMaskLayout.dispatchTouchEvent(ev);
         }
         return super.dispatchTouchEvent(ev);
     }
