@@ -224,8 +224,10 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         heightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, 0, lp.height);
 
 
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+        int widthSize = mTarget.getMeasuredWidth() > 0 ? mTarget.getMeasuredWidth()
+                : MeasureSpec.getSize(widthMeasureSpec);
+        int heightSize = mTarget.getMeasuredHeight() > 0 ? mTarget.getMeasuredHeight()
+                : MeasureSpec.getSize(heightMeasureSpec);
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
@@ -305,6 +307,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
 
         if (mHelper.getMinWidth() > 0 && widthSize < mHelper.getMinWidth()) {
+            // 父控件小于最小宽度，意味着content也小于，此时除了设置父控件最小宽度外，也要设置子控件
+            adjustContentViewMeasure(mTarget, mHelper.getMinWidth(), 0);
             widthSize = mHelper.getMinWidth();
             widthMode = MeasureSpec.EXACTLY;
         }
@@ -314,6 +318,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
 
         if (mHelper.getMinHeight() > 0 && heightSize < mHelper.getMinHeight()) {
+            // 父控件小于最小高度，意味着content也小于，此时除了设置父控件最小高度外，也要设置子控件
+            adjustContentViewMeasure(mTarget, 0, mHelper.getMinHeight());
             heightSize = mHelper.getMinHeight();
             heightMode = MeasureSpec.EXACTLY;
         }
@@ -326,6 +332,22 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         heightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, heightMode);
 
         mTarget.measure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    void adjustContentViewMeasure(View target, int width, int height) {
+        if (target == null) return;
+        View contentView = mTarget.findViewById(mHelper.contentRootId);
+        if (contentView != null) {
+            LayoutParams p = contentView.getLayoutParams();
+            if (p != null) {
+                if (width != 0) {
+                    p.width = width;
+                }
+                if (height != 0) {
+                    p.height = height;
+                }
+            }
+        }
     }
 
     @Override
