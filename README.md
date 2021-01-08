@@ -123,6 +123,8 @@ BasePopup配备完善的文档，建议您优先查阅文档。
   * 修复onCreate下弹窗后立马dismiss不执行的问题 [#381](https://github.com/razerdp/BasePopup/issues/381)
 * **【Candy】2.2.13.210105.1** (2021/01/05)
   * 优化decorview事件拦截 [#378](https://github.com/razerdp/BasePopup/issues/378)
+* **【Candy】2.2.13.0108** (2021/01/08)
+  * 修复decor适配最小高度的情况下，contentview没跟随更改的问题
 
 
 <br>
