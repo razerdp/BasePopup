@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="basepopup_error_non_act_context">无法从context处获得Activity，请确保您的Context是否为Activity</string>
+    <string name="basepopup_error_non_act_context">找不到宿主Activity，请确保您至少打开了一个Activity</string>
     <string name="basepopup_error_thread">请在主线程操作</string>
     <string name="basepopup_error_destroyed">该BasePopup已经被Destroy，无法继续执行show</string>
     <string name="basepopup_error_decorview">PopupWindow需要%s的DecorView的WindowToken，请检查是否存在DecorView</string>

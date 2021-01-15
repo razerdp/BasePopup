@@ -39,19 +39,17 @@ public final class BasePopupSDK {
         mApplicationContext.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
+                recordTopActivity(activity);
             }
 
             @Override
             public void onActivityStarted(Activity activity) {
+                recordTopActivity(activity);
             }
 
             @Override
             public void onActivityResumed(Activity activity) {
-                if (mTopActivity != null) {
-                    mTopActivity.clear();
-                }
-                mTopActivity = new WeakReference<>(activity);
+                recordTopActivity(activity);
             }
 
             @Override
@@ -72,6 +70,16 @@ public final class BasePopupSDK {
             public void onActivityDestroyed(Activity activity) {
             }
         });
+    }
+
+    private void recordTopActivity(Activity act) {
+        if (mTopActivity != null) {
+            if (mTopActivity.get() == act) {
+                return;
+            }
+            mTopActivity.clear();
+        }
+        mTopActivity = new WeakReference<>(act);
     }
 
     public static BasePopupSDK getInstance() {

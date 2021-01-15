@@ -38,6 +38,7 @@ import razerdp.demo.model.common.CommonGestureNavInfo;
 import razerdp.demo.model.common.CommonInputInfo;
 import razerdp.demo.model.common.CommonRTLInfo;
 import razerdp.demo.model.common.CommonSlideInfo;
+import razerdp.demo.model.common.CommonUpdateInfo;
 import razerdp.demo.model.lifecycle.ShowInServiceInfo;
 import razerdp.demo.model.lifecycle.ShowOnCreateInfo;
 import razerdp.demo.utils.ButterKnifeUtil;
@@ -139,6 +140,7 @@ public class CommonUsageActivity extends BaseActivity {
         result.add(new CommonFullScreenActivityInfo());
         result.add(new CommonDialogActivityInfo());
         result.add(new CommonRTLInfo());
+        result.add(new CommonUpdateInfo());
 
         return result;
     }
