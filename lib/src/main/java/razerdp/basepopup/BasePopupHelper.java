@@ -814,6 +814,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         mPopupWindow.mPopupWindowProxy.setSoftInputMode(mSoftInputMode);
         mPopupWindow.mPopupWindowProxy.setAnimationStyle(animationStyleRes);
         mPopupWindow.mPopupWindowProxy.setTouchable((flag & TOUCHABLE) != 0);
+        mPopupWindow.mPopupWindowProxy.setFocusable((flag & TOUCHABLE) != 0);
     }
 
     void onDismiss() {

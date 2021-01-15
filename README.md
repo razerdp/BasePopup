@@ -125,6 +125,10 @@ BasePopup配备完善的文档，建议您优先查阅文档。
   * 优化decorview事件拦截 [#378](https://github.com/razerdp/BasePopup/issues/378)
 * **【Candy】2.2.13.0108** (2021/01/08)
   * 修复decor适配最小高度的情况下，contentview没跟随更改的问题
+* **【Candy】2.2.13.0115** (2021/01/15)
+  * 优化lifecycle绑定对象
+  * 优化touchable设置
+
 
 
 <br>
