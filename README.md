@@ -122,24 +122,28 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 **正在开发日志（Candy版本）请查看dev分支：** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97-%E5%8E%86%E5%8F%B2%E6%9B%B4%E6%96%B0)
 
-* **【Release】2.2.11**(2020/12/08)
+* **【Release】2.2.13** (2021/01/15)
+  * 啦啦啦，新年第一个版本~在此先预祝大家新年快乐，心想事成！以及疫情快走！
+  * 在2.2.13版本中，我们修复了一些bug，以及添加一丢丢功能，下面是更新详情
+  * 【功能增加】
+    * 增加`setShowKeybaordDelay()`：该方法允许您设置键盘弹出延时，默认350ms
   * 【优化】
-    * 给BasePopupUnsafe增加`setFitWindowManagerLayoutParamsCallback`方法
+    * 优化decorview事件拦截 [#378](https://github.com/razerdp/BasePopup/issues/378)
+    * 优化lifecycle绑定对象，修复了在fragment使用销毁因activity没有销毁而导致内存泄漏的问题
+    * 优化touchable设置，该设置将无法让BasePopup响应任何触摸事件，纯展示用哦~
   * 【修复】
-    * 修复MaxHeight测量模式强制为Exactly的问题：[#371](https://github.com/razerdp/BasePopup/issues/371)
-* **【Candy】2.2.12.1216** (2020/12/16)
-  * 增加`setShowKeybaordDelay()`：该方法允许您设置键盘弹出延时，默认350ms
-* **【Candy】2.2.12.1218** (2020/12/18)
-  * 修复关联AnchorView时，底部导航栏偏移计算了两次而导致底部留空的问题
-* **【Candy】2.2.13.210105** (2021/01/05)
-  * 修复onCreate下弹窗后立马dismiss不执行的问题 [#381](https://github.com/razerdp/BasePopup/issues/381)
-* **【Candy】2.2.13.210105.1** (2021/01/05)
-  * 优化decorview事件拦截 [#378](https://github.com/razerdp/BasePopup/issues/378)
-* **【Candy】2.2.13.0108** (2021/01/08)
-  * 修复decor适配最小高度的情况下，contentview没跟随更改的问题
-* **【Candy】2.2.13.0115** (2021/01/15)
-  * 优化lifecycle绑定对象
-  * 优化touchable设置
+    * 修复关联AnchorView时，底部导航栏偏移计算了两次而导致底部留空的问题
+    * 修复onCreate下弹窗后立马dismiss不执行的问题 [#381](https://github.com/razerdp/BasePopup/issues/381)
+    * 修复decor适配最小高度的情况下，contentview没跟随更改的问题
+  * 【其他】
+    * 针对一些调查问卷上的问题和其他问题，我在这里说明一下
+        * 【BasePopup扩展库】：扩展库虽然没怎么提交过代码，但其实一直都有写（进度很慢就是了），而且经常写着写着就来弄BasePopup的迭代，因此可能会非常缓慢，但不会弃坑，请放心
+        * 【更新频率】：如你所见，正式版一般1~2个月会更新，测试版则看情况（更重要的是看心情）
+        * 【动画问题】：调查问卷中有童鞋提到过动画有待优化，针对这一点，我想说的是。。。动画完全依赖于您的自定义，BasePopup只能帮助您更方便的创建动画，至于成品展示，完全看您怎么去调了
+        * 【issue提问】：请务必！一定！必须！按照issue格式提交，以前因为每次都要问版本、机型、系统，隔了很久才回复我以至于我都忘记了当时的思路，因此如果您提问格式不正确，我只能忽略掉这个问题
+        * 【issue关闭】：一般来说不建议您直接关掉issue，一来让大家看到，二来我会标记哪些已经修复等待release，哪些需要后面跟进，如果您关掉了我就没法追踪了
+    * 最后，感谢您一直以来的支持~新的一年，请多点丢bug过来呀哈哈哈，愿BasePopup与您一同成长
+
 
 
 <br>
