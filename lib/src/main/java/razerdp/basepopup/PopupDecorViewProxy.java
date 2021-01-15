@@ -17,7 +17,6 @@ import android.widget.FrameLayout;
 
 import razerdp.util.KeyboardUtils;
 import razerdp.util.PopupUiUtils;
-import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2017/12/25.
@@ -88,13 +87,17 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
 
         mTarget = target;
-        target.setOnClickListener(emptyInterceptClickListener);
         WindowManager.LayoutParams wp = new WindowManager.LayoutParams();
         wp.copyFrom(params);
         wp.x = 0;
         wp.y = 0;
         View contentView = target.findViewById(mHelper.contentRootId);
         if (contentView != null) {
+            if (!contentView.hasOnClickListeners()) {
+                mTarget.setOnClickListener(emptyInterceptClickListener);
+            } else {
+                mTarget.setOnClickListener(null);
+            }
             LayoutParams lp = contentView.getLayoutParams();
             if (lp == null) {
                 lp = new FrameLayout.LayoutParams(mHelper.getLayoutParams());
@@ -135,7 +138,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 if (focusTarget == null) {
                     focusTarget = contentView.findFocus();
                 }
-                KeyboardUtils.open(focusTarget == null ? contentView : focusTarget, 350);
+                KeyboardUtils.open(focusTarget == null ? contentView : focusTarget, mHelper.showKeybaordDelay);
             }
         }
 
@@ -221,20 +224,15 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         heightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, 0, lp.height);
 
 
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+        int widthSize = mTarget.getMeasuredWidth() > 0 ? mTarget.getMeasuredWidth()
+                : MeasureSpec.getSize(widthMeasureSpec);
+        int heightSize = mTarget.getMeasuredHeight() > 0 ? mTarget.getMeasuredHeight()
+                : MeasureSpec.getSize(heightMeasureSpec);
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 
-
-        PopupLog.i("aaaaad",MeasureSpec.toString(heightMeasureSpec));
-
         int gravity = mHelper.getPopupGravity();
-
-        //这里需要根据overlayNavigationbarMode来考虑覆盖导航栏的问题
-        int navigationBarGravity = mHelper.getNavigationBarGravity();
-        int navigationBarSize = mHelper.getNavigationBarSize();
 
         //针对关联anchorView和对齐模式的测量（如果允许resize）
         if (mHelper.isWithAnchor()) {
@@ -254,23 +252,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             if (mHelper.verticalGravityMode == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE) {
                 rt = heightSize - anchorRect.top;
                 rb = anchorRect.bottom;
-            }
-            //anchor是有算navigation的(getLocationOnScreen)
-            if ((mHelper.overlayNavigationBarMode & BasePopupFlag.OVERLAY_CONTENT) == 0) {
-                switch (navigationBarGravity) {
-                    case Gravity.LEFT:
-                        rl -= navigationBarSize;
-                        break;
-                    case Gravity.TOP:
-                        rt -= navigationBarSize;
-                        break;
-                    case Gravity.RIGHT:
-                        rr -= navigationBarSize;
-                        break;
-                    case Gravity.BOTTOM:
-                        rb -= navigationBarSize;
-                        break;
-                }
             }
 
             switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
@@ -326,6 +307,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
 
         if (mHelper.getMinWidth() > 0 && widthSize < mHelper.getMinWidth()) {
+            // 父控件小于最小宽度，意味着content也小于，此时除了设置父控件最小宽度外，也要设置子控件
+            adjustContentViewMeasure(mTarget, mHelper.getMinWidth(), 0);
             widthSize = mHelper.getMinWidth();
             widthMode = MeasureSpec.EXACTLY;
         }
@@ -335,6 +318,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
 
         if (mHelper.getMinHeight() > 0 && heightSize < mHelper.getMinHeight()) {
+            // 父控件小于最小高度，意味着content也小于，此时除了设置父控件最小高度外，也要设置子控件
+            adjustContentViewMeasure(mTarget, 0, mHelper.getMinHeight());
             heightSize = mHelper.getMinHeight();
             heightMode = MeasureSpec.EXACTLY;
         }
@@ -349,6 +334,22 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         mTarget.measure(widthMeasureSpec, heightMeasureSpec);
     }
 
+    void adjustContentViewMeasure(View target, int width, int height) {
+        if (target == null) return;
+        View contentView = mTarget.findViewById(mHelper.contentRootId);
+        if (contentView != null) {
+            LayoutParams p = contentView.getLayoutParams();
+            if (p != null) {
+                if (width != 0) {
+                    p.width = width;
+                }
+                if (height != 0) {
+                    p.height = height;
+                }
+            }
+        }
+    }
+
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         getLocationOnScreen(location);
@@ -361,7 +362,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
             if (child.getVisibility() == GONE) continue;
-            PopupLog.i("lllay", child, t);
 
             //不覆盖状态栏
             if ((mHelper.overlayStatusBarMode & (child == mMaskLayout ? BasePopupFlag.OVERLAY_MASK : BasePopupFlag.OVERLAY_CONTENT)) == 0) {
@@ -599,18 +599,13 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         //由于margin的情况会导致contentView的parent(decorView)会消耗该事件，因此我们这里手动分发给mask
-        if (childLeftMargin > 0 ||
-                childTopMargin > 0 ||
-                childRightMargin > 0 ||
-                childBottomMargin > 0) {
-            if (mMaskLayout == null) {
-                return super.dispatchTouchEvent(ev);
-            }
-            int x = (int) ev.getX();
-            int y = (int) ev.getY();
-            if (contentRect.contains(x, y) && !touchableRect.contains(x, y)) {
-                return mMaskLayout.dispatchTouchEvent(ev);
-            }
+        if (mMaskLayout == null) {
+            return super.dispatchTouchEvent(ev);
+        }
+        int x = (int) ev.getX();
+        int y = (int) ev.getY();
+        if (!touchableRect.contains(x, y)) {
+            return mMaskLayout.dispatchTouchEvent(ev);
         }
         return super.dispatchTouchEvent(ev);
     }
@@ -634,7 +629,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 final KeyEvent.DispatcherState state = getKeyDispatcherState();
                 if (state != null && state.isTracking(event) && !event.isCanceled()) {
                     if (mHelper != null) {
-                        PopupLog.i(TAG, "dispatchKeyEvent: >>> onBackPressed");
                         return mHelper.onBackPressed();
                     }
                 }
@@ -658,12 +652,10 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         if ((event.getAction() == MotionEvent.ACTION_DOWN)
                 && ((x < 0) || (x >= getWidth()) || (y < 0) || (y >= getHeight()))) {
             if (mHelper != null) {
-                PopupLog.i(TAG, "onTouchEvent:[ACTION_DOWN] >>> onOutSideTouch");
                 return mHelper.onOutSideTouch();
             }
         } else if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
             if (mHelper != null) {
-                PopupLog.i(TAG, "onTouchEvent:[ACTION_OUTSIDE] >>> onOutSideTouch");
                 return mHelper.onOutSideTouch();
             }
         }

@@ -99,6 +99,7 @@
             android:name="razerdp.demo.ui.dialog.DialogActivity"
             android:theme="@style/DialogTheme" />
         <activity android:name="razerdp.demo.ui.issuestest.Issue358TestActivity" />
+        <activity android:name="razerdp.demo.ui.updatetest.UpdateTestActivity" />
 
         <service android:name="razerdp.demo.services.DemoService" />
         <service android:name="razerdp.demo.services.DelayDemoService" />
