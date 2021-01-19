@@ -34,6 +34,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     private Rect contentRect = new Rect();
     private Rect contentBounds = new Rect();
     private Rect touchableRect = new Rect();
+    private Rect touchableRectCopy = new Rect();
 
     private int childLeftMargin;
     private int childTopMargin;
@@ -776,8 +777,11 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
 
         if (isVisible) {
+            touchableRectCopy.set(touchableRect);
+            touchableRect.offset(0, offset);
             lastKeyboardBounds.set(keyboardBounds);
         } else {
+            touchableRect.set(touchableRectCopy);
             lastKeyboardBounds.setEmpty();
         }
     }
