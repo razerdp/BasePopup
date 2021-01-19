@@ -112,6 +112,9 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 **Candy dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97-%E5%8E%86%E5%8F%B2%E6%9B%B4%E6%96%B0)
 
+* **[Release] 2.2.18** (2021/01/19) [Please update to this version]
+  * Fix a serious bug that caused touch events to be distributed incorrectly after adapting the keyboard [#388](https://github.com/razerdp/BasePopup/issues/388)
+
 * **【Release】2.2.13**(2021/01/15)
   * 【Feature Additions】
     * Added `setShowKeybaordDelay()`: This method allows you to set the keyboard pop-up delay, default 350ms
