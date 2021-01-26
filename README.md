@@ -117,7 +117,8 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 * **【Candy】2.2.19.0126** (2021/01/26)
   * 修复PopupDecorProxy多次测量时出现的测量取值问题[#389](https://github.com/razerdp/BasePopup/issues/389)
-
+* **【Candy】2.2.20.0126** (2021/01/26)
+  * 修复适配键盘后触发requestLayout()导致触摸判断错误的问题[#390](https://github.com/razerdp/BasePopup/issues/390)
 
 
 <br>
