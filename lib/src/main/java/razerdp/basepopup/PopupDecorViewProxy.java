@@ -225,10 +225,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         heightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, 0, lp.height);
 
 
-        int widthSize = mTarget.getMeasuredWidth() > 0 ? mTarget.getMeasuredWidth()
-                : MeasureSpec.getSize(widthMeasureSpec);
-        int heightSize = mTarget.getMeasuredHeight() > 0 ? mTarget.getMeasuredHeight()
-                : MeasureSpec.getSize(heightMeasureSpec);
+        int widthSize = Math.max(mTarget.getMeasuredWidth(),MeasureSpec.getSize(widthMeasureSpec));
+        int heightSize =Math.max(mTarget.getMeasuredHeight(),MeasureSpec.getSize(heightMeasureSpec));
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);

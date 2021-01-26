@@ -115,8 +115,8 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Candy】2.2.14.0119** (2021/01/19)
-  * 修复一个严重bug：适配键盘后导致触摸事件分发错误 [#388](https://github.com/razerdp/BasePopup/issues/388)
+* **【Candy】2.2.19.0126** (2021/01/26)
+  * 修复PopupDecorProxy多次测量时出现的测量取值问题[#389](https://github.com/razerdp/BasePopup/issues/389)
 
 
 
