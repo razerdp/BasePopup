@@ -52,6 +52,10 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     };
     private boolean isStatusBarVisible = true;
 
+    Rect keyboardBoundsCache;
+    boolean keyboardVisibleCache = false;
+    int lastKeyboardOffset = 0;
+
     private PopupDecorViewProxy(Context context) {
         super(context);
     }
@@ -225,10 +229,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         heightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, 0, lp.height);
 
 
-        int widthSize = mTarget.getMeasuredWidth() > 0 ? mTarget.getMeasuredWidth()
-                : MeasureSpec.getSize(widthMeasureSpec);
-        int heightSize = mTarget.getMeasuredHeight() > 0 ? mTarget.getMeasuredHeight()
-                : MeasureSpec.getSize(heightMeasureSpec);
+        int widthSize = Math.max(mTarget.getMeasuredWidth(), MeasureSpec.getSize(widthMeasureSpec));
+        int heightSize = Math.max(mTarget.getMeasuredHeight(), MeasureSpec.getSize(heightMeasureSpec));
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
@@ -565,6 +567,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 touchableRect.top += childTopMargin;
                 touchableRect.right -= childRightMargin;
                 touchableRect.bottom -= childBottomMargin;
+                if (lastKeyboardOffset != 0) {
+                    touchableRect.offset(0, lastKeyboardOffset);
+                }
 
                 child.layout(contentRect.left, contentRect.top, contentRect.right, contentRect.bottom);
                 if (delayLayoutMask) {
@@ -717,9 +722,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     }
 
     //-----------------------------------------keyboard-----------------------------------------
-    Rect keyboardBoundsCache;
-    boolean keyboardVisibleCache = false;
-
     @Override
     public void onKeyboardChange(Rect keyboardBounds, boolean isVisible) {
         if (mHelper.isOutSideTouchable() && !mHelper.isOverlayStatusbar()) return;
@@ -778,9 +780,11 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
         if (isVisible) {
             touchableRectCopy.set(touchableRect);
+            lastKeyboardOffset = offset;
             touchableRect.offset(0, offset);
             lastKeyboardBounds.set(keyboardBounds);
         } else {
+            lastKeyboardOffset = 0;
             touchableRect.set(touchableRectCopy);
             lastKeyboardBounds.setEmpty();
         }
