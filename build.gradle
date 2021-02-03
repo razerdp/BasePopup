@@ -38,7 +38,7 @@ ext {
     minSdkVersion = 19
     minLibSdkVersion = 16
     targetSdkVersion = 30
-    versionCode = 163
+    versionCode = 164
     versionName = '2.2.20'
 
     candy = false
