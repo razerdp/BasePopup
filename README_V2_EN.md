@@ -112,20 +112,10 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 **Candy dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97-%E5%8E%86%E5%8F%B2%E6%9B%B4%E6%96%B0)
 
-* **[Release] 2.2.18** (2021/01/19) [Please update to this version]
-  * Fix a serious bug that caused touch events to be distributed incorrectly after adapting the keyboard [#388](https://github.com/razerdp/BasePopup/issues/388)
-
-* **【Release】2.2.13**(2021/01/15)
-  * 【Feature Additions】
-    * Added `setShowKeybaordDelay()`: This method allows you to set the keyboard pop-up delay, default 350ms
-  * 【Optimization】
-    * Optimize decorview event interception [#378](https://github.com/razerdp/BasePopup/issues/378)
-    * Optimize the lifecycle binding object, fixes a memory leak caused by an activity not being destroyed when the fragment is used for destruction
-    * Optimized touchable setting, the setting will not allow BasePopup to respond to any touch events
-  * 【Fix】
-    * Fix the problem that the bottom navigation bar was left empty because the bottom offset was calculated twice when associated with AnchorView.
-    * Fix the problem that dismiss is not executed immediately after the popup window under onCreate [#381](https://github.com/razerdp/BasePopup/issues/381)
-    * Fix the problem that the contentview did not follow the change when decor was adapted to the minimum height.
+* **【Release】2.2.20** (2021/02/03)
+  * Please update to this version~
+  * Fix a measurement fetching problem when PopupDecorProxy measures multiple times[#389](https://github.com/razerdp/BasePopup/issues/389)
+  * Fix the problem that triggering requestLayout() after adapting keyboard causes touch judgment error[#390](https://github.com/razerdp/BasePopup/issues/390)
 
 <br>
 
