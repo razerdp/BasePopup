@@ -603,6 +603,13 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     }
 
     @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        boolean intercept = mHelper != null && mHelper.onTouchEvent(event);
+        if (intercept) return true;
+        return super.onTouchEvent(event);
+    }
+
+    @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         //由于margin的情况会导致contentView的parent(decorView)会消耗该事件，因此我们这里手动分发给mask
         if (mMaskLayout == null) {
