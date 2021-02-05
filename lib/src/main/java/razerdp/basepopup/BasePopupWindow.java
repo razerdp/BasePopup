@@ -2105,7 +2105,6 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
      * @return 返回True则意味着您消耗了该事件，该事件不再会被分发下去
      */
     public boolean onOutSideTouch(MotionEvent event, boolean touchInMask) {
-        PopupLog.i("onOutSideTouch", event.getRawX(), event.getRawY(), event.getX(), event.getY(), touchInMask);
         if (mHelper.isOutSideDismiss() && event.getAction() == MotionEvent.ACTION_UP) {
             dismiss();
             return true;
