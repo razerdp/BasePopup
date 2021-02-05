@@ -115,10 +115,11 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Candy】2.2.19.0126** (2021/01/26)
-  * 修复PopupDecorProxy多次测量时出现的测量取值问题[#389](https://github.com/razerdp/BasePopup/issues/389)
-* **【Candy】2.2.20.0126** (2021/01/26)
-  * 修复适配键盘后触发requestLayout()导致触摸判断错误的问题[#390](https://github.com/razerdp/BasePopup/issues/390)
+* **【Candy】2.2.30.210205** (2021/02/05)
+    * 针对[issue#393](https://github.com/razerdp/BasePopup/issues/393)所述需求，onOutSideTouch增加两个参数：
+        * MotionEvent event：触摸事件
+        * boolean touchInMask：是否点击在蒙层
+
 
 
 <br>

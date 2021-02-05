@@ -646,29 +646,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (mHelper != null) {
-            if (mHelper.onTouchEvent(event)) {
-                return true;
-            }
-        }
-        final int x = (int) event.getX();
-        final int y = (int) event.getY();
-
-        if ((event.getAction() == MotionEvent.ACTION_DOWN)
-                && ((x < 0) || (x >= getWidth()) || (y < 0) || (y >= getHeight()))) {
-            if (mHelper != null) {
-                return mHelper.onOutSideTouch();
-            }
-        } else if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-            if (mHelper != null) {
-                return mHelper.onOutSideTouch();
-            }
-        }
-        return super.onTouchEvent(event);
-    }
-
-    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         clear(true);
