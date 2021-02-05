@@ -862,10 +862,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return mPopupWindow.onBackPressed();
     }
 
-    boolean onOutSideTouch() {
-        return mPopupWindow.onOutSideTouch();
-    }
-
     void onShow() {
         prepareShow();
         if ((flag & CUSTOM_ON_UPDATE) != 0) return;
@@ -1020,9 +1016,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         }
     }
 
-    void dispatchOutSideEvent(MotionEvent event) {
+    void dispatchOutSideEvent(MotionEvent event, boolean touchInMask) {
         if (mPopupWindow != null) {
-            mPopupWindow.dispatchOutSideEvent(event);
+            mPopupWindow.dispatchOutSideEvent(event, touchInMask);
         }
     }
 

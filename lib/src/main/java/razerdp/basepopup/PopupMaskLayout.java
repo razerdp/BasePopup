@@ -2,6 +2,7 @@ package razerdp.basepopup;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.RectF;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -24,6 +25,7 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
     private BackgroundViewHolder mBackgroundViewHolder;
     private BasePopupHelper mPopupHelper;
     private int[] location = null;
+    private RectF maskRect;
 
     private PopupMaskLayout(Context context) {
         super(context);
@@ -40,20 +42,13 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
     PopupMaskLayout(Context context, BasePopupHelper helper) {
         this(context);
         init(context, helper);
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mPopupHelper.isOutSideDismiss()) {
-                    mPopupHelper.onOutSideTouch();
-                }
-            }
-        });
     }
 
 
     private void init(Context context, BasePopupHelper mHelper) {
         this.mPopupHelper = mHelper;
         location = null;
+        maskRect = new RectF();
         setLayoutAnimation(null);
         if (mHelper == null) {
             setBackgroundColor(Color.TRANSPARENT);
@@ -85,6 +80,7 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
             mBlurImageView.setCutoutY(location[1]);
             mBlurImageView.applyBlurOption(mPopupHelper.getBlurOption());
         }
+        maskRect.set(left, top, right, bottom);
         super.onLayout(changed, left, top, right, bottom);
     }
 
@@ -120,6 +116,7 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
         if (mBackgroundViewHolder != null) {
             mBackgroundViewHolder.handleAlignBackground(left, top, right, bottom);
         }
+        maskRect.set(left, top, right, bottom);
     }
 
     @Override
@@ -184,13 +181,11 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (mPopupHelper != null && mPopupHelper.isOutSideTouchable()) {
-            MotionEvent nEv = MotionEvent.obtain(ev);
+        if (mPopupHelper != null) {
             if (!mPopupHelper.isOverlayStatusbar()) {
-                nEv.offsetLocation(0, PopupUiUtils.getStatusBarHeight());
+                ev.offsetLocation(0, PopupUiUtils.getStatusBarHeight());
             }
-            mPopupHelper.dispatchOutSideEvent(nEv);
-            nEv.recycle();
+            mPopupHelper.dispatchOutSideEvent(ev, maskRect.contains(ev.getRawX(), ev.getRawY()));
         }
         return super.dispatchTouchEvent(ev);
     }
