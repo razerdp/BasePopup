@@ -94,6 +94,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     Animator mShowAnimator;
     Animation mDismissAnimation;
     Animator mDismissAnimator;
+    boolean preventInitShowAnimation;
+    boolean preventInitDismissAnimation;
 
     Animation mMaskViewShowAnimation;
     Animation mMaskViewDismissAnimation;
@@ -252,9 +254,13 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     //region Animation
 
     void startShowAnimate(int width, int height) {
-        if (getShowAnimation(width, height) == null) {
-            getShowAnimator(width, height);
+        if (!preventInitShowAnimation) {
+            if (initShowAnimation(width, height) == null) {
+                initShowAnimator(width, height);
+            }
         }
+        //动画只初始化一次，后续请自行通过setAnimation/setAnimator实现
+        preventInitShowAnimation = true;
         //通知蒙层动画，此时duration已经计算完毕
         Message msg = Message.obtain();
         msg.what = BasePopupEvent.EVENT_SHOW;
@@ -270,9 +276,13 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     void startDismissAnimate(int width, int height) {
-        if (getDismissAnimation(width, height) == null) {
-            getDismissAnimator(width, height);
+        if (!preventInitDismissAnimation) {
+            if (initDismissAnimation(width, height) == null) {
+                initDismissAnimator(width, height);
+            }
         }
+        //动画只初始化一次，后续请自行通过setAnimation/setAnimator实现
+        preventInitDismissAnimation = true;
         if (mDismissAnimation != null) {
             mDismissAnimation.cancel();
             mPopupWindow.mDisplayAnimateView.startAnimation(mDismissAnimation);
@@ -291,7 +301,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         }
     }
 
-    Animation getShowAnimation(int width, int height) {
+    Animation initShowAnimation(int width, int height) {
         if (mShowAnimation == null) {
             mShowAnimation = mPopupWindow.onCreateShowAnimation(width, height);
             if (mShowAnimation != null) {
@@ -302,7 +312,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return mShowAnimation;
     }
 
-    Animator getShowAnimator(int width, int height) {
+    Animator initShowAnimator(int width, int height) {
         if (mShowAnimator == null) {
             mShowAnimator = mPopupWindow.onCreateShowAnimator(width, height);
             if (mShowAnimator != null) {
@@ -313,7 +323,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return mShowAnimator;
     }
 
-    Animation getDismissAnimation(int width, int height) {
+    Animation initDismissAnimation(int width, int height) {
         if (mDismissAnimation == null) {
             mDismissAnimation = mPopupWindow.onCreateDismissAnimation(width, height);
             if (mDismissAnimation != null) {
@@ -324,7 +334,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return mDismissAnimation;
     }
 
-    Animator getDismissAnimator(int width, int height) {
+    Animator initDismissAnimator(int width, int height) {
         if (mDismissAnimator == null) {
             mDismissAnimator = mPopupWindow.onCreateDismissAnimator(width, height);
             if (mDismissAnimator != null) {

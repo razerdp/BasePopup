@@ -33,12 +33,14 @@ import razerdp.demo.ui.GuideActivity;
 import razerdp.demo.ui.UpdateLogActivity;
 import razerdp.demo.ui.issuestest.home.IssueHomeActivity;
 import razerdp.demo.utils.ButterKnifeUtil;
+import razerdp.demo.utils.FileUtil;
 import razerdp.demo.utils.UIHelper;
 import razerdp.demo.utils.ViewUtil;
 import razerdp.demo.widget.DPRecyclerView;
 import razerdp.demo.widget.DPTextView;
 import razerdp.util.animation.AnimationHelper;
 import razerdp.util.animation.ScaleConfig;
+import razerdp.util.log.PopupLog;
 
 
 public class DemoActivity extends BaseActivity {
@@ -76,6 +78,10 @@ public class DemoActivity extends BaseActivity {
         checkForUpdate();
 
         showWjPopup();
+
+        PopupLog.i("store",getExternalFilesDir(null).getAbsolutePath(),getFilesDir().getAbsolutePath());
+        FileUtil.writeToFile(getExternalFilesDir(null).getAbsolutePath()+"/a.txt","aaa");
+        FileUtil.writeToFile(getFilesDir().getAbsolutePath()+"/a.txt","aaa");
     }
 
     private List<DemoMainItem> generateItem() {
