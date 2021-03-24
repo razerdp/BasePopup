@@ -38,8 +38,8 @@ ext {
     minSdkVersion = 19
     minLibSdkVersion = 16
     targetSdkVersion = 30
-    versionCode = 181
-    versionName = '2.2.30.0319'
+    versionCode = 182
+    versionName = '2.2.30.0324'
 
     candy = true
     group = 'com.github.razerdp'
