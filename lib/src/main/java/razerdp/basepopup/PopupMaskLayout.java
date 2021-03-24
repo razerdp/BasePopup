@@ -249,7 +249,7 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
                     ((mBackgroundView instanceof PopupBackgroundView) || mBackgroundView.getAnimation() == null)) {
                 if (mHelper.mMaskViewDismissAnimation != null) {
                     if (mHelper.isSyncMaskAnimationDuration()) {
-                        if (mHelper.dismissDuration > 0 && mHelper.mMaskViewDismissAnimation == mHelper.DEFAULT_MASK_DISMISS_ANIMATION) {
+                        if (mHelper.dismissDuration > 0 && mHelper.isDefaultMaskViewDismissAnimation) {
                             //当动画时间大于0，且没有设置过蒙层动画，则修改时间为动画时间+50ms
                             mHelper.mMaskViewDismissAnimation.setDuration(mHelper.dismissDuration + 50);
                         }
@@ -276,7 +276,7 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
                 //如果是自定义的backgroundview，同时有自己的动画，那就不使用我们的，而是使用开发者自定义的
                 if (mHelper.mMaskViewShowAnimation != null) {
                     if (mHelper.isSyncMaskAnimationDuration()) {
-                        if (mHelper.showDuration > 0 && mHelper.mMaskViewShowAnimation == mHelper.DEFAULT_MASK_SHOW_ANIMATION) {
+                        if (mHelper.showDuration > 0 && mHelper.isDefaultMaskViewShowAnimation) {
                             //当动画时间大于0，且没有设置过蒙层动画，则修改时间为动画时间+50ms
                             mHelper.mMaskViewShowAnimation.setDuration(mHelper.showDuration + 50);
                         }

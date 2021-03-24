@@ -121,6 +121,9 @@ BasePopup配备完善的文档，建议您优先查阅文档。
         * boolean touchInMask：是否点击在蒙层
 * **【Candy】2.2.30.0319** (2021/03/19)
     * onCreateXXXAnimation/onCreateXXXAnimator现在修改为只会在显示前调用一次，后续不再调用，如果需要切换动画，请通过setXXXAnimation/setXXXAnimator实现
+* **【Candy】2.2.30.0324** (2021/03/24)
+    * 修复蒙层动画可能导致的内存泄漏问题
+
 
 
 <br>

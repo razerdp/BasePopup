@@ -1900,6 +1900,7 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
      */
     public BasePopupWindow setMaskViewShowAnimation(Animation animation) {
         mHelper.mMaskViewShowAnimation = animation;
+        mHelper.isDefaultMaskViewShowAnimation=false;
         return this;
     }
 
@@ -1908,6 +1909,7 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
      */
     public BasePopupWindow setMaskViewDismissAnimation(Animation animation) {
         mHelper.mMaskViewDismissAnimation = animation;
+        mHelper.isDefaultMaskViewDismissAnimation=false;
         return this;
     }
 
