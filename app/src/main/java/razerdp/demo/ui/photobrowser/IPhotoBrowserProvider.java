@@ -10,4 +10,6 @@ import java.io.Serializable;
 public interface IPhotoBrowserProvider extends Serializable {
 
     String getPhoto();
+
+    String getThumb();
 }

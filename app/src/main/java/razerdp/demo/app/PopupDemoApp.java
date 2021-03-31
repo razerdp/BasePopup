@@ -3,6 +3,8 @@ package razerdp.demo.app;
 import android.content.Context;
 import android.text.TextUtils;
 
+import androidx.multidex.MultiDexApplication;
+
 import com.pgyersdk.crash.PgyCrashManager;
 
 import java.lang.reflect.Field;
@@ -10,10 +12,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
-import androidx.multidex.MultiDexApplication;
+import okhttp3.ConnectionPool;
+import okhttp3.OkHttpClient;
 import razerdp.basepopup.BasePopupFlag;
 import razerdp.basepopup.BasePopupWindow;
+import razerdp.demo.base.TestData;
+import razerdp.demo.base.imageloader.GlideProgressManager;
+import razerdp.demo.base.imageloader.ImageLoaderManager;
+import razerdp.demo.widget.bigimageviewer.BigImageViewer;
 import razerdp.util.log.PopupLog;
 
 /**
@@ -30,6 +38,9 @@ public class PopupDemoApp extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         PgyCrashManager.register();
+        GlideProgressManager manager = GlideProgressManager.init(ImageLoaderManager.getGlide(this), getImageOkHttpClient());
+        BigImageViewer.initialize(manager);
+        TestData.init();
         //检查popup flag
         new Thread(() -> {
             try {
@@ -39,6 +50,18 @@ public class PopupDemoApp extends MultiDexApplication {
             }
         }).start();
     }
+
+    public OkHttpClient getImageOkHttpClient() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectionPool(new ConnectionPool(20, 5, TimeUnit.MINUTES))
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS);
+        OkHttpClient imageHttpClient = builder.build();
+        imageHttpClient.dispatcher().setMaxRequestsPerHost(20);
+        return imageHttpClient;
+    }
+
 
     private void checkFlag() throws Exception {
         Field[] fields = BasePopupFlag.class.getFields();

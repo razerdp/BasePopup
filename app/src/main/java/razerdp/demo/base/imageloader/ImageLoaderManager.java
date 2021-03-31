@@ -70,6 +70,9 @@ public enum ImageLoaderManager {
             Glide.with(target).load(from).apply(options.requestOptions).into((Target) target);
         } else {
             if (target instanceof ImageView) {
+                if (options.progressListener != null) {
+                    Glide.with(target).load(from).apply(options.requestOptions).into(new ProgressImageViewTarget((ImageView) target, String.valueOf(from), options.progressListener));
+                }
                 Glide.with(target).load(from).apply(options.requestOptions).into((ImageView) target);
             }
         }

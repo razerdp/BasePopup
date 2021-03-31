@@ -17,6 +17,8 @@ import razerdp.demo.base.interfaces.SimpleCallback;
 import razerdp.demo.utils.UIHelper;
 import razerdp.demo.widget.DPImageView;
 
+import static razerdp.demo.base.imageloader.GlideProgressManager.*;
+
 /**
  * Created by 大灯泡 on 2019/8/7
  * <p>
@@ -40,6 +42,7 @@ public class Options implements Cloneable {
         return DEFAULT_OPTIONS.clone();
     }
 
+    ProgressListener progressListener;
     Drawable error;
     Drawable loading;
     int topLeftRadius;
@@ -53,6 +56,11 @@ public class Options implements Cloneable {
 
     public Options setError(@DrawableRes int error) {
         return setError(UIHelper.getDrawable(error));
+    }
+
+    public Options setProgressListener(ProgressListener progressListener) {
+        this.progressListener = progressListener;
+        return this;
     }
 
     public Options setLoading(@DrawableRes int loading) {
@@ -133,6 +141,13 @@ public class Options implements Cloneable {
 
     void applyRequestOption(View target, Object from) {
 
+        if (target instanceof ProgressListenerEx) {
+            ((ProgressListenerEx) target).setUrl(String.valueOf(from));
+            if (progressListener != null) {
+                ((ProgressListenerEx) target).setProgressListener(progressListener);
+            }
+        }
+
         if (target instanceof DPImageView) {
             if (((DPImageView) target).getShape() == DPImageView.SHAPE_OVAL) {
                 requestOptions.circleCrop();
@@ -181,6 +196,7 @@ public class Options implements Cloneable {
     protected Options clone() {
         try {
             Options result = (Options) super.clone();
+            result.progressListener = null;
             result.error = DEFAULT_ERROR;
             result.loading = DEFAULT_LOADING;
             result.topLeftRadius = 0;

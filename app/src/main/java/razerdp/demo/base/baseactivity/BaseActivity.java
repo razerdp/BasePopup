@@ -36,6 +36,7 @@ import razerdp.demo.utils.StringUtil;
 import razerdp.demo.utils.ToolUtil;
 import razerdp.demo.widget.StatusBarViewPlaceHolder;
 import razerdp.demo.widget.TitleBarView;
+import razerdp.demo.widget.dialog.LoadingDialog;
 import razerdp.util.KeyboardUtils;
 import razerdp.util.log.PopupLog;
 
@@ -303,8 +304,54 @@ public abstract class BaseActivity<T extends BaseActivity.IntentData>
     }
 
 
+    public void showLoadingDialog(boolean cancelable) {
+        if ((mState.state & State.STATE_SHOWING_LOADING) != 0) return;
+        mState.state |= State.STATE_SHOWING_LOADING;
+        if (mLoadingDialog == null) {
+            mLoadingDialog = onCreateLoadingDialog();
+        }
+        mLoadingDialog.setCancelable(cancelable);
+        if (mLoadingDialog != null && !mLoadingDialog.isShowing()) {
+            if (ToolUtil.isMainThread()) {
+                mLoadingDialog.show();
+            } else {
+                runOnUiThread(() -> mLoadingDialog.show());
+            }
+        }
+    }
+
+    public void dismissLoadingDialog() {
+        if (mLoadingDialog == null || !mLoadingDialog.isShowing() || (mState.state & State.STATE_SHOWING_LOADING) == 0) {
+            return;
+        }
+        mState.state &= ~State.STATE_SHOWING_LOADING;
+        if (ToolUtil.isMainThread()) {
+            mLoadingDialog.dismiss();
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mLoadingDialog.dismiss();
+                }
+            });
+        }
+    }
+
+
+    public void setLoadingDialogText(String txt) {
+        if (mLoadingDialog instanceof LoadingDialog) {
+            ((LoadingDialog) mLoadingDialog).setDesc(txt);
+        }
+    }
+
+    public void setActionDialogText(String txt, View.OnClickListener l) {
+        if (mLoadingDialog instanceof LoadingDialog) {
+            ((LoadingDialog) mLoadingDialog).setAction(txt, l);
+        }
+    }
+
     protected Dialog onCreateLoadingDialog() {
-        return null;
+        return LoadingDialog.create(this);
     }
 
     //endregion ===============================other===============================
