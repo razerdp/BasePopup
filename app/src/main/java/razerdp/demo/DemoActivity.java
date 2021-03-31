@@ -5,6 +5,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.pgyersdk.update.DownloadFileListener;
 import com.pgyersdk.update.PgyUpdateManager;
 import com.pgyersdk.update.UpdateManagerListener;
@@ -14,16 +17,16 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
 import razerdp.basepopup.QuickPopupBuilder;
 import razerdp.basepopup.QuickPopupConfig;
 import razerdp.basepopup.R;
+import razerdp.demo.base.TestData;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
+import razerdp.demo.base.interfaces.ExtSimpleCallback;
 import razerdp.demo.model.DemoMainItem;
 import razerdp.demo.popup.update.PopupUpdate;
 import razerdp.demo.ui.ActivityLauncher;
@@ -33,7 +36,6 @@ import razerdp.demo.ui.GuideActivity;
 import razerdp.demo.ui.UpdateLogActivity;
 import razerdp.demo.ui.issuestest.home.IssueHomeActivity;
 import razerdp.demo.utils.ButterKnifeUtil;
-import razerdp.demo.utils.FileUtil;
 import razerdp.demo.utils.UIHelper;
 import razerdp.demo.utils.ViewUtil;
 import razerdp.demo.widget.DPRecyclerView;
@@ -79,9 +81,6 @@ public class DemoActivity extends BaseActivity {
 
         showWjPopup();
 
-        PopupLog.i("store",getExternalFilesDir(null).getAbsolutePath(),getFilesDir().getAbsolutePath());
-        FileUtil.writeToFile(getExternalFilesDir(null).getAbsolutePath()+"/a.txt","aaa");
-        FileUtil.writeToFile(getFilesDir().getAbsolutePath()+"/a.txt","aaa");
     }
 
     private List<DemoMainItem> generateItem() {

@@ -13,6 +13,7 @@ import razerdp.basepopup.R;
 import razerdp.demo.base.TestData;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
+import razerdp.demo.base.interfaces.ExtSimpleCallback;
 import razerdp.demo.model.friendcircle.FriendCircleInfo;
 import razerdp.demo.popup.options.PopupCircleOption;
 import razerdp.demo.utils.RandomUtil;
@@ -41,31 +42,52 @@ public class FriendCircleActivity extends BaseActivity {
 
     @Override
     protected void onInitView(View decorView) {
-        SimpleRecyclerViewAdapter<FriendCircleInfo> adapter = new SimpleRecyclerViewAdapter<>(this, fakeData());
+        SimpleRecyclerViewAdapter<FriendCircleInfo> adapter = new SimpleRecyclerViewAdapter<>(this);
         adapter.setHolder(FriendCircleViewHolder.class);
         rvContent.setLayoutManager(new LinearLayoutManager(this));
         rvContent.setItemAnimator(null);
         rvContent.setAdapter(adapter);
+        fetchData(adapter);
     }
 
-    private List<FriendCircleInfo> fakeData() {
-        List<FriendCircleInfo> result = new ArrayList<>();
-        for (int i = 0; i < RandomUtil.randomInt(20, 80); i++) {
-            FriendCircleInfo info = new FriendCircleInfo();
-            info.avatar = TestData.getAvatar();
-            info.content = RandomUtil.randomString(RandomUtil.randomInt(0, 140));
-            info.name = "BasePopup";
-            int picsCount = RandomUtil.randomInt(0, 9);
-            if (picsCount > 0) {
-                info.pics = new ArrayList<>();
-                for (int j = 0; j < picsCount; j++) {
-                    info.pics.add(TestData.getPicUrl());
-                }
+    private void fetchData(SimpleRecyclerViewAdapter<FriendCircleInfo> adapter) {
+        TestData.getTestData(RandomUtil.randomInt(0, 50), new ExtSimpleCallback<List<TestData.TestResult>>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                showLoadingDialog(true);
+                setLoadingDialogText("加载中...");
             }
-            result.add(info);
-        }
-        return result;
+
+            @Override
+            public void onCall(List<TestData.TestResult> data) {
+                List<FriendCircleInfo> friendCircleInfos = new ArrayList<>();
+                for (TestData.TestResult datum : data) {
+                    FriendCircleInfo info = new FriendCircleInfo();
+                    info.content = datum.text;
+                    info.pics = new ArrayList<>(datum.pics);
+                    info.name = "BasePopup_id_" + RandomUtil.randomInt(0, 999999999);
+                    info.avatar = datum.avatar;
+                    friendCircleInfos.add(info);
+                }
+                dismissLoadingDialog();
+                adapter.updateData(friendCircleInfos);
+            }
+
+            @Override
+            public void onError(int code, String errorMessage) {
+                super.onError(code, errorMessage);
+                setLoadingDialogText("加载出错，请重新加载");
+                setActionDialogText("重新加载", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        fetchData(adapter);
+                    }
+                });
+            }
+        });
     }
+
 
     @Override
     public void onTitleRightClick(View view) {

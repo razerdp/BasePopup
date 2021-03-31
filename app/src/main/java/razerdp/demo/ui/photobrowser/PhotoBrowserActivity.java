@@ -1,32 +1,35 @@
 package razerdp.demo.ui.photobrowser;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.text.TextUtils;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
-import com.github.chrisbanes.photoview.OnViewTapListener;
-import com.github.chrisbanes.photoview.PhotoView;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.SharedElementCallback;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.SharedElementCallback;
 import butterknife.BindView;
 import razerdp.basepopup.R;
 import razerdp.demo.base.baseactivity.BaseActivity;
-import razerdp.demo.base.imageloader.GlideApp;
 import razerdp.demo.utils.ToolUtil;
+import razerdp.demo.utils.TransitionUtil;
+import razerdp.demo.utils.UIHelper;
+import razerdp.demo.utils.ViewUtil;
+import razerdp.demo.widget.bigimageviewer.indicator.CircleProgressIndicator;
+import razerdp.demo.widget.bigimageviewer.loader.ImageLoader;
+import razerdp.demo.widget.bigimageviewer.view.ImageViewer;
 import razerdp.demo.widget.viewpager.BaseCachedViewPagerAdapter;
 import razerdp.demo.widget.viewpager.HackyViewPager;
 import razerdp.demo.widget.viewpager.IndicatorContainer;
+import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2019/8/22
@@ -53,7 +56,6 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
         data = getActivityData();
         if (data == null || ToolUtil.isEmpty(data.photos)) {
             finish();
-            return;
         }
     }
 
@@ -88,8 +90,29 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
             @Override
             public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
                 super.onMapSharedElements(names, sharedElements);
-                sharedElements.clear();
-                sharedElements.put(PhotoBrowserProcessor.TRANSITION_NAME, mAdapter.curView);
+                //大图
+                if (mAdapter.curView instanceof ImageViewer) {
+                    ImageViewer imageViewer = (ImageViewer) mAdapter.curView;
+                    if (imageViewer.isLarge()) {
+                        PopupLog.i(TAG, "is large", mAdapter.curView);
+                        if (TransitionUtil.ENABLE) {
+                            if (!onFinish) {
+                                Transition enter = TransitionInflater.from(self())
+                                        .inflateTransition(R.transition.photo_enter_large);
+                                getWindow().setEnterTransition(enter);
+                            } else {
+                                Transition exit = TransitionInflater.from(self())
+                                        .inflateTransition(R.transition.photo_exit_large);
+                                getWindow().setExitTransition(exit);
+                            }
+                        }
+                    }
+                    sharedElements.clear();
+                    sharedElements.put(PhotoBrowserProcessor.TRANSITION_NAME, imageViewer.getShowingImageView());
+                } else {
+                    sharedElements.clear();
+                    sharedElements.put(PhotoBrowserProcessor.TRANSITION_NAME, mAdapter.curView);
+                }
             }
         });
     }
@@ -105,20 +128,63 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
     @Override
     public void supportFinishAfterTransition() {
         onFinish = true;
-        setResult(RESULT_OK, PhotoBrowserProcessor.setIndex(viewPager == null ? data.startPosition : viewPager.getCurrentItem()));
+        setResult(RESULT_OK, PhotoBrowserProcessor.setIndex(viewPager == null ? data.startPosition : viewPager
+                .getCurrentItem()));
         super.supportFinishAfterTransition();
     }
 
     @Override
     public boolean onBackPressedInternal() {
         supportFinishAfterTransition();
-        viewBackground.animate().alpha(0f).start();
         return true;
     }
 
 
-    class InnerAdapter extends BaseCachedViewPagerAdapter<PhotoView> {
+    class InnerAdapter extends BaseCachedViewPagerAdapter<ImageViewer> {
         View curView;
+
+        private ImageLoader.Callback callback = new ImageLoaderCallbackAdapter() {
+            @Override
+            public void onCacheHit(int imageType, File image) {
+                super.onCacheHit(imageType, image);
+                supportStartPostponedEnterTransition();
+            }
+
+            @Override
+            public void onCacheMiss(int imageType, File image) {
+                super.onCacheMiss(imageType, image);
+                supportStartPostponedEnterTransition();
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                supportStartPostponedEnterTransition();
+            }
+
+            @Override
+            public void onProgress(int progress) {
+                super.onProgress(progress);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                supportStartPostponedEnterTransition();
+            }
+
+            @Override
+            public void onSuccess(File image) {
+                super.onSuccess(image);
+                supportStartPostponedEnterTransition();
+            }
+
+            @Override
+            public void onFail(Exception error) {
+                super.onFail(error);
+                supportStartPostponedEnterTransition();
+            }
+        };
 
         @Override
         public int getItemPosition(@NonNull Object object) {
@@ -131,18 +197,17 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
         }
 
         @Override
-        protected PhotoView onCreateView(ViewGroup container, int position) {
-            PhotoView photoView = new PhotoView(container.getContext());
-            photoView.setMaximumScale(4f);
-            photoView.setZoomTransitionDuration(350);
-            photoView.setOnViewTapListener(new OnViewTapListener() {
-                @Override
-                public void onViewTap(View view, float x, float y) {
-                    curView = view;
-                    supportFinishAfterTransition();
-                }
+        protected ImageViewer onCreateView(ViewGroup container, int position) {
+            ImageViewer result = (ImageViewer) ViewUtil.inflate(self(), R.layout.item_image_browser, container, false);
+            result.setFailureImage(UIHelper.getDrawable(R.drawable.ic_error));
+            result.setImageViewLoader(new AppImageLoader());
+            result.setProgressIndicator(new CircleProgressIndicator());
+            result.setImageLoaderCallback(callback);
+            result.setOnClickListener(v -> {
+                curView = v;
+                supportFinishAfterTransition();
             });
-            return photoView;
+            return result;
         }
 
 
@@ -155,33 +220,21 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
         }
 
         @Override
-        protected void onBindData(final PhotoView view, int position) {
-            GlideApp.with(view)
-                    .load(data.photos.get(position))
-                    .dontAnimate()
-                    .addListener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            supportStartPostponedEnterTransition();
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            supportStartPostponedEnterTransition();
-                            return false;
-                        }
-                    })
-                    .into(view);
+        protected void onBindData(final ImageViewer view, int position) {
+            String photo = data.photos.get(position).getPhoto();
+            String thumb_url = data.photos.get(position).getThumb();
+            Uri original = TextUtils.isEmpty(photo) ? Uri.EMPTY : Uri.parse(photo);
+            Uri thumb = TextUtils.isEmpty(thumb_url) ? original : Uri.parse(thumb_url);
+            view.showImage(thumb, original);
         }
 
     }
 
     public static class Data extends BaseActivity.IntentData {
-        private List<String> photos;
+        private List<IPhotoBrowserProvider> photos;
         private int startPosition;
 
-        public Data setPhotos(List<String> photos) {
+        public Data setPhotos(List<IPhotoBrowserProvider> photos) {
             this.photos = photos;
             return this;
         }
