@@ -3,6 +3,5 @@
     <changeBounds />
     <changeTransform />
     <changeClipBounds />
-    <transition class="razerdp.demo.ui.transition.ImageViewTransition" />
-    <!--    <changeImageTransform />-->
+    <transition class="razerdp.demo.ui.transition.ImageViewerTransition" />
 </transitionSet>
