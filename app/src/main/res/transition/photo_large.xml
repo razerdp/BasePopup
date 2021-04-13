@@ -3,12 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:duration="@integer/animation_default_duration"
     android:transitionOrdering="together">
-    <changeBounds>
-        <arcMotion
-            android:maximumAngle="90"
-            android:minimumHorizontalAngle="15"
-            android:minimumVerticalAngle="0" />
-    </changeBounds>
+    <changeBounds />
+    <changeTransform />
+    <changeClipBounds />
     <transition
         class="razerdp.demo.ui.transition.SubsamplingScaleImageViewSharedTransition"
         app:imageViewScaleType="centerCrop" />

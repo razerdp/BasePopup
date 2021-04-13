@@ -3,24 +3,24 @@ package razerdp.demo.ui.photobrowser;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.SharedElementCallback;
+import androidx.core.view.ViewCompat;
+
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import razerdp.basepopup.R;
+import razerdp.demo.base.TestData;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.utils.ToolUtil;
-import razerdp.demo.utils.TransitionUtil;
 import razerdp.demo.utils.UIHelper;
 import razerdp.demo.utils.ViewUtil;
 import razerdp.demo.widget.bigimageviewer.indicator.CircleProgressIndicator;
@@ -29,7 +29,6 @@ import razerdp.demo.widget.bigimageviewer.view.ImageViewer;
 import razerdp.demo.widget.viewpager.BaseCachedViewPagerAdapter;
 import razerdp.demo.widget.viewpager.HackyViewPager;
 import razerdp.demo.widget.viewpager.IndicatorContainer;
-import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2019/8/22
@@ -48,7 +47,6 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
     InnerAdapter mAdapter;
     Data data;
 
-    boolean onFinish;
     boolean isLoaded;
 
     @Override
@@ -79,40 +77,12 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
         viewPager.setAdapter(mAdapter);
         viewIndicator.attachViewPager(viewPager);
         viewPager.setCurrentItem(Math.max(data.startPosition, 0));
-        onFinish = false;
+
         ActivityCompat.setEnterSharedElementCallback(this, new SharedElementCallback() {
             @Override
             public void onSharedElementStart(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
                 super.onSharedElementStart(sharedElementNames, sharedElements, sharedElementSnapshots);
                 viewBackground.animate().alpha(1f).start();
-            }
-
-            @Override
-            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-                super.onMapSharedElements(names, sharedElements);
-                //大图
-                if (mAdapter.curView instanceof ImageViewer) {
-                    ImageViewer imageViewer = (ImageViewer) mAdapter.curView;
-                    if (imageViewer.isLarge()) {
-                        PopupLog.i(TAG, "is large", mAdapter.curView);
-                        if (TransitionUtil.ENABLE) {
-                            if (!onFinish) {
-                                Transition enter = TransitionInflater.from(self())
-                                        .inflateTransition(R.transition.photo_enter_large);
-                                getWindow().setEnterTransition(enter);
-                            } else {
-                                Transition exit = TransitionInflater.from(self())
-                                        .inflateTransition(R.transition.photo_exit_large);
-                                getWindow().setExitTransition(exit);
-                            }
-                        }
-                    }
-                    sharedElements.clear();
-                    sharedElements.put(PhotoBrowserProcessor.TRANSITION_NAME, imageViewer.getShowingImageView());
-                } else {
-                    sharedElements.clear();
-                    sharedElements.put(PhotoBrowserProcessor.TRANSITION_NAME, mAdapter.curView);
-                }
             }
         });
     }
@@ -127,7 +97,6 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
 
     @Override
     public void supportFinishAfterTransition() {
-        onFinish = true;
         setResult(RESULT_OK, PhotoBrowserProcessor.setIndex(viewPager == null ? data.startPosition : viewPager
                 .getCurrentItem()));
         super.supportFinishAfterTransition();
@@ -204,7 +173,6 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
             result.setProgressIndicator(new CircleProgressIndicator());
             result.setImageLoaderCallback(callback);
             result.setOnClickListener(v -> {
-                curView = v;
                 supportFinishAfterTransition();
             });
             return result;
@@ -215,13 +183,20 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
         public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             super.setPrimaryItem(container, position, object);
             if (object instanceof View) {
-                curView = (View) object;
+                setCurView((View) object);
             }
+        }
+
+        void setCurView(View v) {
+            ViewCompat.setTransitionName(v, PhotoBrowserProcessor.TRANSITION_NAME);
+            this.curView = v;
         }
 
         @Override
         protected void onBindData(final ImageViewer view, int position) {
-            String photo = data.photos.get(position).getPhoto();
+//            String photo = data.photos.get(position).getPhoto();
+            String photo = TestData.TestResult.getThumb(data.photos.get(position)
+                    .getPhoto(), UIHelper.getScreenWidth(), UIHelper.getScreenHeight());
             String thumb_url = data.photos.get(position).getThumb();
             Uri original = TextUtils.isEmpty(photo) ? Uri.EMPTY : Uri.parse(photo);
             Uri thumb = TextUtils.isEmpty(thumb_url) ? original : Uri.parse(thumb_url);

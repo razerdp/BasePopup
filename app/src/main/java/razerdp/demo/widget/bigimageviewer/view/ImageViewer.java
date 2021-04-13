@@ -62,9 +62,10 @@ import razerdp.demo.widget.bigimageviewer.utils.DisplayOptimizeListener;
 import razerdp.demo.widget.bigimageviewer.utils.ThreadedCallbacks;
 
 /**
- * Created by Piasy{github.com/Piasy} on 06/11/2016.
+ * 修改自
+ * https://github.com/Piasy/BigImageViewer/blob/master/BigImageViewer/src/main/java/com/github/piasy/biv/view/BigImageView.java
  * <p>
- * Use FrameLayout for extensibility.
+ * 只针对glide使用
  */
 
 @Keep
