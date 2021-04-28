@@ -52,11 +52,13 @@ public class ImageViewerTransition extends Transition {
 
     public ImageViewerTransition() {
         addTarget(ImageViewer.class);
+        addTarget(ImageView.class);
     }
 
     public ImageViewerTransition(Context context, AttributeSet attrs) {
         super(context, attrs);
         addTarget(ImageViewer.class);
+        addTarget(ImageView.class);
     }
 
     @Override
@@ -71,31 +73,40 @@ public class ImageViewerTransition extends Transition {
 
     private void captureValues(TransitionValues transitionValues) {
         View v = transitionValues.view;
-        if (!(v instanceof ImageViewer)) return;
-        View showingView = ((ImageViewer) v).getShowingImageView();
-        if (showingView instanceof SubsamplingScaleImageView) {
-            Point size = new Point(showingView.getWidth(), showingView.getHeight());
-            transitionValues.values.put(SIZE, size);
-            SubsamplingScaleImageView ssiv = (SubsamplingScaleImageView) showingView;
-            transitionValues.values.put(STATE, ssiv.getState());
-        } else if (showingView instanceof ImageView) {
-            ImageView imageView = (ImageView) showingView;
-            Drawable drawable = imageView.getDrawable();
-            if (drawable == null) {
-                return;
+        if (v instanceof ImageViewer) {
+            View showingView = ((ImageViewer) v).getShowingView();
+            if (showingView instanceof SubsamplingScaleImageView) {
+                captureValueForSSIV((SubsamplingScaleImageView) showingView, transitionValues);
+            } else if (showingView instanceof ImageView) {
+                captureValueForImageView((ImageView) showingView, transitionValues);
             }
-            Map<String, Object> values = transitionValues.values;
-            int left = showingView.getLeft();
-            int top = showingView.getTop();
-            int right = showingView.getRight();
-            int bottom = showingView.getBottom();
+        } else if (v instanceof ImageView) {
+            captureValueForImageView((ImageView) v, transitionValues);
+        }
+    }
 
-            Rect bounds = new Rect(left, top, right, bottom);
-            values.put(BOUNDS, bounds);
-            values.put(SCALE_TYPE, imageView.getScaleType());
-            if (imageView.getScaleType() == ImageView.ScaleType.MATRIX) {
-                values.put(MATRIX, imageView.getImageMatrix());
-            }
+    void captureValueForSSIV(SubsamplingScaleImageView ssiv, TransitionValues transitionValues) {
+        Point size = new Point(ssiv.getWidth(), ssiv.getHeight());
+        transitionValues.values.put(SIZE, size);
+        transitionValues.values.put(STATE, ssiv.getState());
+    }
+
+    void captureValueForImageView(ImageView iv, TransitionValues transitionValues) {
+        Drawable drawable = iv.getDrawable();
+        if (drawable == null) {
+            return;
+        }
+        Map<String, Object> values = transitionValues.values;
+        int left = iv.getLeft();
+        int top = iv.getTop();
+        int right = iv.getRight();
+        int bottom = iv.getBottom();
+
+        Rect bounds = new Rect(left, top, right, bottom);
+        values.put(BOUNDS, bounds);
+        values.put(SCALE_TYPE, iv.getScaleType());
+        if (iv.getScaleType() == ImageView.ScaleType.MATRIX) {
+            values.put(MATRIX, iv.getImageMatrix());
         }
     }
 
@@ -107,10 +118,10 @@ public class ImageViewerTransition extends Transition {
                 !(endValues.view instanceof ImageViewer)) {
             return null;
         }
-        boolean isLarge = ((ImageViewer) startValues.view).getShowingImageView() instanceof SubsamplingScaleImageView &&
-                ((ImageViewer) endValues.view).getShowingImageView() instanceof SubsamplingScaleImageView;
-        PopupLog.i(TAG, isLarge, ((ImageViewer) startValues.view).getShowingImageView(), ((ImageViewer) endValues.view)
-                .getShowingImageView());
+        boolean isLarge = ((ImageViewer) startValues.view).getShowingView() instanceof SubsamplingScaleImageView &&
+                ((ImageViewer) endValues.view).getShowingView() instanceof SubsamplingScaleImageView;
+        PopupLog.i(TAG, isLarge, ((ImageViewer) startValues.view).getShowingView(), ((ImageViewer) endValues.view)
+                .getShowingView());
         if (isLarge) {
             return SubsamplingScaleImageViewTransitionCreator.createAnimator(sceneRoot, startValues, endValues);
         } else {
@@ -129,7 +140,7 @@ public class ImageViewerTransition extends Transition {
                 return null;
             }
             final SubsamplingScaleImageView view = (SubsamplingScaleImageView) ((ImageViewer) startValues.view)
-                    .getShowingImageView();
+                    .getShowingView();
             Point imgSize = new Point(view.getSWidth(), view.getSHeight());
             if (imgSize.x == 0 || imgSize.y == 0) {
                 return null;
@@ -190,7 +201,7 @@ public class ImageViewerTransition extends Transition {
         static Animator createAnimator(ViewGroup sceneRoot, TransitionValues startValues, TransitionValues endValues) {
             Rect startBounds = (Rect) startValues.values.get(BOUNDS);
             Rect endBounds = (Rect) endValues.values.get(BOUNDS);
-            final ImageView imageView = (ImageView) ((ImageViewer) endValues.view).getShowingImageView();
+            final ImageView imageView = (ImageView) ((ImageViewer) endValues.view).getShowingView();
             if (startBounds == null || endBounds == null) {
                 return null;
             }
