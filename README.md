@@ -47,16 +47,20 @@
 
 </div>
 
+
 ---
+
+### 有奖调查问卷：
+
+<a href ="https://wj.qq.com/s2/5468287/c24f"><img src="./img/qrcode.png"/></a>
 
 ### 导航
  
  - [特性](#特性)
  - [注意事项](#注意事项)
  - [环境依赖](#环境依赖)
- - [快速入门](#快速入门)
+ - [文档](#文档)
    - [BasePopup手册](https://www.yuque.com/razerdp/basepopup)
- - [Api](#api)
  - [更新日志](#更新日志-历史更新)
    - [历史更新](https://www.yuque.com/razerdp/basepopup/uyrsxx)
  - [例子预览](#例子预览)
@@ -113,18 +117,20 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 <br>
 
 
+
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Candy】2.2.30.210205** (2021/02/05)
+**正在开发日志（Candy版本）请查看dev分支：** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97-%E5%8E%86%E5%8F%B2%E6%9B%B4%E6%96%B0)
+
+* **【Release】2.2.30** (2021/04/28)
+  * 【功能】
     * 针对[issue#393](https://github.com/razerdp/BasePopup/issues/393)所述需求，onOutSideTouch增加两个参数：
-        * MotionEvent event：触摸事件
-        * boolean touchInMask：是否点击在蒙层
-* **【Candy】2.2.30.0319** (2021/03/19)
+        * `MotionEvent event`：触摸事件
+        * `boolean touchInMask`：是否点击在蒙层
+  * 【优化】
     * onCreateXXXAnimation/onCreateXXXAnimator现在修改为只会在显示前调用一次，后续不再调用，如果需要切换动画，请通过setXXXAnimation/setXXXAnimator实现
-* **【Candy】2.2.30.0324** (2021/03/24)
+  * 【BugFixed】
     * 修复蒙层动画可能导致的内存泄漏问题
-
-
 
 <br>
 
@@ -169,4 +175,12 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 ### License
 
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frazerdp%2FBasePopup.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Frazerdp%2FBasePopup?ref=badge_large)
+
 [Apache-2.0](./LICENSE)
+
+
+<p align="center">
+  Visit Count（from 2020/08/19）<br>
+  <img src="https://profile-counter.glitch.me/razerdp-basepopup/count.svg" />
+</p>
