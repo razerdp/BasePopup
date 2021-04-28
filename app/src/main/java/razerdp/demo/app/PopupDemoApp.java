@@ -19,9 +19,6 @@ import okhttp3.OkHttpClient;
 import razerdp.basepopup.BasePopupFlag;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.demo.base.TestData;
-import razerdp.demo.base.imageloader.GlideProgressManager;
-import razerdp.demo.base.imageloader.ImageLoaderManager;
-import razerdp.demo.widget.bigimageviewer.BigImageViewer;
 import razerdp.util.log.PopupLog;
 
 /**
@@ -38,8 +35,6 @@ public class PopupDemoApp extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         PgyCrashManager.register();
-        GlideProgressManager manager = GlideProgressManager.init(ImageLoaderManager.getGlide(this), getImageOkHttpClient());
-        BigImageViewer.initialize(manager);
         TestData.init();
         //检查popup flag
         new Thread(() -> {
