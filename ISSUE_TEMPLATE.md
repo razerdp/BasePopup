@@ -1,4 +1,4 @@
-### 提issue前请去[**WIKI#常见问题**](https://www.yuque.com/razerdp/basepopup/dgf6ry)找找相关问题，避免重复提问
+### 提issue前请去[**WIKI#常见问题**](https://www.yuque.com/razerdp/basepopup/dgf6ry)查询相关问题，避免重复提问
 ### Please go to [**WIKI#FAQ**](https://www.yuque.com/razerdp/basepopup/dgf6ry) for relevant questions before commit your issue to avoid repetitive questions.
 
 <br>
