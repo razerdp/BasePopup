@@ -35,7 +35,7 @@ public enum BasePopupUnsafe {
      */
     @Deprecated
     public void dismissAllPopup(boolean animateDismiss) {
-        HashMap<String, LinkedList<WindowManagerProxy>> allCache = WindowManagerProxy.PopupWindowQueueManager.sQueueMap;
+        HashMap<String, LinkedList<WindowManagerProxy>> allCache = new HashMap<>(WindowManagerProxy.PopupWindowQueueManager.sQueueMap);
         if (!allCache.isEmpty()) {
             for (LinkedList<WindowManagerProxy> value : allCache.values()) {
                 for (WindowManagerProxy proxy : value) {
@@ -45,6 +45,8 @@ public enum BasePopupUnsafe {
                 }
             }
         }
+        allCache.clear();
+        allCache = null;
     }
 
     /**

@@ -73,4 +73,15 @@
         <attr name="maxWidth" format="dimension" />
         <attr name="maxHeight" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="CircleProgressView">
+        <attr name="inner_circle_size" format="dimension" />
+        <attr name="inner_circle_color" format="color" />
+        <attr name="inner_text_color" format="color" />
+        <attr name="inner_text_size" format="dimension" />
+        <attr name="stroke_margin" format="dimension" />
+        <attr name="stroke_color" format="color" />
+        <attr name="stroke_width" format="dimension" />
+        <attr name="current_progress" format="integer" />
+    </declare-styleable>
 </resources>

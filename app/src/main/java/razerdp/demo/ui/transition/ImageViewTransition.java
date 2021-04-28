@@ -19,9 +19,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import java.util.Map;
-
 import androidx.annotation.RequiresApi;
+
+import java.util.Map;
 
 /**
  * Created by 大灯泡 on 2019/8/22
@@ -150,7 +150,11 @@ public class ImageViewTransition extends Transition {
                 }
                 //计算中间矩阵
                 Matrix imageMatrix = evaluator.evaluate(animation.getAnimatedFraction(), matrixPair.first, matrixPair.second);
-//                imageView.setScaleType(ImageView.ScaleType.MATRIX);
+                try {
+                    imageView.setScaleType(ImageView.ScaleType.MATRIX);
+                } catch (Exception e) {
+                    //ignore
+                }
                 imageView.setImageMatrix(imageMatrix);
 
             }
@@ -158,12 +162,20 @@ public class ImageViewTransition extends Transition {
         animator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-//                imageView.setScaleType(ImageView.ScaleType.MATRIX);
+                try {
+                    imageView.setScaleType(ImageView.ScaleType.MATRIX);
+                } catch (Exception e) {
+                    //ignore
+                }
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                imageView.setScaleType(scaleType);
+                try {
+                    imageView.setScaleType(scaleType);
+                } catch (Exception e) {
+                    //ignore
+                }
             }
 
             @Override

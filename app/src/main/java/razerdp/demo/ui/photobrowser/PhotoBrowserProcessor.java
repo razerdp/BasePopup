@@ -6,20 +6,20 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.app.ComponentActivity;
 import androidx.core.app.SharedElementCallback;
 import androidx.lifecycle.Observer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.event.LiveDataBus;
 import razerdp.demo.utils.LifeCycleHolder;
-import razerdp.demo.utils.StringUtil;
 import razerdp.demo.utils.ToolUtil;
 
 /**
@@ -31,7 +31,7 @@ public class PhotoBrowserProcessor implements Observer<Pair<Integer, Intent>> {
     static final String TRANSITION_NAME = "PhotoBrowserShareView";
     static final String INTENT_KEY_INDEX = "index";
 
-    final List<String> photos;
+    final List<IPhotoBrowserProvider> photos;
     int startPosition;
     ImageView from;
     int exitIndex;
@@ -41,29 +41,29 @@ public class PhotoBrowserProcessor implements Observer<Pair<Integer, Intent>> {
     boolean calledReenter;
 
 
-    public PhotoBrowserProcessor(String photo) {
+    public PhotoBrowserProcessor(IPhotoBrowserProvider photo) {
         this.photos = new ArrayList<>();
-        if (StringUtil.noEmpty(photo)) {
+        if (photo != null) {
             this.photos.add(photo);
         }
     }
 
-    public PhotoBrowserProcessor(List<String> photos) {
+    public PhotoBrowserProcessor(List<IPhotoBrowserProvider> photos) {
         this.photos = new ArrayList<>();
         if (!ToolUtil.isEmpty(photos)) {
             this.photos.addAll(photos);
         }
     }
 
-    public static PhotoBrowserProcessor with(List<String> photos) {
+    public static PhotoBrowserProcessor with(List<IPhotoBrowserProvider> photos) {
         return new PhotoBrowserProcessor(photos);
     }
 
-    public static PhotoBrowserProcessor with(String url) {
+    public static PhotoBrowserProcessor with(IPhotoBrowserProvider url) {
         return new PhotoBrowserProcessor(url);
     }
 
-    public PhotoBrowserProcessor setPhotos(List<String> photos) {
+    public PhotoBrowserProcessor setPhotos(List<IPhotoBrowserProvider> photos) {
         this.photos.clear();
         if (!ToolUtil.isEmpty(photos)) {
             this.photos.addAll(photos);
@@ -71,7 +71,7 @@ public class PhotoBrowserProcessor implements Observer<Pair<Integer, Intent>> {
         return this;
     }
 
-    public PhotoBrowserProcessor setPhoto(String url) {
+    public PhotoBrowserProcessor setPhoto(IPhotoBrowserProvider url) {
         this.photos.clear();
         this.photos.add(url);
         return this;
@@ -109,7 +109,8 @@ public class PhotoBrowserProcessor implements Observer<Pair<Integer, Intent>> {
                     from = null;
                     viewProvider = null;
                     ActivityCompat.setExitSharedElementCallback(act, null);
-                    LiveDataBus.INSTANCE.getActivityReenterLiveData().removeObserver(PhotoBrowserProcessor.this);
+                    LiveDataBus.INSTANCE.getActivityReenterLiveData()
+                            .removeObserver(PhotoBrowserProcessor.this);
                 }
             });
         }

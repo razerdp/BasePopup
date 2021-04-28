@@ -66,20 +66,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     static final int DEFAULT_OVERLAY_STATUS_BAR_MODE = OVERLAY_MASK | OVERLAY_CONTENT;
     static final int DEFAULT_OVERLAY_NAVIGATION_BAR_MODE = OVERLAY_MASK;
     private static final int CONTENT_VIEW_ID = R.id.base_popup_content_root;
-    Animation DEFAULT_MASK_SHOW_ANIMATION = new AlphaAnimation(0f, 1f) {
-        {
-            setFillAfter(true);
-            setInterpolator(new DecelerateInterpolator());
-            setDuration(Resources.getSystem().getInteger(android.R.integer.config_shortAnimTime));
-        }
-    };
-    Animation DEFAULT_MASK_DISMISS_ANIMATION = new AlphaAnimation(1f, 0f) {
-        {
-            setFillAfter(true);
-            setInterpolator(new DecelerateInterpolator());
-            setDuration(Resources.getSystem().getInteger(android.R.integer.config_shortAnimTime));
-        }
-    };
 
     ShowMode mShowMode = ShowMode.SCREEN;
 
@@ -94,9 +80,14 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     Animator mShowAnimator;
     Animation mDismissAnimation;
     Animator mDismissAnimator;
+    boolean preventInitShowAnimation;
+    boolean preventInitDismissAnimation;
 
     Animation mMaskViewShowAnimation;
     Animation mMaskViewDismissAnimation;
+
+    boolean isDefaultMaskViewShowAnimation;
+    boolean isDefaultMaskViewDismissAnimation;
 
     long showDuration;
     long dismissDuration;
@@ -174,8 +165,18 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         cutoutSafeRect = new Rect();
         this.mPopupWindow = popupWindow;
         this.eventObserverMap = new WeakHashMap<>();
-        this.mMaskViewShowAnimation = DEFAULT_MASK_SHOW_ANIMATION;
-        this.mMaskViewDismissAnimation = DEFAULT_MASK_DISMISS_ANIMATION;
+        this.mMaskViewShowAnimation = new AlphaAnimation(0f, 1f);
+        this.mMaskViewDismissAnimation = new AlphaAnimation(1f, 0f);
+        this.mMaskViewShowAnimation.setFillAfter(true);
+        this.mMaskViewShowAnimation.setInterpolator(new DecelerateInterpolator());
+        this.mMaskViewShowAnimation.setDuration(Resources.getSystem()
+                .getInteger(android.R.integer.config_shortAnimTime));
+        isDefaultMaskViewShowAnimation=true;
+        this.mMaskViewDismissAnimation.setFillAfter(true);
+        this.mMaskViewDismissAnimation.setInterpolator(new DecelerateInterpolator());
+        this.mMaskViewDismissAnimation.setDuration(Resources.getSystem()
+                .getInteger(android.R.integer.config_shortAnimTime));
+        isDefaultMaskViewDismissAnimation=true;
     }
 
     void observerEvent(Object who, BasePopupEvent.EventObserver observer) {
@@ -252,9 +253,13 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     //region Animation
 
     void startShowAnimate(int width, int height) {
-        if (getShowAnimation(width, height) == null) {
-            getShowAnimator(width, height);
+        if (!preventInitShowAnimation) {
+            if (initShowAnimation(width, height) == null) {
+                initShowAnimator(width, height);
+            }
         }
+        //动画只初始化一次，后续请自行通过setAnimation/setAnimator实现
+        preventInitShowAnimation = true;
         //通知蒙层动画，此时duration已经计算完毕
         Message msg = Message.obtain();
         msg.what = BasePopupEvent.EVENT_SHOW;
@@ -270,9 +275,13 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     void startDismissAnimate(int width, int height) {
-        if (getDismissAnimation(width, height) == null) {
-            getDismissAnimator(width, height);
+        if (!preventInitDismissAnimation) {
+            if (initDismissAnimation(width, height) == null) {
+                initDismissAnimator(width, height);
+            }
         }
+        //动画只初始化一次，后续请自行通过setAnimation/setAnimator实现
+        preventInitDismissAnimation = true;
         if (mDismissAnimation != null) {
             mDismissAnimation.cancel();
             mPopupWindow.mDisplayAnimateView.startAnimation(mDismissAnimation);
@@ -291,7 +300,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         }
     }
 
-    Animation getShowAnimation(int width, int height) {
+    Animation initShowAnimation(int width, int height) {
         if (mShowAnimation == null) {
             mShowAnimation = mPopupWindow.onCreateShowAnimation(width, height);
             if (mShowAnimation != null) {
@@ -302,7 +311,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return mShowAnimation;
     }
 
-    Animator getShowAnimator(int width, int height) {
+    Animator initShowAnimator(int width, int height) {
         if (mShowAnimator == null) {
             mShowAnimator = mPopupWindow.onCreateShowAnimator(width, height);
             if (mShowAnimator != null) {
@@ -313,7 +322,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return mShowAnimator;
     }
 
-    Animation getDismissAnimation(int width, int height) {
+    Animation initDismissAnimation(int width, int height) {
         if (mDismissAnimation == null) {
             mDismissAnimation = mPopupWindow.onCreateDismissAnimation(width, height);
             if (mDismissAnimation != null) {
@@ -324,7 +333,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return mDismissAnimation;
     }
 
-    Animator getDismissAnimator(int width, int height) {
+    Animator initDismissAnimator(int width, int height) {
         if (mDismissAnimator == null) {
             mDismissAnimator = mPopupWindow.onCreateDismissAnimator(width, height);
             if (mDismissAnimator != null) {
@@ -862,10 +871,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return mPopupWindow.onBackPressed();
     }
 
-    boolean onOutSideTouch() {
-        return mPopupWindow.onOutSideTouch();
-    }
-
     void onShow() {
         prepareShow();
         if ((flag & CUSTOM_ON_UPDATE) != 0) return;
@@ -1020,9 +1025,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         }
     }
 
-    void dispatchOutSideEvent(MotionEvent event) {
+    void dispatchOutSideEvent(MotionEvent event, boolean touchInMask) {
         if (mPopupWindow != null) {
-            mPopupWindow.dispatchOutSideEvent(event);
+            mPopupWindow.dispatchOutSideEvent(event, touchInMask);
         }
     }
 
@@ -1186,22 +1191,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         if (eventObserverMap != null) {
             eventObserverMap.clear();
         }
-        if (mShowAnimation != null) {
-            mShowAnimation.cancel();
-            mShowAnimation.setAnimationListener(null);
-        }
-        if (mDismissAnimation != null) {
-            mDismissAnimation.cancel();
-            mDismissAnimation.setAnimationListener(null);
-        }
-        if (mShowAnimator != null) {
-            mShowAnimator.cancel();
-            mShowAnimator.removeAllListeners();
-        }
-        if (mDismissAnimator != null) {
-            mDismissAnimator.cancel();
-            mDismissAnimator.removeAllListeners();
-        }
+        PopupUiUtils.releaseAnimation(mShowAnimation, mDismissAnimation, mShowAnimator, mDismissAnimator, mMaskViewShowAnimation, mMaskViewDismissAnimation);
         if (mBlurOption != null) {
             mBlurOption.clear();
         }
@@ -1224,6 +1214,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         mDismissAnimation = null;
         mShowAnimator = null;
         mDismissAnimator = null;
+        mMaskViewShowAnimation = null;
+        mMaskViewDismissAnimation = null;
         eventObserverMap = null;
         mPopupWindow = null;
         mOnPopupWindowShowListener = null;
