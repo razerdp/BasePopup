@@ -5,11 +5,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import razerdp.basepopup.R;
@@ -19,6 +20,7 @@ import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.base.imageloader.ImageLoaderManager;
 import razerdp.demo.model.issue.IssueInfo;
 import razerdp.demo.ui.ActivityLauncher;
+import razerdp.demo.ui.photobrowser.PhotoBrowserImpl;
 import razerdp.demo.ui.photobrowser.PhotoBrowserProcessor;
 import razerdp.demo.utils.ActivityUtil;
 import razerdp.demo.utils.ButterKnifeUtil;
@@ -114,14 +116,15 @@ public class IssueHomeActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     if (mPhotoBrowserProcessor == null) {
-                        mPhotoBrowserProcessor = PhotoBrowserProcessor.with(data)
+                        mPhotoBrowserProcessor = PhotoBrowserProcessor.with(new PhotoBrowserImpl(data))
                                 .setExitViewProvider((from, exitPosition) -> {
-                                    InnerPicViewHolder holder = ToolUtil.cast(FillViewUtil.getHolder(mLayoutPic.getChildAt(exitPosition)), InnerPicViewHolder.class);
+                                    InnerPicViewHolder holder = ToolUtil.cast(FillViewUtil.getHolder(mLayoutPic
+                                            .getChildAt(exitPosition)), InnerPicViewHolder.class);
                                     return holder == null ? null : holder.ivIssuePreview;
                                 });
                     }
                     mPhotoBrowserProcessor
-                            .setPhotos(getData().pics)
+                            .setPhotos(PhotoBrowserImpl.fromList(getData().pics, null))
                             .fromView((ImageView) v)
                             .setStartPosition(position)
                             .start(ToolUtil.cast(ActivityUtil.getActivity(v.getContext()), ComponentActivity.class));

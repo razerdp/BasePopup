@@ -1,5 +1,7 @@
 package razerdp.demo.model.friendcircle;
 
+import android.util.Pair;
+
 import java.util.List;
 
 /**
@@ -11,7 +13,7 @@ public class FriendCircleInfo {
     public String name;
     public String avatar;
     public String content;
-    public List<String> pics;
+    public List<Pair<String, String>> pics;
     public boolean started;
 
 

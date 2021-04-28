@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SubsamplingScaleImageViewSharedTransition">
+        <attr name="imageViewScaleType" format="enum">
+            <enum name="fitCenter" value="0" />
+            <enum name="centerCrop" value="1" />
+        </attr>
+        <attr name="subsamplingImageViewScaleType" format="enum">
+            <enum name="fitCenter" value="0" />
+            <enum name="centerCrop" value="1" />
+        </attr>
+        <attr name="transitionDirection" format="enum">
+            <enum name="auto" value="0" />
+            <enum name="entering" value="1" />
+            <enum name="exiting" value="2" />
+        </attr>
+    </declare-styleable>
+</resources>

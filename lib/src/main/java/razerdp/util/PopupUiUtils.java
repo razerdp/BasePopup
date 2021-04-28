@@ -1,5 +1,6 @@
 package razerdp.util;
 
+import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 
 import androidx.annotation.NonNull;
 
@@ -48,7 +50,8 @@ public class PopupUiUtils {
             return true;
         }
         try {
-            return (act.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == 0;
+            return (act.getWindow()
+                    .getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == 0;
         } catch (Exception e) {
             PopupLog.e(e);
             return true;
@@ -170,7 +173,7 @@ public class PopupUiUtils {
     public static boolean isActivityFullScreen(Activity act) {
         if (act == null || act.getWindow() == null) return false;
         return (act.getWindow()
-                   .getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
+                .getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
 
     }
 
@@ -189,5 +192,30 @@ public class PopupUiUtils {
             gravity |= yDelta > 0 ? Gravity.BOTTOM : Gravity.TOP;
         }
         return gravity;
+    }
+
+    public static void releaseAnimation(Object... objects) {
+        if (objects == null) return;
+        for (Object object : objects) {
+            if (object instanceof Animation) {
+                releaseAnimationInternal((Animation) object);
+            }
+            if (object instanceof Animator) {
+                releaseAnimatorInternal((Animator) object);
+            }
+        }
+    }
+
+    static void releaseAnimationInternal(Animation animation) {
+        if (animation == null) return;
+        animation.cancel();
+        animation.setAnimationListener(null);
+
+    }
+
+    static void releaseAnimatorInternal(Animator animator) {
+        if (animator == null) return;
+        animator.cancel();
+        animator.removeAllListeners();
     }
 }

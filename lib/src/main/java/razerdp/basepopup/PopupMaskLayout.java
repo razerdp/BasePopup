@@ -2,6 +2,7 @@ package razerdp.basepopup;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.RectF;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -24,6 +25,7 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
     private BackgroundViewHolder mBackgroundViewHolder;
     private BasePopupHelper mPopupHelper;
     private int[] location = null;
+    private RectF maskRect;
 
     private PopupMaskLayout(Context context) {
         super(context);
@@ -40,20 +42,13 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
     PopupMaskLayout(Context context, BasePopupHelper helper) {
         this(context);
         init(context, helper);
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mPopupHelper.isOutSideDismiss()) {
-                    mPopupHelper.onOutSideTouch();
-                }
-            }
-        });
     }
 
 
     private void init(Context context, BasePopupHelper mHelper) {
         this.mPopupHelper = mHelper;
         location = null;
+        maskRect = new RectF();
         setLayoutAnimation(null);
         if (mHelper == null) {
             setBackgroundColor(Color.TRANSPARENT);
@@ -85,6 +80,7 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
             mBlurImageView.setCutoutY(location[1]);
             mBlurImageView.applyBlurOption(mPopupHelper.getBlurOption());
         }
+        maskRect.set(left, top, right, bottom);
         super.onLayout(changed, left, top, right, bottom);
     }
 
@@ -120,6 +116,7 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
         if (mBackgroundViewHolder != null) {
             mBackgroundViewHolder.handleAlignBackground(left, top, right, bottom);
         }
+        maskRect.set(left, top, right, bottom);
     }
 
     @Override
@@ -184,13 +181,11 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (mPopupHelper != null && mPopupHelper.isOutSideTouchable()) {
-            MotionEvent nEv = MotionEvent.obtain(ev);
+        if (mPopupHelper != null) {
             if (!mPopupHelper.isOverlayStatusbar()) {
-                nEv.offsetLocation(0, PopupUiUtils.getStatusBarHeight());
+                ev.offsetLocation(0, PopupUiUtils.getStatusBarHeight());
             }
-            mPopupHelper.dispatchOutSideEvent(nEv);
-            nEv.recycle();
+            mPopupHelper.dispatchOutSideEvent(ev, maskRect.contains(ev.getRawX(), ev.getRawY()));
         }
         return super.dispatchTouchEvent(ev);
     }
@@ -254,7 +249,7 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
                     ((mBackgroundView instanceof PopupBackgroundView) || mBackgroundView.getAnimation() == null)) {
                 if (mHelper.mMaskViewDismissAnimation != null) {
                     if (mHelper.isSyncMaskAnimationDuration()) {
-                        if (mHelper.dismissDuration > 0 && mHelper.mMaskViewDismissAnimation == mHelper.DEFAULT_MASK_DISMISS_ANIMATION) {
+                        if (mHelper.dismissDuration > 0 && mHelper.isDefaultMaskViewDismissAnimation) {
                             //当动画时间大于0，且没有设置过蒙层动画，则修改时间为动画时间+50ms
                             mHelper.mMaskViewDismissAnimation.setDuration(mHelper.dismissDuration + 50);
                         }
@@ -281,7 +276,7 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
                 //如果是自定义的backgroundview，同时有自己的动画，那就不使用我们的，而是使用开发者自定义的
                 if (mHelper.mMaskViewShowAnimation != null) {
                     if (mHelper.isSyncMaskAnimationDuration()) {
-                        if (mHelper.showDuration > 0 && mHelper.mMaskViewShowAnimation == mHelper.DEFAULT_MASK_SHOW_ANIMATION) {
+                        if (mHelper.showDuration > 0 && mHelper.isDefaultMaskViewShowAnimation) {
                             //当动画时间大于0，且没有设置过蒙层动画，则修改时间为动画时间+50ms
                             mHelper.mMaskViewShowAnimation.setDuration(mHelper.showDuration + 50);
                         }
