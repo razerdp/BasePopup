@@ -112,10 +112,15 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 **Candy dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97-%E5%8E%86%E5%8F%B2%E6%9B%B4%E6%96%B0)
 
-* **【Release】2.2.20** (2021/02/03)
-  * Please update to this version~
-  * Fix a measurement fetching problem when PopupDecorProxy measures multiple times[#389](https://github.com/razerdp/BasePopup/issues/389)
-  * Fix the problem that triggering requestLayout() after adapting keyboard causes touch judgment error[#390](https://github.com/razerdp/BasePopup/issues/390)
+* **【Release】2.2.30** (2021/04/28)
+  * 【Features】
+    * To address the requirements described in [issue#393](https://github.com/razerdp/BasePopup/issues/393), add two parameters to onOutSideTouch：
+        * `MotionEvent event`: Touch event
+        * `boolean touchInMask`: whether to click on the mask
+  * 【Optimise】
+    * onCreateXXXAnimation/onCreateXXXAnimator is now modified to be called only once before the display, and no further calls will be made.
+  * 【BugFixed】
+    * Fix a memory leak that could be caused by mask animations
 
 <br>
 

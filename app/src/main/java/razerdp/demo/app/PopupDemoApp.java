@@ -5,7 +5,6 @@ import android.text.TextUtils;
 
 import androidx.multidex.MultiDexApplication;
 
-import com.pgyersdk.crash.PgyCrashManager;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
