@@ -122,19 +122,15 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 **正在开发日志（Candy版本）请查看dev分支：** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97-%E5%8E%86%E5%8F%B2%E6%9B%B4%E6%96%B0)
 
-* **【Release】2.2.20** (2021/02/03)
-  * 请更新到该版本~
-  * 修复PopupDecorProxy多次测量时出现的测量取值问题[#389](https://github.com/razerdp/BasePopup/issues/389)
-  * 修复适配键盘后触发requestLayout()导致触摸判断错误的问题[#390](https://github.com/razerdp/BasePopup/issues/390)
-* **【Candy】2.2.30.210205** (2021/02/05)
+* **【Release】2.2.30** (2021/04/28)
+  * 【功能】
     * 针对[issue#393](https://github.com/razerdp/BasePopup/issues/393)所述需求，onOutSideTouch增加两个参数：
-        * MotionEvent event：触摸事件
-        * boolean touchInMask：是否点击在蒙层
-* **【Candy】2.2.30.0319** (2021/03/19)
+        * `MotionEvent event`：触摸事件
+        * `boolean touchInMask`：是否点击在蒙层
+  * 【优化】
     * onCreateXXXAnimation/onCreateXXXAnimator现在修改为只会在显示前调用一次，后续不再调用，如果需要切换动画，请通过setXXXAnimation/setXXXAnimator实现
-* **【Candy】2.2.30.0324** (2021/03/24)
+  * 【BugFixed】
     * 修复蒙层动画可能导致的内存泄漏问题
-
 
 <br>
 
