@@ -5,7 +5,6 @@ import android.text.TextUtils;
 
 import androidx.multidex.MultiDexApplication;
 
-import com.pgyersdk.crash.PgyCrashManager;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -37,7 +36,6 @@ public class PopupDemoApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        PgyCrashManager.register();
         GlideProgressManager manager = GlideProgressManager.init(ImageLoaderManager.getGlide(this), getImageOkHttpClient());
         BigImageViewer.initialize(manager);
         TestData.init();
@@ -84,7 +82,7 @@ public class PopupDemoApp extends MultiDexApplication {
         }
         for (Map.Entry<Integer, CheckFlagInfo> entry : map.entrySet()) {
             if (entry.getValue().size() > 1) {
-                PopupLog.e("checkFlag", entry.getValue());
+                PopupLog.i("checkFlag", entry.getValue());
             }
         }
     }
@@ -107,13 +105,14 @@ public class PopupDemoApp extends MultiDexApplication {
 
         @Override
         public String toString() {
-            return "重复flag:" + '\n' +
+            String builder = "重复flag:" + '\n' +
                     "names = {" +
                     TextUtils.join(" , ", names) +
                     " }" +
                     '\n' +
                     "value = " +
                     value;
+            return builder;
         }
     }
 }
