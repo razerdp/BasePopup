@@ -55,9 +55,8 @@
  - [Feature](#Feature)
  - [Precautions](#Precautions)
  - [Download](#Download)
- - [Quick start](#quick-start)
+ - [Document](#Document)
    - [BasePopup manual](https://www.yuque.com/razerdp/basepopup)
- - [Api(Wiki)](#api)
  - [ChangeLog](#changelog-historical-update)
    - [Historical update](https://www.yuque.com/razerdp/basepopup/uyrsxx)
  - [Preview](#Preview)
@@ -103,64 +102,25 @@ Please replace **{$latestVersion}** with the version shown in the Jcenter tab ab
 
 <br>
 
-### Quick start
+### Document
 
 Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/basepopup)
 
 <br>
 
-### Api
-
-**Link👉**[WIKI](https://github.com/razerdp/BasePopup/wiki)
-
-<br>
-
-
 ### ChangeLog ([Historical update](https://www.yuque.com/razerdp/basepopup/uyrsxx))
 
-**Candy dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
+**Candy dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97-%E5%8E%86%E5%8F%B2%E6%9B%B4%E6%96%B0)
 
-* **【Release】2.2.3**(2020/05/07)
-  * We have fixed the 2.2.2 series of problems and added some new features.
-  * **New features/methods added:**
-    * Added `setPopupGravityMode()`: You can set BasePopup alignment individually instead of always bringing the gravity params.
-    * Added `OnPopupWindowShowListener` interface: Notify this interface after BasePopup is displayed, when this method is called back, it means the popup window has been completed and ui has been displayed on the screen.
-    * Added `bindLifecycleOwner()` method: You can now freely bind your LifecycleOwner.
-    * Added `onPreShow()` method: call this method before BasePopup popup, if it returns **false**, it won't show.
-    * Added `onShowing()` method: Same as `OnPopupWindowShowListener`, but this is the protect method in BasePopup.
-    * Added `onPopupLayout()` method: If the popup is associated with an anchor View, the method will be called when BasePopup is in layout(). And return the position of BasePopup on the screen and the position of the anchor View on the screen respectively.
-    * Added `computeGravity()`: Equipped with `onPopupLayout()` callback to calculate the BasePopup center point's orientation at the anchor View.
-  * **Method of abandonment and replacement:**
-    * `BasePopupWindow#dismissWithOutAnimate()` is Deprecated，please use **dismiss(false)** instead.
-    * `BasePopupWindow#setPopupWindowFullScreen()` is Deprecated，please use **setOverlayStatusbar()** instead.
-    * `QuickPopupConfig#dismissOnOutSideTouch()` is Deprecated，please use **outSideDismiss()** instead.
-    * `QuickPopupConfig#allowInterceptTouchEvent()` is Deprecated，please use **outSideTouchable()** instead.
-  * **Optimisation:**
-    * Optimize the query of the DecorView, the original logic will cache the query of the DecorView, but the display error may be caused by the destruction or change of the DecorView host.
-    * The lowest supported version is down to Api 16.
-    * Abandon the reflective WindowManager approach, take the ContextWrapper proxy, no longer Worried about experiencing a black ash list block ~ thanks [@xchengDroid](https://github.com/xchengDroid).
-  * **Bug fixes:**
-    * Fix offsets in event delivery when overriding the status bar
-    * Fix `isShowing()` with NullPointerException.[#267](https://github.com/razerdp/BasePopup/issues/267)
-    * Fix position error when associated with Anchor in case of `setOverlayStatusbar(false)`.
-    * Fix memory leaks that **might** exist due to some references not being empty (no leaks were actually detected).
-    * Fix the problem that the input method of Activity popup is displayed under BasePopup when BasePopup is showing.
-    * Fix the problem of error in judging full-screen Activity.
-    * Fix the missing QuickPopupConfig configuration issue.
-    * Fix the problem of invoking dismiss() directly when there is no popup window, and then call showPopupWindow() for the first time when it is invalid.
-    * fixed issue:[#224](https://github.com/razerdp/BasePopup/issues/224)
-
-* **【Release】2.2.2.2**(2020/03/01)
-  * Fix a serious problem that may cause a crash
-    * Reappearance: Finishing the activity when the dismiss animation is not completed will cause the null pointer to crash
-    * This issue cannot be **try & catch** in previous versions
-  * Fixed an issue that did not force dismiss when finished
-  * Fixed some flags wrong
-  * Fix the problem that the position of outsideTouch deviates in non-full screen
-  * **I feel very sorry, I did not find such errors for my own reasons. After receiving the feedback, I immediately checked all similar places and fixed them one by one. This time the reconfiguration cycle is longer, involving more plates, and the test cycle It is also long, but there are still omissions due to limited personal energy. I hope that I can get your support and try to report any problems during the Candy test period to reduce such problems.**
-
-* **【Release】2.2.2.1**(2020/02/26)
-  * Fix the problem that the input method can not pop up again automatically.
+* **【Release】2.2.30** (2021/04/28)
+  * 【Features】
+    * To address the requirements described in [issue#393](https://github.com/razerdp/BasePopup/issues/393), add two parameters to onOutSideTouch：
+        * `MotionEvent event`: Touch event
+        * `boolean touchInMask`: whether to click on the mask
+  * 【Optimise】
+    * onCreateXXXAnimation/onCreateXXXAnimator is now modified to be called only once before the display, and no further calls will be made.
+  * 【BugFixed】
+    * Fix a memory leak that could be caused by mask animations
 
 <br>
 
@@ -190,3 +150,8 @@ Please refer to [**Basepopup manual: Frequently QA**](https://www.yuque.com/raze
 ### License
 
 [Apache-2.0](./LICENSE)
+
+<p align="center">
+  Visit Count（from 2020/08/21）<br>
+  <img src="https://profile-counter.glitch.me/razerdp-basepopup-en/count.svg" />
+</p>
