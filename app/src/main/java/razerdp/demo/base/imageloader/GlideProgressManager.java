@@ -1,19 +1,15 @@
 
 package razerdp.demo.base.imageloader;
 
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.text.TextUtils;
-
-import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.ConnectionPool;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
@@ -39,10 +37,7 @@ import okio.Okio;
 import okio.Source;
 import razerdp.demo.app.AppContext;
 import razerdp.demo.utils.RandomUtil;
-import razerdp.demo.widget.bigimageviewer.loader.ImageLoader;
-import razerdp.demo.widget.bigimageviewer.loader.glide.GlideLoaderException;
-import razerdp.demo.widget.bigimageviewer.loader.glide.PrefetchTarget;
-import razerdp.demo.widget.bigimageviewer.metadata.ImageInfoExtractor;
+import razerdp.demo.widget.bigimageviewer.loader.glide.ImageDownloadTarget;
 import razerdp.util.log.PopupLog;
 
 /**
@@ -50,12 +45,12 @@ import razerdp.util.log.PopupLog;
  * <p>
  * Glide加载进度
  */
-public class GlideProgressManager implements ImageLoader {
+public class GlideProgressManager {
     private static volatile GlideProgressManager sInstance;
     private final ConcurrentHashMap<Integer, ImageDownloadTarget> mRequestTargetMap = new ConcurrentHashMap<>();
     protected final RequestManager mRequestManager;
 
-    public GlideProgressManager(RequestManager mRequestManager) {
+    GlideProgressManager(RequestManager mRequestManager) {
         this.mRequestManager = mRequestManager;
     }
 
@@ -80,19 +75,26 @@ public class GlideProgressManager implements ImageLoader {
 
     public static GlideProgressManager init(Glide glide, OkHttpClient okHttpClient) {
         if (sInstance == null) {
+
+        }
+        return sInstance;
+    }
+
+    public static GlideProgressManager getsInstance() {
+        if (sInstance == null) {
             synchronized (GlideProgressManager.class) {
                 if (sInstance == null) {
-                    OkHttpClient.Builder builder;
-                    if (okHttpClient != null) {
-                        builder = okHttpClient.newBuilder();
-                    } else {
-                        builder = new OkHttpClient.Builder();
-                    }
-                    builder.addNetworkInterceptor(createInterceptor(new DispatchingProgressListener()));
-                    glide.getRegistry().replace(GlideUrl.class, InputStream.class,
-                            new OkHttpUrlLoader.Factory(builder.build()));
-                    sInstance = new GlideProgressManager(Glide
-                            .with(AppContext.getAppContext()));
+                    OkHttpClient.Builder builder = new OkHttpClient.Builder();
+                    builder.connectionPool(new ConnectionPool(20, 5, TimeUnit.MINUTES))
+                            .connectTimeout(10, TimeUnit.SECONDS)
+                            .readTimeout(10, TimeUnit.SECONDS)
+                            .writeTimeout(10, TimeUnit.SECONDS)
+                            .addNetworkInterceptor(createInterceptor(new DispatchingProgressListener()));
+                    OkHttpClient client = builder.build();
+                    client.dispatcher().setMaxRequestsPerHost(20);
+                    Glide.get(AppContext.getAppContext()).getRegistry()
+                            .replace(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(client));
+                    sInstance = new GlideProgressManager(Glide.with(AppContext.getAppContext()));
                 }
             }
         }
@@ -107,39 +109,7 @@ public class GlideProgressManager implements ImageLoader {
         DispatchingProgressListener.expect(url, listener);
     }
 
-    @Override
-    public void loadImage(int requestId, Uri uri, Callback callback) {
-        ImageDownloadTarget target = new ImageDownloadTarget(uri.toString()) {
-            @Override
-            public void onResourceReady(@NonNull File resource,
-                                        Transition<? super File> transition) {
-                super.onResourceReady(resource, transition);
-                // we don't need delete this image file, so it behaves like cache hit
-                callback.onCacheHit(ImageInfoExtractor.getImageType(resource), resource);
-                callback.onSuccess(resource);
-            }
-
-            @Override
-            public void onLoadFailed(final Drawable errorDrawable) {
-                super.onLoadFailed(errorDrawable);
-                callback.onFail(new GlideLoaderException(errorDrawable));
-            }
-
-            @Override
-            public void onDownloadStart() {
-                callback.onStart();
-            }
-
-            @Override
-            public void onProgress(int progress) {
-                callback.onProgress(progress);
-            }
-
-            @Override
-            public void onDownloadFinish() {
-                callback.onFinish();
-            }
-        };
+    public void loadImage(int requestId, Uri uri, ImageDownloadTarget target) {
         clearTarget(requestId);
         saveTarget(requestId, target);
 
@@ -152,23 +122,6 @@ public class GlideProgressManager implements ImageLoader {
                 .downloadOnly()
                 .load(uri)
                 .into(target);
-    }
-
-    @Override
-    public void prefetch(Uri uri) {
-        downloadImageInto(uri, new PrefetchTarget());
-    }
-
-    @Override
-    public void cancel(int requestId) {
-        clearTarget(requestId);
-    }
-
-    @Override
-    public void cancelAll() {
-        for (Integer key : mRequestTargetMap.keySet()) {
-            cancel(key);
-        }
     }
 
     private void saveTarget(int requestId, ImageDownloadTarget target) {

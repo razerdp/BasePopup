@@ -11,10 +11,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.SharedElementCallback;
 import androidx.core.view.ViewCompat;
 
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-
-import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import razerdp.basepopup.R;
@@ -23,8 +21,7 @@ import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.utils.ToolUtil;
 import razerdp.demo.utils.UIHelper;
 import razerdp.demo.utils.ViewUtil;
-import razerdp.demo.widget.bigimageviewer.indicator.CircleProgressIndicator;
-import razerdp.demo.widget.bigimageviewer.loader.ImageLoader;
+import razerdp.demo.widget.bigimageviewer.view.ImageLoadCallback;
 import razerdp.demo.widget.bigimageviewer.view.ImageViewer;
 import razerdp.demo.widget.viewpager.BaseCachedViewPagerAdapter;
 import razerdp.demo.widget.viewpager.HackyViewPager;
@@ -80,6 +77,15 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
 
         ActivityCompat.setEnterSharedElementCallback(this, new SharedElementCallback() {
             @Override
+            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                super.onMapSharedElements(names, sharedElements);
+                if (mAdapter != null && mAdapter.curView != null) {
+                    sharedElements.clear();
+                    sharedElements.put(PhotoBrowserProcessor.TRANSITION_NAME, mAdapter.curView);
+                }
+            }
+
+            @Override
             public void onSharedElementStart(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
                 super.onSharedElementStart(sharedElementNames, sharedElements, sharedElementSnapshots);
                 viewBackground.animate().alpha(1f).start();
@@ -112,45 +118,29 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
     class InnerAdapter extends BaseCachedViewPagerAdapter<ImageViewer> {
         View curView;
 
-        private ImageLoader.Callback callback = new ImageLoaderCallbackAdapter() {
+        private ImageLoadCallback callback = new ImageLoadCallback() {
             @Override
-            public void onCacheHit(int imageType, File image) {
-                super.onCacheHit(imageType, image);
-                supportStartPostponedEnterTransition();
-            }
-
-            @Override
-            public void onCacheMiss(int imageType, File image) {
-                super.onCacheMiss(imageType, image);
+            public void onShowThumbnail() {
                 supportStartPostponedEnterTransition();
             }
 
             @Override
             public void onStart() {
-                super.onStart();
+
+            }
+
+            @Override
+            public void onSuccess() {
                 supportStartPostponedEnterTransition();
             }
 
             @Override
-            public void onProgress(int progress) {
-                super.onProgress(progress);
+            public void onError() {
+                supportStartPostponedEnterTransition();
             }
 
             @Override
             public void onFinish() {
-                super.onFinish();
-                supportStartPostponedEnterTransition();
-            }
-
-            @Override
-            public void onSuccess(File image) {
-                super.onSuccess(image);
-                supportStartPostponedEnterTransition();
-            }
-
-            @Override
-            public void onFail(Exception error) {
-                super.onFail(error);
                 supportStartPostponedEnterTransition();
             }
         };
@@ -168,10 +158,8 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
         @Override
         protected ImageViewer onCreateView(ViewGroup container, int position) {
             ImageViewer result = (ImageViewer) ViewUtil.inflate(self(), R.layout.item_image_browser, container, false);
-            result.setFailureImage(UIHelper.getDrawable(R.drawable.ic_error));
-            result.setImageViewLoader(new AppImageLoader());
-            result.setProgressIndicator(new CircleProgressIndicator());
-            result.setImageLoaderCallback(callback);
+            result.setErrorDrawable(UIHelper.getDrawable(R.drawable.ic_error));
+            result.setImageLoadCallback(callback);
             result.setOnClickListener(v -> {
                 supportFinishAfterTransition();
             });
@@ -200,7 +188,7 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
             String thumb_url = data.photos.get(position).getThumb();
             Uri original = TextUtils.isEmpty(photo) ? Uri.EMPTY : Uri.parse(photo);
             Uri thumb = TextUtils.isEmpty(thumb_url) ? original : Uri.parse(thumb_url);
-            view.showImage(thumb, original);
+            view.loadImage(original, thumb);
         }
 
     }
