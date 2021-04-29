@@ -1,111 +1,134 @@
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: "com.jfrog.bintray"
-
-def siteUrl = 'https://github.com/razerdp/BasePopup'
-def gitUrl = 'https://github.com/razerdp/BasePopup.git'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 
-group = rootProject.ext.group
-version = rootProject.ext.versionName
+File secretPropsFile = project.rootProject.file('local.properties')
+if (secretPropsFile.exists()) {
+    println "Found secret props file, loading props"
+    Properties p = new Properties()
+    p.load(new FileInputStream(secretPropsFile))
+    p.each { name, value ->
+        ext[name] = value
+    }
+}
 
+def getLocalProperty(key) {
+    return ext[key]
+}
 
-install {
-    repositories.mavenInstaller {
-        pom.artifactId = rootProject.ext.candy ? project.ARTIFACT_CANDY_ID : project.ARTIFACT_ID
-        pom {
-            project {
-                packaging 'aar'
-                name rootProject.ext.candy ? project.ARTIFACT_CANDY_ID : project.ARTIFACT_ID
-                description 'Android下打造通用便捷的PopupWindow'
-                url siteUrl
+def isReleaseBuild() {
+    return !rootProject.ext.candy
+}
 
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
+def getReleaseRepositoryUrl() {
+    return "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+}
 
-                developers {
-                    developer {
-                        id 'razerdp'
-                        name 'razerdp'
-                        email 'razerdp123@gmail.com'
-                    }
-                }
+def getSnapshotRepositoryUrl() {
+    return "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+}
 
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-                }
+def configurePom(pom) {
+    pom.groupId = rootProject.ext.group
+    pom.version = rootProject.ext.versionName
 
-                if (project.IGNORE_DEPENDENCE) {
-                    pom.withXml {
-                        asNode().dependencies.'*'.each {
-                            it.delete
-                        }
-                    }
-                }
+    pom.project {
+        name = rootProject.ext.pkg_name
+        packaging = 'aar'
+        description = 'Android下打造通用便捷的PopupWindow'
+        url 'https://github.com/razerdp/BasePopup'
+
+        scm {
+            url = 'https://github.com/razerdp/BasePopup'
+            connection = 'https://github.com/razerdp/BasePopup.git'
+            developerConnection = 'https://github.com/razerdp/BasePopup.git'
+        }
+
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            }
+        }
+
+        developers {
+            developer {
+                id 'razerdp'
+                name 'razerdp'
+                email 'razerdp123@gmail.com'
+            }
+        }
+    }
+    pom.withXml {
+        asNode().dependencies.'*'.each {
+            if (it.scope.text() == 'test') {
+                it.delete
             }
         }
     }
 }
 
+afterEvaluate { project ->
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    failOnError false
-}
+                repository(url: isReleaseBuild() ? getReleaseRepositoryUrl() : getSnapshotRepositoryUrl()) {
+                    authentication(userName: getLocalProperty('ossrhUsername'), password: getLocalProperty('ossrhPassword'))
+                }
+                configurePom(pom)
+            }
+        }
+    }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
+    signing {
+        required { gradle.taskGraph.hasTask("uploadArchives") }
+        sign configurations.archives
+    }
 
-javadoc {
-    options {
-        encoding "UTF-8"
-        charSet 'UTF-8'
-        author true
-        version true
-        links "https://developer.android.google.cn/reference/"
-        addStringOption('Xdoclint:none', '-quiet')
+    task androidJavadocs(type: Javadoc) {
+        source = android.sourceSets.main.java.srcDirs
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    }
+
+    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+        classifier = 'javadoc'
+        from androidJavadocs.destinationDir
+    }
+
+    task androidSourcesJar(type: Jar) {
+        classifier = 'sources'
+        from android.sourceSets.main.java.sourceFiles
+    }
+    allprojects {
+        tasks.withType(Javadoc) {
+            options {
+                encoding "UTF-8"
+                charSet 'UTF-8'
+                author true
+                version true
+                links "https://developer.android.google.cn/reference/"
+            }
+        }
+    }
+
+    if (JavaVersion.current().isJava8Compatible()) {
+        allprojects {
+            tasks.withType(Javadoc) {
+                options.addStringOption('Xdoclint:none', '-quiet')
+            }
+        }
+    }
+    if (JavaVersion.current().isJava9Compatible()) {
+        allprojects {
+            tasks.withType(Javadoc) {
+                options.addBooleanOption('html5', true)
+            }
+        }
+    }
+    artifacts {
+        archives androidSourcesJar
+        archives androidJavadocsJar
     }
 }
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-    configurations = ['archives']
-    publish = true
-    override = true
-
-    pkg {
-        repo = "maven"
-        name = rootProject.ext.candy ? project.ARTIFACT_CANDY_ID : project.ARTIFACT_ID
-        userOrg = 'razerdp'
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        issueTrackerUrl = siteUrl + '/issues'
-        labels = ['popup', 'popupwindow', 'basepopup', 'dialog']
-        licenses = ["Apache-2.0"]
-        publicDownloadNumbers = true
-        publish = true
-    }
-}
-
-
-

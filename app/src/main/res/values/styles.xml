@@ -73,7 +73,7 @@
         <item name="android:background">@color/common_window_background</item>
     </style>
 
-    <style name="PhotoBrowser" parent="AppTheme" />
+    <style name="PhotoBrowser" parent="AppTheme"/>
 
 
     <style name="BaseDialog" parent="@android:style/Theme.Dialog">
