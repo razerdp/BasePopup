@@ -30,6 +30,7 @@ def getSnapshotRepositoryUrl() {
 
 def configurePom(pom) {
     pom.groupId = rootProject.ext.group
+    pom.artifactId = rootProject.ext.pkg_name
     pom.version = rootProject.ext.versionName
 
     pom.project {

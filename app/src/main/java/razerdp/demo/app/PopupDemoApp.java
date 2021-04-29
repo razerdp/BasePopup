@@ -5,7 +5,6 @@ import android.text.TextUtils;
 
 import androidx.multidex.MultiDexApplication;
 
-
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,7 +19,6 @@ import razerdp.basepopup.BasePopupWindow;
 import razerdp.demo.base.TestData;
 import razerdp.demo.base.imageloader.GlideProgressManager;
 import razerdp.demo.base.imageloader.ImageLoaderManager;
-import razerdp.demo.widget.bigimageviewer.BigImageViewer;
 import razerdp.util.log.PopupLog;
 
 /**
@@ -36,8 +34,6 @@ public class PopupDemoApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        GlideProgressManager manager = GlideProgressManager.init(ImageLoaderManager.getGlide(this), getImageOkHttpClient());
-        BigImageViewer.initialize(manager);
         TestData.init();
         //检查popup flag
         new Thread(() -> {
