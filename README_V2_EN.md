@@ -7,20 +7,20 @@
 <table align="center">
         <tr>
             <th align="center" width="9999">Release</th>
-            <th align="center" width="9999">Candy</th>
+            <th align="center" width="9999">Snapshot</th>
             <th align="center" width="9999">License</th>
 			<th align="center" width="9999">Api</th>
 			<th align="center" width="9999">Author</th>
         </tr>
            <tr>
                     <td align="center">
-        				<a href ="https://bintray.com/razerdp/maven/BasePopup/_latestVersion">
-        					<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg"/>
+        				<a href ="https://search.maven.org/artifact/io.github.razerdp/BasePopup">
+        					<img src="https://img.shields.io/maven-central/v/io.github.razerdp/BasePopup"/>
         				</a>
         			</td>
         			<td align="center">
-        				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion">
-        					<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg"/>
+        				<a href = "https://s01.oss.sonatype.org/content/repositories/snapshots/io/github/razerdp/BasePopup/">
+        					<img src="https://img.shields.io/nexus/s/io.github.razerdp/BasePopup?server=https%3A%2F%2Fs01.oss.sonatype.org%2F"/>
         				</a>
         			</td>
         			<td align="center">
@@ -44,7 +44,6 @@
         			</td>
         		</tr>
 </table>
-
 
 </div>
 
@@ -85,10 +84,10 @@
 
   - **Please be sure to read this README carefully. Please check the changelog for each version upgrade, which can reduce unnecessary detours for you.**
   - **Support is no longer supported in version 2.2.2, it is recommended that you upgrade to AndroidX as soon as possible.**
-  - **Please pay attention on the dependence version, the Release version is a stable version, and Candy is a preview version.**
-    - Release version: Generally published to Release after repeated verification of the Candy version. If you have higher stability requirements, please use the Release version.
-    - Candy version: new features, issue fixes will be published  to the Candy version, Candy version is updated more frequently, but usually has new features, if you like to test new features and stability requirements are not high, please use the Candy version.
-    - **Switching between Release and Candy versions may cause Build to fail. At this time, you can clean Project.**
+  - **Please pay attention on the dependence version, the Release version is a stable version, and Snapshot is a preview version.**
+    - Release version: Generally published to Release after repeated verification of the Snapshot version. If you have higher stability requirements, please use the Release version.
+    - Snapshot version: new features, issue fixes will be published  to the Snapshot version, Snapshot version is updated more frequently, but usually has new features, if you like to test new features and stability requirements are not high, please use the Snapshot version.
+    - **Switching between Release and Snapshot versions may cause Build to fail. At this time, you can clean Project.**
 
 <br>
 
@@ -96,10 +95,10 @@
 
 Please replace **{$latestVersion}** with the version shown in the Jcenter tab above.
 
-**Support is no longer supported in version 2.2.2, it is recommended that you upgrade to AndroidX as soon as possible.**
+**Since JCenter is no longer in service, starting with version 2.3, this library will be migrated to Maven with a new dependency groupId of [io.github.razerdp]**
 
- - **Release：** `implementation 'com.github.razerdp:BasePopup:{$latestVersion}'`
- - **Candy：** `implementation 'com.github.razerdp:BasePopup_Candy:{$latestVersion}'`
+ - **Release：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion}'`
+ - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion_for_snapshot}'`
 
 <br>
 
@@ -118,49 +117,10 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 ### ChangeLog ([Historical update](https://www.yuque.com/razerdp/basepopup/uyrsxx))
 
-**Candy dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
+**Snapshot dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **【Release】2.2.3**(2020/05/07)
-  * We have fixed the 2.2.2 series of problems and added some new features.
-  * **New features/methods added:**
-    * Added `setPopupGravityMode()`: You can set BasePopup alignment individually instead of always bringing the gravity params.
-    * Added `OnPopupWindowShowListener` interface: Notify this interface after BasePopup is displayed, when this method is called back, it means the popup window has been completed and ui has been displayed on the screen.
-    * Added `bindLifecycleOwner()` method: You can now freely bind your LifecycleOwner.
-    * Added `onPreShow()` method: call this method before BasePopup popup, if it returns **false**, it won't show.
-    * Added `onShowing()` method: Same as `OnPopupWindowShowListener`, but this is the protect method in BasePopup.
-    * Added `onPopupLayout()` method: If the popup is associated with an anchor View, the method will be called when BasePopup is in layout(). And return the position of BasePopup on the screen and the position of the anchor View on the screen respectively.
-    * Added `computeGravity()`: Equipped with `onPopupLayout()` callback to calculate the BasePopup center point's orientation at the anchor View.
-  * **Method of abandonment and replacement:**
-    * `BasePopupWindow#dismissWithOutAnimate()` is Deprecated，please use **dismiss(false)** instead.
-    * `BasePopupWindow#setPopupWindowFullScreen()` is Deprecated，please use **setOverlayStatusbar()** instead.
-    * `QuickPopupConfig#dismissOnOutSideTouch()` is Deprecated，please use **outSideDismiss()** instead.
-    * `QuickPopupConfig#allowInterceptTouchEvent()` is Deprecated，please use **outSideTouchable()** instead.
-  * **Optimisation:**
-    * Optimize the query of the DecorView, the original logic will cache the query of the DecorView, but the display error may be caused by the destruction or change of the DecorView host.
-    * The lowest supported version is down to Api 16.
-    * Abandon the reflective WindowManager approach, take the ContextWrapper proxy, no longer Worried about experiencing a black ash list block ~ thanks [@xchengDroid](https://github.com/xchengDroid).
-  * **Bug fixes:**
-    * Fix offsets in event delivery when overriding the status bar
-    * Fix `isShowing()` with NullPointerException.[#267](https://github.com/razerdp/BasePopup/issues/267)
-    * Fix position error when associated with Anchor in case of `setOverlayStatusbar(false)`.
-    * Fix memory leaks that **might** exist due to some references not being empty (no leaks were actually detected).
-    * Fix the problem that the input method of Activity popup is displayed under BasePopup when BasePopup is showing.
-    * Fix the problem of error in judging full-screen Activity.
-    * Fix the missing QuickPopupConfig configuration issue.
-    * Fix the problem of invoking dismiss() directly when there is no popup window, and then call showPopupWindow() for the first time when it is invalid.
-    * fixed issue:[#224](https://github.com/razerdp/BasePopup/issues/224)
-
-* **【Release】2.2.2.2**(2020/03/01)
-  * Fix a serious problem that may cause a crash
-    * Reappearance: Finishing the activity when the dismiss animation is not completed will cause the null pointer to crash
-    * This issue cannot be **try & catch** in previous versions
-  * Fixed an issue that did not force dismiss when finished
-  * Fixed some flags wrong
-  * Fix the problem that the position of outsideTouch deviates in non-full screen
-  * **I feel very sorry, I did not find such errors for my own reasons. After receiving the feedback, I immediately checked all similar places and fixed them one by one. This time the reconfiguration cycle is longer, involving more plates, and the test cycle It is also long, but there are still omissions due to limited personal energy. I hope that I can get your support and try to report any problems during the Candy test period to reduce such problems.**
-
-* **【Release】2.2.2.1**(2020/02/26)
-  * Fix the problem that the input method can not pop up again automatically.
+* **【Snapshot】2.3.0** (2021/04/30)
+    * Migration to maven central
 
 <br>
 

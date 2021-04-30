@@ -15,7 +15,7 @@
            <tr>
                     <td align="center">
         				<a href ="https://search.maven.org/artifact/io.github.razerdp/BasePopup">
-        					<img src="https://maven-badges.herokuapp.com/maven-central/io.github.razerdp/BasePopup/badge.svg"/>
+        					<img src="https://img.shields.io/maven-central/v/io.github.razerdp/BasePopup"/>
         				</a>
         			</td>
         			<td align="center">
@@ -100,7 +100,7 @@
 **由于JCenter已经停止服务，自2.3版本开始，本库将迁移到Maven，新的依赖groupId为 【io.github.razerdp】**
 
  - **Release：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion}'`
- - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion}'`
+ - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion_for_snapshot}'`
 
 <br>
 
