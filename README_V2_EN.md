@@ -92,7 +92,7 @@
 
 ### Download
 
-Please replace **{$latestVersion}** with the version shown in the Jcenter tab above.
+Please replace **{$latestVersion}** with the version shown in the Jcenter tab above.(eg. release:2.3.0 / snapshot:2.3.1-SNAPSHOT)
 
 **Since JCenter is no longer in service, starting with version 2.3, this library will be migrated to Maven with a new dependency groupId of [io.github.razerdp]**
 

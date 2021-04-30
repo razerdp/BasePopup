@@ -99,7 +99,7 @@
 
 ### 环境依赖
 
-请把下述 **{$latestVersion}** 替换为上面表格中对应的版本。
+请把下述 **{$latestVersion}** 替换为上面表格中对应的版本（eg. release:2.3.0 / snapshot:2.3.1-SNAPSHOT）。
 
 **由于JCenter已经停止服务，自2.3版本开始，本库将迁移到Maven，新的依赖groupId为 【io.github.razerdp】**
 
