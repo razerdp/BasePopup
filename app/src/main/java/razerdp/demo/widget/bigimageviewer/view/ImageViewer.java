@@ -66,13 +66,14 @@ public class ImageViewer extends FrameLayout implements View.OnClickListener {
     private CircleProgressView mProgressView;
     private OnClickListener mOnClickListener;
     private ImageLoadCallback cb;
-    private ImageLoadCallback internalCb;
 
     private View showingView;
 
     private Drawable mErrorDrawable;
 
     private boolean inLarge = false;
+
+    Runnable showLoadingRunnable;
 
     public ImageViewer(@NonNull Context context) {
         this(context, null);
