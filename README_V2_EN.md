@@ -7,20 +7,20 @@
 <table align="center">
         <tr>
             <th align="center" width="9999">Release</th>
-            <th align="center" width="9999">Candy</th>
+            <th align="center" width="9999">Snapshot</th>
             <th align="center" width="9999">License</th>
 			<th align="center" width="9999">Api</th>
 			<th align="center" width="9999">Author</th>
         </tr>
            <tr>
                     <td align="center">
-        				<a href ="https://bintray.com/razerdp/maven/BasePopup/_latestVersion">
-        					<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg"/>
+        				<a href ="https://search.maven.org/artifact/io.github.razerdp/BasePopup">
+        					<img src="https://img.shields.io/maven-central/v/io.github.razerdp/BasePopup"/>
         				</a>
         			</td>
         			<td align="center">
-        				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion">
-        					<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg"/>
+        				<a href = "https://s01.oss.sonatype.org/content/repositories/snapshots/io/github/razerdp/BasePopup/">
+        					<img src="https://img.shields.io/nexus/s/io.github.razerdp/BasePopup?server=https%3A%2F%2Fs01.oss.sonatype.org%2F"/>
         				</a>
         			</td>
         			<td align="center">
@@ -44,7 +44,6 @@
         			</td>
         		</tr>
 </table>
-
 
 </div>
 
@@ -84,10 +83,10 @@
 
   - **Please be sure to read this README carefully. Please check the changelog for each version upgrade, which can reduce unnecessary detours for you.**
   - **Support is no longer supported in version 2.2.2, it is recommended that you upgrade to AndroidX as soon as possible.**
-  - **Please pay attention on the dependence version, the Release version is a stable version, and Candy is a preview version.**
-    - Release version: Generally published to Release after repeated verification of the Candy version. If you have higher stability requirements, please use the Release version.
-    - Candy version: new features, issue fixes will be published  to the Candy version, Candy version is updated more frequently, but usually has new features, if you like to test new features and stability requirements are not high, please use the Candy version.
-    - **Switching between Release and Candy versions may cause Build to fail. At this time, you can clean Project.**
+  - **Please pay attention on the dependence version, the Release version is a stable version, and Snapshot is a preview version.**
+    - Release version: Generally published to Release after repeated verification of the Snapshot version. If you have higher stability requirements, please use the Release version.
+    - Snapshot version: new features, issue fixes will be published  to the Snapshot version, Snapshot version is updated more frequently, but usually has new features, if you like to test new features and stability requirements are not high, please use the Snapshot version.
+    - **Switching between Release and Snapshot versions may cause Build to fail. At this time, you can clean Project.**
 
 <br>
 
@@ -95,10 +94,10 @@
 
 Please replace **{$latestVersion}** with the version shown in the Jcenter tab above.
 
-**Support is no longer supported in version 2.2.2, it is recommended that you upgrade to AndroidX as soon as possible.**
+**Since JCenter is no longer in service, starting with version 2.3, this library will be migrated to Maven with a new dependency groupId of [io.github.razerdp]**
 
- - **Release：** `implementation 'com.github.razerdp:BasePopup:{$latestVersion}'`
- - **Candy：** `implementation 'com.github.razerdp:BasePopup_Candy:{$latestVersion}'`
+ - **Release：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion}'`
+ - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion_for_snapshot}'`
 
 <br>
 
@@ -110,17 +109,10 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 ### ChangeLog ([Historical update](https://www.yuque.com/razerdp/basepopup/uyrsxx))
 
-**Candy dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97-%E5%8E%86%E5%8F%B2%E6%9B%B4%E6%96%B0)
+**Snapshot dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **【Release】2.2.30** (2021/04/28)
-  * 【Features】
-    * To address the requirements described in [issue#393](https://github.com/razerdp/BasePopup/issues/393), add two parameters to onOutSideTouch：
-        * `MotionEvent event`: Touch event
-        * `boolean touchInMask`: whether to click on the mask
-  * 【Optimise】
-    * onCreateXXXAnimation/onCreateXXXAnimator is now modified to be called only once before the display, and no further calls will be made.
-  * 【BugFixed】
-    * Fix a memory leak that could be caused by mask animations
+* **【Snapshot】2.3.0** (2021/04/30)
+    * Migration to maven central
 
 <br>
 
