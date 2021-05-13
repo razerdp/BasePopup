@@ -115,7 +115,7 @@ allprojects {
 
  - **Release：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion}'`
     - e.g.  `implementation 'io.github.razerdp:BasePopup:2.3.0'`
- - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion_for_snapshot}'`
+ - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion_for_snapshot}-SNAPSHOT'`
     - e.g. `implementation 'io.github.razerdp:BasePopup:2.3.2-SNAPSHOT'`
 
 <br>
