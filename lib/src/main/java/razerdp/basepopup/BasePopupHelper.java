@@ -171,12 +171,12 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         this.mMaskViewShowAnimation.setInterpolator(new DecelerateInterpolator());
         this.mMaskViewShowAnimation.setDuration(Resources.getSystem()
                 .getInteger(android.R.integer.config_shortAnimTime));
-        isDefaultMaskViewShowAnimation=true;
+        isDefaultMaskViewShowAnimation = true;
         this.mMaskViewDismissAnimation.setFillAfter(true);
         this.mMaskViewDismissAnimation.setInterpolator(new DecelerateInterpolator());
         this.mMaskViewDismissAnimation.setDuration(Resources.getSystem()
                 .getInteger(android.R.integer.config_shortAnimTime));
-        isDefaultMaskViewDismissAnimation=true;
+        isDefaultMaskViewDismissAnimation = true;
     }
 
     void observerEvent(Object who, BasePopupEvent.EventObserver observer) {
@@ -1014,15 +1014,11 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     void update(View v, boolean positionMode) {
         if (!mPopupWindow.isShowing() || mPopupWindow.mContentView == null) return;
+        if (v == null && mShowInfo != null) {
+            v = mShowInfo.mAnchorView;
+        }
         prepare(v, positionMode);
         mPopupWindow.mPopupWindowProxy.update();
-    }
-
-    void onUpdate() {
-        if (mShowInfo != null) {
-            prepare(mShowInfo.mAnchorView == null ? null : mShowInfo.mAnchorView,
-                    mShowInfo.positionMode);
-        }
     }
 
     void dispatchOutSideEvent(MotionEvent event, boolean touchInMask) {
