@@ -115,8 +115,9 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Snapshot】2.3.1-SNAPSHOT** (2021/04/30)
-    * 迁移到maven central
+* **【Snapshot】2.3.2-SNAPSHOT** (2021/05/13)
+    * 修复屏幕旋转后Popup大小没更新的问题
+    * 修复update(float,float)失效的问题
 
 
 <br>

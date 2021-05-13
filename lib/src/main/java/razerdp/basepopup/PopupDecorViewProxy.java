@@ -41,6 +41,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     private int childRightMargin;
     private int childBottomMargin;
 
+    private boolean reMeasure;
+
     private int[] location = new int[2];
     private Rect lastKeyboardBounds = new Rect();
     private OnClickListener emptyInterceptClickListener = new OnClickListener() {
@@ -92,6 +94,11 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
 
         mTarget = target;
+        LayoutParams wp = setupViewSize(target, params);
+        addView(target, wp);
+    }
+
+    WindowManager.LayoutParams setupViewSize(View target, WindowManager.LayoutParams params) {
         WindowManager.LayoutParams wp = new WindowManager.LayoutParams();
         wp.copyFrom(params);
         wp.x = 0;
@@ -99,9 +106,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         View contentView = target.findViewById(mHelper.contentRootId);
         if (contentView != null) {
             if (!contentView.hasOnClickListeners()) {
-                mTarget.setOnClickListener(emptyInterceptClickListener);
+                target.setOnClickListener(emptyInterceptClickListener);
             } else {
-                mTarget.setOnClickListener(null);
+                target.setOnClickListener(null);
             }
             LayoutParams lp = contentView.getLayoutParams();
             if (lp == null) {
@@ -162,7 +169,14 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         if (wp.height > 0) {
             wp.height += childTopMargin + childBottomMargin;
         }
-        addView(target, wp);
+        return wp;
+    }
+
+
+    @Override
+    public void requestLayout() {
+        reMeasure = true;
+        super.requestLayout();
     }
 
     @Override
@@ -229,8 +243,10 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         heightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, 0, lp.height);
 
 
-        int widthSize = Math.max(mTarget.getMeasuredWidth(), MeasureSpec.getSize(widthMeasureSpec));
-        int heightSize = Math.max(mTarget.getMeasuredHeight(), MeasureSpec.getSize(heightMeasureSpec));
+        int widthSize = reMeasure ? MeasureSpec.getSize(widthMeasureSpec) :
+                Math.max(mTarget.getMeasuredWidth(), MeasureSpec.getSize(widthMeasureSpec));
+        int heightSize = reMeasure ? MeasureSpec.getSize(heightMeasureSpec) :
+                Math.max(mTarget.getMeasuredHeight(), MeasureSpec.getSize(heightMeasureSpec));
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
@@ -581,6 +597,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                     popupRect.set(contentRect);
                     mHelper.onPopupLayout(popupRect, anchorRect);
                 }
+                reMeasure = false;
             }
         }
     }
@@ -666,13 +683,16 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
 
     public void updateLayout() {
-        if (mHelper != null) {
-            mHelper.onUpdate();
-        }
         if (mMaskLayout != null) {
             mMaskLayout.update();
         }
-        requestLayout();
+        if (mTarget != null) {
+            WindowManager.LayoutParams lp = (WindowManager.LayoutParams) mTarget.getLayoutParams();
+            if (lp.width != mHelper.getLayoutParams().width || lp.height != mHelper.getLayoutParams().height) {
+                setupViewSize(mTarget, (WindowManager.LayoutParams) mTarget.getLayoutParams());
+            }
+            requestLayout();
+        }
     }
 
 
