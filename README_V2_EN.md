@@ -92,12 +92,28 @@
 
 ### Download
 
+#### Gradle settings
+
+```
+allprojects {
+    repositories {
+        mavenCentral() // release dependency repository (available by default configuration after 4.1)
+        maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots' } // snapshot repository (configure this maven if you need snapshot dependencies)
+        google()
+    }
+}
+```
+
+#### Dependency
+
 Please replace **{$latestVersion}** with the version shown in the Jcenter tab above.(e.g. release:2.3.0 / snapshot:2.3.1-SNAPSHOT)
 
 **Since JCenter is no longer in service, starting with version 2.3, this library will be migrated to Maven with a new dependency groupId of [io.github.razerdp]**
 
  - **Release：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion}'`
+    - e.g.  `implementation 'io.github.razerdp:BasePopup:2.3.0'`
  - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion_for_snapshot}'`
+    - e.g. `implementation 'io.github.razerdp:BasePopup:2.3.2-SNAPSHOT'`
 
 <br>
 
