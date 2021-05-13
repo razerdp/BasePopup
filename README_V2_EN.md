@@ -106,13 +106,13 @@ allprojects {
 
 #### Dependency
 
-Please replace **{$latestVersion}** with the version shown in the Jcenter tab above.(e.g. release:2.3.0 / snapshot:2.3.1-SNAPSHOT)
+Please replace **{$latestVersion}** with the version shown in the Jcenter tab above.
 
 **Since JCenter is no longer in service, starting with version 2.3, this library will be migrated to Maven with a new dependency groupId of [io.github.razerdp]**
 
  - **Release：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion}'`
     - e.g.  `implementation 'io.github.razerdp:BasePopup:2.3.0'`
- - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion_for_snapshot}'`
+ - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion_for_snapshot}-SNAPSHOT'`
     - e.g. `implementation 'io.github.razerdp:BasePopup:2.3.2-SNAPSHOT'`
 
 <br>
