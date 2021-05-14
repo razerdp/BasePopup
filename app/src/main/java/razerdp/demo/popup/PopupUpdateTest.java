@@ -32,7 +32,7 @@ public class PopupUpdateTest extends BasePopupWindow {
 
     public PopupUpdateTest(Context context) {
         super(context);
-
+        setContentView(R.layout.popup_update_test);
         setBackground(null);
         setPopupGravity(Gravity.BOTTOM);
         tvUpdate.setOnClickListener(new View.OnClickListener() {
@@ -80,10 +80,6 @@ public class PopupUpdateTest extends BasePopupWindow {
         ButterKnifeUtil.bind(this, contentView);
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_update_test);
-    }
 
     public void setOnUpdateClickCallback(OnUpdateClickCallback cb) {
         this.updateCb = cb;

@@ -28,6 +28,7 @@ public class PopupSlideSmall extends BasePopupWindow {
 
     public PopupSlideSmall(Context context) {
         super(context);
+        setContentView(R.layout.popup_slide_small);
     }
 
     @Override
@@ -35,10 +36,6 @@ public class PopupSlideSmall extends BasePopupWindow {
         ButterKnifeUtil.bind(this, contentView);
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_slide_small);
-    }
 
     @OnClick({R.id.tv_item_1, R.id.tv_item_2, R.id.tv_item_3})
     void click(View v) {

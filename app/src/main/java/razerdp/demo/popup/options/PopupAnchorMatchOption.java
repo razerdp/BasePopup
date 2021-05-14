@@ -45,6 +45,7 @@ public class PopupAnchorMatchOption extends BaseOptionPopup<CommonAnchorMatchInf
 
     public PopupAnchorMatchOption(Context context) {
         super(context);
+        setContentView(R.layout.popup_match);
 
         List<Info> infos = new ArrayList<>();
         infos.add(new Info(Gravity.LEFT, "Gravity.Left"));
@@ -70,10 +71,6 @@ public class PopupAnchorMatchOption extends BaseOptionPopup<CommonAnchorMatchInf
         rvContent.setAdapter(mAdapter);
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_match);
-    }
 
     @OnClick(R.id.tv_go)
     void apply() {

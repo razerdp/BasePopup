@@ -29,12 +29,9 @@ public class PopupCircleOption extends BaseOptionPopup {
 
     public PopupCircleOption(Context context) {
         super(context);
+        setContentView(R.layout.popup_option_circle);
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_option_circle);
-    }
 
     @Override
     protected Animation onCreateShowAnimation() {
