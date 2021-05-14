@@ -117,12 +117,12 @@ public class GuideActivity extends BaseActivity {
         builder.append("BasePopup区分为Release版本和Candy版本，Candy版本相当于预览版，其更新较为频繁且可能会包含了新的想法和特性，就像糖果一样甜，但也可能会引起蛀牙。")
                 .append('\n')
                 .append(String.format(FORMAT, "如果商业用途，请使用Release版本"))
-                .append(String.format(FORMAT, "如果希望体验新的特性和功能，请使用Candy版本"))
+                .append(String.format(FORMAT, "如果希望体验新的特性和功能，请使用Snapshot版本"))
                 .append('\n')
                 .append("自2.2.2版本开始，BasePopup将完全迁移至AndroidX，不再提供扩展组件了，BasePopup建议您尽早迁移到AndroidX");
         SpanUtil.create(builder)
                 .append("Release").setTextStyle(Typeface.DEFAULT_BOLD).setTextColor(Color.BLACK)
-                .append("Candy").setTextStyle(Typeface.DEFAULT_BOLD).setTextColor(Color.BLACK)
+                .append("Snapshot").setTextStyle(Typeface.DEFAULT_BOLD).setTextColor(Color.BLACK)
                 .append("自2.2.2版本开始，BasePopup将完全迁移至AndroidX，不再提供扩展组件了，BasePopup建议您尽早迁移到AndroidX").setTextColor(Color.RED).setTextStyle(Typeface.DEFAULT_BOLD)
                 .into(tvDependence);
 
@@ -133,17 +133,17 @@ public class GuideActivity extends BaseActivity {
 
     private void appendReleaseDependence() {
         List<DependenceInfo> infos = new ArrayList<>();
-        infos.add(new DependenceInfo("https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg",
+        infos.add(new DependenceInfo("https://img.shields.io/maven-central/v/io.github.razerdp/BasePopup",
                 "基础库（必选）",
-                "implementation 'com.github.razerdp:BasePopup:{$latestVersion}'"));
+                "implementation 'io.github.razerdp:BasePopup:{$latestVersion}'"));
         FillViewUtil.fillView(infos, layoutDependenceRelease, R.layout.item_guide_denpendence, fillViewsListener);
     }
 
     private void appendCandyDependence() {
         List<DependenceInfo> infos = new ArrayList<>();
-        infos.add(new DependenceInfo("https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg",
+        infos.add(new DependenceInfo("https://img.shields.io/nexus/s/io.github.razerdp/BasePopup?server=https%3A%2F%2Fs01.oss.sonatype.org%2F",
                 "基础库（必选）",
-                "implementation 'com.github.razerdp:BasePopup_Candy:{$latestVersion}'"));
+                "implementation 'io.github.razerdp:BasePopup_Candy:{$latestVersion}'"));
         FillViewUtil.fillView(infos, layoutDependenceCandy, R.layout.item_guide_denpendence, fillViewsListener);
     }
 
