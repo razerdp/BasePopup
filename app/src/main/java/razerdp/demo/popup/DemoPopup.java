@@ -25,14 +25,17 @@ public class DemoPopup extends BasePopupWindow {
 
     public DemoPopup(Context context) {
         super(context);
+        setContentView(R.layout.popup_demo);
     }
 
     public DemoPopup(Fragment fragment) {
         super(fragment);
+        setContentView(R.layout.popup_demo);
     }
 
     public DemoPopup(Dialog dialog) {
         super(dialog);
+        setContentView(R.layout.popup_demo);
     }
 
     @Override
@@ -54,10 +57,6 @@ public class DemoPopup extends BasePopupWindow {
                 .toDismiss();
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_demo);
-    }
 
     public DemoPopup setText(CharSequence text) {
         mTvDesc.setText(text);

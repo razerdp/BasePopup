@@ -23,6 +23,7 @@ public class PopupIssue210 extends BasePopupWindow {
 
     public PopupIssue210(Context context) {
         super(context);
+        setContentView(R.layout.popup_issue_210);
         setPopupGravity(Gravity.BOTTOM);
     }
 
@@ -31,10 +32,6 @@ public class PopupIssue210 extends BasePopupWindow {
         ButterKnifeUtil.bind(this, contentView);
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_issue_210);
-    }
 
     @Override
     protected Animation onCreateShowAnimation() {

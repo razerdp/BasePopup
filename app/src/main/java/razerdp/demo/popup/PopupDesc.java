@@ -29,6 +29,7 @@ public class PopupDesc extends BasePopupWindow {
 
     public PopupDesc(Context context) {
         super(context);
+        setContentView(R.layout.popup_description);
         setClipChildren(false);
     }
 
@@ -51,10 +52,6 @@ public class PopupDesc extends BasePopupWindow {
                 .toDismiss();
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_description);
-    }
 
     public PopupDesc setTitle(CharSequence title) {
         mTvTitle.setText(title);

@@ -35,6 +35,7 @@ public class SimpleSelectorPopup extends BasePopupWindow {
 
     public SimpleSelectorPopup(Context context) {
         super(context);
+        setContentView(R.layout.popup_text_selector);
         layoutContainer = findViewById(R.id.layout_container);
         datas = new ArrayList<>();
         setBlurBackgroundEnable(true);
@@ -68,11 +69,6 @@ public class SimpleSelectorPopup extends BasePopupWindow {
                 .setContentTextSize(14)
                 .build();
 
-    }
-
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_text_selector);
     }
 
 

@@ -13,8 +13,8 @@ import androidx.fragment.app.Fragment;
 import java.util.HashMap;
 import java.util.Map;
 
-import razerdp.basepopup.BaseLazyPopupWindow;
 import razerdp.basepopup.BasePopupFlag;
+import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.QuickPopupConfig;
 
 /**
@@ -22,7 +22,7 @@ import razerdp.basepopup.QuickPopupConfig;
  * <p>
  * 快速popup
  */
-public class QuickPopup extends BaseLazyPopupWindow {
+public class QuickPopup extends BasePopupWindow {
 
     private QuickPopupConfig mConfig;
 
@@ -32,6 +32,7 @@ public class QuickPopup extends BaseLazyPopupWindow {
         if (mConfig == null) {
             throw new NullPointerException("QuickPopupConfig must be not null!");
         }
+        setContentView(mConfig.getContentViewLayoutid());
     }
 
     public QuickPopup(Dialog dialog, int width, int height, QuickPopupConfig config) {
@@ -40,6 +41,7 @@ public class QuickPopup extends BaseLazyPopupWindow {
         if (mConfig == null) {
             throw new NullPointerException("QuickPopupConfig must be not null!");
         }
+        setContentView(mConfig.getContentViewLayoutid());
     }
 
     public QuickPopup(Context context, int width, int height, QuickPopupConfig config) {
@@ -48,6 +50,7 @@ public class QuickPopup extends BaseLazyPopupWindow {
         if (mConfig == null) {
             throw new NullPointerException("QuickPopupConfig must be not null!");
         }
+        setContentView(mConfig.getContentViewLayoutid());
     }
 
 
@@ -153,12 +156,6 @@ public class QuickPopup extends BaseLazyPopupWindow {
     protected Animator onCreateShowAnimator() {
         if (isConfigDestroyed()) return null;
         return mConfig.getShowAnimator();
-    }
-
-    @Override
-    public View onCreateContentView() {
-        if (isConfigDestroyed()) return null;
-        return createPopupById(mConfig.getContentViewLayoutid());
     }
 
     boolean isConfigDestroyed() {

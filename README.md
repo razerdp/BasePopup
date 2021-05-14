@@ -89,7 +89,7 @@
     - Release版本：一般在Snapshot版本反复验证修复后发布到Release，如果您对稳定性要求较高，请使用Release版本。
     - Snapshot：一般新功能、issue修复都会发布到Snapshot版本，Snapshot版本发布比较频繁，但通常会拥有新的功能，如果您喜欢试验新功能同时对稳定性要求不高，请使用Snapshot版本。
     - **Release和Snapshot两个版本互相切换可能会导致Build失败，这时候您Clean一下Project即可**
-  - 从16年[**第一次**](https://github.com/razerdp/BasePopup/commit/c92b7088270d5757269d9b79213627a4a0392d31)提交到现在，本人技术也一直在进步，BasePopup也会一直迭代更新，所以，请谨慎选择版本哦~一不小心就颠覆了之前的实现。
+  - **3.0版本是破坏性升级，请您务必阅读升级提示**：[关于BasePopup 3.0的破坏性更新说明](./Update_3.0.md)
 
 <br>
 
@@ -113,6 +113,8 @@ allprojects {
 
 **由于JCenter已经停止服务，自2.3版本开始，本库将迁移到Maven，新的依赖groupId为 【io.github.razerdp】**
 
+**3.0版本是破坏性升级，请您务必阅读升级提示**：[关于BasePopup 3.0的破坏性更新说明](./Update_3.0.md)
+
  - **Release：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion}'`
     - e.g.  `implementation 'io.github.razerdp:BasePopup:2.3.0'`
  - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion_for_snapshot}-SNAPSHOT'`
@@ -134,6 +136,13 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 * **【Snapshot】2.3.2-SNAPSHOT** (2021/05/13)
     * 修复屏幕旋转后Popup大小没更新的问题
     * 修复update(float,float)失效的问题
+* **【Snapshot】3.0.0-SNAPSHOT** (2021/05/14)
+    * 升级提示：[关于BasePopup 3.0的破坏性更新说明](./Update_3.0.md)
+    * 删除**BaseLazyPopupWindow**：往后不需要区分懒加载和正常的BasePopupWindow，统一依赖BasePopupWindow
+    * 删除方法`onCreateConstructor`：该方法实际上是给BaseLazyPopupWindow使用的，现在没有了BaseLazyPopupWindow，自然不需要该方法
+    * 【重要】删除方法`onCreateContentView`：该方法的删除将会影响所有的BasePopupWindow子类，您需要手动去改动
+        * 该方法将会被`setContentView(@LayoutRes int layoutResID)`或`setContentView(final View view)`所代替，您需要修改其使用。
+        * 当然，如果使用`setContentView(final View view)`，我们依然建议您用setContentView(createPopupById(layoutResID))，以便我们解析到正确的xml配置。
 
 
 <br>

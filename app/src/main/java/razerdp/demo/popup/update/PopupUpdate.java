@@ -39,6 +39,7 @@ public class PopupUpdate extends BasePopupWindow {
 
     public PopupUpdate(Context context) {
         super(context);
+        setContentView(R.layout.popup_update);
         setOutSideDismiss(false);
         setBackPressEnable(false);
         setBlurBackgroundEnable(true);
@@ -50,10 +51,6 @@ public class PopupUpdate extends BasePopupWindow {
         ButterKnife.bind(this, contentView);
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_update);
-    }
 
     @Override
     protected Animation onCreateShowAnimation() {
