@@ -2,7 +2,7 @@
 
 ---
 
-Notes on the disruptive update to BasePopup 3.0
+## Notes on the disruptive update to BasePopup 3.0
 
 ### Description of alterations
 
