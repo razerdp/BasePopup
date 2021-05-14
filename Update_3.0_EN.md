@@ -6,11 +6,11 @@ Notes on the disruptive update to BasePopup 3.0
 
 ### Description of alterations
 
-    - Delete **BaseLazyPopupWindow**: there is no need to distinguish between lazy loading and normal BasePopupWindow in the future, it inherits BasePopupWindow uniformly
-    - Remove the method `onCreateConstructor`: this method is actually for the BaseLazyPopupWindow and is not needed now that there is no more BaseLazyPopupWindow
-    - [Important] Delete method `onCreateContentView`: The deletion of this method will affect all BasePopupWindow subclasses and you will need to change it manually.
-        - This method will be replaced by `setContentView(@LayoutRes int layoutResID)` or `setContentView(final View view)` and you will need to modify its use.
-        - Of course, if you use `setContentView(final View view)`, we still recommend that you use setContentView(createPopupById(layoutResID)) so that we parse to the correct xml configuration.
+    * Delete **BaseLazyPopupWindow**: there is no need to distinguish between lazy loading and normal BasePopupWindow in the future, it inherits BasePopupWindow uniformly
+    * Remove the method `onCreateConstructor`: this method is actually for the BaseLazyPopupWindow and is not needed now that there is no more BaseLazyPopupWindow
+    * [Important] Delete method `onCreateContentView`: The deletion of this method will affect all BasePopupWindow subclasses and you will need to change it manually.
+        * This method will be replaced by `setContentView(@LayoutRes int layoutResID)` or `setContentView(final View view)` and you will need to modify its use.
+        * Of course, if you use `setContentView(final View view)`, we still recommend that you use setContentView(createPopupById(layoutResID)) so that we parse to the correct xml configuration.
 
 ### Why
 
