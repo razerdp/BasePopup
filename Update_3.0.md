@@ -38,6 +38,7 @@
 在以前的版本中，我提供了一个BaseLazyPopupWindow来解决构造器传参，onViewCreated中无法获取的问题。
 
 咋一眼似乎还行，实际上仍有弊端，最主要体现在两个：
+
     1. inflate的时机在showPopupWindow()，这会导致复杂的布局在第一次show的时候会卡顿（卡顿原因：inflate）
     2. 由于懒加载，其加载时机在show的时候，因此我们无法在构造器中findViewById，其次对于 new popup().setText().showPopupWindow()这样的在setText中直接访问控件的方法是不可行的，只会得到NPE报错（在show之前都没有inflate呢，访问控件只能是空的）。
 
