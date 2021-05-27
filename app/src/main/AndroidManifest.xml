@@ -104,6 +104,9 @@
             android:name="razerdp.demo.ui.ScreenRotateActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name="razerdp.demo.ui.issuestest.Issue369TestActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <service android:name="razerdp.demo.services.DemoService" />
         <service android:name="razerdp.demo.services.DelayDemoService" />
