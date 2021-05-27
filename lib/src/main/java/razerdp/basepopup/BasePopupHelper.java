@@ -1021,9 +1021,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         mPopupWindow.mPopupWindowProxy.update();
     }
 
-    void dispatchOutSideEvent(MotionEvent event, boolean touchInMask) {
+    void dispatchOutSideEvent(MotionEvent event, boolean touchInMask, boolean isMaskPressed) {
         if (mPopupWindow != null) {
-            mPopupWindow.dispatchOutSideEvent(event, touchInMask);
+            mPopupWindow.dispatchOutSideEvent(event, touchInMask, isMaskPressed);
         }
     }
 

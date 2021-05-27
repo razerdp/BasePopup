@@ -13,6 +13,7 @@ import razerdp.demo.ui.issuestest.Issue238TestActivity;
 import razerdp.demo.ui.issuestest.Issue242TestActivity;
 import razerdp.demo.ui.issuestest.Issue277TestActivity;
 import razerdp.demo.ui.issuestest.Issue358TestActivity;
+import razerdp.demo.ui.issuestest.Issue369TestActivity;
 import razerdp.demo.utils.DescBuilder;
 import razerdp.demo.utils.StringUtil;
 
@@ -31,6 +32,7 @@ class IssueHelper {
         add_242(result);
         add_277(result);
         add_358(result);
+        add_369(result);
 
         sort(result);
 
@@ -43,6 +45,22 @@ class IssueHelper {
             int issue2 = StringUtil.toInt(o2.issue);
             return Integer.compare(issue, issue2);
         });
+    }
+
+    private static void add_369(List<IssueInfo> result) {
+        IssueInfo issue369 = new IssueInfo();
+        issue369.setActivityClass(Issue369TestActivity.class)
+                .setIssue("369")
+                .setFixed(true)
+                .setTitle("弹出popupwindow不收起键盘")
+                .setDesc(DescBuilder.get()
+                        .append("系统版本：Unknown")
+                        .append("库版本：2.2.9")
+                        .append("键盘是已经打开的的时候，长按item会触发pop弹出，会影响键盘自动收起。\n" +
+                                "使用原生的popwindow，宽高使用WRAP_CONTENT，弹出是不会影响的，希望此库也能支持。谢谢作者")
+                        .build());
+
+        result.add(issue369);
     }
 
     private static void add_358(List<IssueInfo> result) {

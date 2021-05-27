@@ -21,8 +21,11 @@ public class KeyboardUtils {
     public static void open(View view) {
         if (view == null) return;
         if (!view.hasFocus()) {
-            view.requestFocus();
-            view = view.findFocus();
+            PopupUiUtils.requestFocus(view);
+            View focusedView = view.findFocus();
+            if (focusedView != null) {
+                view = focusedView;
+            }
         }
         InputMethodManager imm = (InputMethodManager) view.getContext()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);

@@ -47,6 +47,7 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
 
     private void init(Context context, BasePopupHelper mHelper) {
         this.mPopupHelper = mHelper;
+        setClickable(true);
         location = null;
         maskRect = new RectF();
         setLayoutAnimation(null);
@@ -185,7 +186,7 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
             if (!mPopupHelper.isOverlayStatusbar()) {
                 ev.offsetLocation(0, PopupUiUtils.getStatusBarHeight());
             }
-            mPopupHelper.dispatchOutSideEvent(ev, maskRect.contains(ev.getRawX(), ev.getRawY()));
+            mPopupHelper.dispatchOutSideEvent(ev, maskRect.contains(ev.getRawX(), ev.getRawY()),isPressed());
         }
         return super.dispatchTouchEvent(ev);
     }
