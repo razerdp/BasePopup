@@ -62,6 +62,7 @@ public class PopupBarControllerOption extends BaseOptionPopup<CommonBarControlle
 
     public PopupBarControllerOption(Context context) {
         super(context);
+        setContentView(R.layout.popup_option_control_bar);
 
         List<Info> infos = new ArrayList<>();
         infos.add(new Info(Gravity.LEFT, "Gravity.Left"));
@@ -88,10 +89,6 @@ public class PopupBarControllerOption extends BaseOptionPopup<CommonBarControlle
         rvContent.setAdapter(mAdapter);
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_option_control_bar);
-    }
 
     @Override
     protected Animation onCreateShowAnimation() {

@@ -72,6 +72,7 @@ public class Issue358TestActivity extends BaseActivity {
 
         public Issue358Popup(Context context) {
             super(context);
+            setContentView(R.layout.popup_issue_358);
 
             rvContent.setLayoutManager(new LinearLayoutManager(context));
             List<Integer> data = new ArrayList<>();
@@ -83,10 +84,6 @@ public class Issue358TestActivity extends BaseActivity {
             rvContent.setAdapter(adapter);
         }
 
-        @Override
-        public View onCreateContentView() {
-            return createPopupById(R.layout.popup_issue_358);
-        }
 
         @Override
         public void onViewCreated(@NonNull View contentView) {

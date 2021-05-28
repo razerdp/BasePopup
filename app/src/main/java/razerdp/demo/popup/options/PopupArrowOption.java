@@ -44,7 +44,7 @@ public class PopupArrowOption extends BaseOptionPopup<CommonArrowInfo> {
 
     public PopupArrowOption(Context context) {
         super(context);
-
+        setContentView(R.layout.popup_option_arrow);
         List<Info> infos = new ArrayList<>();
         infos.add(new Info(Gravity.LEFT, "Gravity.Left"));
         infos.add(new Info(Gravity.TOP, "Gravity.Top"));
@@ -69,10 +69,6 @@ public class PopupArrowOption extends BaseOptionPopup<CommonArrowInfo> {
         rvContent.setAdapter(mAdapter);
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_option_arrow);
-    }
 
     @OnClick(R.id.tv_go)
     void apply() {

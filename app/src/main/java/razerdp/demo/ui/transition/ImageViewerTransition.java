@@ -26,6 +26,7 @@ import androidx.annotation.RequiresApi;
 
 import com.davemorrissey.labs.subscaleview.ImageViewState;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.Map;
 
@@ -113,15 +114,18 @@ public class ImageViewerTransition extends Transition {
     @Override
     public Animator createAnimator(ViewGroup sceneRoot, TransitionValues startValues, TransitionValues endValues) {
         if (startValues == null ||
-                endValues == null ||
-                !(startValues.view instanceof ImageViewer) ||
-                !(endValues.view instanceof ImageViewer)) {
+                endValues == null) {
             return null;
         }
-        boolean isLarge = ((ImageViewer) startValues.view).getShowingView() instanceof SubsamplingScaleImageView &&
-                ((ImageViewer) endValues.view).getShowingView() instanceof SubsamplingScaleImageView;
-        PopupLog.i(TAG, isLarge, ((ImageViewer) startValues.view).getShowingView(), ((ImageViewer) endValues.view)
-                .getShowingView());
+        View startView = startValues.view;
+        View endView = endValues.view;
+        boolean isLarge = false;
+        if (startView instanceof ImageViewer) {
+            isLarge = ((ImageViewer) startView).getShowingView() instanceof SubsamplingScaleImageView;
+        }
+        if (endView instanceof ImageViewer) {
+            isLarge = ((ImageViewer) endView).getShowingView() instanceof SubsamplingScaleImageView;
+        }
         if (isLarge) {
             return SubsamplingScaleImageViewTransitionCreator.createAnimator(sceneRoot, startValues, endValues);
         } else {
@@ -157,14 +161,14 @@ public class ImageViewerTransition extends Transition {
             if (isEntering) {
                 centerFrom = new PointF(imgSize.x / 2, imgSize.y / 2);
                 scaleFrom = getMinIfTrue(startSize.x / (float) imgSize.x, startSize.y / (float) imgSize.y,
-                        false);
+                                         false);
                 scaleTo = getMinIfTrue(imgSize.x / (float) endSize.x, imgSize.y / (float) endSize.y,
-                        false);
+                                       false);
             } else {
                 centerFrom = subsamplingState.getCenter();
                 scaleFrom = subsamplingState.getScale();
                 scaleTo = getMinIfTrue(endSize.x / (float) imgSize.x, endSize.y / (float) imgSize.y,
-                        false);
+                                       false);
 
             }
 
@@ -201,11 +205,13 @@ public class ImageViewerTransition extends Transition {
         static Animator createAnimator(ViewGroup sceneRoot, TransitionValues startValues, TransitionValues endValues) {
             Rect startBounds = (Rect) startValues.values.get(BOUNDS);
             Rect endBounds = (Rect) endValues.values.get(BOUNDS);
-            final ImageView imageView = (ImageView) ((ImageViewer) endValues.view).getShowingView();
-            if (startBounds == null || endBounds == null) {
-                return null;
+            ImageView imageView = null;
+            if (endValues.view instanceof ImageViewer) {
+                imageView = (ImageView) ((ImageViewer) endValues.view).getShowingView();
+            } else if (endValues.view instanceof ImageView) {
+                imageView = (ImageView) endValues.view;
             }
-            if (startBounds.equals(endBounds)) {
+            if (imageView == null || startBounds == null || endBounds == null || startBounds.equals(endBounds)) {
                 return null;
             }
             return createMatrixAnimator(imageView, startValues, endValues);
@@ -357,7 +363,7 @@ public class ImageViewerTransition extends Transition {
                 } else if (ImageView.ScaleType.CENTER == scaleType) {
                     // Center bitmap in view, no scaling.
                     matrix.setTranslate(Math.round((vwidth - dwidth) * 0.5f),
-                            Math.round((vheight - dheight) * 0.5f));
+                                        Math.round((vheight - dheight) * 0.5f));
                 } else if (ImageView.ScaleType.CENTER_CROP == scaleType) {
 
                     float scale;
@@ -383,7 +389,7 @@ public class ImageViewerTransition extends Transition {
                         scale = 1.0f;
                     } else {
                         scale = Math.min((float) vwidth / (float) dwidth,
-                                (float) vheight / (float) dheight);
+                                         (float) vheight / (float) dheight);
                     }
 
                     dx = Math.round((vwidth - dwidth * scale) * 0.5f);

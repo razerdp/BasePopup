@@ -25,13 +25,10 @@ public class PopupAnyPosOption extends BaseOptionPopup<CommonAnyPosInfo> {
 
     public PopupAnyPosOption(Context context) {
         super(context);
+        setContentView(R.layout.popup_option_anypos);
     }
 
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_option_anypos);
-    }
 
     @OnClick(R.id.tv_go)
     void ok() {

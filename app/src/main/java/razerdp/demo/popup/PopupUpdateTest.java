@@ -21,15 +21,18 @@ import razerdp.util.animation.TranslationConfig;
 public class PopupUpdateTest extends BasePopupWindow {
     @BindView(R.id.tv_change_view)
     TextView tvChangeView;
+    @BindView(R.id.tv_change_size)
+    TextView tvChangeSize;
     @BindView(R.id.tv_update)
     TextView tvUpdate;
 
     OnTvChangeViewClickCallback cb;
+    OnTvChangeViewSizeClickCallback sizeCb;
     OnUpdateClickCallback updateCb;
 
     public PopupUpdateTest(Context context) {
         super(context);
-
+        setContentView(R.layout.popup_update_test);
         setBackground(null);
         setPopupGravity(Gravity.BOTTOM);
         tvUpdate.setOnClickListener(new View.OnClickListener() {
@@ -45,6 +48,14 @@ public class PopupUpdateTest extends BasePopupWindow {
             public void onClick(View v) {
                 if (cb != null) {
                     cb.onClick();
+                }
+            }
+        });
+        tvChangeSize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sizeCb != null) {
+                    sizeCb.onClick();
                 }
             }
         });
@@ -69,18 +80,19 @@ public class PopupUpdateTest extends BasePopupWindow {
         ButterKnifeUtil.bind(this, contentView);
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_update_test);
-    }
 
-    public void OnUpdateClickCallback(OnUpdateClickCallback cb) {
+    public void setOnUpdateClickCallback(OnUpdateClickCallback cb) {
         this.updateCb = cb;
     }
 
     public void setOnTvChangeViewClickCallback(OnTvChangeViewClickCallback cb) {
         this.cb = cb;
     }
+
+    public void setOnTvChangeViewSizeClickCallback(OnTvChangeViewSizeClickCallback cb) {
+        this.sizeCb = cb;
+    }
+
 
     @Override
     public void onDestroy() {
@@ -90,6 +102,10 @@ public class PopupUpdateTest extends BasePopupWindow {
     }
 
     public interface OnTvChangeViewClickCallback {
+        void onClick();
+    }
+
+    public interface OnTvChangeViewSizeClickCallback {
         void onClick();
     }
 

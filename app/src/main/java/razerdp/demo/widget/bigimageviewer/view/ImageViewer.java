@@ -61,6 +61,8 @@ import razerdp.demo.widget.bigimageviewer.loader.glide.ImageDownloadTarget;
 
 @Keep
 public class ImageViewer extends FrameLayout implements View.OnClickListener {
+    static final long PROGRESS_BAR_DELAY = 500;
+    static final long THUMBNAIL_BAR_DELAY = 500;
     private PhotoView mNormalView;
     private SubsamplingScaleImageView mLargeView;
     private CircleProgressView mProgressView;
@@ -74,6 +76,8 @@ public class ImageViewer extends FrameLayout implements View.OnClickListener {
     private boolean inLarge = false;
 
     Runnable showLoadingRunnable;
+
+    private long thumbnailTime;
 
     public ImageViewer(@NonNull Context context) {
         this(context, null);
@@ -94,9 +98,9 @@ public class ImageViewer extends FrameLayout implements View.OnClickListener {
         mNormalView.setZoomTransitionDuration(350);
         mNormalView.setOnClickListener(this);
         addViewInLayout(mNormalView,
-                -1,
-                new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT),
-                true);
+                        -1,
+                        new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT),
+                        true);
         mProgressView = new CircleProgressView(getContext());
         FrameLayout.LayoutParams p = new FrameLayout.LayoutParams(UIHelper.dip2px(80), UIHelper.dip2px(80));
         p.gravity = Gravity.CENTER;
@@ -110,9 +114,9 @@ public class ImageViewer extends FrameLayout implements View.OnClickListener {
         if (mLargeView != null) {
             if (mLargeView.getParent() == null) {
                 addViewInLayout(mLargeView,
-                        -1,
-                        new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT),
-                        true);
+                                -1,
+                                new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT),
+                                true);
             }
             return;
         }
@@ -121,9 +125,9 @@ public class ImageViewer extends FrameLayout implements View.OnClickListener {
         mLargeView.setMinimumTileDpi(160);
         mLargeView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE);
         addViewInLayout(mLargeView,
-                -1,
-                new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT),
-                true);
+                        -1,
+                        new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT),
+                        true);
     }
 
 
@@ -133,64 +137,79 @@ public class ImageViewer extends FrameLayout implements View.OnClickListener {
             cb.onShowThumbnail();
         }
         GlideProgressManager.getsInstance()
-                .loadImage(pic.hashCode(), pic, new ImageDownloadTarget(pic
-                        .toString()) {
-                    @Override
-                    public void onDownloadStart() {
-                        runOnUI(() -> {
-                            if (mProgressView != null) {
-                                mProgressView.start();
-                            }
-                            if (cb != null) {
-                                cb.onStart();
-                            }
-                        });
+                            .loadImage(pic.hashCode(), pic, new ImageDownloadTarget(pic
+                                                                                            .toString()) {
+                                @Override
+                                public void onDownloadStart() {
+                                    if (mProgressView != null) {
+                                        showLoadingRunnable = () -> {
+                                            if (mProgressView != null) {
+                                                mProgressView.start();
+                                            }
+                                            showLoadingRunnable = null;
+                                        };
+                                        postDelayed(showLoadingRunnable, PROGRESS_BAR_DELAY);
+                                    }
+                                    runOnUI(() -> {
+                                        if (cb != null) {
+                                            cb.onStart();
+                                        }
+                                    });
 
-                    }
+                                }
 
-                    @Override
-                    public void onResourceReady(@NonNull File resource, Transition<? super File> transition) {
-                        super.onResourceReady(resource, transition);
-                        runOnUI(() -> {
-                            displayImage(resource);
-                            if (cb != null) {
-                                cb.onSuccess();
-                            }
-                        });
-                    }
+                                @Override
+                                public void onResourceReady(@NonNull File resource, Transition<? super File> transition) {
+                                    super.onResourceReady(resource, transition);
+                                    runOnUI(() -> {
+                                        if (showLoadingRunnable != null) {
+                                            removeCallbacks(showLoadingRunnable);
+                                        }
+                                        displayImage(resource);
+                                        if (cb != null) {
+                                            cb.onSuccess();
+                                        }
+                                    });
+                                }
 
 
-                    @Override
-                    public void onLoadFailed(Drawable errorDrawable) {
-                        super.onLoadFailed(errorDrawable);
-                        runOnUI(() -> {
-                            displayErrorDrawable();
-                            if (cb != null) {
-                                cb.onError();
-                            }
-                        });
-                    }
+                                @Override
+                                public void onLoadFailed(Drawable errorDrawable) {
+                                    super.onLoadFailed(errorDrawable);
+                                    runOnUI(() -> {
+                                        if (showLoadingRunnable != null) {
+                                            removeCallbacks(showLoadingRunnable);
+                                        }
+                                        displayErrorDrawable();
+                                        if (cb != null) {
+                                            cb.onError();
+                                        }
+                                    });
+                                }
 
-                    @Override
-                    public void onProgress(int progress) {
-                        runOnUI(() -> {
-                            if (mProgressView == null) return;
-                            mProgressView.setProgress(progress);
-                        });
-                    }
+                                @Override
+                                public void onProgress(int progress) {
+                                    runOnUI(() -> {
+                                        if (mProgressView == null) return;
+                                        mProgressView.setProgress(progress);
+                                    });
+                                }
 
-                    @Override
-                    public void onDownloadFinish() {
-                        runOnUI(() -> {
-                            if (mProgressView != null) {
-                                mProgressView.finish(true);
-                            }
-                            if (cb != null) {
-                                cb.onFinish();
-                            }
-                        });
-                    }
-                });
+                                @Override
+                                public void onDownloadFinish() {
+                                    runOnUI(() -> {
+                                        if (showLoadingRunnable != null) {
+                                            removeCallbacks(showLoadingRunnable);
+                                        }
+                                        if (mProgressView != null) {
+                                            mProgressView.finish(true);
+                                        }
+                                        if (cb != null) {
+                                            cb.onFinish();
+                                        }
+                                    });
+                                }
+                            });
     }
 
     void displayThumbnail(Uri thumbnail) {
@@ -200,9 +219,11 @@ public class ImageViewer extends FrameLayout implements View.OnClickListener {
         ImageLoaderManager.INSTANCE
                 .loadImage(mNormalView, thumbnail);
         showingView = mNormalView;
+        thumbnailTime=System.currentTimeMillis();
     }
 
     void displayImage(File image) {
+        boolean cacheHit = System.currentTimeMillis() - thumbnailTime <=THUMBNAIL_BAR_DELAY;
         if (mProgressView != null) {
             mProgressView.finish(true);
         }
@@ -216,16 +237,23 @@ public class ImageViewer extends FrameLayout implements View.OnClickListener {
             if (mLargeView != null) {
                 removeViewInLayout(mLargeView);
             }
+            if (cacheHit){
+                mNormalView.setScaleX(1f);
+                mNormalView.setScaleY(1f);
+            }
             ImageLoaderManager
                     .INSTANCE
                     .option()
                     .setLoading(new ColorDrawable(Color.TRANSPARENT))
                     .loadImage(mNormalView, image);
             showingView = mNormalView;
-            mNormalView.animate()
-                    .scaleX(1f)
-                    .scaleY(1f)
-                    .start();
+            if (!cacheHit) {
+                mNormalView.animate()
+                           .scaleX(1f)
+                           .scaleY(1f)
+                           .setStartDelay(300)
+                           .start();
+            }
         }
         requestLayout();
     }
@@ -236,9 +264,9 @@ public class ImageViewer extends FrameLayout implements View.OnClickListener {
         }
         if (mNormalView.getParent() == null) {
             addViewInLayout(mNormalView,
-                    -1,
-                    new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT),
-                    true);
+                            -1,
+                            new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT),
+                            true);
         }
         mNormalView.setScaleX(1);
         mNormalView.setScaleY(1);

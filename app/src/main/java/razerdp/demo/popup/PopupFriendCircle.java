@@ -46,6 +46,7 @@ public class PopupFriendCircle extends BasePopupWindow {
 
     public PopupFriendCircle(Context context) {
         super(context);
+        setContentView(R.layout.popup_friend_circle_comment);
         ViewUtil.setViewPivotRatio(ivStar, 0.5f, 0.5f);
         setBackgroundColor(0);
     }
@@ -55,10 +56,6 @@ public class PopupFriendCircle extends BasePopupWindow {
         ButterKnifeUtil.bind(this, contentView);
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_friend_circle_comment);
-    }
 
     @Override
     public void showPopupWindow(View anchorView) {

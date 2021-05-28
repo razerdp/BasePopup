@@ -64,6 +64,7 @@ public class PopupBackgroundOption extends BaseOptionPopup<CommonBackgroundInfo>
 
     public PopupBackgroundOption(Context context) {
         super(context);
+        setContentView(R.layout.popup_option_background);
         randomColors();
 
         View.OnClickListener listener = new View.OnClickListener() {
@@ -158,10 +159,6 @@ public class PopupBackgroundOption extends BaseOptionPopup<CommonBackgroundInfo>
                 .toDismiss();
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_option_background);
-    }
 
     private int randomColor() {
         Random random = new Random();

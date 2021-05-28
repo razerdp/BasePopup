@@ -48,15 +48,12 @@ public class PopupAnimateOption extends BaseOptionPopup<CommonAnimateInfo> {
 
     public PopupAnimateOption(Context context) {
         super(context);
+        setContentView(R.layout.popup_option_animate);
         checkClipchildren.setChecked(true);
         setAutoLocatePopup(true);
     }
 
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_option_animate);
-    }
 
 
     @OnClick(R.id.layout_select_show)

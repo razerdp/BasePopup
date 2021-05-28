@@ -28,6 +28,7 @@ public class PopupInput extends BasePopupWindow {
 
     public PopupInput(Context context) {
         super(context);
+        setContentView(R.layout.popup_input);
         mTvSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,10 +43,6 @@ public class PopupInput extends BasePopupWindow {
         ButterKnifeUtil.bind(this, contentView);
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_input);
-    }
 
     @Override
     protected Animation onCreateShowAnimation() {
