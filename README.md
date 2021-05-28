@@ -137,23 +137,25 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Snapshot】2.3.2-SNAPSHOT** (2021/05/13)
-    * 修复屏幕旋转后Popup大小没更新的问题
-    * 修复update(float,float)失效的问题
-* **【Snapshot】3.0.0-SNAPSHOT** (2021/05/14)
-    * 升级提示：[关于BasePopup 3.0的破坏性更新说明](./Update_3.0.md)
-    * 删除**BaseLazyPopupWindow**：往后不需要区分懒加载和正常的BasePopupWindow，统一依赖BasePopupWindow
-    * 删除方法`onCreateConstructor`：该方法实际上是给BaseLazyPopupWindow使用的，现在没有了BaseLazyPopupWindow，自然不需要该方法
-    * 【重要】删除方法`onCreateContentView`：该方法的删除将会影响所有的BasePopupWindow子类，您需要手动去改动
-        * 该方法将会被`setContentView(@LayoutRes int layoutResID)`或`setContentView(final View view)`所代替，您需要修改其使用。
-        * 当然，如果使用`setContentView(final View view)`，我们依然建议您用setContentView(createPopupById(layoutResID))，以便我们解析到正确的xml配置。
-* **【Snapshot】3.1.0-SNAPSHOT** (2021/05/27)
-    * 增加api：`hideKeyboardOnShow(boolean)`，是否在BasePopup显示时收起键盘，默认收起
-        * demo增加 issue 369测试用例
-        * fixed [#369](https://github.com/razerdp/BasePopup/issues/369)
-    * 蒙层现在只有点击的时候才会执行dismiss（之前是只判断action_up是否在蒙层内）
-        * `onOutSideTouch`增加isMaskPressed标记
-
+* **【Release】3.1.0** (2021/05/28)
+    * 本次更新是破坏性更新，更新之前如果您仍处于2.x版本，请务必阅读以下两项事项：
+        * 由于JCenter已经停止服务，因此3.0版本开始将会迁移到MavenCentral，新的依赖groupId为【io.github.razerdp】，具体请查看上面的[环境依赖]((#环境依赖))
+        * 3.0版本是破坏性升级，影响范围为所有BasePopupWindow子类，但修改不会很多，具体请看[关于BasePopup 3.0的破坏性更新说明](./Update_3.0.md)
+    * 【优化】
+        * 增加api：`hideKeyboardOnShow(boolean)`，是否在BasePopup显示时收起键盘，默认收起
+            * demo增加 issue 369测试用例
+            * fixed [#369](https://github.com/razerdp/BasePopup/issues/369)
+        * 蒙层现在只有点击的时候才会执行dismiss（之前是只判断action_up是否在蒙层内）
+            * `onOutSideTouch`增加isMaskPressed标记
+    * 【Api修改】
+        * 删除**BaseLazyPopupWindow**：往后不需要区分懒加载和正常的BasePopupWindow，统一依赖BasePopupWindow
+        * 删除方法`onCreateConstructor`：该方法实际上是给BaseLazyPopupWindow使用的，现在没有了BaseLazyPopupWindow，自然不需要该方法
+        * 删除方法`onCreateContentView`：该方法的删除将会影响所有的BasePopupWindow子类，您需要手动去改动
+            * 该方法将会被`setContentView(@LayoutRes int layoutResID)`或`setContentView(final View view)`所代替，您需要修改其使用。
+            * 如果使用`setContentView(final View view)`，我们依然建议您用setContentView(createPopupById(layoutResID))，以便我们解析到正确的xml配置。
+    * 【修复】
+        * 修复屏幕旋转后Popup大小没更新的问题
+        * 修复`update(float,float)`失效的问题
 
 <br>
 
