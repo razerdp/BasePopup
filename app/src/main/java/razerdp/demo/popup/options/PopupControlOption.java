@@ -33,11 +33,7 @@ public class PopupControlOption extends BaseOptionPopup<CommonControllerInfo> {
 
     public PopupControlOption(Context context) {
         super(context);
-    }
-
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_option_control);
+        setContentView(R.layout.popup_option_control);
     }
 
     @Override

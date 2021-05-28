@@ -34,6 +34,7 @@ public class PopupIssue224 extends BasePopupWindow {
 
     public PopupIssue224(Context context) {
         super(context);
+        setContentView(R.layout.popup_issue_224);
         mIntegers = new ArrayList<>();
         mAdapter = new SimpleRecyclerViewAdapter<>(context, mIntegers);
         mAdapter.setHolder(ViewHolder.class);
@@ -46,10 +47,6 @@ public class PopupIssue224 extends BasePopupWindow {
         mRvContent.setAdapter(mAdapter);
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_issue_224);
-    }
 
     @Override
     protected Animation onCreateShowAnimation() {

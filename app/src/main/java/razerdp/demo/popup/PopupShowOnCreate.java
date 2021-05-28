@@ -17,6 +17,7 @@ public class PopupShowOnCreate extends BasePopupWindow {
 
     public PopupShowOnCreate(Context context) {
         super(context);
+        setContentView(R.layout.popup_show_on_create);
     }
 
     @Override
@@ -31,11 +32,6 @@ public class PopupShowOnCreate extends BasePopupWindow {
         return AnimationHelper.asAnimation()
                 .withScale(ScaleConfig.CENTER)
                 .toDismiss();
-    }
-
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_show_on_create);
     }
 
 

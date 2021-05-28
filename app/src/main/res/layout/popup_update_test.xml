@@ -23,6 +23,21 @@
         android:background="@color/white" />
 
     <TextView
+        android:id="@+id/tv_change_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="执行update(width,height)"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white" />
+
+    <TextView
         android:id="@+id/tv_update"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,4 +46,5 @@
         android:text="执行update()"
         android:textColor="@color/white"
         android:textSize="18sp" />
+
 </LinearLayout>

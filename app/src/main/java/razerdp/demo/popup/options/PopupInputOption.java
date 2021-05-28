@@ -35,12 +35,9 @@ public class PopupInputOption extends BaseOptionPopup<CommonInputInfo> {
 
     public PopupInputOption(Context context) {
         super(context);
+        setContentView(R.layout.popup_option_input);
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_option_input);
-    }
 
     @Override
     protected Animation onCreateShowAnimation() {

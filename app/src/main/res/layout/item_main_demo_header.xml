@@ -10,6 +10,6 @@
         android:layout_height="200dp"
         android:src="@drawable/logo" />
 
-    <View style="@style/divider_middle_window_color" />
+    <View style="@style/divider" />
 
 </LinearLayout>

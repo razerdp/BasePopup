@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
+
+    <razerdp.demo.widget.TitleBarView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title_text="屏幕旋转Test" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <razerdp.demo.widget.DPTextView
+            android:id="@+id/tv_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/default_padding"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingTop="8dp"
+            android:paddingRight="@dimen/default_padding"
+            android:paddingBottom="8dp"
+            android:text="弹窗"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_normal"
+            app:backgroundColor="@color/color_blue"
+            app:corner_radius="4dp" />
+
+        <razerdp.demo.widget.DPTextView
+            android:id="@+id/tv_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/default_padding"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingTop="8dp"
+            android:paddingRight="@dimen/default_padding"
+            android:paddingBottom="8dp"
+            android:text="弹窗设置"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_normal"
+            app:backgroundColor="@color/common_red"
+            app:corner_radius="4dp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</LinearLayout>

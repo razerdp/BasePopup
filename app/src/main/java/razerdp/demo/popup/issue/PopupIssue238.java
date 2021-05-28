@@ -7,7 +7,7 @@ import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 import butterknife.BindView;
-import razerdp.basepopup.BaseLazyPopupWindow;
+import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.UIHelper;
@@ -17,7 +17,7 @@ import razerdp.util.animation.TranslationConfig;
 /**
  * Created by 大灯泡 on 2020/02/26.
  */
-public class PopupIssue238 extends BaseLazyPopupWindow {
+public class PopupIssue238 extends BasePopupWindow {
     private boolean isEdit;
 
     @Nullable
@@ -27,6 +27,7 @@ public class PopupIssue238 extends BaseLazyPopupWindow {
     public PopupIssue238(Context context, boolean isEdit) {
         super(context);
         this.isEdit = isEdit;
+        setContentView(isEdit ? R.layout.popup_issue_238_with_edittext : R.layout.popup_issue_238);
     }
 
     @Override
@@ -42,11 +43,6 @@ public class PopupIssue238 extends BaseLazyPopupWindow {
             setAutoShowInputMethod(true);
             setAdjustInputMethod(true);
         }
-    }
-
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(isEdit ? R.layout.popup_issue_238_with_edittext : R.layout.popup_issue_238);
     }
 
     @Override

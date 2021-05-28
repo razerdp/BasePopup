@@ -28,14 +28,10 @@ public class PopupArrow extends BasePopupWindow {
 
     public PopupArrow(Context context) {
         super(context);
+        setContentView(R.layout.popup_arrow);
         ViewUtil.setViewPivotRatio(mIvArrow, 0.5f, 0.5f);
     }
 
-
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_arrow);
-    }
 
     @Override
     public void onViewCreated(@NonNull View contentView) {

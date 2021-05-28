@@ -312,11 +312,7 @@ public abstract class BaseActivity<T extends BaseActivity.IntentData>
         }
         mLoadingDialog.setCancelable(cancelable);
         if (mLoadingDialog != null && !mLoadingDialog.isShowing()) {
-            if (ToolUtil.isMainThread()) {
-                mLoadingDialog.show();
-            } else {
-                runOnUiThread(() -> mLoadingDialog.show());
-            }
+            runOnUiThread(() -> mLoadingDialog.show());
         }
     }
 

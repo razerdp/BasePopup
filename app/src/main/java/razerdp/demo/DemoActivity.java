@@ -1,10 +1,23 @@
 package razerdp.demo;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.PictureDrawable;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.pgyersdk.update.DownloadFileListener;
+import com.pgyersdk.update.PgyUpdateManager;
+import com.pgyersdk.update.UpdateManagerListener;
+import com.pgyersdk.update.javabean.AppBean;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +31,8 @@ import razerdp.basepopup.R;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
+import razerdp.demo.base.imageloader.GlideApp;
+import razerdp.demo.base.imageloader.SvgSoftwareLayerSetter;
 import razerdp.demo.model.DemoMainItem;
 import razerdp.demo.ui.ActivityLauncher;
 import razerdp.demo.ui.ApiListActivity;
@@ -58,6 +73,7 @@ public class DemoActivity extends BaseActivity {
         View header = ViewUtil.inflate(this, R.layout.item_main_demo_header, rvContent, false);
         header.setOnClickListener(v -> onHeaderClick());
         rvContent.addHeaderView(header);
+        rvContent.addHeaderView(genVersionHeader());
         mAdapter = new SimpleRecyclerViewAdapter<>(this, generateItem());
         mAdapter.setHolder(InnerViewHolder.class);
         mAdapter.setOnItemClickListener((v, position, data) -> ActivityLauncher.start(self(),
@@ -66,6 +82,29 @@ public class DemoActivity extends BaseActivity {
 
 
         showWjPopup();
+    }
+
+    private View genVersionHeader() {
+        View header = ViewUtil.inflate(this, R.layout.item_main_demo_version, rvContent, false);
+        ImageView release = header.findViewById(R.id.iv_release);
+        GlideApp.with(release)
+                .as(PictureDrawable.class)
+                .placeholder(new ColorDrawable(UIHelper.getColor(R.color.color_loading)))
+                .error(R.drawable.ic_error_gray)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .listener(new SvgSoftwareLayerSetter())
+                .load("https://img.shields.io/maven-central/v/io.github.razerdp/BasePopup")
+                .into(release);
+        ImageView snapshot = header.findViewById(R.id.iv_snapshot);
+        GlideApp.with(snapshot)
+                .as(PictureDrawable.class)
+                .placeholder(new ColorDrawable(UIHelper.getColor(R.color.color_loading)))
+                .error(R.drawable.ic_error_gray)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .listener(new SvgSoftwareLayerSetter())
+                .load("https://img.shields.io/nexus/s/io.github.razerdp/BasePopup?server=https%3A%2F%2Fs01.oss.sonatype.org%2F")
+                .into(snapshot);
+        return header;
     }
 
     private List<DemoMainItem> generateItem() {

@@ -45,6 +45,7 @@ public class PopupSelectShowAnimate extends BasePopupWindow {
 
     public PopupSelectShowAnimate(Context context) {
         super(context);
+        setContentView(R.layout.popup_select_animate);
         setMaxHeight(UIHelper.getScreenHeight() >> 1);
         generateAnimation();
         FillViewUtil.fillView(animations, layoutAnimation, R.layout.item_popup_animate, creator);
@@ -156,10 +157,6 @@ public class PopupSelectShowAnimate extends BasePopupWindow {
     }
 
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_select_animate);
-    }
 
     @Override
     protected Animation onCreateShowAnimation() {

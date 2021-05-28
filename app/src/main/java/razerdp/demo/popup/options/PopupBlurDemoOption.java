@@ -54,6 +54,7 @@ public class PopupBlurDemoOption extends BaseOptionPopup<CommonBlurInfo> {
 
     public PopupBlurDemoOption(Context context) {
         super(context);
+        setContentView(R.layout.popup_option_blur);
         init();
     }
 
@@ -148,11 +149,6 @@ public class PopupBlurDemoOption extends BaseOptionPopup<CommonBlurInfo> {
     public void onViewCreated(View contentView) {
         super.onViewCreated(contentView);
         ButterKnifeUtil.bind(this, contentView);
-    }
-
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_option_blur);
     }
 
 
