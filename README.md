@@ -139,7 +139,7 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 * **【Release】3.1.0** (2021/05/28)
     * 本次更新是破坏性更新，更新之前如果您仍处于2.x版本，请务必阅读以下两项事项：
-        * 由于JCenter已经停止服务，因此3.0版本开始将会迁移到MavenCentral，新的依赖groupId为【io.github.razerdp】，具体请查看上面的[环境依赖]((#环境依赖))
+        * 由于JCenter已经停止服务，因此3.0版本开始将会迁移到MavenCentral，新的依赖groupId为【io.github.razerdp】，具体请查看上面的[环境依赖](#环境依赖)
         * 3.0版本是破坏性升级，影响范围为所有BasePopupWindow子类，但修改不会很多，具体请看[关于BasePopup 3.0的破坏性更新说明](./Update_3.0.md)
     * 【优化】
         * 增加api：`hideKeyboardOnShow(boolean)`，是否在BasePopup显示时收起键盘，默认收起
