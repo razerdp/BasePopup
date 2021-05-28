@@ -127,8 +127,25 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 **Snapshot dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **【Snapshot】2.3.0** (2021/04/30)
-    * Migration to maven central
+* **【Release】3.1.0** (2021/05/28)
+    * This update is a destructive update, so if you are still on version 2.x before updating, please make sure you read the following two notes.
+        * As JCenter is no longer in service, it will be migrated to MavenCentral starting with version 3.0. The new dependency groupId is `io.github.razerdp`, see [Download](#Download) above for details.
+        * Version 3.0 is a destructive update that affects all BasePopupWindow subclasses, but the changes will not be extensive, see [Note on destructive update to BasePopup 3.0](./Update_3.0.md)
+    * 【Optimise】
+        * Add api: `hideKeyboardOnShow(boolean)`, whether to put away the keyboard when BasePopup is displayed, default is put away
+            * demo adds issue 369 test cases
+            * fixed [#369](https://github.com/razerdp/BasePopup/issues/369)
+        * The mask now only performs a dismiss when it is clicked (previously it only determined if action_up was inside the mask)
+            * `onOutSideTouch` adds the `isMaskPressed` param
+    * 【Api Modification】
+        * Delete **BaseLazyPopupWindow**: henceforth there is no need to distinguish between lazy loading and normal BasePopupWindow, and the reliance on BasePopupWindow is uniform
+        * Remove the method `onCreateConstructor`: this method is actually for the BaseLazyPopupWindow and is not needed now that there is no more BaseLazyPopupWindow.
+        * Delete method `onCreateContentView`: the deletion of this method will affect all BasePopupWindow subclasses and you will need to change them manually
+            * This method will be replaced by `setContentView(@LayoutRes int layoutResID)` or `setContentView(final View view)`, which you will need to modify to use.
+            * If you use `setContentView(final View view)`, we still recommend that you use setContentView(createPopupById(layoutResID)) so that we parse to the correct xml configuration.
+    * 【Bug fixed】
+        * Fix Popup size not updating after screen rotation
+        * Fix `update(float,float)` not working
 
 <br>
 

@@ -12,17 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.pgyersdk.update.DownloadFileListener;
-import com.pgyersdk.update.PgyUpdateManager;
-import com.pgyersdk.update.UpdateManagerListener;
-import com.pgyersdk.update.javabean.AppBean;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
 import razerdp.basepopup.QuickPopupBuilder;
