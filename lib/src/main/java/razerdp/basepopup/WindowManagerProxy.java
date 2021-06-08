@@ -1,6 +1,7 @@
 package razerdp.basepopup;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.Display;
@@ -74,7 +75,6 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
     public void addView(View view, ViewGroup.LayoutParams params) {
         PopupLog.i(TAG,
                    "WindowManager.addView  >>>  " + (view == null ? null : view.getClass().getName()));
-        PopupWindowQueueManager.getInstance().put(this);
         if (mWindowManager == null || view == null) return;
         if (isPopupInnerDecorView(view)) {
             /**
@@ -89,6 +89,7 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
         } else {
             mWindowManager.addView(view, params);
         }
+        PopupWindowQueueManager.getInstance().put(this);
     }
 
     private ViewGroup.LayoutParams fitLayoutParamsPosition(ViewGroup.LayoutParams params) {
@@ -239,6 +240,12 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
                 return null;
             }
             return String.valueOf(managerProxy.mPopupHelper.mPopupWindow.getContext());
+        }
+
+        boolean hasPopup(Context context) {
+            if (sQueueMap == null || sQueueMap.isEmpty()) return false;
+            LinkedList l = sQueueMap.get(String.valueOf(context));
+            return l != null && l.size() > 0;
         }
 
         void put(WindowManagerProxy managerProxy) {

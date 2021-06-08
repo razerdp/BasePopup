@@ -136,6 +136,9 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 * **【Snapshot】3.1.1-SNAPSHOT** (2021/06/03)
     * 优化BlurHelper，RenderScript使用单例
     * 修复`onOutSideTouch`拦截事件后，没有传到DecorView的问题 [#393-comment](https://github.com/razerdp/BasePopup/issues/393#issuecomment-853687468)
+* **【Snapshot】3.1.2-SNAPSHOT** (2021/06/08)
+    * 增加`setOverlayMask(boolean)`：是否允许蒙层叠加，默认不叠加，一个页面同个background不会重复叠加，直到设置了背景为止。
+
 
 
 <br>
