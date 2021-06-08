@@ -130,6 +130,9 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
 
     void superDismiss() {
         try {
+            if (mBasePopupContextWrapper!=null){
+                WindowManagerProxy.PopupWindowQueueManager.getInstance().remove(mBasePopupContextWrapper.mWindowManagerProxy);
+            }
             super.dismiss();
         } catch (Exception e) {
             e.printStackTrace();

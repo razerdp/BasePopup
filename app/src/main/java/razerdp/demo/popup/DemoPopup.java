@@ -7,7 +7,6 @@ import android.view.animation.Animation;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-
 import butterknife.BindView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
