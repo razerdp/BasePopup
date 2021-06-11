@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import java.util.ArrayList;
@@ -78,36 +79,66 @@ public class GuideActivity extends BaseActivity {
                 .append(String.format(FORMAT2, "简单的PopupWindow不想新建一个类，希望拥有链式调用？没问题，QuickPopupBuilder为此而生，相信你会越用越爱~"));
 
         SpanUtil.create(builder)
-                .append("Gravity").setTextColorRes(R.color.color_link).setTextStyle(Typeface.DEFAULT_BOLD).setSpanClickListener(v -> {
-            //gravity
-        })
-                .append("Animation、Animator").setTextColorRes(R.color.color_link).setTextStyle(Typeface.DEFAULT_BOLD).setSpanClickListener(v -> {
-            //Animation、Animator
-        })
-                .append("背景模糊").setTextColorRes(R.color.color_link).setTextStyle(Typeface.DEFAULT_BOLD).setSpanClickListener(v -> {
-            //背景模糊
-        })
-                .append("局部模糊").setTextColorRes(R.color.color_link).setTextStyle(Typeface.DEFAULT_BOLD).setSpanClickListener(v -> {
-            //局部模糊
-        })
-                .append("修改颜色").setTextColorRes(R.color.color_link).setTextStyle(Typeface.DEFAULT_BOLD).setSpanClickListener(v -> {
-            //修改颜色
-        })
-                .append("返回键控制").setTextColorRes(R.color.color_link).setTextStyle(Typeface.DEFAULT_BOLD).setSpanClickListener(v -> {
-            //返回键控制
-        })
-                .append("点击外部控制").setTextColorRes(R.color.color_link).setTextStyle(Typeface.DEFAULT_BOLD).setSpanClickListener(v -> {
-            //点击外部控制
-        })
-                .append("外部事件响应控制").setTextColorRes(R.color.color_link).setTextStyle(Typeface.DEFAULT_BOLD).setSpanClickListener(v -> {
-            //外部事件响应控制
-        })
-                .append("Link").setTextColorRes(R.color.color_link).setTextStyle(Typeface.DEFAULT_BOLD).setSpanClickListener(v -> {
-            //Link
-        })
-                .append("QuickPopupBuilder").setTextColorRes(R.color.color_link).setTextStyle(Typeface.DEFAULT_BOLD).setSpanClickListener(v -> {
-            //QuickPopupBuilder
-        })
+                .append("Gravity")
+                .setTextColorRes(R.color.color_link)
+                .setTextStyle(Typeface.DEFAULT_BOLD)
+                .setSpanClickListener(v -> {
+                    //gravity
+                })
+                .append("Animation、Animator")
+                .setTextColorRes(R.color.color_link)
+                .setTextStyle(Typeface.DEFAULT_BOLD)
+                .setSpanClickListener(v -> {
+                    //Animation、Animator
+                })
+                .append("背景模糊")
+                .setTextColorRes(R.color.color_link)
+                .setTextStyle(Typeface.DEFAULT_BOLD)
+                .setSpanClickListener(v -> {
+                    //背景模糊
+                })
+                .append("局部模糊")
+                .setTextColorRes(R.color.color_link)
+                .setTextStyle(Typeface.DEFAULT_BOLD)
+                .setSpanClickListener(v -> {
+                    //局部模糊
+                })
+                .append("修改颜色")
+                .setTextColorRes(R.color.color_link)
+                .setTextStyle(Typeface.DEFAULT_BOLD)
+                .setSpanClickListener(v -> {
+                    //修改颜色
+                })
+                .append("返回键控制")
+                .setTextColorRes(R.color.color_link)
+                .setTextStyle(Typeface.DEFAULT_BOLD)
+                .setSpanClickListener(v -> {
+                    //返回键控制
+                })
+                .append("点击外部控制")
+                .setTextColorRes(R.color.color_link)
+                .setTextStyle(Typeface.DEFAULT_BOLD)
+                .setSpanClickListener(v -> {
+                    //点击外部控制
+                })
+                .append("外部事件响应控制")
+                .setTextColorRes(R.color.color_link)
+                .setTextStyle(Typeface.DEFAULT_BOLD)
+                .setSpanClickListener(v -> {
+                    //外部事件响应控制
+                })
+                .append("Link")
+                .setTextColorRes(R.color.color_link)
+                .setTextStyle(Typeface.DEFAULT_BOLD)
+                .setSpanClickListener(v -> {
+                    //Link
+                })
+                .append("QuickPopupBuilder")
+                .setTextColorRes(R.color.color_link)
+                .setTextStyle(Typeface.DEFAULT_BOLD)
+                .setSpanClickListener(v -> {
+                    //QuickPopupBuilder
+                })
                 .into(tvFeature);
 
     }
@@ -121,9 +152,15 @@ public class GuideActivity extends BaseActivity {
                 .append('\n')
                 .append("自2.2.2版本开始，BasePopup将完全迁移至AndroidX，不再提供扩展组件了，BasePopup建议您尽早迁移到AndroidX");
         SpanUtil.create(builder)
-                .append("Release").setTextStyle(Typeface.DEFAULT_BOLD).setTextColor(Color.BLACK)
-                .append("Snapshot").setTextStyle(Typeface.DEFAULT_BOLD).setTextColor(Color.BLACK)
-                .append("自2.2.2版本开始，BasePopup将完全迁移至AndroidX，不再提供扩展组件了，BasePopup建议您尽早迁移到AndroidX").setTextColor(Color.RED).setTextStyle(Typeface.DEFAULT_BOLD)
+                .append("Release")
+                .setTextStyle(Typeface.DEFAULT_BOLD)
+                .setTextColor(Color.BLACK)
+                .append("Snapshot")
+                .setTextStyle(Typeface.DEFAULT_BOLD)
+                .setTextColor(Color.BLACK)
+                .append("自2.2.2版本开始，BasePopup将完全迁移至AndroidX，不再提供扩展组件了，BasePopup建议您尽早迁移到AndroidX")
+                .setTextColor(Color.RED)
+                .setTextStyle(Typeface.DEFAULT_BOLD)
                 .into(tvDependence);
 
         appendReleaseDependence();
@@ -179,6 +216,8 @@ public class GuideActivity extends BaseActivity {
             GlideApp.with(ivVersion)
                     .as(PictureDrawable.class)
                     .placeholder(new ColorDrawable(UIHelper.getColor(R.color.color_loading)))
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
                     .error(R.drawable.ic_error_gray)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .listener(new SvgSoftwareLayerSetter())
