@@ -24,6 +24,9 @@ public class CommonBlurInfo extends DemoCommonUsageInfo {
 
     public CommonBlurInfo() {
         title = "背景模糊";
+        name = "DemoPopup";
+        javaUrl = "https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/DemoPopup.java";
+        resUrl = "https://github.com/razerdp/BasePopup/blob/master/app/src/main/res/layout/popup_demo.xml";
     }
 
     @Override

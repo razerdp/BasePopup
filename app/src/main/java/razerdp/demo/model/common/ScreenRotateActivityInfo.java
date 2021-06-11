@@ -16,6 +16,7 @@ public class ScreenRotateActivityInfo extends DemoCommonUsageInfo {
 
     public ScreenRotateActivityInfo() {
         title = "屏幕旋转";
+        sourceVisible = false;
     }
 
     @Override

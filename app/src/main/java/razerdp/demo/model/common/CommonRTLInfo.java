@@ -13,6 +13,7 @@ import razerdp.demo.utils.UIHelper;
 public class CommonRTLInfo extends DemoCommonUsageInfo {
     public CommonRTLInfo() {
         title = "RTL布局";
+        sourceVisible = false;
     }
 
     @Override

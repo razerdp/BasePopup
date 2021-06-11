@@ -25,7 +25,7 @@ public class CommonBottomSheetDialogInfo extends DemoCommonUsageInfo {
     public CommonBottomSheetDialogInfo() {
         title = "BottomSheetDialog中弹出BasePopup";
         option = "描述";
-//        问题描述：在没有依赖BasePopup Compat组件时，在Fragment或者BottomSheetDialog里弹出，会显示在这些组件下层。
+        sourceVisible = false;
     }
 
     @Override
