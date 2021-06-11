@@ -20,6 +20,9 @@ public class CommonBackgroundInfo extends DemoCommonUsageInfo {
 
     public CommonBackgroundInfo() {
         title = "背景控制";
+        name = "DemoPopup";
+        javaUrl = "https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/DemoPopup.java";
+        resUrl = "https://github.com/razerdp/BasePopup/blob/master/app/src/main/res/layout/popup_demo.xml";
     }
 
     @Override

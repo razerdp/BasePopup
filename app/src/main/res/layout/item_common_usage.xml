@@ -52,6 +52,22 @@
             app:corner_bottomRightRadius="8dp"
             app:layout_constraintBottom_toBottomOf="parent" />
 
+        <razerdp.demo.widget.DPTextView
+            android:id="@+id/tv_source"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:padding="6dp"
+            android:text="Popup源码"
+            android:textColor="@color/common_blue"
+            android:textSize="10sp"
+            app:corner_radius="50dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="@color/common_blue"
+            app:stroke_Width="1dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </razerdp.demo.widget.SquareFrameLayout>

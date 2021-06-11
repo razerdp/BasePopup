@@ -178,6 +178,8 @@ public class CommonUsageActivity extends BaseActivity {
         View divider;
         @BindView(R.id.tv_option)
         DPTextView tvOption;
+        @BindView(R.id.tv_source)
+        DPTextView tvSource;
 
         public InnerItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -191,6 +193,7 @@ public class CommonUsageActivity extends BaseActivity {
 
         @Override
         public void onBindData(DemoCommonUsageInfo data, int position) {
+            tvSource.setVisibility(data.sourceVisible ? View.VISIBLE : View.GONE);
             tvFun.setText(data.title);
             tvOption.setText(TextUtils.isEmpty(data.option) ? "配置" : data.option);
         }
@@ -200,6 +203,10 @@ public class CommonUsageActivity extends BaseActivity {
             getData().toOption(v);
         }
 
+        @OnClick(R.id.tv_source)
+        void showSource(View v) {
+            getData().toSource(v);
+        }
     }
 
 }

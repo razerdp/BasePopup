@@ -42,6 +42,8 @@ public class UpdateLogActivity extends BaseActivity {
                 .createAgentWeb()
                 .ready()
                 .go("https://www.yuque.com/razerdp/basepopup/uyrsxx");
+        mAgentWeb.getAgentWebSettings().getWebSettings().setUseWideViewPort(true);
+        mAgentWeb.getAgentWebSettings().getWebSettings().setLoadWithOverviewMode(true);
     }
 
     @Override

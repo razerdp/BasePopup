@@ -5,7 +5,6 @@ import android.view.View;
 import razerdp.demo.model.DemoCommonUsageInfo;
 import razerdp.demo.ui.ActivityLauncher;
 import razerdp.demo.ui.dialog.DialogActivity;
-import razerdp.demo.ui.fullscreen.FullScreenActivity;
 import razerdp.demo.utils.UIHelper;
 
 /**
@@ -17,6 +16,7 @@ public class CommonDialogActivityInfo extends DemoCommonUsageInfo {
 
     public CommonDialogActivityInfo() {
         title = "Dialog Activity";
+        sourceVisible = false;
     }
 
     @Override

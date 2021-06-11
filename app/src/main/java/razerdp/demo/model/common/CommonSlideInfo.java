@@ -34,6 +34,9 @@ public class CommonSlideInfo extends DemoCommonUsageInfo {
 
     public CommonSlideInfo() {
         title = "位置控制";
+        name = "PopupSlide";
+        javaUrl = "https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/PopupSlide.java";
+        resUrl = "https://github.com/razerdp/BasePopup/blob/master/app/src/main/res/layout/popup_slide.xml";
     }
 
     @Override

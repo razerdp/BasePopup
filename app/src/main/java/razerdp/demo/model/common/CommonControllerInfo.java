@@ -21,6 +21,9 @@ public class CommonControllerInfo extends DemoCommonUsageInfo {
 
     public CommonControllerInfo() {
         title = "控制展示";
+        name = "DemoPopup";
+        javaUrl = "https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/DemoPopup.java";
+        resUrl = "https://github.com/razerdp/BasePopup/blob/master/app/src/main/res/layout/popup_demo.xml";
     }
 
     @Override

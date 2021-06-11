@@ -24,6 +24,9 @@ public class CommonAnimateInfo extends DemoCommonUsageInfo {
 
     public CommonAnimateInfo() {
         title = "动画展示";
+        name = "PopupAnimate";
+        javaUrl = "https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/PopupAnimate.java";
+        resUrl = "https://github.com/razerdp/BasePopup/blob/master/app/src/main/res/layout/popup_animate.xml";
     }
 
     @Override
