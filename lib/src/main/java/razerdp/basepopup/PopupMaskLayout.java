@@ -55,7 +55,7 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
             setBackgroundColor(Color.TRANSPARENT);
             return;
         }
-        if (!mHelper.overlayMask && mHelper.isPrePopupExists()) {
+        if (!mHelper.overlayMask && mHelper.isPrePopupBackgroundExists()) {
             setBackgroundColor(Color.TRANSPARENT);
             return;
         }
@@ -69,8 +69,8 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
         } else {
             if (!PopupUtils.isBackgroundInvalidated(mHelper.getPopupBackground())) {
                 mBackgroundViewHolder = new BackgroundViewHolder(PopupBackgroundView.creaete(context,
-                                                                                             mHelper),
-                                                                 mHelper);
+                        mHelper),
+                        mHelper);
             }
         }
         if (mBackgroundViewHolder != null) {
@@ -193,8 +193,8 @@ class PopupMaskLayout extends FrameLayout implements BasePopupEvent.EventObserve
                 ev.offsetLocation(0, PopupUiUtils.getStatusBarHeight());
             }
             mPopupHelper.dispatchOutSideEvent(ev,
-                                              maskRect.contains(ev.getRawX(), ev.getRawY()),
-                                              isPressed());
+                    maskRect.contains(ev.getRawX(), ev.getRawY()),
+                    isPressed());
         }
         return super.dispatchTouchEvent(ev);
     }
