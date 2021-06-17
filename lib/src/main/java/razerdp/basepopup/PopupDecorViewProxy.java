@@ -27,7 +27,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     private static final String TAG = "PopupDecorViewProxy";
     //蒙层
     private PopupMaskLayout mMaskLayout;
-    private BasePopupHelper mHelper;
+    BasePopupHelper mHelper;
     private View mTarget;
     private Rect popupRect = new Rect();
     private Rect anchorRect = new Rect();
