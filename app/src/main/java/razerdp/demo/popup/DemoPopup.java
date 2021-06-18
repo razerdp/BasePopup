@@ -2,11 +2,14 @@ package razerdp.demo.popup;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Rect;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
 import butterknife.BindView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
@@ -21,6 +24,8 @@ import razerdp.util.animation.TranslationConfig;
 public class DemoPopup extends BasePopupWindow {
     @BindView(R.id.tv_desc)
     public TextView mTvDesc;
+
+    OnPopupLayoutListener layoutListener;
 
     public DemoPopup(Context context) {
         super(context);
@@ -60,5 +65,22 @@ public class DemoPopup extends BasePopupWindow {
     public DemoPopup setText(CharSequence text) {
         mTvDesc.setText(text);
         return this;
+    }
+
+    public DemoPopup setLayoutListener(OnPopupLayoutListener layoutListener) {
+        this.layoutListener = layoutListener;
+        return this;
+    }
+
+    @Override
+    public void onPopupLayout(@NonNull Rect popupRect, @NonNull Rect anchorRect) {
+        super.onPopupLayout(popupRect, anchorRect);
+        if (layoutListener != null) {
+            layoutListener.onPopupLayout(popupRect, anchorRect);
+        }
+    }
+
+    public interface OnPopupLayoutListener {
+        void onPopupLayout(@NonNull Rect popupRect, @NonNull Rect anchorRect);
     }
 }

@@ -495,7 +495,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     boolean isAutoLocatePopup() {
-        return (flag & AUTO_LOCATED) != 0;
+        return (flag & AUTO_MIRROR) != 0;
     }
 
     boolean isOutSideDismiss() {
@@ -854,7 +854,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
             this.flag &= ~flag;
         } else {
             this.flag |= flag;
-            if (flag == AUTO_LOCATED) {
+            if (flag == AUTO_MIRROR) {
                 this.flag |= WITH_ANCHOR;
             }
         }
@@ -1003,12 +1003,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         if (dismissAnimationDelayRunnable != null) {
             dismissAnimationDelayRunnable.run();
         }
-    }
-
-    void onAnchorTop() {
-    }
-
-    void onAnchorBottom() {
     }
 
     @Override

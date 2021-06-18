@@ -138,6 +138,9 @@ BasePopup配备完善的文档，建议您优先查阅文档。
     * 修复`onOutSideTouch`拦截事件后，没有传到DecorView的问题 [#393-comment](https://github.com/razerdp/BasePopup/issues/393#issuecomment-853687468)
 * **【Snapshot】3.1.2-SNAPSHOT** (2021/06/17)
     * 增加`setOverlayMask(boolean)`：是否允许蒙层叠加，默认不叠加，一个页面同个background不会重复叠加，直到设置了背景为止。
+* **【Snapshot】3.1.3-SNAPSHOT** (2021/06/18)
+    * deprecated `setAutoLocatePopup`，请用`setAutoMirrorEnable`代替
+    * 增加左右自动镜像定位的功能，增加demo
 
 
 
