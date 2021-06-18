@@ -85,7 +85,7 @@ public class QuickPopup extends BasePopupWindow {
         setPopupGravity(config.getGravity());
         setAlignBackground((config.flag & BasePopupFlag.ALIGN_BACKGROUND) != 0);
         setAlignBackgroundGravity(config.getAlignBackgroundGravity());
-        setAutoLocatePopup((config.flag & BasePopupFlag.AUTO_LOCATED) != 0);
+        setAutoLocatePopup((config.flag & BasePopupFlag.AUTO_MIRROR) != 0);
         setOverlayStatusbar((config.flag & BasePopupFlag.OVERLAY_STATUS_BAR) != 0);
         setOverlayNavigationBar((config.flag & BasePopupFlag.OVERLAY_NAVIGATION_BAR) != 0);
         setOverlayStatusbarMode(config.getOverlayStatusBarMode());

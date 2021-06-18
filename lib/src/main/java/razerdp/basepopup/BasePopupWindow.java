@@ -245,7 +245,7 @@ import razerdp.util.PopupUtils;
 import razerdp.util.log.PopupLog;
 
 import static razerdp.basepopup.BasePopupFlag.AUTO_INPUT_METHOD;
-import static razerdp.basepopup.BasePopupFlag.AUTO_LOCATED;
+import static razerdp.basepopup.BasePopupFlag.AUTO_MIRROR;
 import static razerdp.basepopup.BasePopupFlag.BACKPRESS_ENABLE;
 import static razerdp.basepopup.BasePopupFlag.CLIP_CHILDREN;
 import static razerdp.basepopup.BasePopupFlag.FADE_ENABLE;
@@ -1579,8 +1579,8 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
      * </ul>
      *
      * @param mode <ul><li>GravityMode.RELATIVE_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup处于该Anchor的哪个位置</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     </ul>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 </ul>
      */
     public BasePopupWindow setPopupGravity(GravityMode mode, int popupGravity) {
         mHelper.setPopupGravity(mode, popupGravity);
@@ -1617,9 +1617,7 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
 
     /**
      * <p>
-     * 是否自动设置PopupWindow位置
-     * <br>
-     * 在设定了clipToScreen的情况下{@link #setClipToScreen(boolean)}
+     * 自动镜像定位
      * <br>
      * 如果当前屏幕不足以完整显示您的PopupWindow，则PopupWindow会自行布置在其镜像位置。
      * <br>
@@ -1634,9 +1632,34 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
      * </p>
      *
      * @param isAutoLocatePopup 是否自适配
+     * @deprecated please use  {@link #setAutoMirrorEnable(boolean)} instead
      */
+    @Deprecated
     public BasePopupWindow setAutoLocatePopup(boolean isAutoLocatePopup) {
-        mHelper.setFlag(AUTO_LOCATED, isAutoLocatePopup);
+        return setAutoMirrorEnable(isAutoLocatePopup);
+    }
+
+
+    /**
+     * <p>
+     * 自动镜像定位
+     * <br>
+     * 如果当前屏幕不足以完整显示您的PopupWindow，则PopupWindow会自行布置在其镜像位置。
+     * <br>
+     * <br>
+     * <pre>
+     * 比如当前PopupWindow显示在某个View的下方，而屏幕下方不够位置展示完整改PopupWindow，
+     * 当本设置为true，PopupWindow将会显示在原来的View的上方以满足完整显示PopupWindow的情况。
+     * </pre>
+     * <br>
+     * <br>
+     * <strong>如果您配置了{@link #setOffsetY(int)}，则对应的偏移量也是在其适配后的位置生效</strong>
+     * </p>
+     *
+     * @param enable 是否开启
+     */
+    public BasePopupWindow setAutoMirrorEnable(boolean enable) {
+        mHelper.setFlag(AUTO_MIRROR, enable);
         return this;
     }
 
