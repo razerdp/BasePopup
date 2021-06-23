@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -34,6 +35,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -67,6 +69,10 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     static final int DEFAULT_OVERLAY_NAVIGATION_BAR_MODE = OVERLAY_MASK;
     private static final int CONTENT_VIEW_ID = R.id.base_popup_content_root;
 
+    static final int STATUS_START_SHOWING = 0x1;
+    static final int STATUS_START_DISMISS = 0x2;
+    int showFlag = 0;
+
     ShowMode mShowMode = ShowMode.SCREEN;
 
     int contentRootId = CONTENT_VIEW_ID;
@@ -88,6 +94,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     boolean isDefaultMaskViewShowAnimation;
     boolean isDefaultMaskViewDismissAnimation;
+    boolean overlayMask = false;
 
     long showDuration;
     long dismissDuration;
@@ -95,7 +102,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     int animationStyleRes;
 
-    boolean isStartShowing = false;
     //callback
     BasePopupWindow.OnDismissListener mOnDismissListener;
     BasePopupWindow.OnBeforeShowCallback mOnBeforeShowCallback;
@@ -489,7 +495,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     boolean isAutoLocatePopup() {
-        return (flag & AUTO_LOCATED) != 0;
+        return (flag & AUTO_MIRROR) != 0;
     }
 
     boolean isOutSideDismiss() {
@@ -634,6 +640,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     BasePopupHelper setPopupBackground(Drawable background) {
         mBackgroundDrawable = background;
+        overlayMask = true;
         return this;
     }
 
@@ -728,6 +735,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     BasePopupHelper setBackgroundView(View backgroundView) {
         mBackgroundView = backgroundView;
+        overlayMask = true;
         return this;
     }
 
@@ -846,7 +854,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
             this.flag &= ~flag;
         } else {
             this.flag |= flag;
-            if (flag == AUTO_LOCATED) {
+            if (flag == AUTO_MIRROR) {
                 this.flag |= WITH_ANCHOR;
             }
         }
@@ -898,7 +906,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     void onAttachToWindow() {
-        isStartShowing = false;
+        showFlag &= ~STATUS_START_SHOWING;
         if (mPopupWindow != null) {
             mPopupWindow.onShowing();
         }
@@ -957,7 +965,8 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         if (mPopupWindow.mDisplayAnimateView == null || animateDismiss && (flag & CUSTOM_ON_ANIMATE_DISMISS) != 0) {
             return;
         }
-        isStartShowing = false;
+        showFlag &= ~STATUS_START_SHOWING;
+        showFlag |= STATUS_START_DISMISS;
         Message msg = BasePopupEvent.getMessage(BasePopupEvent.EVENT_DISMISS);
         if (animateDismiss) {
             startDismissAnimate(mPopupWindow.mDisplayAnimateView.getWidth(),
@@ -996,12 +1005,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         }
     }
 
-    void onAnchorTop() {
-    }
-
-    void onAnchorBottom() {
-    }
-
     @Override
     public void onKeyboardChange(Rect keyboardBounds, boolean isVisible) {
         if (mKeyboardStateChangeListener != null) {
@@ -1025,6 +1028,17 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         if (mPopupWindow != null) {
             mPopupWindow.dispatchOutSideEvent(event, touchInMask, isMaskPressed);
         }
+    }
+
+    boolean hasBackground() {
+        if (mBackgroundView != null) {
+            return true;
+        }
+        if (mBackgroundDrawable instanceof ColorDrawable) {
+            return ((ColorDrawable) mBackgroundDrawable).getColor() != Color.TRANSPARENT && mBackgroundDrawable
+                    .getAlpha() > 0;
+        }
+        return mBackgroundDrawable != null;
     }
 
     static class InnerShowInfo {
@@ -1178,6 +1192,28 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         }
     }
 
+    boolean isPrePopupBackgroundExists() {
+        if (mPopupWindow == null) return false;
+        LinkedList<WindowManagerProxy> popupList = WindowManagerProxy.PopupWindowQueueManager.getInstance()
+                .getPopupList(mPopupWindow.getContext());
+        if (popupList == null || popupList.isEmpty()) return false;
+        final int size = popupList.size();
+        if (size == 1) {
+            // 只有一个popup的时候需要留意这个popup是否正在dismiss
+            WindowManagerProxy proxy = popupList.get(0);
+            if (proxy.mPopupHelper != null && (proxy.mPopupHelper.showFlag & BasePopupHelper.STATUS_START_DISMISS) != 0) {
+                return false;
+            }
+        }
+        for (WindowManagerProxy windowManagerProxy : popupList) {
+            BasePopupHelper helper = windowManagerProxy.mPopupHelper;
+            if (helper != null && helper.hasBackground()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void clear(boolean destroy) {
         if (mPopupWindow != null && mPopupWindow.mDisplayAnimateView != null) {
@@ -1187,7 +1223,12 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         if (eventObserverMap != null) {
             eventObserverMap.clear();
         }
-        PopupUiUtils.releaseAnimation(mShowAnimation, mDismissAnimation, mShowAnimator, mDismissAnimator, mMaskViewShowAnimation, mMaskViewDismissAnimation);
+        PopupUiUtils.releaseAnimation(mShowAnimation,
+                mDismissAnimation,
+                mShowAnimator,
+                mDismissAnimator,
+                mMaskViewShowAnimation,
+                mMaskViewDismissAnimation);
         if (mBlurOption != null) {
             mBlurOption.clear();
         }
@@ -1204,7 +1245,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         if (mLinkedViewLayoutChangeListenerWrapper != null) {
             mLinkedViewLayoutChangeListenerWrapper.detach();
         }
-
+        showFlag = 0;
         dismissAnimationDelayRunnable = null;
         mShowAnimation = null;
         mDismissAnimation = null;

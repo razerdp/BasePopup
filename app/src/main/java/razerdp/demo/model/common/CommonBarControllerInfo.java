@@ -31,6 +31,9 @@ public class CommonBarControllerInfo extends DemoCommonUsageInfo {
 
     public CommonBarControllerInfo() {
         title = "控制系统Bar覆盖";
+        name = "DemoPopup";
+        javaUrl = "https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/DemoPopup.java";
+        resUrl = "https://github.com/razerdp/BasePopup/blob/master/app/src/main/res/layout/popup_demo.xml";
     }
 
     @Override

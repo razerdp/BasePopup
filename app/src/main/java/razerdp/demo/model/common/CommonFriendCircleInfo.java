@@ -16,6 +16,9 @@ public class CommonFriendCircleInfo extends DemoCommonUsageInfo {
 
     public CommonFriendCircleInfo() {
         title = "朋友圈评论";
+        name="PopupFriendCircle";
+        javaUrl="https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/PopupFriendCircle.java";
+        resUrl="https://github.com/razerdp/BasePopup/blob/master/app/src/main/res/layout/popup_friend_circle_comment.xml";
     }
 
     @Override

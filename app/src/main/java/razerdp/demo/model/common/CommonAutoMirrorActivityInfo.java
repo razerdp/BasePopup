@@ -4,24 +4,24 @@ import android.view.View;
 
 import razerdp.demo.model.DemoCommonUsageInfo;
 import razerdp.demo.ui.ActivityLauncher;
-import razerdp.demo.ui.dialog.DialogActivity;
+import razerdp.demo.ui.AutoMirrorActivity;
 import razerdp.demo.utils.UIHelper;
 
 /**
- * Created by 大灯泡 on 2020/08/17
+ * Created by 大灯泡 on 2021/06/18
  * <p>
- * Description：dialog activity
+ * Description：自动镜像
  */
-public class CommonDialogActivityInfo extends DemoCommonUsageInfo {
+public class CommonAutoMirrorActivityInfo extends DemoCommonUsageInfo {
 
-    public CommonDialogActivityInfo() {
-        title = "Dialog Activity";
+    public CommonAutoMirrorActivityInfo() {
+        title = "自动镜像定位";
         sourceVisible = false;
     }
 
     @Override
     public void toShow(View v) {
-        ActivityLauncher.start(v.getContext(), DialogActivity.class);
+        ActivityLauncher.start(v.getContext(), AutoMirrorActivity.class);
     }
 
     @Override

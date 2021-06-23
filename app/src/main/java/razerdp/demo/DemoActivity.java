@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import java.util.ArrayList;
@@ -82,6 +83,8 @@ public class DemoActivity extends BaseActivity {
         ImageView release = header.findViewById(R.id.iv_release);
         GlideApp.with(release)
                 .as(PictureDrawable.class)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .placeholder(new ColorDrawable(UIHelper.getColor(R.color.color_loading)))
                 .error(R.drawable.ic_error_gray)
                 .transition(DrawableTransitionOptions.withCrossFade())
@@ -91,6 +94,8 @@ public class DemoActivity extends BaseActivity {
         ImageView snapshot = header.findViewById(R.id.iv_snapshot);
         GlideApp.with(snapshot)
                 .as(PictureDrawable.class)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .placeholder(new ColorDrawable(UIHelper.getColor(R.color.color_loading)))
                 .error(R.drawable.ic_error_gray)
                 .transition(DrawableTransitionOptions.withCrossFade())

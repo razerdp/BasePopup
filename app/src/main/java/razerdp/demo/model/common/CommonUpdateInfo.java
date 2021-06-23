@@ -13,6 +13,9 @@ import razerdp.demo.utils.UIHelper;
 public class CommonUpdateInfo extends DemoCommonUsageInfo {
     public CommonUpdateInfo() {
         title = "Update()方法测试";
+        name = "PopupUpdateTest";
+        javaUrl = "https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/PopupUpdateTest.java";
+        resUrl = "https://github.com/razerdp/BasePopup/blob/master/app/src/main/res/layout/popup_update_test.xml";
     }
 
     @Override

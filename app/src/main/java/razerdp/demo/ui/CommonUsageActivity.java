@@ -25,6 +25,7 @@ import razerdp.demo.model.common.CommonAnchorMatchInfo;
 import razerdp.demo.model.common.CommonAnimateInfo;
 import razerdp.demo.model.common.CommonAnyPosInfo;
 import razerdp.demo.model.common.CommonArrowInfo;
+import razerdp.demo.model.common.CommonAutoMirrorActivityInfo;
 import razerdp.demo.model.common.CommonBackgroundAlignInfo;
 import razerdp.demo.model.common.CommonBackgroundInfo;
 import razerdp.demo.model.common.CommonBarControllerInfo;
@@ -121,6 +122,7 @@ public class CommonUsageActivity extends BaseActivity {
         result.add(new CommonFriendCircleInfo());
         result.add(new CommonAnchorMatchInfo());
         result.add(new CommonArrowInfo());
+        result.add(new CommonAutoMirrorActivityInfo());
         result.add(new DemoCommonUsageTitle("PopupWindow控制相关"));
         result.add(new CommonControllerInfo());
         result.add(new CommonBarControllerInfo());
@@ -178,6 +180,8 @@ public class CommonUsageActivity extends BaseActivity {
         View divider;
         @BindView(R.id.tv_option)
         DPTextView tvOption;
+        @BindView(R.id.tv_source)
+        DPTextView tvSource;
 
         public InnerItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -191,6 +195,7 @@ public class CommonUsageActivity extends BaseActivity {
 
         @Override
         public void onBindData(DemoCommonUsageInfo data, int position) {
+            tvSource.setVisibility(data.sourceVisible ? View.VISIBLE : View.GONE);
             tvFun.setText(data.title);
             tvOption.setText(TextUtils.isEmpty(data.option) ? "配置" : data.option);
         }
@@ -200,6 +205,10 @@ public class CommonUsageActivity extends BaseActivity {
             getData().toOption(v);
         }
 
+        @OnClick(R.id.tv_source)
+        void showSource(View v) {
+            getData().toSource(v);
+        }
     }
 
 }

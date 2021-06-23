@@ -23,6 +23,9 @@ public class CommonAnyPosInfo extends DemoCommonUsageInfo {
 
     public CommonAnyPosInfo() {
         title = "任意位置展示";
+        name="DemoPopup";
+        javaUrl="https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/DemoPopup.java";
+        resUrl="https://github.com/razerdp/BasePopup/blob/master/app/src/main/res/layout/popup_demo.xml";
     }
 
     @Override

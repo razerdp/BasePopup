@@ -97,8 +97,14 @@ public class BlurImageView extends ImageView {
                 if (!BlurHelper.renderScriptSupported()) {
                     PopupLog.e(TAG, "不支持脚本模糊。。。最低支持api 17(Android 4.2.2)，将采用fastblur");
                 }
-                setImageBitmapOnUiThread(BlurHelper.blur(getContext(), anchorView, option.getBlurPreScaleRatio(), option
-                        .getBlurRadius(), option.isFullScreen(), cutoutX, cutoutY), isOnUpdate);
+                setImageBitmapOnUiThread(BlurHelper.blur(getContext(),
+                        anchorView,
+                        option.getBlurPreScaleRatio(),
+                        option.getBlurRadius(),
+                        option.isFullScreen(),
+                        cutoutX,
+                        cutoutY),
+                        isOnUpdate);
             } catch (Exception e) {
                 PopupLog.e(TAG, "模糊异常", e);
                 e.printStackTrace();

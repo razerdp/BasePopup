@@ -195,7 +195,7 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
     }
 
     public QuickPopupConfig autoLocated(boolean autoLocated) {
-        setFlag(AUTO_LOCATED, autoLocated);
+        setFlag(AUTO_MIRROR, autoLocated);
         return this;
     }
 

@@ -27,7 +27,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     private static final String TAG = "PopupDecorViewProxy";
     //蒙层
     private PopupMaskLayout mMaskLayout;
-    private BasePopupHelper mHelper;
+    BasePopupHelper mHelper;
     private View mTarget;
     private Rect popupRect = new Rect();
     private Rect anchorRect = new Rect();
@@ -513,27 +513,40 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
                 contentRect.top = contentRect.top + childTopMargin - childBottomMargin;
 
+                // 处理相对模式下位置不足的情况，显示在镜像位置
                 if (mHelper.isAutoLocatePopup() && mHelper.isWithAnchor()) {
-                    int tBottom = contentRect.top + height + offsetY;
-                    int restHeight;
                     switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
                         case Gravity.TOP:
-                            restHeight = isVerticalAlignAnchorSlide ? b - anchorRect.top : anchorRect.top;
-                            if (height > restHeight) {
-                                //需要移位
-                                offsetY += isVerticalAlignAnchorSlide ? 0 : anchorRect.bottom - contentRect.top;
-                                //如果自动定位到下方，则可显示的window区域为[anchor底部，屏幕底部]
+                            if (isVerticalAlignAnchorSlide) break;
+                            // 显示在上方时，剩余空间为[0,anchor顶部]
+                            if (height > anchorRect.top) {
+                                offsetY += anchorRect.bottom - contentRect.top;
                             }
                             break;
                         case Gravity.BOTTOM:
                         default:
-                            restHeight = isVerticalAlignAnchorSlide ? anchorRect.bottom : contentBounds
-                                    .height() - anchorRect.bottom;
-
-                            if (height > restHeight) {
-                                //需要移位
-                                offsetY -= isVerticalAlignAnchorSlide ? 0 : tBottom - anchorRect.top;
-                                //如果是自动定位到上方，则可显示的window区域为[0,anchor顶部]
+                            if (isVerticalAlignAnchorSlide) break;
+                            // 显示在底部，剩余空间为[anchor.bottom，屏幕底部]
+                            if (height > contentBounds.bottom - anchorRect.bottom) {
+                                int popupContentBottom = contentRect.top + height + offsetY;
+                                offsetY -= popupContentBottom - anchorRect.top;
+                            }
+                            break;
+                    }
+                    switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
+                        case Gravity.RIGHT:
+                            if (isHorizontalAlignAnchorSlide) break;
+                            // 显示在右边，剩余空间为[anchor.right,屏幕右方]
+                            if (width > contentBounds.right - anchorRect.right) {
+                                int popupContentRight = contentRect.left + width + offsetX;
+                                offsetX += anchorRect.left - popupContentRight;
+                            }
+                            break;
+                        case Gravity.LEFT:
+                            if (isHorizontalAlignAnchorSlide) break;
+                            // 显示在左边，剩余空间为[0,anchor.left]
+                            if (width > anchorRect.left) {
+                                offsetX += anchorRect.right - contentRect.left;
                             }
                             break;
                     }

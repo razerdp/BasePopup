@@ -15,7 +15,7 @@ public class PopupBlurOption {
 
 
     private static final float DEFAULT_BLUR_RADIUS = 10;
-    private static final float DEFAULT_PRE_SCALE_RATIO = 0.15f;
+    private static final float DEFAULT_PRE_SCALE_RATIO = 0.125f;
     private static final long DEFAULT_ANIMATION_DURATION = 500;
     private static final boolean DEFAULT_BLUR_ASYNC = true;//默认子线程blur
 
