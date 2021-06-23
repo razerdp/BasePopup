@@ -82,7 +82,6 @@
 ### Precautions
 
   - **Please be sure to read this README carefully. Please check the changelog for each version upgrade, which can reduce unnecessary detours for you.**
-  - **Support is no longer supported in version 2.2.2, it is recommended that you upgrade to AndroidX as soon as possible.**
   - **Please pay attention on the dependence version, the Release version is a stable version, and Snapshot is a preview version.**
     - Release version: Generally published to Release after repeated verification of the Snapshot version. If you have higher stability requirements, please use the Release version.
     - Snapshot version: new features, issue fixes will be published  to the Snapshot version, Snapshot version is updated more frequently, but usually has new features, if you like to test new features and stability requirements are not high, please use the Snapshot version.
@@ -97,9 +96,11 @@
 ```
 allprojects {
     repositories {
-        mavenCentral() // release dependency repository (available by default configuration after 4.1)
-        maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots' } // snapshot repository (configure this maven if you need snapshot dependencies)
-        google()
+        // release dependency repository (available by default configuration after 4.1)
+        mavenCentral()
+
+        // snapshot repository (configure this maven if you need snapshot dependencies)
+        maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots' }
     }
 }
 ```
@@ -110,10 +111,8 @@ Please replace **{$latestVersion}** with the version shown in the Jcenter tab ab
 
 **Since JCenter is no longer in service, starting with version 2.3, this library will be migrated to Maven with a new dependency groupId of [io.github.razerdp]**
 
- - **Release：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion}'`
-    - e.g.  `implementation 'io.github.razerdp:BasePopup:2.3.0'`
- - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion_for_snapshot}-SNAPSHOT'`
-    - e.g. `implementation 'io.github.razerdp:BasePopup:2.3.2-SNAPSHOT'`
+ - **Release：** `implementation 'io.github.razerdp:BasePopup:3.1.4'`
+ - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:3.1.4-SNAPSHOT'`
 
 <br>
 
@@ -127,25 +126,14 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 **Snapshot dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **【Release】3.1.0** (2021/05/28)
-    * This update is a destructive update, so if you are still on version 2.x before updating, please make sure you read the following two notes.
-        * As JCenter is no longer in service, it will be migrated to MavenCentral starting with version 3.0. The new dependency groupId is `io.github.razerdp`, see [Download](#Download) above for details.
-        * Version 3.0 is a destructive update that affects all BasePopupWindow subclasses, but the changes will not be extensive, see [Note on destructive update to BasePopup 3.0](./Update_3.0.md)
+* **【Release】3.1.5** (2021/06/23)
     * 【Optimise】
-        * Add api: `hideKeyboardOnShow(boolean)`, whether to put away the keyboard when BasePopup is displayed, default is put away
-            * demo adds issue 369 test cases
-            * fixed [#369](https://github.com/razerdp/BasePopup/issues/369)
-        * The mask now only performs a dismiss when it is clicked (previously it only determined if action_up was inside the mask)
-            * `onOutSideTouch` adds the `isMaskPressed` param
-    * 【Api Modification】
-        * Delete **BaseLazyPopupWindow**: henceforth there is no need to distinguish between lazy loading and normal BasePopupWindow, and the reliance on BasePopupWindow is uniform
-        * Remove the method `onCreateConstructor`: this method is actually for the BaseLazyPopupWindow and is not needed now that there is no more BaseLazyPopupWindow.
-        * Delete method `onCreateContentView`: the deletion of this method will affect all BasePopupWindow subclasses and you will need to change them manually
-            * This method will be replaced by `setContentView(@LayoutRes int layoutResID)` or `setContentView(final View view)`, which you will need to modify to use.
-            * If you use `setContentView(final View view)`, we still recommend that you use setContentView(createPopupById(layoutResID)) so that we parse to the correct xml configuration.
-    * 【Bug fixed】
-        * Fix Popup size not updating after screen rotation
-        * Fix `update(float,float)` not working
+        * Optimisation of BlurHelper, RenderScript using single instance
+        * Add `setOverlayMask(boolean)`: whether to allow mask overlays, default is no overlays. BasePopup with default background on the same page will not overlay the mask until the background is set.
+        * deprecated `setAutoLocatePopup`，please use `setAutoMirrorEnable` instead
+        * Add left and right automatic mirror positioning function, add demos
+    * 【Fixed Bug】
+        * Fix `onOutSideTouch` not being passed to the DecorView after intercepting the event [#393-comment](https://github.com/razerdp/BasePopup/issues/393#issuecomment-853687468)
 
 <br>
 
