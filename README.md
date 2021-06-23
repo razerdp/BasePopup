@@ -130,7 +130,7 @@ BasePopup配备完善的文档，详情请看。
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Release】3.1.5** (2021/06/23)
+* **【Release】3.1.4** (2021/06/23)
     * 【优化】
         * 优化BlurHelper，RenderScript使用单例
         * 增加`setOverlayMask(boolean)`：是否允许蒙层叠加，默认不叠加。同个页面默认背景的BasePopup不会叠加蒙层，直到设置了背景为止。

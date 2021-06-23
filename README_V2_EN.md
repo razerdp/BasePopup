@@ -126,7 +126,7 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 **Snapshot dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **【Release】3.1.5** (2021/06/23)
+* **【Release】3.1.4** (2021/06/23)
     * 【Optimise】
         * Optimisation of BlurHelper, RenderScript using single instance
         * Add `setOverlayMask(boolean)`: whether to allow mask overlays, default is no overlays. BasePopup with default background on the same page will not overlay the mask until the background is set.
