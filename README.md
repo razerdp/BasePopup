@@ -47,6 +47,7 @@
 
 </div>
 
+
 ---
 
 ### 导航
@@ -54,9 +55,8 @@
  - [特性](#特性)
  - [注意事项](#注意事项)
  - [环境依赖](#环境依赖)
- - [快速入门](#快速入门)
+ - [文档](#文档)
    - [BasePopup手册](https://www.yuque.com/razerdp/basepopup)
- - [Api](#api)
  - [更新日志](#更新日志-历史更新)
    - [历史更新](https://www.yuque.com/razerdp/basepopup/uyrsxx)
  - [例子预览](#例子预览)
@@ -84,7 +84,6 @@
 ### 注意事项
 
   - **请务必仔细阅读本README,每个版本升级请务必查阅更新日志，这可以为您减少不必要弯路**
-  - **2.2.2版本开始不再支持Support，建议您尽快升级到AndroidX**
   - **请注意引用版本的问题，Release版本是稳定版，Snapshot是预览版。**
     - Release版本：一般在Snapshot版本反复验证修复后发布到Release，如果您对稳定性要求较高，请使用Release版本。
     - Snapshot：一般新功能、issue修复都会发布到Snapshot版本，Snapshot版本发布比较频繁，但通常会拥有新的功能，如果您喜欢试验新功能同时对稳定性要求不高，请使用Snapshot版本。
@@ -100,31 +99,29 @@
 ```
 allprojects {
     repositories {
-        mavenCentral() // release依赖仓库（4.1后as默认配置有）
-        maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots' } // snapshot仓库（如果需要snapshot依赖，请配置该maven）
-        google()
+        // release依赖仓库（4.1后as默认配置有）
+        mavenCentral()
+
+        // snapshot仓库（如果需要snapshot依赖，请配置该maven）
+        maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots' }
     }
 }
 ```
 
 #### 依赖
 
-请把下述 **{$latestVersion}** 替换为上面表格中对应的版本。
-
 **由于JCenter已经停止服务，自2.3版本开始，本库将迁移到Maven，新的依赖groupId为 【io.github.razerdp】**
 
 **3.0版本是破坏性升级，请您务必阅读升级提示**：[关于BasePopup 3.0的破坏性更新说明](./Update_3.0.md)
 
- - **Release：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion}'`
-    - e.g.  `implementation 'io.github.razerdp:BasePopup:2.3.0'`
- - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:{$latestVersion_for_snapshot}-SNAPSHOT'`
-    - e.g. `implementation 'io.github.razerdp:BasePopup:2.3.2-SNAPSHOT'`
+ - **Release：** `implementation 'io.github.razerdp:BasePopup:3.1.4'`
+ - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:3.1.4-SNAPSHOT'`
 
 <br>
 
 ### 文档
 
-BasePopup配备完善的文档，建议您优先查阅文档。
+BasePopup配备完善的文档，详情请看。
 
 [**BasePopup手册**](https://www.yuque.com/razerdp/basepopup)
 
@@ -133,16 +130,8 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Snapshot】3.1.1-SNAPSHOT** (2021/06/03)
-    * 优化BlurHelper，RenderScript使用单例
-    * 修复`onOutSideTouch`拦截事件后，没有传到DecorView的问题 [#393-comment](https://github.com/razerdp/BasePopup/issues/393#issuecomment-853687468)
-* **【Snapshot】3.1.2-SNAPSHOT** (2021/06/17)
-    * 增加`setOverlayMask(boolean)`：是否允许蒙层叠加，默认不叠加，一个页面同个background不会重复叠加，直到设置了背景为止。
-* **【Snapshot】3.1.3-SNAPSHOT** (2021/06/18)
-    * deprecated `setAutoLocatePopup`，请用`setAutoMirrorEnable`代替
-    * 增加左右自动镜像定位的功能，增加demo
-
-
+* **【Snapshot】3.1.5-SNAPSHOT** (2021/06/24)
+    * 增加对application创建阶段showpopup的支持
 
 <br>
 
@@ -171,9 +160,7 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 ### 交流群
 
-因公司不能登录QQ，因此解散原QQ群。
-
-同时开通微信群，主要用于交流和BasePopup的反馈，为了保证微信群的质量（主要是远离斗图党和广告党），因此只有打赏了之后才能进群~
+为了保证微信群的质量（主要是远离斗图党和广告党），因此只有打赏了之后才能进群~
 
 【**打赏后请加微信小号：razerdp_test，并注明付款账号，定期核验后会通过**】
 
@@ -187,4 +174,12 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 ### License
 
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frazerdp%2FBasePopup.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Frazerdp%2FBasePopup?ref=badge_large)
+
 [Apache-2.0](./LICENSE)
+
+
+<p align="center">
+  Visit Count（from 2020/08/19）<br>
+  <img src="https://profile-counter.glitch.me/razerdp-basepopup/count.svg" />
+</p>
