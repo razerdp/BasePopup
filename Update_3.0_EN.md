@@ -28,8 +28,6 @@ However, with more and more people asking this question, I think this change is 
 
 So for this change I will release version 3.0 straight away, to distinguish it from version 2.x.
 
-Translated with www.DeepL.com/Translator (free version)
-
 
 ### Benefits
 
