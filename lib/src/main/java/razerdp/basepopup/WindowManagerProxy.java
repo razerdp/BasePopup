@@ -64,6 +64,9 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
                 if (!popupDecorViewProxy.isAttachedToWindow()) return;
             }
             mWindowManager.removeViewImmediate(popupDecorViewProxy);
+            if (mPopupDecorViewProxy.mHelper!=null) {
+                mPopupDecorViewProxy.mHelper.showFlag &= ~BasePopupHelper.STATUS_START_DISMISS;
+            }
             mPopupDecorViewProxy.clear(true);
             mPopupDecorViewProxy = null;
         } else {

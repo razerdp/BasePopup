@@ -84,8 +84,6 @@ public class DemoActivity extends BaseActivity {
 
         checkForUpdate();
 
-        showWjPopup();
-
     }
 
     private View genVersionHeader() {
@@ -134,21 +132,6 @@ public class DemoActivity extends BaseActivity {
         return result;
     }
 
-    void showWjPopup() {
-        QuickPopupBuilder.with(this)
-                .contentView(R.layout.popup_wj)
-                .config(new QuickPopupConfig()
-                        .withShowAnimation(AnimationHelper.asAnimation()
-                                .withScale(ScaleConfig.CENTER)
-                                .toShow())
-                        .withDismissAnimation(AnimationHelper.asAnimation()
-                                .withScale(ScaleConfig.CENTER)
-                                .toDismiss())
-                        .withClick(R.id.tv_go, null, true)
-                        .blurBackground(true)
-                        .outSideDismiss(false))
-                .show();
-    }
 
     @Override
     public void onTitleRightClick(View view) {
@@ -209,7 +192,7 @@ public class DemoActivity extends BaseActivity {
     }
 
     void onHeaderClick() {
-        showWjPopup();
+        UIHelper.toast("感谢您的支持，您的star和issue是我维护BasePopup最大的动力");
     }
 
 
