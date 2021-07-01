@@ -115,7 +115,7 @@ allprojects {
 **3.0版本是破坏性升级，请您务必阅读升级提示**：[关于BasePopup 3.0的破坏性更新说明](./Update_3.0.md)
 
  - **Release：** `implementation 'io.github.razerdp:BasePopup:3.1.4'`
- - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:3.1.5-SNAPSHOT'`
+ - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:3.1.6-SNAPSHOT'`
 
 <br>
 
