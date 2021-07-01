@@ -132,6 +132,8 @@ BasePopup配备完善的文档，详情请看。
 
 * **【Snapshot】3.1.5-SNAPSHOT** (2021/06/24)
     * 增加对application创建阶段showpopup的支持
+* **【Snapshot】3.1.6-SNAPSHOT** (2021/07/01)
+    * 优化isShowing()方法，现在只要开始调用过showpopupwindow()，就可以立即获取到正确的isShowing()，不需要等待popup完全展示后才能正确获取
 
 <br>
 

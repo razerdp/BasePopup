@@ -849,18 +849,17 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
         View decorView = getDecorView();
         if (decorView == null) {
             onShowError(new NullPointerException(PopupUtils.getString(R.string.basepopup_error_decorview,
-                    ownerParentLog())));
+                                                                      ownerParentLog())));
             return;
         }
         if (decorView.getWindowToken() == null) {
             onShowError(new IllegalStateException(PopupUtils.getString(R.string.basepopup_window_not_prepare,
-                    ownerParentLog())));
+                                                                       ownerParentLog())));
             pendingPopupWindow(decorView, v, positionMode);
             return;
         }
         onLogInternal(PopupUtils.getString(R.string.basepopup_window_prepared, ownerParentLog()));
         if (!onBeforeShow()) return;
-        mHelper.showFlag |= BasePopupHelper.STATUS_START_SHOWING;
         mHelper.prepare(v, positionMode);
         try {
             if (isShowing()) {
@@ -1021,10 +1020,10 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
     public BasePopupWindow setAdjustInputMode(int viewId, int flag) {
         mHelper.keybaordAlignViewId = viewId;
         mHelper.setFlag(FLAG_KEYBOARD_ALIGN_TO_ROOT
-                | FLAG_KEYBOARD_ALIGN_TO_VIEW
-                | FLAG_KEYBOARD_IGNORE_OVER
-                | FLAG_KEYBOARD_ANIMATE_ALIGN
-                | FLAG_KEYBOARD_FORCE_ADJUST, false);
+                                | FLAG_KEYBOARD_ALIGN_TO_VIEW
+                                | FLAG_KEYBOARD_IGNORE_OVER
+                                | FLAG_KEYBOARD_ANIMATE_ALIGN
+                                | FLAG_KEYBOARD_FORCE_ADJUST, false);
         mHelper.setFlag(flag, true);
         return this;
     }
@@ -1046,10 +1045,10 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
     public BasePopupWindow setAdjustInputMode(View alignTarget, int flag) {
         mHelper.keybaordAlignView = alignTarget;
         mHelper.setFlag(FLAG_KEYBOARD_ALIGN_TO_ROOT
-                | FLAG_KEYBOARD_ALIGN_TO_VIEW
-                | FLAG_KEYBOARD_IGNORE_OVER
-                | FLAG_KEYBOARD_ANIMATE_ALIGN
-                | FLAG_KEYBOARD_FORCE_ADJUST, false);
+                                | FLAG_KEYBOARD_ALIGN_TO_VIEW
+                                | FLAG_KEYBOARD_IGNORE_OVER
+                                | FLAG_KEYBOARD_ANIMATE_ALIGN
+                                | FLAG_KEYBOARD_FORCE_ADJUST, false);
         mHelper.setFlag(flag, true);
         return this;
     }
@@ -1337,15 +1336,14 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
 
     //region ------------------------------------------Getter/Setter-----------------------------------------------
 
-    boolean isShowingInternal() {
-        return isShowing() || (mHelper.showFlag & BasePopupHelper.STATUS_START_SHOWING) != 0;
-    }
-
     /**
      * PopupWindow是否处于展示状态
      */
     public boolean isShowing() {
-        return mPopupWindowProxy == null ? false : mPopupWindowProxy.isShowing();
+        if (mPopupWindowProxy == null) {
+            return false;
+        }
+        return mPopupWindowProxy.isShowing() || (mHelper.showFlag & BasePopupHelper.STATUS_START_SHOWING) != 0;
     }
 
     public OnDismissListener getOnDismissListener() {
@@ -1602,8 +1600,8 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
      * </ul>
      *
      * @param mode <ul><li>GravityMode.RELATIVE_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup处于该Anchor的哪个位置</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             </ul>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     </ul>
      */
     public BasePopupWindow setPopupGravity(GravityMode mode, int popupGravity) {
         mHelper.setPopupGravity(mode, popupGravity);
@@ -1997,9 +1995,9 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
         mHelper.setFlag(BasePopupFlag.TOUCHABLE, touchable);
         if (isShowing()) {
             ((PopupWindowProxy) getPopupWindow()).updateFlag(touchable ? MODE_REMOVE : MODE_ADD,
-                    true,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+                                                             true,
+                                                             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                                                             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
         }
         return this;
     }
@@ -2047,7 +2045,7 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
         if (Looper.myLooper() != Looper.getMainLooper()) {
             throw new CalledFromWrongThreadException(PopupUtils.getString(R.string.basepopup_error_thread));
         }
-        if (!isShowingInternal() || mContentView == null) return;
+        if (!isShowing() || mContentView == null) return;
         mHelper.dismiss(animateDismiss);
     }
 
@@ -2085,7 +2083,7 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
         boolean result = true;
         if (mHelper.mOnBeforeShowCallback != null) {
             result = mHelper.mOnBeforeShowCallback.onBeforeShow(mContentView, v,
-                    mHelper.mShowAnimation != null || mHelper.mShowAnimator != null);
+                                                                mHelper.mShowAnimation != null || mHelper.mShowAnimator != null);
         }
         return result;
     }

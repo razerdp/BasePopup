@@ -187,12 +187,12 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             //蒙层给最大值
             if (child == mMaskLayout) {
                 measureChild(child,
-                        adjustWidthMeasureSpec(widthMeasureSpec, BasePopupFlag.OVERLAY_MASK),
-                        adjustHeightMeasureSpec(heightMeasureSpec, BasePopupFlag.OVERLAY_MASK));
+                             adjustWidthMeasureSpec(widthMeasureSpec, BasePopupFlag.OVERLAY_MASK),
+                             adjustHeightMeasureSpec(heightMeasureSpec, BasePopupFlag.OVERLAY_MASK));
             } else {
                 measureWrappedDecorView(child,
-                        adjustWidthMeasureSpec(widthMeasureSpec, BasePopupFlag.OVERLAY_CONTENT),
-                        adjustHeightMeasureSpec(heightMeasureSpec, BasePopupFlag.OVERLAY_CONTENT));
+                                        adjustWidthMeasureSpec(widthMeasureSpec, BasePopupFlag.OVERLAY_CONTENT),
+                                        adjustHeightMeasureSpec(heightMeasureSpec, BasePopupFlag.OVERLAY_CONTENT));
             }
         }
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
@@ -430,9 +430,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             if (child == mMaskLayout) {
                 contentBounds.offset(mHelper.maskOffsetX, mHelper.maskOffsetY);
                 child.layout(contentBounds.left,
-                        contentBounds.top,
-                        contentBounds.left + getMeasuredWidth(),
-                        contentBounds.top + getMeasuredHeight());
+                             contentBounds.top,
+                             contentBounds.left + getMeasuredWidth(),
+                             contentBounds.top + getMeasuredHeight());
             } else {
                 anchorRect.set(mHelper.getAnchorViewBound());
                 anchorRect.offset(-location[0], -location[1]);
@@ -553,9 +553,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 }
 
                 contentRect.set(contentRect.left,
-                        contentRect.top,
-                        contentRect.left + width,
-                        contentRect.top + height);
+                                contentRect.top,
+                                contentRect.left + width,
+                                contentRect.top + height);
 
                 contentRect.offset(offsetX, offsetY);
 
@@ -604,7 +604,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 child.layout(contentRect.left, contentRect.top, contentRect.right, contentRect.bottom);
                 if (delayLayoutMask) {
                     mMaskLayout.handleAlignBackground(mHelper.getAlignBackgroundGravity(),
-                            contentRect.left, contentRect.top, contentRect.right, contentRect.bottom);
+                                                      contentRect.left, contentRect.top, contentRect.right, contentRect.bottom);
                 }
                 if (isRelativeToAnchor) {
                     popupRect.set(contentRect);
@@ -820,6 +820,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     @Override
     public void clear(boolean destroy) {
         if (mHelper != null) {
+            mHelper.showFlag = 0;
             mHelper.mKeyboardStateChangeListener = null;
             mHelper.removeEventObserver(this);
         }
