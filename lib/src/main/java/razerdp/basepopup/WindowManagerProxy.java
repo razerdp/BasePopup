@@ -113,9 +113,7 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
         if (params instanceof LayoutParams) {
             LayoutParams p = (LayoutParams) params;
             if (mPopupHelper != null) {
-                if (mPopupHelper.getShowCount() > 1) {
-                    p.type = LayoutParams.TYPE_APPLICATION_SUB_PANEL;
-                }
+                p.type = LayoutParams.TYPE_APPLICATION_PANEL + mPopupHelper.priority.type;
                 //偏移交给PopupDecorViewProxy处理，此处固定为0
                 p.y = 0;
                 p.x = 0;

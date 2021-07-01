@@ -72,14 +72,13 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     static final int STATUS_START_SHOWING = 0x1;
     static final int STATUS_START_DISMISS = 0x2;
     int showFlag = 0;
+    BasePopupWindow.Priority priority = BasePopupWindow.Priority.NORMAL;
 
     ShowMode mShowMode = ShowMode.SCREEN;
 
     int contentRootId = CONTENT_VIEW_ID;
 
     int flag = IDLE;
-
-    static int showCount;
 
     //animate
     Animation mShowAnimation;
@@ -711,11 +710,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return layoutParams;
     }
 
-    int getShowCount() {
-        return showCount;
-    }
-
-
     BasePopupHelper setContentRootId(View contentRoot) {
         if (contentRoot == null) return this;
         if (contentRoot.getId() == View.NO_ID) {
@@ -835,11 +829,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     void onDismiss() {
-        if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP ||
-                android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
-            showCount--;
-            showCount = Math.max(0, showCount);
-        }
         if (isAutoShowInputMethod()) {
             KeyboardUtils.close(mPopupWindow.getContext());
         }
@@ -897,11 +886,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         } else {
             startShowAnimate(mPopupWindow.mDisplayAnimateView.getWidth(),
                              mPopupWindow.mDisplayAnimateView.getHeight());
-        }
-        //针对官方的坑（两个popup切换页面后重叠）
-        if (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP ||
-                android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
-            showCount++;
         }
     }
 
