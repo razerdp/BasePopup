@@ -1,7 +1,7 @@
  **中文** | [**English**](./README_V2_EN.md)
 
 <p align="center"><img src="./img/logo.png" alt="Logo图片似乎加载不出来" height="360"/></p>
-<h2 align="center">BasePopup - Android下打造通用便捷的PopupWindow</h2>
+<h2 align="center">BasePopup - Android下打造通用便捷的PopupWindow弹窗库</h2>
 <div align="center">
 
 <table align="center">
