@@ -139,7 +139,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     KeyboardUtils.OnKeyboardChangeListener mUserKeyboardStateChangeListener;
     BasePopupWindow.KeyEventListener mKeyEventListener;
 
-    int mSoftInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
+    int mSoftInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED;
     ViewGroup.MarginLayoutParams layoutParams;
 
     int maxWidth, maxHeight, minWidth, minHeight;
