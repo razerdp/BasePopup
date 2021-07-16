@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Message;
 import android.util.LayoutDirection;
@@ -12,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
@@ -56,7 +58,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
     Rect keyboardBoundsCache;
     boolean keyboardVisibleCache = false;
-    int lastKeyboardOffset = 0;
+    Point lastKeyboardOffset = new Point();
 
     private PopupDecorViewProxy(Context context) {
         super(context);
@@ -239,8 +241,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         if (mTarget == null || mTarget.getVisibility() == GONE) return;
         final LayoutParams lp = mTarget.getLayoutParams();
 
-        widthMeasureSpec = getChildMeasureSpec(widthMeasureSpec, 0, lp.width);
-        heightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, 0, lp.height);
+        widthMeasureSpec = getChildMeasureSpec(widthMeasureSpec, childLeftMargin + childRightMargin, lp.width);
+        heightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, childTopMargin + childBottomMargin, lp.height);
 
 
         int widthSize = reMeasure ? MeasureSpec.getSize(widthMeasureSpec) :
@@ -477,8 +479,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                         break;
                 }
 
-                contentRect.left += childLeftMargin - childRightMargin;
-
                 switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
                     case Gravity.TOP:
                         if (isRelativeToAnchor) {
@@ -510,8 +510,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                         }
                         break;
                 }
-
-                contentRect.top = contentRect.top + childTopMargin - childBottomMargin;
 
                 // 处理相对模式下位置不足的情况，显示在镜像位置
                 if (mHelper.isAutoLocatePopup() && mHelper.isWithAnchor()) {
@@ -597,9 +595,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 touchableRect.right -= childRightMargin;
                 touchableRect.bottom -= childBottomMargin;
                 touchableRectOnNoKeyboard.set(touchableRect);
-                if (lastKeyboardOffset != 0) {
-                    touchableRect.offset(0, lastKeyboardOffset);
-                }
+                touchableRect.offset(lastKeyboardOffset.x, lastKeyboardOffset.y);
 
                 child.layout(contentRect.left, contentRect.top, contentRect.right, contentRect.bottom);
                 if (delayLayoutMask) {
@@ -743,7 +739,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     @Override
     public void onKeyboardChange(Rect keyboardBounds, boolean isVisible) {
         if (mHelper.isOutSideTouchable() && !mHelper.isOverlayStatusbar()) return;
-        int offset = 0;
         boolean forceAdjust = (mHelper.flag & BasePopupFlag.KEYBOARD_FORCE_ADJUST) != 0;
         boolean process = forceAdjust || ((PopupUiUtils.getScreenOrientation() != Configuration.ORIENTATION_LANDSCAPE)
                 && (mHelper.getSoftInputMode() == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN ||
@@ -767,54 +762,103 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             alignWhat = mTarget;
         }
 
+        int offsetX;
+        int offsetY;
+        final int keyboardGravity = mHelper.keyboardGravity;
         boolean animate = (mHelper.flag & BasePopupFlag.KEYBOARD_ANIMATE_ALIGN) != 0;
         alignWhat.getLocationOnScreen(location);
         //自身或者指定view的bottom
-        int bottom = location[1] + alignWhat.getHeight();
+        final int left = location[0];
+        final int top = location[1];
+        final int right = left + alignWhat.getWidth();
+        final int bottom = top + alignWhat.getHeight();
+        final int centerX = (left + right) >> 1;
+        final int centerY = (top + bottom) >> 1;
+
+        switch (keyboardGravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
+            case Gravity.LEFT:
+                offsetX = -left;
+                break;
+            case Gravity.RIGHT:
+                offsetX = keyboardBounds.right - right;
+                break;
+            case Gravity.CENTER_HORIZONTAL:
+                offsetX = keyboardBounds.centerX() - centerX;
+                break;
+            default:
+                offsetX = 0;
+                break;
+        }
+        switch (keyboardGravity & Gravity.VERTICAL_GRAVITY_MASK) {
+            case Gravity.TOP:
+                offsetY = -top;
+                break;
+            case Gravity.BOTTOM:
+                offsetY = keyboardBounds.top - bottom;
+                break;
+            case Gravity.CENTER_VERTICAL:
+                offsetY = (keyboardBounds.top >> 1) - centerY;
+                break;
+            default:
+                offsetY = 0;
+                break;
+        }
 
         if (isVisible && keyboardBounds.height() > 0) {
-            offset = keyboardBounds.top - bottom;
-            if (bottom <= keyboardBounds.top
-                    && (mHelper.flag & BasePopupFlag.KEYBOARD_IGNORE_OVER_KEYBOARD) != 0
-                    && lastKeyboardBounds.isEmpty()) {
-                offset = 0;
+            if ((mHelper.flag & BasePopupFlag.KEYBOARD_IGNORE_OVER_KEYBOARD) != 0) {
+                // 忽略basepopup在键盘上方
+                if (bottom <= keyboardBounds.height() && lastKeyboardBounds.isEmpty()) {
+                    offsetY = 0;
+                }
             } else {
-                //如果是有anchor，则考虑anchor的情况
                 if (mHelper.isWithAnchor()) {
+                    //如果是有anchor，则考虑anchor的情况
                     int gravity = PopupUiUtils.computeGravity(popupRect, anchorRect);
                     if ((gravity & Gravity.VERTICAL_GRAVITY_MASK) == Gravity.TOP) {
                         //显示在anchor顶部，则需要考虑anchor的高度
-                        offset -= mHelper.getAnchorViewBound().height();
+                        offsetY -= mHelper.getAnchorViewBound().height();
                     }
                 }
             }
+            offsetX += mHelper.keyboardOffsetX;
+            offsetY += mHelper.keyboardOffsetY;
+        } else {
+            offsetX = offsetY = 0;
         }
 
         if (animate) {
-            animateTranslate(mTarget, isVisible, offset);
+            animateTranslate(mTarget, offsetX, offsetY);
         } else {
-            mTarget.setTranslationY(isVisible ? mTarget.getTranslationY() + offset : 0);
+            mTarget.setTranslationX(isVisible ? mTarget.getTranslationX() + offsetX : offsetX);
+            mTarget.setTranslationY(isVisible ? mTarget.getTranslationY() + offsetY : offsetY);
         }
 
         if (isVisible) {
             touchableRectOnNoKeyboard.set(touchableRect);
-            lastKeyboardOffset = offset;
-            touchableRect.offset(0, offset);
+            lastKeyboardOffset.set(offsetX, offsetY);
+            touchableRect.offset(offsetX, offsetY);
             lastKeyboardBounds.set(keyboardBounds);
         } else {
-            lastKeyboardOffset = 0;
+            lastKeyboardOffset.set(offsetX, offsetY);
             touchableRect.set(touchableRectOnNoKeyboard);
             lastKeyboardBounds.setEmpty();
         }
     }
 
-    private void animateTranslate(View target, boolean isVisible, int offset) {
+    private void animateTranslate(View target, int offsetX, int offsetY) {
         target.animate().cancel();
-        if (isVisible) {
-            target.animate().translationYBy(offset).setDuration(300).start();
+        ViewPropertyAnimator anim = target.animate();
+        if (offsetX != 0) {
+            anim.translationXBy(offsetX);
         } else {
-            target.animate().translationY(0).setDuration(200).start();
+            anim.translationX(0);
         }
+        if (offsetY != 0) {
+            anim.translationYBy(offsetY);
+        } else {
+            anim.translationY(0);
+        }
+        anim.start();
     }
 
     @Override

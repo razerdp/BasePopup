@@ -118,6 +118,10 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     int preMeasureWidth;
     int preMeasureHeight;
 
+    int keyboardGravity = Gravity.BOTTOM;
+    int keyboardOffsetX;
+    int keyboardOffsetY;
+
     int popupViewWidth = 0;
     int popupViewHeight = 0;
     int layoutDirection = LayoutDirection.LTR;
