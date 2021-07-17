@@ -54,6 +54,16 @@
             android:theme="@style/MyCheckBox" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/check_ignore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="FLAG_KEYBOARD_IGNORE_OVER\n（键盘适配仅作用于无法完整显示的情况）"
+            android:textColor="@color/text_black2"
+            android:textSize="@dimen/text_small"
+            android:theme="@style/MyCheckBox" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/check_force"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

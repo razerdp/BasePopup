@@ -16,7 +16,7 @@ public class CommonInputInfo extends DemoCommonUsageInfo {
 
     public boolean adjust = true;
     public boolean autoOpen = true;
-    public int alignMode = BasePopupWindow.FLAG_KEYBOARD_ALIGN_TO_ROOT | BasePopupWindow.FLAG_KEYBOARD_ANIMATE_ALIGN;
+    public int keyboardFlag = BasePopupWindow.FLAG_KEYBOARD_ALIGN_TO_ROOT | BasePopupWindow.FLAG_KEYBOARD_ANIMATE_ALIGN;
     public int keyboardGravity = Gravity.BOTTOM;
 
 
@@ -39,7 +39,7 @@ public class CommonInputInfo extends DemoCommonUsageInfo {
         mPopupInput.setKeyboardAdaptive(adjust)
                 .setAutoShowKeyboard(mPopupInput.findViewById(R.id.ed_input), autoOpen)
                 .setKeyboardGravity(keyboardGravity)
-                .setKeyboardAdaptionMode(R.id.ed_input, alignMode)
+                .setKeyboardAdaptionMode(R.id.ed_input, keyboardFlag)
                 .showPopupWindow();
     }
 

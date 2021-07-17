@@ -5,13 +5,12 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 
-import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.OnClick;
 import razerdp.basepopup.BasePopupWindow;
@@ -40,6 +39,8 @@ public class PopupInputOption extends BaseOptionPopup<CommonInputInfo> {
     AppCompatCheckBox mCheckAjustInput;
     @BindView(R.id.check_auto_open)
     AppCompatCheckBox mCheckAutoOpen;
+    @BindView(R.id.check_ignore)
+    AppCompatCheckBox mCheckIgnore;
     @BindView(R.id.check_force)
     AppCompatCheckBox mCheckForce;
     @BindView(R.id.tv_go)
@@ -95,20 +96,23 @@ public class PopupInputOption extends BaseOptionPopup<CommonInputInfo> {
 
     @OnClick(R.id.tv_go)
     void ok() {
-        int alignMode = 0;
+        int keyboardFlag = 0;
         if (mCheckAlignAnimate.isChecked()) {
-            alignMode |= BasePopupWindow.FLAG_KEYBOARD_ANIMATE_ALIGN;
+            keyboardFlag |= BasePopupWindow.FLAG_KEYBOARD_ANIMATE_ALIGN;
         }
         if (mCheckAlignToRoot.isChecked()) {
-            alignMode |= BasePopupWindow.FLAG_KEYBOARD_ALIGN_TO_ROOT;
+            keyboardFlag |= BasePopupWindow.FLAG_KEYBOARD_ALIGN_TO_ROOT;
         }
         if (mCheckAlignToView.isChecked()) {
-            alignMode |= BasePopupWindow.FLAG_KEYBOARD_ALIGN_TO_VIEW;
+            keyboardFlag |= BasePopupWindow.FLAG_KEYBOARD_ALIGN_TO_VIEW;
         }
         if (mCheckForce.isChecked()) {
-            alignMode |= BasePopupWindow.FLAG_KEYBOARD_FORCE_ADJUST;
+            keyboardFlag |= BasePopupWindow.FLAG_KEYBOARD_FORCE_ADJUST;
         }
-        mInfo.alignMode = alignMode;
+        if (mCheckIgnore.isChecked()){
+            keyboardFlag |= BasePopupWindow.FLAG_KEYBOARD_IGNORE_OVER;
+        }
+        mInfo.keyboardFlag = keyboardFlag;
         mInfo.adjust = mCheckAjustInput.isChecked();
         mInfo.autoOpen = mCheckAutoOpen.isChecked();
         int gravity = Gravity.NO_GRAVITY;
