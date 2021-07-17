@@ -122,13 +122,6 @@ public class QuickPopupBuilder implements LifecycleObserver {
         return show(null);
     }
 
-    @Deprecated
-    public QuickPopup show(int anchorViewResid) {
-        QuickPopup quickPopup = build();
-        quickPopup.showPopupWindow(anchorViewResid);
-        return quickPopup;
-    }
-
     public QuickPopup show(View anchorView) {
         QuickPopup quickPopup = build();
         quickPopup.showPopupWindow(anchorView);

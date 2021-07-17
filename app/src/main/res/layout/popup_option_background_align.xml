@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
@@ -64,6 +63,7 @@
                 android:textSize="@dimen/text_small"
                 android:theme="@style/MyCheckBox" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -90,6 +90,150 @@
                 android:theme="@style/MyCheckBox" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/check_sync_duration"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="蒙层动画时间同步"
+                android:checked="true"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small"
+                android:theme="@style/MyCheckBox" />
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/check_overlay_mask"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="蒙层是否叠加"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small"
+                android:theme="@style/MyCheckBox" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tv_content_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ContentView动画时间：500ms"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/progress_content_duration"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:max="3000"
+                android:progress="500" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tv_mask_offsetx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="蒙层水平位移：0"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/progress_offsetx"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:max="100"
+                android:progress="0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tv_mask_offsety"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="蒙层垂直位移：0"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/progress_offsety"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:max="100"
+                android:progress="0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_select_show"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/common_selector"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_padding"
+                android:text="请选择蒙层展示动画："
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small" />
+
+            <TextView
+                android:id="@+id/tv_mask_anim_show"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="请选择动画（默认透明度）"
+                android:textColor="@color/text_black1"
+                android:textColorHint="@color/text_black2_20"
+                android:textSize="@dimen/text_small"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_select_dismiss"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/common_selector"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_padding"
+                android:text="请选择蒙层消失动画："
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/text_small" />
+
+            <TextView
+                android:id="@+id/tv_mask_anim_dismiss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="请选择动画（默认透明度）"
+                android:textColor="@color/text_black1"
+                android:textColorHint="@color/text_black2_20"
+                android:textSize="@dimen/text_small"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
 
 

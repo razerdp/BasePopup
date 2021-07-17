@@ -65,7 +65,7 @@
            android:paddingTop="8dp"
            android:paddingRight="@dimen/default_padding"
            android:paddingBottom="8dp"
-           android:text="showPopUp"
+           android:text="showSystemPopUp"
            android:textColor="@color/white"
            android:textSize="@dimen/text_normal"
            app:backgroundColor="@color/color_blue"

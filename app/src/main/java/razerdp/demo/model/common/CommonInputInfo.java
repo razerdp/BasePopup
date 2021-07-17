@@ -1,5 +1,6 @@
 package razerdp.demo.model.common;
 
+import android.view.Gravity;
 import android.view.View;
 
 import razerdp.basepopup.BasePopupWindow;
@@ -16,6 +17,7 @@ public class CommonInputInfo extends DemoCommonUsageInfo {
     public boolean adjust = true;
     public boolean autoOpen = true;
     public int alignMode = BasePopupWindow.FLAG_KEYBOARD_ALIGN_TO_ROOT | BasePopupWindow.FLAG_KEYBOARD_ANIMATE_ALIGN;
+    public int keyboardGravity = Gravity.BOTTOM;
 
 
     public CommonInputInfo() {
@@ -34,9 +36,10 @@ public class CommonInputInfo extends DemoCommonUsageInfo {
         if (mPopupInput == null) {
             mPopupInput = new PopupInput(v.getContext());
         }
-        mPopupInput.setAdjustInputMethod(adjust)
-                .setAutoShowInputMethod(mPopupInput.findViewById(R.id.ed_input), autoOpen)
-                .setAdjustInputMode(R.id.ed_input, alignMode)
+        mPopupInput.setKeyboardAdaptive(adjust)
+                .setAutoShowKeyboard(mPopupInput.findViewById(R.id.ed_input), autoOpen)
+                .setKeyboardGravity(keyboardGravity)
+                .setKeyboardAdaptionMode(R.id.ed_input, alignMode)
                 .showPopupWindow();
     }
 

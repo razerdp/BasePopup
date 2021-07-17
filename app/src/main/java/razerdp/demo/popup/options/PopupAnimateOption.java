@@ -50,7 +50,7 @@ public class PopupAnimateOption extends BaseOptionPopup<CommonAnimateInfo> {
         super(context);
         setContentView(R.layout.popup_option_animate);
         checkClipchildren.setChecked(true);
-        setAutoLocatePopup(true);
+        setAutoMirrorEnable(true);
     }
 
 
