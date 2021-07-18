@@ -126,7 +126,7 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 **Snapshot dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **[Release] 3.1.7-SNAPSHOT** (2021/07/18)
+* **[Release] 3.1.7** (2021/07/18)
     * Add support for showpopup in application creation phase
     * Optimize isShowing() method, now as soon as showpopupwindow() has been called, you can get the correct isShowing() immediately, no need to wait for the popup to be fully displayed to get it correctly
     * Add priority method `setPriority(BasePopupWindow.Priority)`, please refer to [priority setting](https://www.yuque.com/razerdp/basepopup/iq9i36) for related documentation
