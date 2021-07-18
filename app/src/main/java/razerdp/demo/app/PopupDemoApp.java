@@ -5,6 +5,8 @@ import android.text.TextUtils;
 
 import androidx.multidex.MultiDexApplication;
 
+import com.pgyersdk.crash.PgyCrashManager;
+
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,8 +19,6 @@ import okhttp3.OkHttpClient;
 import razerdp.basepopup.BasePopupFlag;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.demo.base.TestData;
-import razerdp.demo.base.imageloader.GlideProgressManager;
-import razerdp.demo.base.imageloader.ImageLoaderManager;
 import razerdp.util.log.PopupLog;
 
 /**
@@ -34,6 +34,7 @@ public class PopupDemoApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        PgyCrashManager.register();
         TestData.init();
         //检查popup flag
         new Thread(() -> {
@@ -78,7 +79,7 @@ public class PopupDemoApp extends MultiDexApplication {
         }
         for (Map.Entry<Integer, CheckFlagInfo> entry : map.entrySet()) {
             if (entry.getValue().size() > 1) {
-                PopupLog.i("checkFlag", entry.getValue());
+                PopupLog.e("checkFlag", entry.getValue());
             }
         }
     }
@@ -101,14 +102,13 @@ public class PopupDemoApp extends MultiDexApplication {
 
         @Override
         public String toString() {
-            String builder = "重复flag:" + '\n' +
+            return "重复flag:" + '\n' +
                     "names = {" +
                     TextUtils.join(" , ", names) +
                     " }" +
                     '\n' +
                     "value = " +
                     value;
-            return builder;
         }
     }
 }

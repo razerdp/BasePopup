@@ -5,6 +5,8 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.lifecycle.Observer;
+
 import java.lang.ref.WeakReference;
 
 /**
@@ -16,11 +18,18 @@ public final class BasePopupSDK {
 
     private static volatile Application mApplicationContext;
     private WeakReference<Activity> mTopActivity;
+    private FirstOpenActivityLiveData<Boolean> firstActivityOpenLiveData;
 
     private static class SingletonHolder {
-        private static BasePopupSDK INSTANCE = new BasePopupSDK();
+        private static final BasePopupSDK INSTANCE = new BasePopupSDK();
     }
 
+    void regFirstActivityOpen(Observer<Boolean> observer) {
+        if (firstActivityOpenLiveData == null) {
+            firstActivityOpenLiveData = new FirstOpenActivityLiveData<>();
+        }
+        firstActivityOpenLiveData.observeForever(observer);
+    }
 
     private BasePopupSDK() {
     }
@@ -79,7 +88,13 @@ public final class BasePopupSDK {
             }
             mTopActivity.clear();
         }
+        boolean isFirstActivityOpened = mTopActivity == null;
         mTopActivity = new WeakReference<>(act);
+        if (isFirstActivityOpened && firstActivityOpenLiveData != null) {
+            firstActivityOpenLiveData.setValue(true);
+            firstActivityOpenLiveData.clear();
+            firstActivityOpenLiveData = null;
+        }
     }
 
     public static BasePopupSDK getInstance() {

@@ -40,8 +40,8 @@ public class PopupIssue238 extends BasePopupWindow {
             }
         });
         if (isEdit) {
-            setAutoShowInputMethod(true);
-            setAdjustInputMethod(true);
+            setAutoShowKeyboard(true);
+            setKeyboardAdaptive(true);
         }
     }
 

@@ -37,6 +37,7 @@ import razerdp.demo.model.common.CommonFriendCircleInfo;
 import razerdp.demo.model.common.CommonFullScreenActivityInfo;
 import razerdp.demo.model.common.CommonGestureNavInfo;
 import razerdp.demo.model.common.CommonInputInfo;
+import razerdp.demo.model.common.CommonPriorityInfo;
 import razerdp.demo.model.common.CommonRTLInfo;
 import razerdp.demo.model.common.CommonSlideInfo;
 import razerdp.demo.model.common.CommonUpdateInfo;
@@ -94,7 +95,7 @@ public class CommonUsageActivity extends BaseActivity {
         });
         rvContent.setLayoutManager(gridLayoutManager);
         rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(UIHelper.DP8)
-                .build()));
+                                                                   .build()));
         mAdapter = new MultiRecyclerViewAdapter(this, createItem());
         mAdapter.appendHolder(InnerTitleViewHolder.class, 0)
                 .appendHolder(InnerItemViewHolder.class, 1);
@@ -126,6 +127,7 @@ public class CommonUsageActivity extends BaseActivity {
         result.add(new DemoCommonUsageTitle("PopupWindow控制相关"));
         result.add(new CommonControllerInfo());
         result.add(new CommonBarControllerInfo());
+        result.add(new CommonPriorityInfo());
         result.add(new DemoCommonUsageTitle("动画相关"));
         result.add(new CommonAnimateInfo());
         result.add(new DemoCommonUsageTitle("背景相关"));

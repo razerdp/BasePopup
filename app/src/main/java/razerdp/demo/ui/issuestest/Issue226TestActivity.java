@@ -51,8 +51,8 @@ public class Issue226TestActivity extends BaseActivity {
         if (checkForceAdjust.isChecked()) {
             flag |= BasePopupWindow.FLAG_KEYBOARD_FORCE_ADJUST;
         }
-        popupInput.setAdjustInputMethod(true)
-                .setAdjustInputMode(flag)
+        popupInput.setKeyboardAdaptive(true)
+                .setKeyboardAdaptionMode(flag)
                 .showPopupWindow();
     }
 

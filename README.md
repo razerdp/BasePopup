@@ -114,7 +114,7 @@ allprojects {
 
 **3.0版本是破坏性升级，请您务必阅读升级提示**：[关于BasePopup 3.0的破坏性更新说明](./Update_3.0.md)
 
- - **Release：** `implementation 'io.github.razerdp:BasePopup:3.1.4'`
+ - **Release：** `implementation 'io.github.razerdp:BasePopup:3.1.7'`
  - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:3.1.7-SNAPSHOT'`
 
 <br>
@@ -130,14 +130,22 @@ BasePopup配备完善的文档，详情请看。
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Release】3.1.4** (2021/06/23)
-    * 【优化】
-        * 优化BlurHelper，RenderScript使用单例
-        * 增加`setOverlayMask(boolean)`：是否允许蒙层叠加，默认不叠加。同个页面默认背景的BasePopup不会叠加蒙层，直到设置了背景为止。
-        * deprecated `setAutoLocatePopup`，请用`setAutoMirrorEnable`代替
-        * 增加左右自动镜像定位的功能，增加demo
-    * 【修复】
-        * 修复`onOutSideTouch`拦截事件后，没有传到DecorView的问题 [#393-comment](https://github.com/razerdp/BasePopup/issues/393#issuecomment-853687468)
+* **【Snapshot】3.1.5-SNAPSHOT** (2021/06/24)
+    * 增加对application创建阶段showpopup的支持
+* **【Snapshot】3.1.6-SNAPSHOT** (2021/07/01)
+    * 优化isShowing()方法，现在只要开始调用过showpopupwindow()，就可以立即获取到正确的isShowing()，不需要等待popup完全展示后才能正确获取
+    * 增加优先级方法`setPriority(BasePopupWindow.Priority)`，相关文档请查阅[优先级设置](https://www.yuque.com/razerdp/basepopup/iq9i36)
+* **【Snapshot】3.1.7-SNAPSHOT** (2021/07/16)
+    * 优化margin逻辑，现在margin仅影响大小，不用作offset
+    * 【键盘适配调优】：
+        * 增加`setKeyboardGravity`：现在允许您设置basepopup在键盘弹出后可见区域的gravity
+        * 增加`setKeyboardOffsetX`：允许您设置键盘弹出后在可见区域的水平位移
+        * 增加`setKeyboardOffsetY`：允许您设置键盘弹出后在可见区域的垂直位移
+    * 【方法名称规范化】
+        * 删除现存的\@Deprecated标记方法
+        * \@Deprecated标记现有的*inputmethod方法，以及增加规范化名称后的方法：
+            * `setAdjustInputMethod` -> `setKeyboardAdaptive`
+            * `setAdjustInputMode` -> `setKeyboardAdaptionMode`
 
 
 <br>

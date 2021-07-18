@@ -111,7 +111,7 @@ Please replace **{$latestVersion}** with the version shown in the Jcenter tab ab
 
 **Since JCenter is no longer in service, starting with version 2.3, this library will be migrated to Maven with a new dependency groupId of [io.github.razerdp]**
 
- - **Release：** `implementation 'io.github.razerdp:BasePopup:3.1.4'`
+ - **Release：** `implementation 'io.github.razerdp:BasePopup:3.1.7'`
  - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:3.1.7-SNAPSHOT'`
 
 <br>
@@ -126,6 +126,8 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 **Snapshot dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
+* **【Snapshot】2.3.0** (2021/04/30)
+    * Migration to maven central
 * **【Release】3.1.4** (2021/06/23)
     * 【Optimise】
         * Optimisation of BlurHelper, RenderScript using single instance
