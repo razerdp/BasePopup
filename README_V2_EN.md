@@ -126,16 +126,21 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 
 **Snapshot dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
 
-* **【Snapshot】2.3.0** (2021/04/30)
-    * Migration to maven central
-* **【Release】3.1.4** (2021/06/23)
-    * 【Optimise】
-        * Optimisation of BlurHelper, RenderScript using single instance
-        * Add `setOverlayMask(boolean)`: whether to allow mask overlays, default is no overlays. BasePopup with default background on the same page will not overlay the mask until the background is set.
-        * deprecated `setAutoLocatePopup`，please use `setAutoMirrorEnable` instead
-        * Add left and right automatic mirror positioning function, add demos
-    * 【Fixed Bug】
-        * Fix `onOutSideTouch` not being passed to the DecorView after intercepting the event [#393-comment](https://github.com/razerdp/BasePopup/issues/393#issuecomment-853687468)
+* **[Release] 3.1.7-SNAPSHOT** (2021/07/18)
+    * Add support for showpopup in application creation phase
+    * Optimize isShowing() method, now as soon as showpopupwindow() has been called, you can get the correct isShowing() immediately, no need to wait for the popup to be fully displayed to get it correctly
+    * Add priority method `setPriority(BasePopupWindow.Priority)`, please refer to [priority setting](https://www.yuque.com/razerdp/basepopup/iq9i36) for related documentation
+    * Optimize margin logic, now margin only affects size and is not used as offset.
+    * Keyboard Adaptation Tuning
+        * [Documentation](https://www.yuque.com/razerdp/basepopup/hxd29e#IDNU8), [#issue426](https://github.com/razerdp/BasePopup/issues/426)
+        * Add `setKeyboardGravity`: now allows you to set the gravity of the visible area of the basepopup after the keyboard is popped up
+        * Add `setKeyboardOffsetX`: allows you to set the horizontal displacement of the keyboard after it is popped up in the visible area
+        * Add `setKeyboardOffsetY`: allows you to set the vertical displacement of the visible area after the keyboard is popped up.
+    * Method name normalization
+        * Remove the existing \@Deprecated flag method
+        * \@Deprecated marks the existing *inputmethod method, and adds the normalized name to the method.
+            * `setAdjustInputMethod` -> `setKeyboardAdaptive`
+            * `setAdjustInputMode` -> `setKeyboardAdaptionMode`
 
 <br>
 
