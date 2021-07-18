@@ -20,17 +20,33 @@ import android.renderscript.ScriptIntrinsicBlur;
 import android.view.View;
 import android.widget.Toast;
 
+import razerdp.util.PopupUiUtils;
 import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2017/12/27.
  * <p>
  * 模糊处理类
+ * <p>
+ * warn:renderscript即将遗弃，后期将前移到Vulkan，使用GPU更快
+ * https://developer.android.com/guide/topics/renderscript/compute?hl=zh-cn#additional-code-samples
+ * https://developer.android.com/guide/topics/renderscript/migrate?hl=zh-cn
  */
 public class BlurHelper {
     private static final String TAG = "BlurHelper";
-    private static int statusBarHeight = 0;
     private static long startTime;
+    private static volatile RenderScript SCRIPT_INSTANCE;
+
+    static RenderScript getScriptInstance(Context context) {
+        if (SCRIPT_INSTANCE == null) {
+            synchronized (BlurHelper.class) {
+                if (SCRIPT_INSTANCE == null) {
+                    SCRIPT_INSTANCE = RenderScript.create(context.getApplicationContext());
+                }
+            }
+        }
+        return SCRIPT_INSTANCE;
+    }
 
     public static boolean renderScriptSupported() {
         return Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1;
@@ -42,7 +58,17 @@ public class BlurHelper {
 
     public static Bitmap blur(Context context, View view, float scaledRatio, float radius, boolean fullScreen) {
         return blur(context,
-                getViewBitmap(view, scaledRatio, fullScreen),
+                view,
+                scaledRatio,
+                radius,
+                fullScreen,
+                0,
+                0);
+    }
+
+    public static Bitmap blur(Context context, View view, float scaledRatio, float radius, boolean fullScreen, int cutoutX, int cutoutY) {
+        return blur(context,
+                getViewBitmap(view, scaledRatio, fullScreen, cutoutX, cutoutY),
                 view.getWidth(),
                 view.getHeight(),
                 radius);
@@ -70,7 +96,7 @@ public class BlurHelper {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     public static Bitmap scriptBlur(Context context, Bitmap origin, int outWidth, int outHeight, float radius) {
         if (origin == null || origin.isRecycled()) return null;
-        RenderScript renderScript = RenderScript.create(context.getApplicationContext());
+        RenderScript renderScript = getScriptInstance(context);
 
         Allocation blurInput = Allocation.createFromBitmap(renderScript, origin);
         Allocation blurOutput = Allocation.createTyped(renderScript, blurInput.getType());
@@ -79,13 +105,15 @@ public class BlurHelper {
         try {
             blur = ScriptIntrinsicBlur.create(renderScript, blurInput.getElement());
         } catch (RSIllegalArgumentException e) {
-            if (e.getMessage().contains("Unsuported element type")) {
+            if (e.getMessage() != null && e.getMessage().contains("Unsuported element type")) {
                 blur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
             }
         }
 
         if (blur == null) {
             PopupLog.e(TAG, "脚本模糊失败，转fastBlur");
+            blurInput.destroy();
+            blurOutput.destroy();
             return fastBlur(context, origin, outWidth, outHeight, radius);
         }
 
@@ -95,7 +123,6 @@ public class BlurHelper {
         blurOutput.copyTo(origin);
 
         //释放
-        renderScript.destroy();
         blurInput.destroy();
         blurOutput.destroy();
 
@@ -126,16 +153,16 @@ public class BlurHelper {
     }
 
     public static Bitmap getViewBitmap(final View v, boolean fullScreen) {
-        return getViewBitmap(v, 1.0f, fullScreen);
+        return getViewBitmap(v, 1.0f, fullScreen, 0, 0);
     }
 
 
-    public static Bitmap getViewBitmap(final View v, float scaledRatio, boolean fullScreen) {
+    public static Bitmap getViewBitmap(final View v, float scaledRatio, boolean fullScreen, int cutoutX, int cutoutY) {
         if (v == null || v.getWidth() <= 0 || v.getHeight() <= 0) {
             PopupLog.e("getViewBitmap  >>  宽或者高为空");
             return null;
         }
-        if (statusBarHeight <= 0) statusBarHeight = getStatusBarHeight(v.getContext());
+        final int statusBarHeight = PopupUiUtils.getStatusBarHeight();
         Bitmap b;
         PopupLog.i("模糊原始图像分辨率 [" + v.getWidth() + " x " + v.getHeight() + "]");
 
@@ -167,6 +194,17 @@ public class BlurHelper {
         }
         v.draw(c);
         PopupLog.i("模糊缩放图像分辨率 [" + b.getWidth() + " x " + b.getHeight() + "]");
+        if (cutoutX > 0 || cutoutY > 0) {
+            try {
+                int cutLeft = (int) (cutoutX * scaledRatio);
+                int cutTop = (int) (cutoutY * scaledRatio);
+                int cutWidth = b.getWidth() - cutLeft;
+                int cutHeight = b.getHeight() - cutTop;
+                b = Bitmap.createBitmap(b, cutLeft, cutTop, cutWidth, cutHeight, null, false);
+            } catch (Exception e) {
+                System.gc();
+            }
+        }
         return b;
     }
 
@@ -175,16 +213,6 @@ public class BlurHelper {
         return Math.max(min, Math.min(value, max));
     }
 
-
-    private static int getStatusBarHeight(Context context) {
-        if (context == null) return 0;
-        int result = 0;
-        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = context.getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
 
     private static void toast(final Context context, final String msg) {
         if (Looper.myLooper() == null || Looper.myLooper() != Looper.getMainLooper()) {

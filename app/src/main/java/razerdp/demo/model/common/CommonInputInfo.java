@@ -20,6 +20,10 @@ public class CommonInputInfo extends DemoCommonUsageInfo {
 
     public CommonInputInfo() {
         title = "输入法适配";
+        name = "PopupInput";
+        javaUrl = "https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/PopupInput.java";
+        resUrl = "https://github.com/razerdp/BasePopup/blob/master/app/src/main/res/layout/popup_input.xml";
+
     }
 
     PopupInput mPopupInput;

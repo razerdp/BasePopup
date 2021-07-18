@@ -13,8 +13,8 @@ import androidx.fragment.app.Fragment;
 import java.util.HashMap;
 import java.util.Map;
 
-import razerdp.basepopup.BaseLazyPopupWindow;
 import razerdp.basepopup.BasePopupFlag;
+import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.QuickPopupConfig;
 
 /**
@@ -22,7 +22,7 @@ import razerdp.basepopup.QuickPopupConfig;
  * <p>
  * 快速popup
  */
-public class QuickPopup extends BaseLazyPopupWindow {
+public class QuickPopup extends BasePopupWindow {
 
     private QuickPopupConfig mConfig;
 
@@ -32,6 +32,7 @@ public class QuickPopup extends BaseLazyPopupWindow {
         if (mConfig == null) {
             throw new NullPointerException("QuickPopupConfig must be not null!");
         }
+        setContentView(mConfig.getContentViewLayoutid());
     }
 
     public QuickPopup(Dialog dialog, int width, int height, QuickPopupConfig config) {
@@ -40,6 +41,7 @@ public class QuickPopup extends BaseLazyPopupWindow {
         if (mConfig == null) {
             throw new NullPointerException("QuickPopupConfig must be not null!");
         }
+        setContentView(mConfig.getContentViewLayoutid());
     }
 
     public QuickPopup(Context context, int width, int height, QuickPopupConfig config) {
@@ -48,6 +50,7 @@ public class QuickPopup extends BaseLazyPopupWindow {
         if (mConfig == null) {
             throw new NullPointerException("QuickPopupConfig must be not null!");
         }
+        setContentView(mConfig.getContentViewLayoutid());
     }
 
 
@@ -70,6 +73,9 @@ public class QuickPopup extends BaseLazyPopupWindow {
 
         setOffsetX(config.getOffsetX());
         setOffsetY(config.getOffsetY());
+        setMaskOffsetX(config.getMaskOffsetX());
+        setMaskOffsetY(config.getMaskOffsetY());
+
 
         setClipChildren((config.flag & BasePopupFlag.CLIP_CHILDREN) != 0);
 
@@ -79,8 +85,11 @@ public class QuickPopup extends BaseLazyPopupWindow {
         setPopupGravity(config.getGravity());
         setAlignBackground((config.flag & BasePopupFlag.ALIGN_BACKGROUND) != 0);
         setAlignBackgroundGravity(config.getAlignBackgroundGravity());
-        setAutoLocatePopup((config.flag & BasePopupFlag.AUTO_LOCATED) != 0);
+        setAutoLocatePopup((config.flag & BasePopupFlag.AUTO_MIRROR) != 0);
         setOverlayStatusbar((config.flag & BasePopupFlag.OVERLAY_STATUS_BAR) != 0);
+        setOverlayNavigationBar((config.flag & BasePopupFlag.OVERLAY_NAVIGATION_BAR) != 0);
+        setOverlayStatusbarMode(config.getOverlayStatusBarMode());
+        setOverlayNavigationBarMode(config.getOverlayNavigationBarMode());
         setOnDismissListener(config.getDismissListener());
         setBackground(config.getBackground());
         linkTo(config.getLinkedView());
@@ -147,12 +156,6 @@ public class QuickPopup extends BaseLazyPopupWindow {
     protected Animator onCreateShowAnimator() {
         if (isConfigDestroyed()) return null;
         return mConfig.getShowAnimator();
-    }
-
-    @Override
-    public View onCreateContentView() {
-        if (isConfigDestroyed()) return null;
-        return createPopupById(mConfig.getContentViewLayoutid());
     }
 
     boolean isConfigDestroyed() {

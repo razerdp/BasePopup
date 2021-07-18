@@ -23,17 +23,13 @@ public class PopupIssue236 extends BasePopupWindow {
 
     public PopupIssue236(Context context) {
         super(context);
+        setContentView(R.layout.popup_issue_236);
         setPopupGravity(Gravity.BOTTOM);
     }
 
     @Override
     public void onViewCreated(View contentView) {
         ButterKnifeUtil.bind(this, contentView);
-    }
-
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_issue_236);
     }
 
     @Override

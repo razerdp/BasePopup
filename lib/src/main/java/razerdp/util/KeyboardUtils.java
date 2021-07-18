@@ -20,7 +20,13 @@ public class KeyboardUtils {
      */
     public static void open(View view) {
         if (view == null) return;
-        view.requestFocus();
+        if (!view.hasFocus()) {
+            PopupUiUtils.requestFocus(view);
+            View focusedView = view.findFocus();
+            if (focusedView != null) {
+                view = focusedView;
+            }
+        }
         InputMethodManager imm = (InputMethodManager) view.getContext()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
@@ -66,7 +72,7 @@ public class KeyboardUtils {
                     .getSystemService(Context.INPUT_METHOD_SERVICE);
             if (imm != null) {
                 imm.hideSoftInputFromWindow(view.getWindowToken(),
-                                            InputMethodManager.HIDE_NOT_ALWAYS);
+                        InputMethodManager.HIDE_NOT_ALWAYS);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,8 +96,9 @@ public class KeyboardUtils {
 
     public static boolean isOpen() {
         try {
-            InputMethodManager imm = (InputMethodManager) BasePopupSDK.getApplication().getSystemService(
-                    Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) BasePopupSDK.getApplication()
+                    .getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
             if (imm != null) {
                 return imm.isActive();
             }
@@ -103,8 +110,9 @@ public class KeyboardUtils {
 
     public static boolean isOpen(View view) {
         try {
-            InputMethodManager imm = (InputMethodManager) BasePopupSDK.getApplication().getSystemService(
-                    Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) BasePopupSDK.getApplication()
+                    .getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
             if (imm != null) {
                 return imm.isActive(view);
             }
@@ -161,9 +169,9 @@ public class KeyboardUtils {
                         parent = parent.getParent();
                     }
                     originalContentRect.set(((View) parent).getLeft(),
-                                            ((View) parent).getTop(),
-                                            ((View) parent).getRight(),
-                                            ((View) parent).getBottom());
+                            ((View) parent).getTop(),
+                            ((View) parent).getRight(),
+                            ((View) parent).getBottom());
                 }
                 decor.getWindowVisibleDisplayFrame(rect);
                 keyboardRect.set(rect.left, rect.bottom, rect.right, originalContentRect.bottom);

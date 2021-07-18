@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingBottom="@dimen/default_padding"
-        android:text="这是一个BottomSheet"
+        android:text="这是一个Dialog"
         android:textColor="@color/text_black2"
         android:textSize="@dimen/text_large" />
 

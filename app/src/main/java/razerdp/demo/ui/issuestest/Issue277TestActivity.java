@@ -8,7 +8,7 @@ import android.view.animation.Animation;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import razerdp.basepopup.BaseLazyPopupWindow;
+import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.widget.DPTextView;
@@ -46,10 +46,11 @@ public class Issue277TestActivity extends BaseActivity {
         new Issue277Popup(this).showPopupWindow();
     }
 
-    class Issue277Popup extends BaseLazyPopupWindow {
+    class Issue277Popup extends BasePopupWindow {
 
         public Issue277Popup(Context context) {
             super(context);
+            setContentView(R.layout.popup_issue_277);
             setPopupGravity(Gravity.BOTTOM);
             setBlurBackgroundEnable(false);
             setOutSideDismiss(false);
@@ -57,10 +58,6 @@ public class Issue277TestActivity extends BaseActivity {
             setAdjustInputMode(R.id.feedbackTv, FLAG_KEYBOARD_ALIGN_TO_VIEW);
         }
 
-        @Override
-        public View onCreateContentView() {
-            return createPopupById(R.layout.popup_issue_277);
-        }
 
         @Override
         protected Animation onCreateShowAnimation() {

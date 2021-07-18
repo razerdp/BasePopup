@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_top_round_white_8dp"
+    android:orientation="vertical"
+    android:padding="@dimen/default_padding">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="@dimen/default_padding"
+        android:text="这是一个BottomSheet"
+        android:textColor="@color/text_black2"
+        android:textSize="@dimen/text_large" />
+
+    <View style="@style/divider" />
+    <TextView
+        android:id="@+id/tv_show"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:gravity="center"
+        android:text="请点击我弹出BasePopup"
+        android:textColor="@color/text_black2_60" />
+
+
+</LinearLayout>

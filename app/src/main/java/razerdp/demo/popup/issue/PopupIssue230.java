@@ -37,6 +37,7 @@ public class PopupIssue230 extends BasePopupWindow {
 
     public PopupIssue230(Context context) {
         super(context);
+        setContentView(R.layout.popup_issue_230);
         setPopupGravity(Gravity.CENTER);
         setMaxHeight(UIHelper.getScreenHeight() >> 1);
         setMaxWidth(UIHelper.getScreenWidth() >> 1);
@@ -57,10 +58,6 @@ public class PopupIssue230 extends BasePopupWindow {
         ButterKnifeUtil.bind(this, contentView);
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_issue_230);
-    }
 
     void delItem(String which) {
         mAdapter.remove(which);

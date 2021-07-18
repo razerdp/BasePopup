@@ -13,6 +13,16 @@ android {
 
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [
+                        //使用asXxx方法时必须，告知RxHttp你依赖的rxjava版本，可传入rxjava2、rxjava3
+                        rxhttp_rxjava : 'rxjava2',
+                        rxhttp_package: 'rxhttp'   //非必须，指定RxHttp类包名
+                ]
+            }
+        }
     }
     lintOptions {
         abortOnError false
@@ -31,17 +41,15 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
     // android
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     implementation 'androidx.multidex:multidex:2.0.1'
 
-
-    implementation 'com.google.android.material:material:1.1.0'
     implementation 'com.github.razerdp:StrokeLayouts:1.0.0'
     implementation project(path: ':lib')
 
@@ -56,9 +64,8 @@ dependencies {
 
     implementation 'com.caverock:androidsvg:1.2.1'
 
-    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
     //net
-    implementation 'com.squareup.okhttp3:okhttp:4.2.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.10.0'
     //gson
     implementation 'com.google.code.gson:gson:2.8.6'
@@ -67,10 +74,21 @@ dependencies {
     implementation 'com.just.agentweb:agentweb:4.1.3'
 
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-
+    implementation 'pub.devrel:easypermissions:3.0.0'
     // rx
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.14'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'com.ljx.rxlife2:rxlife-rxjava:2.0.0'
 
     implementation 'com.contrarywind:Android-PickerView:4.1.8'
+
+    implementation "com.davemorrissey.labs:subsampling-scale-image-view:3.10.0"
+
+    implementation 'com.ljx.rxhttp:rxhttp:2.5.7'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+    annotationProcessor 'com.ljx.rxhttp:rxhttp-compiler:2.5.7'
+
+    implementation 'com.kaopiz:kprogresshud:1.0.2'
+
+
 }

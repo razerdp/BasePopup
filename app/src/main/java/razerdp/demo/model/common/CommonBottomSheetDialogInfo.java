@@ -1,12 +1,14 @@
 package razerdp.demo.model.common;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import androidx.annotation.NonNull;
 import razerdp.basepopup.R;
 import razerdp.demo.model.DemoCommonUsageInfo;
 import razerdp.demo.popup.DemoPopup;
@@ -23,7 +25,7 @@ public class CommonBottomSheetDialogInfo extends DemoCommonUsageInfo {
     public CommonBottomSheetDialogInfo() {
         title = "BottomSheetDialog中弹出BasePopup";
         option = "描述";
-//        问题描述：在没有依赖BasePopup Compat组件时，在Fragment或者BottomSheetDialog里弹出，会显示在这些组件下层。
+        sourceVisible = false;
     }
 
     @Override
@@ -68,7 +70,8 @@ public class CommonBottomSheetDialogInfo extends DemoCommonUsageInfo {
             if (mDemoPopup == null) {
                 mDemoPopup = new DemoPopup(this).setText("兼容性测试\n\nBttomSheetDialog内弹出BasePopup");
             }
-            mDemoPopup.showPopupWindow();
+            mDemoPopup.setPopupGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
+            mDemoPopup.showPopupWindow(tvShow);
         }
     }
 }

@@ -12,6 +12,8 @@ import razerdp.demo.ui.issuestest.Issue236TestActivity;
 import razerdp.demo.ui.issuestest.Issue238TestActivity;
 import razerdp.demo.ui.issuestest.Issue242TestActivity;
 import razerdp.demo.ui.issuestest.Issue277TestActivity;
+import razerdp.demo.ui.issuestest.Issue358TestActivity;
+import razerdp.demo.ui.issuestest.Issue369TestActivity;
 import razerdp.demo.utils.DescBuilder;
 import razerdp.demo.utils.StringUtil;
 
@@ -29,6 +31,8 @@ class IssueHelper {
         add_238(result);
         add_242(result);
         add_277(result);
+        add_358(result);
+        add_369(result);
 
         sort(result);
 
@@ -43,11 +47,42 @@ class IssueHelper {
         });
     }
 
+    private static void add_369(List<IssueInfo> result) {
+        IssueInfo issue369 = new IssueInfo();
+        issue369.setActivityClass(Issue369TestActivity.class)
+                .setIssue("369")
+                .setFixed(true)
+                .setTitle("弹出popupwindow不收起键盘")
+                .setDesc(DescBuilder.get()
+                        .append("系统版本：Unknown")
+                        .append("库版本：2.2.9")
+                        .append("键盘是已经打开的的时候，长按item会触发pop弹出，会影响键盘自动收起。\n" +
+                                "使用原生的popwindow，宽高使用WRAP_CONTENT，弹出是不会影响的，希望此库也能支持。谢谢作者")
+                        .build());
+
+        result.add(issue369);
+    }
+
+    private static void add_358(List<IssueInfo> result) {
+        IssueInfo issue358 = new IssueInfo();
+        issue358.setActivityClass(Issue358TestActivity.class)
+                .setIssue("358")
+                .setFixed(true)
+                .setTitle("让键盘跟随recyclerview中的edittext")
+                .setDesc(DescBuilder.get()
+                        .append("系统版本：10.0")
+                        .append("库版本：2.2.8")
+                        .append("Popup内包含RecyclerView，希望在键盘弹出之前能够定位到RecyclerView内的某个View")
+                        .build());
+
+        result.add(issue358);
+    }
+
     private static void add_277(List<IssueInfo> result) {
         IssueInfo issue277 = new IssueInfo();
         issue277.setActivityClass(Issue277TestActivity.class)
                 .setIssue("277")
-                .setFixed(false)
+                .setFixed(true)
                 .setTitle("BasePopupHelper#GlobalLayoutListener#onGlobalLayout键盘检测问题")
                 .setDesc(DescBuilder.get()
                         .append("系统版本：UnKnown")

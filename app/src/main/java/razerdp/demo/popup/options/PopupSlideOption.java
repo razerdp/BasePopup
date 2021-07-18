@@ -38,8 +38,10 @@ public class PopupSlideOption extends BaseOptionPopup<CommonSlideInfo> {
     AppCompatCheckBox anchorCheck;
     @BindView(R.id.check_blur)
     AppCompatCheckBox blurCheck;
-    @BindView(R.id.check_align_to_side)
-    AppCompatCheckBox gravitySideMode;
+    @BindView(R.id.check_horizontal_align_to_side)
+    AppCompatCheckBox horizontalGravitySideMode;
+    @BindView(R.id.check_vertical_align_to_side)
+    AppCompatCheckBox verticalGravitySideMode;
     @BindView(R.id.tv_go)
     DPTextView tvGo;
 
@@ -47,7 +49,7 @@ public class PopupSlideOption extends BaseOptionPopup<CommonSlideInfo> {
 
     public PopupSlideOption(Context context) {
         super(context);
-
+        setContentView(R.layout.popup_option_slide);
         List<Info> infos = new ArrayList<>();
         infos.add(new Info(Gravity.LEFT, "Gravity.Left"));
         infos.add(new Info(Gravity.TOP, "Gravity.Top"));
@@ -60,7 +62,8 @@ public class PopupSlideOption extends BaseOptionPopup<CommonSlideInfo> {
         mAdapter = new SimpleRecyclerViewAdapter<>(context, infos);
         mAdapter.setHolder(InnerViewHolder.class);
         rvContent.setLayoutManager(new GridLayoutManager(context, 2));
-        rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(UIHelper.DP12).build()));
+        rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(UIHelper.DP12)
+                .build()));
         rvContent.setItemAnimator(null);
         mAdapter.setOnItemClickListener(new OnItemClickListener<Info>() {
             @Override
@@ -72,10 +75,6 @@ public class PopupSlideOption extends BaseOptionPopup<CommonSlideInfo> {
         rvContent.setAdapter(mAdapter);
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_option_slide);
-    }
 
     @OnClick(R.id.tv_go)
     void apply() {
@@ -88,7 +87,8 @@ public class PopupSlideOption extends BaseOptionPopup<CommonSlideInfo> {
         mInfo.gravity = gravity;
         mInfo.withAnchor = anchorCheck.isChecked();
         mInfo.blur = blurCheck.isChecked();
-        mInfo.gravityMode = gravitySideMode.isChecked() ? GravityMode.ALIGN_TO_ANCHOR_SIDE : GravityMode.RELATIVE_TO_ANCHOR;
+        mInfo.horizontalGravityMode = horizontalGravitySideMode.isChecked() ? GravityMode.ALIGN_TO_ANCHOR_SIDE : GravityMode.RELATIVE_TO_ANCHOR;
+        mInfo.verticalGravityMode = verticalGravitySideMode.isChecked() ? GravityMode.ALIGN_TO_ANCHOR_SIDE : GravityMode.RELATIVE_TO_ANCHOR;
         dismiss();
     }
 

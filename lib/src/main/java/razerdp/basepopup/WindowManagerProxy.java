@@ -1,11 +1,15 @@
 package razerdp.basepopup;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
@@ -25,8 +29,17 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
     private static final String TAG = "WindowManagerProxy";
     private WindowManager mWindowManager;
     PopupDecorViewProxy mPopupDecorViewProxy;
-    private BasePopupHelper mPopupHelper;
+    BasePopupHelper mPopupHelper;
     boolean isAddedToQueue;
+    static final WindowFlagCompat FLAG_COMPAT;
+
+    static {
+        if (Build.VERSION.SDK_INT >= 30) {
+            FLAG_COMPAT = new WindowFlagCompat.Api30Impl();
+        } else {
+            FLAG_COMPAT = new WindowFlagCompat.BeforeApi30Impl();
+        }
+    }
 
     WindowManagerProxy(WindowManager windowManager, BasePopupHelper helper) {
         mWindowManager = windowManager;
@@ -40,7 +53,9 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
 
     @Override
     public void removeViewImmediate(View view) {
-        PopupLog.i(TAG, "WindowManager.removeViewImmediate  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
+        PopupLog.i(TAG,
+                "WindowManager.removeViewImmediate  >>>  " + (view == null ? null : view.getClass()
+                        .getSimpleName()));
         PopupWindowQueueManager.getInstance().remove(this);
         if (mWindowManager == null || view == null) return;
         if (isPopupInnerDecorView(view) && mPopupDecorViewProxy != null) {
@@ -58,15 +73,15 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
 
     @Override
     public void addView(View view, ViewGroup.LayoutParams params) {
-        PopupLog.i(TAG, "WindowManager.addView  >>>  " + (view == null ? null : view.getClass().getName()));
-        PopupWindowQueueManager.getInstance().put(this);
+        PopupLog.i(TAG,
+                "WindowManager.addView  >>>  " + (view == null ? null : view.getClass().getName()));
         if (mWindowManager == null || view == null) return;
         if (isPopupInnerDecorView(view)) {
             /**
              * 此时的params是WindowManager.LayoutParams，需要留意强转问题
              * popup内部有scrollChangeListener，会有params强转为WindowManager.LayoutParams的情况
              */
-            applyHelper(params, mPopupHelper);
+            FLAG_COMPAT.setupFlag(params, mPopupHelper);
             //添加popup主体
             mPopupDecorViewProxy = new PopupDecorViewProxy(view.getContext(), mPopupHelper);
             mPopupDecorViewProxy.wrapPopupDecorView(view, (LayoutParams) params);
@@ -74,28 +89,7 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
         } else {
             mWindowManager.addView(view, params);
         }
-    }
-
-    private void applyHelper(ViewGroup.LayoutParams params, BasePopupHelper helper) {
-        if (params instanceof LayoutParams && helper != null) {
-            LayoutParams p = (LayoutParams) params;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                p.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT;
-            }
-            if (helper.isOverlayStatusbar()) {
-                PopupLog.i(TAG, "applyHelper  >>>  覆盖状态栏");
-                p.flags |= LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    PopupLog.i(TAG, "applyHelper  >>>  覆盖导航栏");
-                    p.flags |= LayoutParams.FLAG_LAYOUT_IN_OVERSCAN;
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    //允许占用刘海
-                    p.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-                }
-                p.flags |= LayoutParams.FLAG_LAYOUT_NO_LIMITS;
-            }
-        }
+        PopupWindowQueueManager.getInstance().put(this);
     }
 
     private ViewGroup.LayoutParams fitLayoutParamsPosition(ViewGroup.LayoutParams params) {
@@ -111,14 +105,19 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
                 p.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 p.height = ViewGroup.LayoutParams.MATCH_PARENT;
             }
-            applyHelper(p, mPopupHelper);
+            FLAG_COMPAT.setupFlag(p, mPopupHelper);
+            if (mPopupHelper.mOnFitWindowManagerLayoutParamsCallback != null) {
+                mPopupHelper.mOnFitWindowManagerLayoutParamsCallback.onFitLayoutParams(p);
+            }
         }
         return params;
     }
 
     @Override
     public void updateViewLayout(View view, ViewGroup.LayoutParams params) {
-        PopupLog.i(TAG, "WindowManager.updateViewLayout  >>>  " + (view == null ? null : view.getClass().getName()));
+        PopupLog.i(TAG,
+                "WindowManager.updateViewLayout  >>>  " + (view == null ? null : view.getClass()
+                        .getName()));
         if (mWindowManager == null || view == null) return;
         if (isPopupInnerDecorView(view) && mPopupDecorViewProxy != null || view == mPopupDecorViewProxy) {
             mWindowManager.updateViewLayout(mPopupDecorViewProxy, fitLayoutParamsPosition(params));
@@ -127,13 +126,14 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
         }
     }
 
-    public void updateFocus(boolean focus) {
+    void updateFocus(boolean focus) {
         if (mWindowManager != null && mPopupDecorViewProxy != null) {
             PopupDecorViewProxy popupDecorViewProxy = mPopupDecorViewProxy;
             ViewGroup.LayoutParams params = popupDecorViewProxy.getLayoutParams();
             if (params instanceof LayoutParams) {
                 if (focus) {
-                    ((LayoutParams) params).flags &= ~WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                    ((LayoutParams) params).flags &= ~(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                            LayoutParams.FLAG_ALT_FOCUSABLE_IM);
                 } else {
                     ((LayoutParams) params).flags |= WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
                 }
@@ -141,6 +141,28 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
             mWindowManager.updateViewLayout(popupDecorViewProxy, params);
         }
     }
+
+
+    void updateFlag(int mode, boolean updateImmediately, int... flags) {
+        if (flags == null || flags.length == 0) return;
+        if (mWindowManager != null && mPopupDecorViewProxy != null) {
+            PopupDecorViewProxy popupDecorViewProxy = mPopupDecorViewProxy;
+            ViewGroup.LayoutParams params = popupDecorViewProxy.getLayoutParams();
+            if (params instanceof LayoutParams) {
+                for (int flag : flags) {
+                    if (mode == BasePopupFlag.MODE_ADD) {
+                        ((LayoutParams) params).flags |= flag;
+                    } else if (mode == BasePopupFlag.MODE_REMOVE) {
+                        ((LayoutParams) params).flags &= ~flag;
+                    }
+                }
+            }
+            if (updateImmediately) {
+                mWindowManager.updateViewLayout(popupDecorViewProxy, params);
+            }
+        }
+    }
+
 
     public void update() {
         if (mWindowManager == null) return;
@@ -151,11 +173,16 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
 
     @Override
     public void removeView(View view) {
-        PopupLog.i(TAG, "WindowManager.removeView  >>>  " + (view == null ? null : view.getClass().getSimpleName()));
+        PopupLog.i(TAG,
+                "WindowManager.removeView  >>>  " + (view == null ? null : view.getClass()
+                        .getSimpleName()));
         PopupWindowQueueManager.getInstance().remove(this);
         if (mWindowManager == null || view == null) return;
         if (isPopupInnerDecorView(view) && mPopupDecorViewProxy != null) {
             mWindowManager.removeView(mPopupDecorViewProxy);
+            if (mPopupDecorViewProxy.mHelper != null) {
+                mPopupDecorViewProxy.mHelper.showFlag &= ~BasePopupHelper.STATUS_START_DISMISS;
+            }
             mPopupDecorViewProxy = null;
         } else {
             mWindowManager.removeView(view);
@@ -198,7 +225,7 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
 
     static class PopupWindowQueueManager {
 
-        private static final HashMap<String, LinkedList<WindowManagerProxy>> sQueueMap = new HashMap<>();
+        static final HashMap<String, LinkedList<WindowManagerProxy>> sQueueMap = new HashMap<>();
 
         private static class SingleTonHolder {
             private static PopupWindowQueueManager INSTANCE = new PopupWindowQueueManager();
@@ -216,6 +243,13 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
                 return null;
             }
             return String.valueOf(managerProxy.mPopupHelper.mPopupWindow.getContext());
+        }
+
+
+        @Nullable
+        LinkedList<WindowManagerProxy> getPopupList(Context context) {
+            if (sQueueMap == null || sQueueMap.isEmpty()) return null;
+            return sQueueMap.get(String.valueOf(context));
         }
 
         void put(WindowManagerProxy managerProxy) {
@@ -268,6 +302,78 @@ final class WindowManagerProxy implements WindowManager, ClearMemoryObject {
                 return queue.get(index);
             }
             return null;
+        }
+    }
+
+
+    interface WindowFlagCompat {
+        void setupFlag(ViewGroup.LayoutParams params, BasePopupHelper helper);
+
+        class BeforeApi30Impl implements WindowFlagCompat {
+
+            @Override
+            public void setupFlag(ViewGroup.LayoutParams params, BasePopupHelper helper) {
+                if (params instanceof LayoutParams && helper != null) {
+                    LayoutParams p = (LayoutParams) params;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        Activity decorAct = helper.mPopupWindow.getContext();
+                        if (decorAct != null) {
+                            WindowManager.LayoutParams lp = decorAct.getWindow().getAttributes();
+                            p.layoutInDisplayCutoutMode = lp.layoutInDisplayCutoutMode;
+                        }
+                    }
+                    if (helper.isOverlayStatusbar()) {
+                        PopupLog.i(TAG, "applyHelper  >>>  覆盖状态栏");
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            int cutoutGravity = helper.getCutoutGravity();
+                            if (cutoutGravity == Gravity.TOP || cutoutGravity == Gravity.BOTTOM) {
+                                //垂直方向允许占用刘海
+                                p.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+                            }
+
+                        }
+                    }
+                    // 状态栏和导航栏相关处理交给decorview proxy，这里永远占用
+                    p.flags |= LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+                    p.flags |= LayoutParams.FLAG_LAYOUT_NO_LIMITS;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                        p.flags |= LayoutParams.FLAG_LAYOUT_IN_OVERSCAN;
+                    }
+                }
+            }
+        }
+
+        class Api30Impl implements WindowFlagCompat {
+
+            @Override
+            public void setupFlag(ViewGroup.LayoutParams params, BasePopupHelper helper) {
+                if (params instanceof LayoutParams && helper != null) {
+                    LayoutParams p = (LayoutParams) params;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        Activity decorAct = helper.mPopupWindow.getContext();
+                        if (decorAct != null) {
+                            WindowManager.LayoutParams lp = decorAct.getWindow().getAttributes();
+                            p.layoutInDisplayCutoutMode = lp.layoutInDisplayCutoutMode;
+                        }
+                    }
+                    int insetsType = p.getFitInsetsTypes();
+                    if (helper.isOverlayStatusbar()) {
+                        PopupLog.i(TAG, "applyHelper  >>>  覆盖状态栏");
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            int cutoutGravity = helper.getCutoutGravity();
+                            if (cutoutGravity == Gravity.TOP || cutoutGravity == Gravity.BOTTOM) {
+                                //垂直方向允许占用刘海
+                                p.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+                            }
+                        }
+                    }
+                    // 状态栏和导航栏相关处理交给decorview proxy，这里永远占用
+                    insetsType &= ~WindowInsets.Type.statusBars();
+                    insetsType &= ~WindowInsets.Type.navigationBars();
+                    p.setFitInsetsTypes(insetsType);
+                }
+
+            }
         }
     }
 }

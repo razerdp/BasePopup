@@ -13,19 +13,21 @@ import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import pub.devrel.easypermissions.EasyPermissions;
 import razerdp.basepopup.R;
 import razerdp.demo.base.StatusBarHelper;
 import razerdp.demo.base.interfaces.ClearMemoryObject;
@@ -34,6 +36,7 @@ import razerdp.demo.utils.StringUtil;
 import razerdp.demo.utils.ToolUtil;
 import razerdp.demo.widget.StatusBarViewPlaceHolder;
 import razerdp.demo.widget.TitleBarView;
+import razerdp.demo.widget.dialog.LoadingDialog;
 import razerdp.util.KeyboardUtils;
 import razerdp.util.log.PopupLog;
 
@@ -73,8 +76,15 @@ public abstract class BaseActivity<T extends BaseActivity.IntentData>
         super.onActivityReenter(resultCode, data);
         LiveDataBus.INSTANCE.getActivityReenterLiveData().send(Pair.create(resultCode, data));
     }
+
     protected void onStartCreate(Bundle savedInstanceState) {
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     //region ===============================abstract===============================
@@ -294,8 +304,50 @@ public abstract class BaseActivity<T extends BaseActivity.IntentData>
     }
 
 
+    public void showLoadingDialog(boolean cancelable) {
+        if ((mState.state & State.STATE_SHOWING_LOADING) != 0) return;
+        mState.state |= State.STATE_SHOWING_LOADING;
+        if (mLoadingDialog == null) {
+            mLoadingDialog = onCreateLoadingDialog();
+        }
+        mLoadingDialog.setCancelable(cancelable);
+        if (mLoadingDialog != null && !mLoadingDialog.isShowing()) {
+            runOnUiThread(() -> mLoadingDialog.show());
+        }
+    }
+
+    public void dismissLoadingDialog() {
+        if (mLoadingDialog == null || !mLoadingDialog.isShowing() || (mState.state & State.STATE_SHOWING_LOADING) == 0) {
+            return;
+        }
+        mState.state &= ~State.STATE_SHOWING_LOADING;
+        if (ToolUtil.isMainThread()) {
+            mLoadingDialog.dismiss();
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mLoadingDialog.dismiss();
+                }
+            });
+        }
+    }
+
+
+    public void setLoadingDialogText(String txt) {
+        if (mLoadingDialog instanceof LoadingDialog) {
+            ((LoadingDialog) mLoadingDialog).setDesc(txt);
+        }
+    }
+
+    public void setActionDialogText(String txt, View.OnClickListener l) {
+        if (mLoadingDialog instanceof LoadingDialog) {
+            ((LoadingDialog) mLoadingDialog).setAction(txt, l);
+        }
+    }
+
     protected Dialog onCreateLoadingDialog() {
-        return null;
+        return LoadingDialog.create(this);
     }
 
     //endregion ===============================other===============================

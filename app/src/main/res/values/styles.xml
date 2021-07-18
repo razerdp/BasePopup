@@ -18,6 +18,18 @@
         <!-- 自定义 -->
     </style>
 
+    <style name="DialogTheme" parent="Theme.AppCompat.Dialog">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/common_window_background</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+
     <style name="AppTheme.FUllScreen" parent="AppTheme">
         <item name="android:windowFullscreen">true</item>
     </style>
@@ -61,5 +73,15 @@
         <item name="android:background">@color/common_window_background</item>
     </style>
 
-    <style name="PhotoBrowser" parent="AppTheme" />
+    <style name="PhotoBrowser" parent="AppTheme"/>
+
+
+    <style name="BaseDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
 </resources>

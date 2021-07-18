@@ -14,10 +14,7 @@ import razerdp.basepopup.R;
 public class PopupAnimate extends BasePopupWindow {
     public PopupAnimate(Context context) {
         super(context);
+        setContentView(R.layout.popup_animate);
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_animate);
-    }
 }

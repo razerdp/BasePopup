@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rtl_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <razerdp.demo.widget.TitleBarView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title_text="RTL布局" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="1.2dp"
+            android:lineSpacingMultiplier="1.2"
+            android:padding="@dimen/default_padding"
+            android:text="Dialog样式的Activity"
+            android:textColor="@color/text_black2"
+            android:textSize="@dimen/text_normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Space
+            android:id="@+id/view_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_desc" />
+
+        <razerdp.demo.widget.DPTextView
+            android:id="@+id/show_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingTop="8dp"
+            android:paddingRight="@dimen/default_padding"
+            android:paddingBottom="8dp"
+            android:text="显示Dialog"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_normal"
+            app:backgroundColor="@color/color_blue"
+            app:corner_radius="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_empty" />
+
+        <razerdp.demo.widget.DPTextView
+            android:id="@+id/show_application_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingTop="8dp"
+            android:paddingRight="@dimen/default_padding"
+            android:paddingBottom="8dp"
+            android:text="显示全局 Dialog"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_normal"
+            app:backgroundColor="@color/color_blue"
+            app:corner_radius="4dp"
+            app:layout_constraintLeft_toRightOf="@id/show_dialog"
+            app:layout_constraintRight_toLeftOf="@id/show_popup"
+            app:layout_constraintTop_toTopOf="@id/show_dialog" />
+
+        <razerdp.demo.widget.DPTextView
+            android:id="@+id/show_popup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingTop="8dp"
+            android:paddingRight="@dimen/default_padding"
+            android:paddingBottom="8dp"
+            android:text="显示Popup"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_normal"
+            app:backgroundColor="@color/color_blue"
+            app:corner_radius="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_empty" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

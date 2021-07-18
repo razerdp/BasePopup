@@ -37,6 +37,7 @@ public class PopupAlignBackgroundOption extends BaseOptionPopup<CommonBackground
 
     public PopupAlignBackgroundOption(Context context) {
         super(context);
+        setContentView(R.layout.popup_option_background_align);
     }
 
     @Override
@@ -54,10 +55,6 @@ public class PopupAlignBackgroundOption extends BaseOptionPopup<CommonBackground
                 .toDismiss();
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_option_background_align);
-    }
 
     @OnClick(R.id.tv_go)
     void ok() {

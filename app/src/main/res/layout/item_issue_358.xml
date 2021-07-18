@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/tv_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/common_red"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="键盘对齐我"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/tv_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:background="@color/color_blue"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="键盘对齐我"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/tv_3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_weight="1"
+            android:background="@color/common_gold"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="键盘对齐我"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/tv_4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_weight="1"
+            android:background="@color/common_green"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="键盘对齐我"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+</LinearLayout>

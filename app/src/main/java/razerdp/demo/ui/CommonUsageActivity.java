@@ -5,11 +5,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
 import razerdp.basepopup.R;
@@ -24,17 +25,22 @@ import razerdp.demo.model.common.CommonAnchorMatchInfo;
 import razerdp.demo.model.common.CommonAnimateInfo;
 import razerdp.demo.model.common.CommonAnyPosInfo;
 import razerdp.demo.model.common.CommonArrowInfo;
+import razerdp.demo.model.common.CommonAutoMirrorActivityInfo;
 import razerdp.demo.model.common.CommonBackgroundAlignInfo;
 import razerdp.demo.model.common.CommonBackgroundInfo;
+import razerdp.demo.model.common.CommonBarControllerInfo;
 import razerdp.demo.model.common.CommonBlurInfo;
 import razerdp.demo.model.common.CommonBottomSheetDialogInfo;
 import razerdp.demo.model.common.CommonControllerInfo;
+import razerdp.demo.model.common.CommonDialogActivityInfo;
 import razerdp.demo.model.common.CommonFriendCircleInfo;
 import razerdp.demo.model.common.CommonFullScreenActivityInfo;
 import razerdp.demo.model.common.CommonGestureNavInfo;
 import razerdp.demo.model.common.CommonInputInfo;
 import razerdp.demo.model.common.CommonRTLInfo;
 import razerdp.demo.model.common.CommonSlideInfo;
+import razerdp.demo.model.common.CommonUpdateInfo;
+import razerdp.demo.model.common.ScreenRotateActivityInfo;
 import razerdp.demo.model.lifecycle.ShowInServiceInfo;
 import razerdp.demo.model.lifecycle.ShowOnCreateInfo;
 import razerdp.demo.utils.ButterKnifeUtil;
@@ -87,7 +93,8 @@ public class CommonUsageActivity extends BaseActivity {
             }
         });
         rvContent.setLayoutManager(gridLayoutManager);
-        rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(UIHelper.DP8).build()));
+        rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(UIHelper.DP8)
+                .build()));
         mAdapter = new MultiRecyclerViewAdapter(this, createItem());
         mAdapter.appendHolder(InnerTitleViewHolder.class, 0)
                 .appendHolder(InnerItemViewHolder.class, 1);
@@ -115,8 +122,10 @@ public class CommonUsageActivity extends BaseActivity {
         result.add(new CommonFriendCircleInfo());
         result.add(new CommonAnchorMatchInfo());
         result.add(new CommonArrowInfo());
+        result.add(new CommonAutoMirrorActivityInfo());
         result.add(new DemoCommonUsageTitle("PopupWindow控制相关"));
         result.add(new CommonControllerInfo());
+        result.add(new CommonBarControllerInfo());
         result.add(new DemoCommonUsageTitle("动画相关"));
         result.add(new CommonAnimateInfo());
         result.add(new DemoCommonUsageTitle("背景相关"));
@@ -132,7 +141,10 @@ public class CommonUsageActivity extends BaseActivity {
         result.add(new CommonBottomSheetDialogInfo());
         result.add(new CommonGestureNavInfo());
         result.add(new CommonFullScreenActivityInfo());
+        result.add(new CommonDialogActivityInfo());
         result.add(new CommonRTLInfo());
+        result.add(new CommonUpdateInfo());
+        result.add(new ScreenRotateActivityInfo());
 
         return result;
     }
@@ -168,6 +180,8 @@ public class CommonUsageActivity extends BaseActivity {
         View divider;
         @BindView(R.id.tv_option)
         DPTextView tvOption;
+        @BindView(R.id.tv_source)
+        DPTextView tvSource;
 
         public InnerItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -181,6 +195,7 @@ public class CommonUsageActivity extends BaseActivity {
 
         @Override
         public void onBindData(DemoCommonUsageInfo data, int position) {
+            tvSource.setVisibility(data.sourceVisible ? View.VISIBLE : View.GONE);
             tvFun.setText(data.title);
             tvOption.setText(TextUtils.isEmpty(data.option) ? "配置" : data.option);
         }
@@ -190,6 +205,10 @@ public class CommonUsageActivity extends BaseActivity {
             getData().toOption(v);
         }
 
+        @OnClick(R.id.tv_source)
+        void showSource(View v) {
+            getData().toSource(v);
+        }
     }
 
 }

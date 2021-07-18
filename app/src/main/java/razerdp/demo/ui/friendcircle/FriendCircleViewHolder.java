@@ -1,5 +1,6 @@
 package razerdp.demo.ui.friendcircle;
 
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.app.ComponentActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -19,6 +21,7 @@ import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.imageloader.ImageLoaderManager;
 import razerdp.demo.model.friendcircle.FriendCircleInfo;
 import razerdp.demo.popup.PopupFriendCircle;
+import razerdp.demo.ui.photobrowser.PhotoBrowserImpl;
 import razerdp.demo.ui.photobrowser.PhotoBrowserProcessor;
 import razerdp.demo.utils.ActivityUtil;
 import razerdp.demo.utils.ButterKnifeUtil;
@@ -73,12 +76,7 @@ public class FriendCircleViewHolder extends BaseSimpleRecyclerViewHolder<FriendC
             mAdapter = new Adapter(data.pics);
             rvBox.setAdapter(mAdapter);
         } else {
-            if (mAdapter.data == null || ToolUtil.isEmpty(data.pics)) {
-                mAdapter.data = data.pics;
-            } else {
-                mAdapter.data.clear();
-                mAdapter.data.addAll(data.pics);
-            }
+            mAdapter.updateData(data.pics);
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -95,12 +93,27 @@ public class FriendCircleViewHolder extends BaseSimpleRecyclerViewHolder<FriendC
     }
 
     static class Adapter extends RecyclerViewBox.Adapter implements View.OnClickListener {
-        List<String> data;
+        List<String> thumb;
+        List<String> hight;
+        List<Pair<String, String>> data;
         private PhotoBrowserProcessor mPhotoBrowserProcessor;
         private RecyclerViewBox mRecyclerViewBox;
 
-        public Adapter(List<String> datas) {
+        public Adapter(List<Pair<String, String>> datas) {
             this.data = datas;
+            thumb = new ArrayList<>();
+            hight = new ArrayList<>();
+            updateData(datas);
+        }
+
+        public void updateData(List<Pair<String, String>> datas) {
+            this.data = datas;
+            thumb.clear();
+            hight.clear();
+            for (Pair<String, String> data : datas) {
+                hight.add(data.first);
+                thumb.add(data.second);
+            }
         }
 
         @Override
@@ -117,9 +130,11 @@ public class FriendCircleViewHolder extends BaseSimpleRecyclerViewHolder<FriendC
         @Override
         public RecyclerViewBox.ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
             return getItemCount() == 1 ?
-                    new SingleViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_ninegrid_image_single_view, parent, false))
+                    new SingleViewHolder(LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.item_ninegrid_image_single_view, parent, false))
                     :
-                    new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_ninegrid_image_view, parent, false));
+                    new ViewHolder(LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.item_ninegrid_image_view, parent, false));
         }
 
         @Override
@@ -138,14 +153,14 @@ public class FriendCircleViewHolder extends BaseSimpleRecyclerViewHolder<FriendC
                     .INSTANCE
                     .option()
                     .setError(R.drawable.ic_error_gray)
-                    .loadImage(iv, data.get(position));
+                    .loadImage(iv, thumb.get(position));
         }
 
         @Override
         public void onClick(View v) {
             if (v instanceof ImageView) {
                 if (mPhotoBrowserProcessor == null) {
-                    mPhotoBrowserProcessor = PhotoBrowserProcessor.with(data)
+                    mPhotoBrowserProcessor = PhotoBrowserProcessor.with(PhotoBrowserImpl.fromList(hight,thumb))
                             .setExitViewProvider((from, exitPosition) -> {
                                 RecyclerViewBox.ViewHolder holder = mRecyclerViewBox.findViewHolderForPosition(exitPosition);
                                 ImageView iv = null;
@@ -159,7 +174,7 @@ public class FriendCircleViewHolder extends BaseSimpleRecyclerViewHolder<FriendC
                 }
                 int pos = ToolUtil.cast(v.getTag(R.id.friend_circle_imageview_tag), Integer.class, 0);
                 mPhotoBrowserProcessor
-                        .setPhotos(data)
+                        .setPhotos(PhotoBrowserImpl.fromList(hight,thumb))
                         .fromView((ImageView) v)
                         .setStartPosition(pos)
                         .start(ToolUtil.cast(ActivityUtil.getActivity(v.getContext()), ComponentActivity.class));

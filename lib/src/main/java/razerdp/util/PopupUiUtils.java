@@ -1,5 +1,6 @@
 package razerdp.util;
 
+import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -13,11 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 
 import androidx.annotation.NonNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import razerdp.basepopup.BasePopupSDK;
 import razerdp.util.log.PopupLog;
@@ -31,11 +33,29 @@ public class PopupUiUtils {
     public static final String POPUP_VIEWCONTAINER = "android.widget.PopupWindow$PopupViewContainer";
     public static final String POPUP_BACKGROUNDVIEW = "android.widget.PopupWindow$PopupBackgroundView";
 
-    private static final List<String> NAVIGATION_BAR_NAMES = new ArrayList<>();
+    private static final Map<String, Void> NAVIGATION_BAR_NAMES = new HashMap<>();
 
     static {
-        NAVIGATION_BAR_NAMES.add("navigationbarbackground");
-        NAVIGATION_BAR_NAMES.add("immersion_navigation_bar_view");
+        NAVIGATION_BAR_NAMES.put("navigationbarbackground", null);
+        NAVIGATION_BAR_NAMES.put("immersion_navigation_bar_view", null);
+    }
+
+    public static void appendNavigationBarID(String id) {
+        NAVIGATION_BAR_NAMES.put(id, null);
+    }
+
+    public static boolean isStatusBarVisible(Context context) {
+        Activity act = PopupUtils.getActivity(context);
+        if (act == null) {
+            return true;
+        }
+        try {
+            return (act.getWindow()
+                    .getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == 0;
+        } catch (Exception e) {
+            PopupLog.e(e);
+            return true;
+        }
     }
 
     public static boolean isPopupDecorView(View view) {
@@ -66,25 +86,41 @@ public class PopupUiUtils {
      * https://juejin.im/post/5bb5c4e75188255c72285b54
      */
     @SuppressLint("NewApi")
-    public static int getNavigationBarHeight(Context context) {
+    @NonNull
+    public static void getNavigationBarBounds(Rect r, Context context) {
         Activity act = PopupUtils.getActivity(context);
-        if (!PopupUtils.isActivityAlive(act)) return 0;
+        if (!PopupUtils.isActivityAlive(act)) return;
         ViewGroup decorView = (ViewGroup) act.getWindow().getDecorView();
         final int childCount = decorView.getChildCount();
         for (int i = childCount - 1; i >= 0; i--) {
             View child = decorView.getChildAt(i);
             if (child.getId() == View.NO_ID || !child.isShown()) continue;
-            String resourceEntryName;
             try {
-                resourceEntryName = act.getResources().getResourceEntryName(child.getId());
-                if (NAVIGATION_BAR_NAMES.contains(resourceEntryName.toLowerCase())) {
-                    return child.getHeight();
+                String resourceEntryName = act.getResources().getResourceEntryName(child.getId());
+                if (NAVIGATION_BAR_NAMES.containsKey(resourceEntryName.toLowerCase())) {
+                    r.set(child.getLeft(), child.getTop(), child.getRight(), child.getBottom());
+                    return;
                 }
             } catch (Exception e) {
                 //do nothing
             }
         }
-        return 0;
+    }
+
+
+    public static int getNavigationBarGravity(Rect navigationBarBounds) {
+        if (navigationBarBounds == null || navigationBarBounds.isEmpty()) {
+            return Gravity.NO_GRAVITY;
+        }
+        if (navigationBarBounds.left <= 0) {
+            if (navigationBarBounds.top <= 0) {
+                return navigationBarBounds.width() > navigationBarBounds.height() ? Gravity.TOP : Gravity.LEFT;
+            } else {
+                return Gravity.BOTTOM;
+            }
+        } else {
+            return Gravity.RIGHT;
+        }
     }
 
     public static int getScreenOrientation() {
@@ -100,7 +136,7 @@ public class PopupUiUtils {
         if (statusBarHeight != 0) return;
         int result = 0;
         //获取状态栏高度的资源id
-        Resources resources = BasePopupSDK.getApplication().getResources();
+        Resources resources = Resources.getSystem();
         int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
             result = resources.getDimensionPixelSize(resourceId);
@@ -136,7 +172,8 @@ public class PopupUiUtils {
 
     public static boolean isActivityFullScreen(Activity act) {
         if (act == null || act.getWindow() == null) return false;
-        return (act.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
+        return (act.getWindow()
+                .getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == WindowManager.LayoutParams.FLAG_FULLSCREEN;
 
     }
 
@@ -155,5 +192,30 @@ public class PopupUiUtils {
             gravity |= yDelta > 0 ? Gravity.BOTTOM : Gravity.TOP;
         }
         return gravity;
+    }
+
+    public static void releaseAnimation(Object... objects) {
+        if (objects == null) return;
+        for (Object object : objects) {
+            if (object instanceof Animation) {
+                releaseAnimationInternal((Animation) object);
+            }
+            if (object instanceof Animator) {
+                releaseAnimatorInternal((Animator) object);
+            }
+        }
+    }
+
+    static void releaseAnimationInternal(Animation animation) {
+        if (animation == null) return;
+        animation.cancel();
+        animation.setAnimationListener(null);
+
+    }
+
+    static void releaseAnimatorInternal(Animator animator) {
+        if (animator == null) return;
+        animator.cancel();
+        animator.removeAllListeners();
     }
 }

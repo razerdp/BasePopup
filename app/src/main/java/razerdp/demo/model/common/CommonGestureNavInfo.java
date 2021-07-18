@@ -16,6 +16,10 @@ public class CommonGestureNavInfo extends DemoCommonUsageInfo {
 
     public CommonGestureNavInfo() {
         title = "各种手势导航栏测试\n" + "系统：" + RomUtils.getRomInfo().getName();
+        name = "PopupDesc";
+        javaUrl = "https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/PopupDesc.java";
+        resUrl = "https://github.com/razerdp/BasePopup/blob/master/app/src/main/res/layout/popup_description.xml";
+
     }
 
     @Override

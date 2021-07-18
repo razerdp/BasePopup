@@ -2,15 +2,16 @@
 
 buildscript {
     repositories {
+        maven { url "https://raw.githubusercontent.com/Pgyer/mvn_repo_pgyer/master" }
         maven { url "https://maven.google.com" }
         maven { url "https://jitpack.io" }
         jcenter()
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.3'
+        classpath 'com.android.tools.build:gradle:4.2.1'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.4.30"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -19,6 +20,7 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url "https://raw.githubusercontent.com/Pgyer/mvn_repo_pgyer/master" }
         maven { url "https://maven.google.com" }
         maven { url "https://jitpack.io" }
         jcenter()
@@ -32,18 +34,17 @@ task clean(type: Delete) {
 
 ext {
     //Android
-    compileSdkVersion = 29
+    compileSdkVersion = 30
     minSdkVersion = 19
     minLibSdkVersion = 16
-    targetSdkVersion = 29
-    versionCode = 118
-    versionName = '2.2.4.1'
+    targetSdkVersion = 30
+    versionCode = 310
+    versionName = '3.1.4'
 
     candy = false
-    group = 'com.github.razerdp'
+    group = 'io.github.razerdp'
 
     pkg_name = 'BasePopup'
-    pkg_candy_name = 'BasePopup_Candy'
 }
 
 

@@ -1,26 +1,26 @@
  **中文** | [**English**](./README_V2_EN.md)
 
 <p align="center"><img src="./img/logo.png" alt="Logo图片似乎加载不出来" height="360"/></p>
-<h2 align="center">BasePopup - Android下打造通用便捷的PopupWindow</h2>
+<h2 align="center">BasePopup - Android下打造通用便捷的PopupWindow弹窗库</h2>
 <div align="center">
 
 <table align="center">
         <tr>
             <th align="center" width="9999">Release</th>
-            <th align="center" width="9999">Candy</th>
+            <th align="center" width="9999">Snapshot</th>
             <th align="center" width="9999">License</th>
 			<th align="center" width="9999">Api</th>
 			<th align="center" width="9999">Author</th>
         </tr>
            <tr>
                     <td align="center">
-        				<a href ="https://bintray.com/razerdp/maven/BasePopup/_latestVersion">
-        					<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup/images/download.svg"/>
+        				<a href ="https://search.maven.org/artifact/io.github.razerdp/BasePopup">
+        					<img src="https://img.shields.io/maven-central/v/io.github.razerdp/BasePopup"/>
         				</a>
         			</td>
         			<td align="center">
-        				<a href = "https://bintray.com/razerdp/maven/BasePopup_Candy/_latestVersion">
-        					<img src="https://api.bintray.com/packages/razerdp/maven/BasePopup_Candy/images/download.svg"/>
+        				<a href = "https://s01.oss.sonatype.org/content/repositories/snapshots/io/github/razerdp/BasePopup/">
+        					<img src="https://img.shields.io/nexus/s/io.github.razerdp/BasePopup?server=https%3A%2F%2Fs01.oss.sonatype.org%2F"/>
         				</a>
         			</td>
         			<td align="center">
@@ -47,11 +47,8 @@
 
 </div>
 
+
 ---
-
-### 有奖调查问卷：
-
-<a href ="https://wj.qq.com/s2/5468287/c24f"><img src="./img/qrcode.png"/></a>
 
 ### 导航
  
@@ -87,82 +84,60 @@
 ### 注意事项
 
   - **请务必仔细阅读本README,每个版本升级请务必查阅更新日志，这可以为您减少不必要弯路**
-  - **2.2.2版本开始不再支持Support，建议您尽快升级到AndroidX**
-  - **请注意引用版本的问题，Release版本是稳定版，Candy是预览版。**
-    - Release版本：一般在Candy版本反复验证修复后发布到Release，如果您对稳定性要求较高，请使用Release版本。
-    - Candy版本：一般新功能、issue修复都会发布到Candy版本，Candy版本发布比较频繁，但通常会拥有新的功能，如果您喜欢试验新功能同时对稳定性要求不高，请使用Candy版本。
-    - **Release和Candy两个版本互相切换可能会导致Build失败，这时候您Clean一下Project即可**
-  - 从16年[**第一次**](https://github.com/razerdp/BasePopup/commit/c92b7088270d5757269d9b79213627a4a0392d31)提交到现在，本人技术也一直在进步，BasePopup也会一直迭代更新，所以，请谨慎选择版本哦~一不小心就颠覆了之前的实现。
+  - **请注意引用版本的问题，Release版本是稳定版，Snapshot是预览版。**
+    - Release版本：一般在Snapshot版本反复验证修复后发布到Release，如果您对稳定性要求较高，请使用Release版本。
+    - Snapshot：一般新功能、issue修复都会发布到Snapshot版本，Snapshot版本发布比较频繁，但通常会拥有新的功能，如果您喜欢试验新功能同时对稳定性要求不高，请使用Snapshot版本。
+    - **Release和Snapshot两个版本互相切换可能会导致Build失败，这时候您Clean一下Project即可**
+  - **3.0版本是破坏性升级，请您务必阅读升级提示**：[关于BasePopup 3.0的破坏性更新说明](./Update_3.0.md)
 
 <br>
 
 ### 环境依赖
 
-请把下述 **{$latestVersion}** 替换为上面表格中对应的版本。
+#### root gradle配置
 
-**自2.2.2版本开始，BasePopup将完全迁移至AndroidX，不再提供扩展组件了**，BasePopup建议您尽早迁移到AndroidX
+```
+allprojects {
+    repositories {
+        // release依赖仓库（4.1后as默认配置有）
+        mavenCentral()
 
- - **Release：** `implementation 'com.github.razerdp:BasePopup:{$latestVersion}'`
- - **Candy：** `implementation 'com.github.razerdp:BasePopup_Candy:{$latestVersion}'`
+        // snapshot仓库（如果需要snapshot依赖，请配置该maven）
+        maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots' }
+    }
+}
+```
+
+#### 依赖
+
+**由于JCenter已经停止服务，自2.3版本开始，本库将迁移到Maven，新的依赖groupId为 【io.github.razerdp】**
+
+**3.0版本是破坏性升级，请您务必阅读升级提示**：[关于BasePopup 3.0的破坏性更新说明](./Update_3.0.md)
+
+ - **Release：** `implementation 'io.github.razerdp:BasePopup:3.1.4'`
+ - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:3.1.7-SNAPSHOT'`
 
 <br>
 
 ### 文档
 
-BasePopup配备完善的文档，建议您优先查阅文档。
+BasePopup配备完善的文档，详情请看。
 
 [**BasePopup手册**](https://www.yuque.com/razerdp/basepopup)
 
 <br>
 
 
-
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-**正在开发日志（Candy版本）请查看dev分支：** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
-
-* **【Release】2.2.4.1**(2020/07/19)
-  * 【注意】：在**2.2.4**中我们发现`setMaxWidth/setMaxHeight`出现错误，因此我们紧急发布**2.2.4.1**，请使用**2.2.4**的用户尽快升级到**2.2.4.1**
-  * 在2.2.4版本中，我们添加了非常棒的 `AnimationHelper`，在它的帮助下，创建BasePopup动画将会变得十分简单易懂，同时我们也增加了很多很棒的功能，欢迎更新到2.2.4版本~
-  * **新增功能/方法：**
-    * 添加弹窗线程检查：非主线程下我们将会抛出异常 `CalledFromWrongThreadException`
-    * 开放 `OnKeyboardChangeListener`：现在您可以监听键盘显示、关闭事件，同时该回调会返回键盘的大小
-    * 增加 `KeyEventListener`：现在允许您在外部添加事件监听，感谢issue：[#296](https://github.com/razerdp/BasePopup/issues/296)
-    * 增加 `setOverlayNavigationBar`：通过该方法，您可以让您的BasePopup覆盖到导航栏，默认情况下不允许覆盖，如果您确实有需要，可以通过该api配置覆盖
-      * 相关讨论：[《关于MIUI小白条及类似的“全面屏手势提示线”覆盖问题描述》](https://github.com/razerdp/BasePopup/issues/307)
-    * 增加 `setWidthAsAnchorView`：您可以调用该Api决定BasePopup的宽度是否设置为AnchorView的宽度
-    * 增加 `setHeightAsAnchorView`：您可以调用该Api决定BasePopup的高度是否设置为AnchorView的高度
-    * 增加RTL布局支持：该需求早在几个月前就有群友在群里提出了，一直没去弄，直到最近才有空去写，得益于BasePopup根据Gravity来做方向判断，我们修改了极少的代码完成了RTL适配
-      * 如果使用RTL，请务必设置 `setLayoutDirection`方向，告诉BasePopup宿主布局方向
-      * RTL仅对`showPopupWindow(View anchorView)`和`showPopupWindow(int x,int y)`有效
-      * **请务必注意，BasePopup遵循官方做法，当您需要RTL布局的时候，请使用START代替LEFT，使用END代替RIGHT**
-    * 增加 `syncMaskAnimationDuration`：您可以设置蒙层动画的时间是否同步您的动画时间（取最长时间），默认同步
-    * 增加AnimationHelper：我们希望能减少动画的代码量，同时让动画的创建更加的易懂，因此我们在本版本中正式推出AnimationHelper，相信你一定会喜欢他的
-      * 关于AnimationHelper的资料，受篇幅限制，请查阅文档：[【进阶指引-动画-AnimationHelper】](https://www.yuque.com/razerdp/basepopup/zcgtm5)
-      * AnimationHelper在2.2.4版本新推出，可能会存在我们没测出来的Bug，不过它只是创建动画的辅助类，因此不影响主体流程，所以如果您发现它不好用或者不满足您的功能，您可以更换为原生的动画创建，同时欢迎提交issue
-  * **优化**
-    * 优化BasePopupHelper代码
-    * 优化蒙层动画：
-      * 我们针对蒙层的动画进行了优化，现在蒙层的渐入渐出时间将会跟您设置的动画最长时间同步，我们期望在您的展示/退出动画完成的一刹那，蒙层动画也同步完成，而不希望其提前或延后
-      * 您可以通过 `syncMaskAnimationDuration`配置是否同步
-  * **删除类/方法**
-    * **请注意，这次我们没有标记为@Deprecated，直接删除了代码，如果您使用到这些方法，请务必进行更改**
-    * **删除类：** SimpleAnimationUtils.java，我们建议您使用 [AnimationHelper](https://www.yuque.com/razerdp/basepopup/zcgtm5) 代替
-    * **删除方法：** BasePopupWindow#getTranslateVerticalAnimation
-    * **删除方法：** BasePopupWindow#getScaleAnimation
-    * **删除方法：** BasePopupWindow#getDefaultScaleAnimation
-    * **删除方法：** BasePopupWindow#getDefaultAlphaAnimation
-    * **删除方法：** BasePopupWindow#getDefaultSlideFromBottomAnimationSet
-  * **bug修复**
-    * 修复全屏Activity下focusable没有恢复的问题
-    * 修复全屏Activity下SystemUiVisibility被强制修改的问题
-    * 修复Quickpopupbuilder中backpressenable设置失效的问题[#296](https://github.com/razerdp/BasePopup/issues/296)
-    * 修复非BasePopup内EditText弹出键盘时挡住EditText的问题[#297](https://github.com/razerdp/BasePopup/issues/297)
-    * 修复lazypopup中gravity覆盖的问题[#310](https://github.com/razerdp/BasePopup/issues/310)
-    * 修复onCreate()下关联锚点View时因未完成测量过程而导致的位置获取不成功问题[#313](https://github.com/razerdp/BasePopup/issues/313)
-    * 修复设置最大/最小宽高下测量错误的问题
-    * 修复键盘监听在adjustResize下可能会出现的问题[#315](https://github.com/razerdp/BasePopup/issues/315)
-    * 修复设置softInputMode重复的问题[#314](https://github.com/razerdp/BasePopup/issues/314)
+* **【Release】3.1.4** (2021/06/23)
+    * 【优化】
+        * 优化BlurHelper，RenderScript使用单例
+        * 增加`setOverlayMask(boolean)`：是否允许蒙层叠加，默认不叠加。同个页面默认背景的BasePopup不会叠加蒙层，直到设置了背景为止。
+        * deprecated `setAutoLocatePopup`，请用`setAutoMirrorEnable`代替
+        * 增加左右自动镜像定位的功能，增加demo
+    * 【修复】
+        * 修复`onOutSideTouch`拦截事件后，没有传到DecorView的问题 [#393-comment](https://github.com/razerdp/BasePopup/issues/393#issuecomment-853687468)
 
 
 <br>
@@ -192,7 +167,9 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 ### 交流群
 
-因QQ没时间管理，因此解散，同时开通微信群，主要用于交流和BasePopup的反馈，为了保证微信群的质量，因此只有打赏了之后才能进群~
+为了保证微信群的质量（主要是远离斗图党和广告党），因此只有打赏了之后才能进群~
+
+【**打赏后请加微信小号：razerdp_test，并注明付款账号，定期核验后会通过**】
 
 <br>
 
@@ -204,4 +181,12 @@ BasePopup配备完善的文档，建议您优先查阅文档。
 
 ### License
 
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frazerdp%2FBasePopup.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Frazerdp%2FBasePopup?ref=badge_large)
+
 [Apache-2.0](./LICENSE)
+
+
+<p align="center">
+  Visit Count（from 2020/08/19）<br>
+  <img src="https://profile-counter.glitch.me/razerdp-basepopup/count.svg" />
+</p>

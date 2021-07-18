@@ -30,6 +30,9 @@ public class CommonAnchorMatchInfo extends DemoCommonUsageInfo {
 
     public CommonAnchorMatchInfo() {
         title = "关联anchor\n同时宽或者高为match_parent";
+        name="PopupSlide";
+        javaUrl="https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/PopupSlide.java";
+        resUrl="https://github.com/razerdp/BasePopup/blob/master/app/src/main/res/layout/popup_slide.xml";
     }
 
     @Override

@@ -16,6 +16,7 @@ public class CommonFullScreenActivityInfo extends DemoCommonUsageInfo {
 
     public CommonFullScreenActivityInfo() {
         title = "全屏Activity";
+        sourceVisible = false;
     }
 
     @Override

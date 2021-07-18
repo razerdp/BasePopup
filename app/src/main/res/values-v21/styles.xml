@@ -8,8 +8,8 @@
         <item name="colorPrimaryDark">@color/transparent</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowBackground">@color/transparent</item>
-        <item name="android:windowSharedElementEnterTransition">@transition/photo_enter</item>
-        <item name="android:windowSharedElementExitTransition">@transition/photo_exit</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/imageviewer</item>
+        <item name="android:windowSharedElementExitTransition">@transition/imageviewer</item>
     </style>
 
 </resources>

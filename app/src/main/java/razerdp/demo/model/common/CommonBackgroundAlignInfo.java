@@ -22,6 +22,9 @@ public class CommonBackgroundAlignInfo extends DemoCommonUsageInfo {
 
     public CommonBackgroundAlignInfo() {
         title = "背景蒙层控制";
+        name="DemoPopup";
+        javaUrl="https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/DemoPopup.java";
+        resUrl="https://github.com/razerdp/BasePopup/blob/master/app/src/main/res/layout/popup_demo.xml";
     }
 
     @Override

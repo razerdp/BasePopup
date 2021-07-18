@@ -20,14 +20,8 @@ android {
     }
 }
 
-ext {
-    ARTIFACT_ID = 'BasePopup'
-    ARTIFACT_CANDY_ID = 'BasePopup_Candy'
-    IGNORE_DEPENDENCE = false
-}
-
 dependencies {
-    compileOnly 'androidx.appcompat:appcompat:1.1.0'
+    compileOnly 'androidx.appcompat:appcompat:1.2.0'
 }
 
 apply from: "$rootProject.rootDir/scripts/upload.gradle"

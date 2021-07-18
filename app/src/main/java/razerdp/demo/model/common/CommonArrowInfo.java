@@ -21,6 +21,9 @@ public class CommonArrowInfo extends DemoCommonUsageInfo {
 
     public CommonArrowInfo() {
         title = "带箭头的Popup";
+        name="PopupArrow";
+        javaUrl="https://github.com/razerdp/BasePopup/blob/master/app/src/main/java/razerdp/demo/popup/PopupArrow.java";
+        resUrl="https://github.com/razerdp/BasePopup/blob/master/app/src/main/res/layout/popup_arrow.xml";
     }
 
     @Override

@@ -58,12 +58,14 @@ public class PopupBackgroundOption extends BaseOptionPopup<CommonBackgroundInfo>
     @BindView(R.id.tv_go)
     DPTextView mTvGo;
 
-    View[] colorViews = {mViewColor1, mViewColor2, mViewColor3, mViewColor4, mViewColor5, mViewColor6, mViewColor7};
+    View[] colorViews;
 
     Drawable selectedBackground;
 
     public PopupBackgroundOption(Context context) {
         super(context);
+        setContentView(R.layout.popup_option_background);
+        colorViews = new View[]{mViewColor1, mViewColor2, mViewColor3, mViewColor4, mViewColor5, mViewColor6, mViewColor7};
         randomColors();
 
         View.OnClickListener listener = new View.OnClickListener() {
@@ -158,10 +160,6 @@ public class PopupBackgroundOption extends BaseOptionPopup<CommonBackgroundInfo>
                 .toDismiss();
     }
 
-    @Override
-    public View onCreateContentView() {
-        return createPopupById(R.layout.popup_option_background);
-    }
 
     private int randomColor() {
         Random random = new Random();

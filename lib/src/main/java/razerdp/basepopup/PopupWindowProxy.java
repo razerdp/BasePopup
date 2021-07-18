@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
 
+import razerdp.library.R;
 import razerdp.util.PopupUtils;
 
 /**
@@ -20,7 +21,7 @@ import razerdp.util.PopupUtils;
 
 class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
     private static final String TAG = "PopupWindowProxy";
-    private BasePopupContextWrapper mBasePopupContextWrapper;
+    BasePopupContextWrapper mBasePopupContextWrapper;
 
     private boolean oldFocusable = true;
     private boolean isHandledFullScreen;
@@ -58,19 +59,29 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
     }
 
     private void restoreFocusable() {
-        if (mBasePopupContextWrapper != null && mBasePopupContextWrapper.mWindowManagerProxy != null) {
-            mBasePopupContextWrapper.mWindowManagerProxy.updateFocus(oldFocusable);
-        }
+        updateFocusable(oldFocusable);
         setFocusable(oldFocusable);
         isHandledFullScreen = false;
+    }
+
+    void updateFocusable(boolean focusable) {
+        if (mBasePopupContextWrapper != null && mBasePopupContextWrapper.mWindowManagerProxy != null) {
+            mBasePopupContextWrapper.mWindowManagerProxy.updateFocus(focusable);
+        }
+    }
+
+    void updateFlag(int mode, boolean updateImmediately, int... flags) {
+        if (mBasePopupContextWrapper != null && mBasePopupContextWrapper.mWindowManagerProxy != null) {
+            mBasePopupContextWrapper.mWindowManagerProxy.updateFlag(mode, updateImmediately, flags);
+        }
     }
 
     @Override
     public void showAtLocation(View parent, int gravity, int x, int y) {
         if (isShowing()) return;
-        Activity activity = PopupUtils.getActivity(parent.getContext());
+        Activity activity = PopupUtils.getActivity(parent.getContext(), false);
         if (activity == null) {
-            Log.e(TAG, "please make sure that context is instance of activity");
+            Log.e(TAG, PopupUtils.getString(R.string.basepopup_error_non_act_context));
             return;
         }
         onBeforeShowExec(activity);
@@ -119,6 +130,9 @@ class PopupWindowProxy extends PopupWindow implements ClearMemoryObject {
 
     void superDismiss() {
         try {
+            if (mBasePopupContextWrapper!=null){
+                WindowManagerProxy.PopupWindowQueueManager.getInstance().remove(mBasePopupContextWrapper.mWindowManagerProxy);
+            }
             super.dismiss();
         } catch (Exception e) {
             e.printStackTrace();
