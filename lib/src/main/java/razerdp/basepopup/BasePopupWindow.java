@@ -2195,11 +2195,12 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
     /**
      * PopupWindow ContentView外的事件点击回调
      *
-     * @param touchInMask 是否在mask中触摸
+     * @param touchInBackground 是否在背景中触摸
+     * @param isPressed 是否点击事件
      * @return 返回True则意味着您消耗了该事件，该事件不再会被分发下去
      */
-    public boolean onOutSideTouch(MotionEvent event, boolean touchInMask, boolean isMaskPressed) {
-        if (mHelper.isOutSideDismiss() && event.getAction() == MotionEvent.ACTION_UP && isMaskPressed) {
+    public boolean onOutSideTouch(MotionEvent event, boolean touchInBackground, boolean isPressed) {
+        if (mHelper.isOutSideDismiss() && event.getAction() == MotionEvent.ACTION_UP && isPressed) {
             dismiss();
             return true;
         }
