@@ -13,7 +13,10 @@ if (secretPropsFile.exists()) {
 }
 
 def getLocalProperty(key) {
-    return ext[key]
+    if (ext.has(key)){
+        return ext[key]
+    }
+    return ""
 }
 
 def isReleaseBuild() {
@@ -74,7 +77,6 @@ afterEvaluate { project ->
         repositories {
             mavenDeployer {
                 beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
                 repository(url: isReleaseBuild() ? getReleaseRepositoryUrl() : getSnapshotRepositoryUrl()) {
                     authentication(userName: getLocalProperty('ossrhUsername'), password: getLocalProperty('ossrhPassword'))
                 }

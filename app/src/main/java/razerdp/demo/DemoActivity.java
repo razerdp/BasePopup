@@ -8,9 +8,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.pgyersdk.update.DownloadFileListener;
@@ -22,10 +19,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
-import razerdp.basepopup.QuickPopupBuilder;
-import razerdp.basepopup.QuickPopupConfig;
 import razerdp.basepopup.R;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
@@ -45,8 +42,6 @@ import razerdp.demo.utils.UIHelper;
 import razerdp.demo.utils.ViewUtil;
 import razerdp.demo.widget.DPRecyclerView;
 import razerdp.demo.widget.DPTextView;
-import razerdp.util.animation.AnimationHelper;
-import razerdp.util.animation.ScaleConfig;
 
 
 public class DemoActivity extends BaseActivity {
@@ -193,6 +188,7 @@ public class DemoActivity extends BaseActivity {
 
     void onHeaderClick() {
         UIHelper.toast("感谢您的支持，您的star和issue是我维护BasePopup最大的动力");
+//        ActivityLauncher.start(this, MyTestActivity.class);
     }
 
 

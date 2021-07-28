@@ -1761,7 +1761,7 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
     }
 
     public boolean isAutoLocatePopup() {
-        return mHelper.isAutoLocatePopup();
+        return mHelper.isAutoMirror();
     }
 
 

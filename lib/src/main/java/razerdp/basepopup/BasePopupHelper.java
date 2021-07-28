@@ -30,15 +30,14 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import razerdp.blur.PopupBlurOption;
 import razerdp.library.R;
 import razerdp.util.KeyboardUtils;
@@ -497,7 +496,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return (flag & AUTO_INPUT_METHOD) != 0;
     }
 
-    boolean isAutoLocatePopup() {
+    boolean isAutoMirror() {
         return (flag & AUTO_MIRROR) != 0;
     }
 
