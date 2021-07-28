@@ -112,7 +112,7 @@ Please replace **{$latestVersion}** with the version shown in the Jcenter tab ab
 **Since JCenter is no longer in service, starting with version 2.3, this library will be migrated to Maven with a new dependency groupId of [io.github.razerdp]**
 
  - **Release：** `implementation 'io.github.razerdp:BasePopup:3.1.7'`
- - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:3.1.7-SNAPSHOT'`
+ - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:3.1.8-SNAPSHOT'`
 
 <br>
 
