@@ -2,6 +2,7 @@ package razerdp.demo.ui;
 
 import android.content.Intent;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -11,8 +12,8 @@ import android.widget.LinearLayout;
 import com.just.agentweb.AgentWeb;
 import com.just.agentweb.WebChromeClient;
 
-import butterknife.BindView;
-import razerdp.basepopup.R;
+import androidx.viewbinding.ViewBinding;
+import razerdp.basepopup.databinding.ActivityWebBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.utils.StringUtil;
 
@@ -22,7 +23,6 @@ import static razerdp.demo.ui.WebActivity.Data;
  * Created by 大灯泡 on 2019/9/23.
  */
 public class WebActivity extends BaseActivity<Data> {
-    @BindView(R.id.web_view_container)
     FrameLayout mWebViewContainer;
     AgentWeb mAgentWeb;
 
@@ -34,8 +34,8 @@ public class WebActivity extends BaseActivity<Data> {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_web;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityWebBinding.inflate(layoutInflater);
     }
 
     @Override
@@ -45,7 +45,9 @@ public class WebActivity extends BaseActivity<Data> {
             return;
         }
         mAgentWeb = AgentWeb.with(this)
-                .setAgentWebParent(mWebViewContainer, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+                .setAgentWebParent(mWebViewContainer,
+                                   new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                                                 ViewGroup.LayoutParams.MATCH_PARENT))
                 .useDefaultIndicator()
                 .setWebChromeClient(mWebChromeClient)
                 .createAgentWeb()

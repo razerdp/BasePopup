@@ -6,8 +6,6 @@ import android.view.animation.Animation;
 import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.utils.ButterKnifeUtil;
@@ -20,11 +18,11 @@ import razerdp.util.animation.ScaleConfig;
  * 描述专用
  */
 public class PopupDesc extends BasePopupWindow {
-    @BindView(R.id.tv_title)
+//    @BindView(R.id.tv_title)
     TextView mTvTitle;
-    @BindView(R.id.tv_desc)
+//    @BindView(R.id.tv_desc)
     TextView mTvDesc;
-    @BindView(R.id.tv_ok)
+//    @BindView(R.id.tv_ok)
     DPTextView mTvOk;
 
     public PopupDesc(Context context) {
@@ -63,7 +61,6 @@ public class PopupDesc extends BasePopupWindow {
         return this;
     }
 
-    @OnClick(R.id.tv_ok)
     @Override
     public void dismiss() {
         super.dismiss();

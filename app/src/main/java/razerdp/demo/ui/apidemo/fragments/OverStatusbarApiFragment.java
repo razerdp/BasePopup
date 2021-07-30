@@ -1,11 +1,11 @@
 package razerdp.demo.ui.apidemo.fragments;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import butterknife.BindView;
-import butterknife.OnClick;
+import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.demo.ui.apidemo.ApiDemoActivity;
@@ -16,15 +16,15 @@ import razerdp.demo.utils.SpanUtil;
  * Created by 大灯泡 on 2020/4/4.
  */
 public class OverStatusbarApiFragment extends ApiDemoFragment {
-    @BindView(R.id.tv_title)
     TextView tvTitle;
 
     DemoPopup mDemoPopup;
     boolean overStatusbar = true;
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.api_demo_over_stausbar;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+//        return R.layout.api_demo_over_stausbar;
+        return null;
     }
 
     @Override
@@ -51,7 +51,6 @@ public class OverStatusbarApiFragment extends ApiDemoFragment {
     }
 
 
-    @OnClick(R.id.tv_test)
     void show() {
         if (mDemoPopup == null) {
             mDemoPopup = new DemoPopup(this);

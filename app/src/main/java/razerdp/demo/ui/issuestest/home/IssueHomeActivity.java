@@ -1,19 +1,19 @@
 package razerdp.demo.ui.issuestest.home;
 
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
-import java.util.ArrayList;
-
-import butterknife.BindView;
-import butterknife.OnClick;
+import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ActivityIssueBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
@@ -39,7 +39,6 @@ public class IssueHomeActivity extends BaseActivity {
     public static final String DESC = DescBuilder.get()
             .append("关于Issue部分问题的测试Demo")
             .build();
-    @BindView(R.id.rv_content)
     DPRecyclerView rvContent;
 
     SimpleRecyclerViewAdapter<IssueInfo> mAdapter;
@@ -51,8 +50,8 @@ public class IssueHomeActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_issue;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityIssueBinding.inflate(layoutInflater);
     }
 
     @Override
@@ -67,21 +66,13 @@ public class IssueHomeActivity extends BaseActivity {
 
     class InnerViewHolder extends BaseSimpleRecyclerViewHolder<IssueInfo> {
 
-        @BindView(R.id.tv_issue)
         TextView mTvIssue;
-        @BindView(R.id.tv_title)
         TextView mTvTitle;
-        @BindView(R.id.tv_desc)
         TextView mTvDesc;
-        @BindView(R.id.layout_pic)
         FlowLayout mLayoutPic;
-        @BindView(R.id.divider)
         View mDivider;
-        @BindView(R.id.tv_to_web)
         DPTextView mTvToWeb;
-        @BindView(R.id.tv_go)
         DPTextView mTvGo;
-        @BindView(R.id.iv_state)
         ImageView ivState;
 
         public InnerViewHolder(@NonNull View itemView) {
@@ -148,12 +139,10 @@ public class IssueHomeActivity extends BaseActivity {
             }
         }
 
-        @OnClick(R.id.tv_to_web)
         void toWeb() {
             ToolUtil.openInSystemBroswer(getContext(), getData().url);
         }
 
-        @OnClick(R.id.tv_go)
         void toTarget() {
             ActivityLauncher.start(getContext(), getData().activityClass);
         }

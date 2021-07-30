@@ -1,4 +1,4 @@
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 
@@ -13,7 +13,7 @@ if (secretPropsFile.exists()) {
 }
 
 def getLocalProperty(key) {
-    if (ext.has(key)){
+    if (ext.has(key)) {
         return ext[key]
     }
     return ""
@@ -31,63 +31,60 @@ def getSnapshotRepositoryUrl() {
     return "https://s01.oss.sonatype.org/content/repositories/snapshots/"
 }
 
-def configurePom(pom) {
-    pom.groupId = rootProject.ext.group
-    pom.artifactId = rootProject.ext.pkg_name
-    pom.version = rootProject.ext.versionName
+afterEvaluate {
+    publishing {
+        publications {
+            mavenBasepopup(MavenPublication) {
+                from components.release
 
-    pom.project {
-        name = rootProject.ext.pkg_name
-        packaging = 'aar'
-        description = 'Android下打造通用便捷的PopupWindow'
-        url 'https://github.com/razerdp/BasePopup'
+                groupId = rootProject.ext.group
+                artifactId = rootProject.ext.pkg_name
+                version = rootProject.ext.versionName
 
-        scm {
-            url = 'https://github.com/razerdp/BasePopup'
-            connection = 'https://github.com/razerdp/BasePopup.git'
-            developerConnection = 'https://github.com/razerdp/BasePopup.git'
-        }
+                pom {
+                    name = rootProject.ext.pkg_name
+                    packaging = 'aar'
+                    description = 'Android下打造通用便捷的PopupWindow弹窗库'
+                    url = 'https://github.com/razerdp/BasePopup'
+                    scm {
+                        url = 'https://github.com/razerdp/BasePopup'
+                        connection = 'https://github.com/razerdp/BasePopup.git'
+                        developerConnection = 'https://github.com/razerdp/BasePopup.git'
+                    }
 
-        licenses {
-            license {
-                name 'The Apache Software License, Version 2.0'
-                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-            }
-        }
+                    licenses {
+                        license {
+                            name = 'The Apache Software License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
 
-        developers {
-            developer {
-                id 'razerdp'
-                name 'razerdp'
-                email 'razerdp123@gmail.com'
-            }
-        }
-    }
-    pom.withXml {
-        asNode().dependencies.'*'.each {
-            if (it.scope.text() == 'test') {
-                it.delete
-            }
-        }
-    }
-}
-
-afterEvaluate { project ->
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-                repository(url: isReleaseBuild() ? getReleaseRepositoryUrl() : getSnapshotRepositoryUrl()) {
-                    authentication(userName: getLocalProperty('ossrhUsername'), password: getLocalProperty('ossrhPassword'))
+                    developers {
+                        developer {
+                            id = 'razerdp'
+                            name = 'razerdp'
+                            email = 'razerdp123@gmail.com'
+                        }
+                    }
                 }
-                configurePom(pom)
+//                pom.withXml {
+//                    asNode().dependencies.'*'.each {
+//                        if (it.scope.text() == 'test') {
+//                            it.delete
+//                        }
+//                    }
+//                }
+            }
+        }
+        repositories {
+            maven {
+                url = isReleaseBuild() ? getReleaseRepositoryUrl() : getSnapshotRepositoryUrl()
             }
         }
     }
 
     signing {
-        required { gradle.taskGraph.hasTask("uploadArchives") }
-        sign configurations.archives
+        sign publishing.publications.mavenBasepopup
     }
 
     task androidJavadocs(type: Javadoc) {
@@ -96,12 +93,12 @@ afterEvaluate { project ->
     }
 
     task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-        classifier = 'javadoc'
+        archiveClassifier.set('javadoc')
         from androidJavadocs.destinationDir
     }
 
     task androidSourcesJar(type: Jar) {
-        classifier = 'sources'
+        archiveClassifier.set('sources')
         from android.sourceSets.main.java.sourceFiles
     }
     allprojects {
@@ -130,6 +127,7 @@ afterEvaluate { project ->
             }
         }
     }
+
     artifacts {
         archives androidSourcesJar
         archives androidJavadocsJar

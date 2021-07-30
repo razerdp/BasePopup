@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.TextView;
 
-import butterknife.BindView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.ui.ActivityLauncher;
@@ -21,11 +20,8 @@ import razerdp.util.animation.TranslationConfig;
  */
 public class PopupSource extends BasePopupWindow {
 
-    @BindView(R.id.tv_title)
     TextView tvTitle;
-    @BindView(R.id.tv_item_1)
     TextView tvJava;
-    @BindView(R.id.tv_item_2)
     TextView tvRes;
 
 

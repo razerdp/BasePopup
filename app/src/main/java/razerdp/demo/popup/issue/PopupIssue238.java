@@ -6,7 +6,6 @@ import android.view.animation.Animation;
 import android.widget.EditText;
 
 import androidx.annotation.Nullable;
-import butterknife.BindView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.utils.ButterKnifeUtil;
@@ -21,7 +20,6 @@ public class PopupIssue238 extends BasePopupWindow {
     private boolean isEdit;
 
     @Nullable
-    @BindView(R.id.ed_input)
     EditText edInput;
 
     public PopupIssue238(Context context, boolean isEdit) {

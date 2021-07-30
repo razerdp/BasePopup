@@ -8,14 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ComponentActivity;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
+import androidx.annotation.NonNull;
+import androidx.core.app.ComponentActivity;
 import razerdp.basepopup.R;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.imageloader.ImageLoaderManager;
@@ -37,15 +34,10 @@ import razerdp.demo.widget.recyclerviewbox.layoutmanager.NineGridLayoutManager;
  * Description：
  */
 public class FriendCircleViewHolder extends BaseSimpleRecyclerViewHolder<FriendCircleInfo> {
-    @BindView(R.id.iv_avatar)
     DPImageView ivAvatar;
-    @BindView(R.id.tv_nick)
     TextView tvNick;
-    @BindView(R.id.tv_content)
     TextView tvContent;
-    @BindView(R.id.rv_box)
     RecyclerViewBox rvBox;
-    @BindView(R.id.iv_comment)
     ImageView ivComment;
 
     NineGridLayoutManager manager;
@@ -81,7 +73,6 @@ public class FriendCircleViewHolder extends BaseSimpleRecyclerViewHolder<FriendC
         }
     }
 
-    @OnClick(R.id.iv_comment)
     void showPopup(View v) {
         if (popupFriendCircle == null) {
             popupFriendCircle = new PopupFriendCircle(getContext());

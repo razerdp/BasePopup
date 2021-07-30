@@ -9,9 +9,6 @@ import android.widget.TextView;
 import com.pgyersdk.update.PgyUpdateManager;
 import com.pgyersdk.update.javabean.AppBean;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.widget.DPTextView;
@@ -22,17 +19,11 @@ import razerdp.util.animation.AnimationHelper;
  * Created by 大灯泡 on 2020/3/4.
  */
 public class PopupUpdate extends BasePopupWindow {
-    @BindView(R.id.tv_title)
     TextView mTvTitle;
-    @BindView(R.id.tv_content)
     TextView mTvContent;
-    @BindView(R.id.tv_ignore)
     DPTextView mTvIgnore;
-    @BindView(R.id.tv_update)
     DPTextView mTvUpdate;
-    @BindView(R.id.layout_controller)
     View controller;
-    @BindView(R.id.progress)
     ProgressBar mProgressBar;
 
     AppBean mAppBean;
@@ -48,7 +39,6 @@ public class PopupUpdate extends BasePopupWindow {
     @Override
     public void onViewCreated(View contentView) {
         super.onViewCreated(contentView);
-        ButterKnife.bind(this, contentView);
     }
 
 
@@ -74,12 +64,10 @@ public class PopupUpdate extends BasePopupWindow {
         showPopupWindow();
     }
 
-    @OnClick(R.id.tv_ignore)
     void ignore() {
         dismiss();
     }
 
-    @OnClick(R.id.tv_update)
     void download() {
         if (mAppBean == null) return;
         PgyUpdateManager.downLoadApk(mAppBean.getDownloadURL());

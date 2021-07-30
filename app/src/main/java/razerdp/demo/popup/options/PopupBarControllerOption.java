@@ -6,16 +6,13 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.CompoundButton;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.BasePopupFlag;
 import razerdp.basepopup.R;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
@@ -39,25 +36,15 @@ public class PopupBarControllerOption extends BaseOptionPopup<CommonBarControlle
 
     SimpleRecyclerViewAdapter<Info> mAdapter;
 
-    @BindView(R.id.rv_content)
     RecyclerView rvContent;
-    @BindView(R.id.tv_go)
     DPTextView tvGo;
-    @BindView(R.id.check_overlay_status)
     AppCompatCheckBox checkOverlayStatus;
-    @BindView(R.id.check_status_mask)
     AppCompatCheckBox checkStatusMask;
-    @BindView(R.id.check_status_content)
     AppCompatCheckBox checkStatusContent;
-    @BindView(R.id.check_overlay_nav)
     AppCompatCheckBox checkOverlayNav;
-    @BindView(R.id.check_nav_mask)
     AppCompatCheckBox checkNavMask;
-    @BindView(R.id.check_nav_content)
     AppCompatCheckBox checkNavContent;
-    @BindView(R.id.check_match_horizontal)
     AppCompatCheckBox checkMatchHorizontal;
-    @BindView(R.id.check_match_vertical)
     AppCompatCheckBox checkMatchVertical;
 
     public PopupBarControllerOption(Context context) {
@@ -104,7 +91,6 @@ public class PopupBarControllerOption extends BaseOptionPopup<CommonBarControlle
                 .toDismiss();
     }
 
-    @OnClick(R.id.tv_go)
     void apply() {
         int gravity = Gravity.NO_GRAVITY;
         for (Info data : mAdapter.getDatas()) {
@@ -138,7 +124,6 @@ public class PopupBarControllerOption extends BaseOptionPopup<CommonBarControlle
     }
 
     static class InnerViewHolder extends BaseSimpleRecyclerViewHolder<Info> {
-        @BindView(R.id.check_box)
         AppCompatCheckBox checkBox;
 
         public InnerViewHolder(@NonNull View itemView) {

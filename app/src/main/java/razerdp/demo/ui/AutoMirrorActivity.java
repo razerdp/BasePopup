@@ -3,16 +3,17 @@ package razerdp.demo.ui;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RadioGroup;
 
-import androidx.annotation.NonNull;
-
 import org.jetbrains.annotations.NotNull;
 
-import butterknife.BindView;
+import androidx.annotation.NonNull;
+import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ActivityMirrorBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.demo.utils.DescBuilder;
@@ -31,9 +32,7 @@ public class AutoMirrorActivity extends BaseActivity {
             .build();
 
     int gravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
-    @BindView(R.id.rd_group)
     RadioGroup rdGroup;
-    @BindView(R.id.tv_show)
     View show;
 
     DemoPopup demoPopup;
@@ -44,8 +43,9 @@ public class AutoMirrorActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_mirror;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+//        return R.layout.activity_mirror;
+        return ActivityMirrorBinding.inflate(layoutInflater);
     }
 
     @Override

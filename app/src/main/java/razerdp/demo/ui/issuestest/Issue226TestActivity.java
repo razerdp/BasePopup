@@ -1,14 +1,13 @@
 package razerdp.demo.ui.issuestest;
 
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.appcompat.widget.AppCompatCheckBox;
-
-import butterknife.BindView;
-import butterknife.OnClick;
+import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.BasePopupWindow;
-import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ActivityIssue226Binding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.popup.PopupInput;
 import razerdp.demo.widget.DPTextView;
@@ -19,9 +18,7 @@ import razerdp.demo.widget.DPTextView;
  * Description：https://github.com/razerdp/BasePopup/issues/226
  */
 public class Issue226TestActivity extends BaseActivity {
-    @BindView(R.id.check_force_adjust)
     AppCompatCheckBox checkForceAdjust;
-    @BindView(R.id.tv_show)
     DPTextView tvShow;
 
     PopupInput popupInput;
@@ -32,8 +29,8 @@ public class Issue226TestActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_issue_226;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityIssue226Binding.inflate(layoutInflater);
     }
 
     @Override
@@ -41,7 +38,6 @@ public class Issue226TestActivity extends BaseActivity {
 
     }
 
-    @OnClick(R.id.tv_show)
     void show() {
         if (popupInput == null) {
             popupInput = new PopupInput(this);

@@ -2,11 +2,12 @@ package razerdp.demo.ui.fullscreen;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 
-import butterknife.OnClick;
+import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.BasePopupUnsafe;
-import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ActivityFullScreenBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.demo.ui.ActivityLauncher;
@@ -33,8 +34,8 @@ public class FullScreenActivity extends BaseActivity {
 
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_full_screen;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityFullScreenBinding.inflate(layoutInflater);
     }
 
     @Override
@@ -63,7 +64,6 @@ public class FullScreenActivity extends BaseActivity {
         }
     }
 
-    @OnClick(R.id.tv_test)
     void show() {
         if (mDemoPopup == null) {
             mDemoPopup = new DemoPopup(this);

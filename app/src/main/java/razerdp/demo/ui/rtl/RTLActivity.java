@@ -2,11 +2,11 @@ package razerdp.demo.ui.rtl;
 
 import android.content.Intent;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-import razerdp.basepopup.R;
+import androidx.viewbinding.ViewBinding;
+import razerdp.basepopup.databinding.ActivityRtlDemoBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.util.PopupUtils;
@@ -22,7 +22,6 @@ public class RTLActivity extends BaseActivity {
 
     DemoPopup mDemoPopup;
 
-    @BindView(R.id.rtl_root)
     View rootView;
 
     @Override
@@ -31,8 +30,8 @@ public class RTLActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_rtl_demo;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityRtlDemoBinding.inflate(layoutInflater);
     }
 
     @Override
@@ -40,12 +39,10 @@ public class RTLActivity extends BaseActivity {
 
     }
 
-    @OnClick(R.id.tv_left_top)
     void leftTopClick(View v) {
         showPopup(v, END);
     }
 
-    @OnClick(R.id.tv_right_top)
     void rightTopClick(View v) {
         showPopup(v, START);
     }

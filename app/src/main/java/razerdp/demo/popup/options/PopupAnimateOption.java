@@ -1,15 +1,12 @@
 package razerdp.demo.popup.options;
 
 import android.content.Context;
-import android.view.View;
 import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatCheckBox;
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.R;
 import razerdp.demo.model.common.CommonAnimateInfo;
 import razerdp.demo.widget.DPTextView;
@@ -20,19 +17,12 @@ import razerdp.demo.widget.DPTextView;
  * Description：{@link CommonAnimateInfo}
  */
 public class PopupAnimateOption extends BaseOptionPopup<CommonAnimateInfo> {
-    @BindView(R.id.tv_show)
     TextView tvShow;
-    @BindView(R.id.layout_select_show)
     LinearLayout layoutSelectShow;
-    @BindView(R.id.tv_dismiss)
     TextView tvDismiss;
-    @BindView(R.id.layout_select_dismiss)
     LinearLayout layoutSelectDismiss;
-    @BindView(R.id.check_clipchildren)
     AppCompatCheckBox checkClipchildren;
-    @BindView(R.id.check_blur)
     AppCompatCheckBox checkBlur;
-    @BindView(R.id.tv_go)
     DPTextView tvGo;
 
 
@@ -56,7 +46,6 @@ public class PopupAnimateOption extends BaseOptionPopup<CommonAnimateInfo> {
 
 
 
-    @OnClick(R.id.layout_select_show)
     void selectShow() {
         if (popupSelectShowAnimate == null) {
             popupSelectShowAnimate = new PopupSelectShowAnimate(getContext());
@@ -72,7 +61,6 @@ public class PopupAnimateOption extends BaseOptionPopup<CommonAnimateInfo> {
         popupSelectShowAnimate.showPopupWindow();
     }
 
-    @OnClick(R.id.layout_select_dismiss)
     void selectDismiss() {
         if (popupSelectDismissAnimate == null) {
             popupSelectDismissAnimate = new PopupSelectDismissAnimate(getContext());
@@ -95,7 +83,6 @@ public class PopupAnimateOption extends BaseOptionPopup<CommonAnimateInfo> {
         super.showPopupWindow();
     }
 
-    @OnClick(R.id.tv_go)
     void ok() {
         if (mInfo != null) {
             mInfo.showAnimation = showAnimation;

@@ -1,11 +1,12 @@
 package razerdp.demo.ui;
 
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import butterknife.BindView;
-import razerdp.basepopup.R;
+import androidx.viewbinding.ViewBinding;
+import razerdp.basepopup.databinding.ActivityRotateBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.model.common.CommonSlideInfo;
 import razerdp.demo.utils.DescBuilder;
@@ -19,9 +20,7 @@ public class ScreenRotateActivity extends BaseActivity {
     public static final String DESC = DescBuilder.get()
             .append("测试屏幕旋转")
             .build();
-    @BindView(R.id.tv_show)
     TextView tvShow;
-    @BindView(R.id.tv_setting)
     TextView tvSetting;
 
     CommonSlideInfo info;
@@ -32,8 +31,8 @@ public class ScreenRotateActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_rotate;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityRotateBinding.inflate(layoutInflater);
     }
 
     @Override

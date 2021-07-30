@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
@@ -26,7 +25,6 @@ import razerdp.util.animation.TranslationConfig;
  * Created by 大灯泡 on 2020/4/6.
  */
 public class PopupIssue224 extends BasePopupWindow {
-    @BindView(R.id.rv_content)
     RecyclerView mRvContent;
 
     SimpleRecyclerViewAdapter<Integer> mAdapter;

@@ -5,8 +5,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.utils.ButterKnifeUtil;
@@ -18,7 +16,6 @@ import razerdp.util.animation.TranslationConfig;
  * Created by 大灯泡 on 2019/9/22.
  */
 public class PopupIssue210 extends BasePopupWindow {
-    @BindView(R.id.tv_go)
     DPTextView mTvGo;
 
     public PopupIssue210(Context context) {
@@ -48,7 +45,6 @@ public class PopupIssue210 extends BasePopupWindow {
                 .toDismiss();
     }
 
-    @OnClick(R.id.tv_go)
     @Override
     public void dismiss() {
         super.dismiss();

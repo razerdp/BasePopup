@@ -1,11 +1,12 @@
 package razerdp.demo.ui.updatetest;
 
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import butterknife.BindView;
-import razerdp.basepopup.R;
+import androidx.viewbinding.ViewBinding;
+import razerdp.basepopup.databinding.ActivityUpdateTestBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.popup.PopupUpdateTest;
 import razerdp.demo.utils.RandomUtil;
@@ -16,7 +17,6 @@ import razerdp.demo.utils.RandomUtil;
  * Description：
  */
 public class UpdateTestActivity extends BaseActivity {
-    @BindView(R.id.tv_test)
     TextView tvTest;
 
     PopupUpdateTest updateTest;
@@ -30,8 +30,8 @@ public class UpdateTestActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_update_test;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityUpdateTestBinding.inflate(layoutInflater);
     }
 
     @Override

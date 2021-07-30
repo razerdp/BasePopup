@@ -13,8 +13,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
@@ -30,7 +28,6 @@ import razerdp.util.animation.ScaleConfig;
  */
 public class PopupIssue230 extends BasePopupWindow {
 
-    @BindView(R.id.rv_content)
     RecyclerView mRvContent;
 
     SimpleRecyclerViewAdapter<String> mAdapter;
@@ -79,9 +76,7 @@ public class PopupIssue230 extends BasePopupWindow {
 
     class InnerViewHolder extends BaseSimpleRecyclerViewHolder<String> {
 
-        @BindView(R.id.tv_content)
         TextView mTvContent;
-        @BindView(R.id.btn_del)
         Button mBtnDel;
 
         public InnerViewHolder(@NonNull View itemView) {
@@ -99,7 +94,6 @@ public class PopupIssue230 extends BasePopupWindow {
             mTvContent.setText(data);
         }
 
-        @OnClick(R.id.btn_del)
         void del() {
             delItem(getData());
         }

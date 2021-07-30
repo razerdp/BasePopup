@@ -2,14 +2,14 @@ package razerdp.demo.ui.issuestest;
 
 import android.content.Intent;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.PopupWindow;
 
 import androidx.appcompat.widget.AppCompatCheckBox;
-
-import butterknife.BindView;
-import butterknife.OnClick;
+import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ActivityIssue369Binding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.demo.utils.UIHelper;
@@ -22,11 +22,8 @@ import razerdp.demo.widget.DPTextView;
  * https://github.com/razerdp/BasePopup/issues/369
  */
 public class Issue369TestActivity extends BaseActivity {
-    @BindView(R.id.showPopBt)
     DPTextView mShowPopBt;
-    @BindView(R.id.show_system_popup)
     DPTextView mShowSystemPopup;
-    @BindView(R.id.check_hidekeyboard)
     AppCompatCheckBox check_hidekeyboard;
 
     DemoPopup demoPopup;
@@ -38,8 +35,8 @@ public class Issue369TestActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_issue_369;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityIssue369Binding.inflate(layoutInflater);
     }
 
     @Override
@@ -48,7 +45,6 @@ public class Issue369TestActivity extends BaseActivity {
     }
 
 
-    @OnClick(R.id.showPopBt)
     public void onViewClicked() {
         if (demoPopup == null) {
             demoPopup = new DemoPopup(this);
@@ -57,7 +53,6 @@ public class Issue369TestActivity extends BaseActivity {
         demoPopup.showPopupWindow();
     }
 
-    @OnClick(R.id.show_system_popup)
     public void onSystemViewClicked(View v) {
         if (systemPopup == null) {
             systemPopup = new PopupWindow(this);

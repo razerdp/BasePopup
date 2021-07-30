@@ -29,6 +29,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     private static final String TAG = "PopupDecorViewProxy";
     //蒙层
     private PopupMaskLayout mMaskLayout;
+    private int childBottomMargin;
+
     BasePopupHelper mHelper;
     private View mTarget;
     private Rect popupRect = new Rect();
@@ -41,8 +43,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     private int childLeftMargin;
     private int childTopMargin;
     private int childRightMargin;
-    private int childBottomMargin;
-
     private boolean reMeasure;
 
     private int[] location = new int[2];
@@ -254,19 +254,22 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         if (mTarget == null || mTarget.getVisibility() == GONE) return;
         final LayoutParams lp = mTarget.getLayoutParams();
 
-        widthMeasureSpec = getChildMeasureSpec(widthMeasureSpec, 0, lp.width);
-        heightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, 0, lp.height);
+        final int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
+        final int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
 
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec, 0, lp.width);
+        int childHeightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, 0, lp.height);
+
+        int widthSize = MeasureSpec.getSize(childWidthMeasureSpec);
+        int heightSize = MeasureSpec.getSize(childHeightMeasureSpec);
+        int widthMode = MeasureSpec.getMode(childWidthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(childHeightMeasureSpec);
 
         if (reMeasure) {
             widthSize = Math.max(mTarget.getMeasuredWidth(), widthSize);
             heightSize = Math.max(mTarget.getMeasuredHeight(), heightSize);
         }
-
+        boolean reMeasureContentView = mHelper.isFitsizable();
         int gravity = mHelper.getPopupGravity();
 
         //针对关联anchorView和对齐模式的测量（如果允许resize）
@@ -276,16 +279,16 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             //etc.如果是相对于锚点，则剩余宽度为屏幕左侧到anchor左侧
             int rl = anchorRect.left;
             int rt = anchorRect.top;
-            int rr = widthSize - anchorRect.right;
-            int rb = heightSize - anchorRect.bottom;
+            int rr = parentWidth - anchorRect.right;
+            int rb = parentHeight - anchorRect.bottom;
             //如果是对齐到anchor的边，则需要修正
             if (mHelper.horizontalGravityMode == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE) {
-                rl = widthSize - anchorRect.left;
+                rl = parentWidth - anchorRect.left;
                 rr = anchorRect.right;
             }
             //如果是对齐到anchor的边，则需要修正
             if (mHelper.verticalGravityMode == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE) {
-                rt = heightSize - anchorRect.top;
+                rt = parentHeight - anchorRect.top;
                 rb = anchorRect.bottom;
             }
 
@@ -335,10 +338,12 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         //如果跟anchor对齐大小
         if (mHelper.isAlignAnchorWidth()) {
             widthSize = mHelper.getAnchorViewBound().width();
+            reMeasureContentView = true;
         }
 
         if (mHelper.isAlignAnchorHeight()) {
             heightSize = mHelper.getAnchorViewBound().height();
+            reMeasureContentView = true;
         }
 
         if (mHelper.getMinWidth() > 0 && widthSize < mHelper.getMinWidth()) {
@@ -346,10 +351,12 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             adjustContentViewMeasure(mTarget, mHelper.getMinWidth(), 0);
             widthSize = mHelper.getMinWidth();
             widthMode = MeasureSpec.EXACTLY;
+            reMeasureContentView = true;
         }
 
         if (mHelper.getMaxWidth() > 0 && widthSize > mHelper.getMaxWidth()) {
             widthSize = mHelper.getMaxWidth();
+            reMeasureContentView = true;
         }
 
         if (mHelper.getMinHeight() > 0 && heightSize < mHelper.getMinHeight()) {
@@ -357,16 +364,22 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             adjustContentViewMeasure(mTarget, 0, mHelper.getMinHeight());
             heightSize = mHelper.getMinHeight();
             heightMode = MeasureSpec.EXACTLY;
+            reMeasureContentView = true;
         }
 
         if (mHelper.getMaxHeight() > 0 && heightSize > mHelper.getMaxHeight()) {
             heightSize = mHelper.getMaxHeight();
+            reMeasureContentView = true;
         }
 
-        widthMeasureSpec = MeasureSpec.makeMeasureSpec(widthSize, widthMode);
-        heightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, heightMode);
+        childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(widthSize, widthMode);
+        childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, heightMode);
 
-        mTarget.measure(widthMeasureSpec, heightMeasureSpec);
+        mTarget.measure(childWidthMeasureSpec, childHeightMeasureSpec);
+        View contentView = mTarget.findViewById(mHelper.contentRootId);
+        if (contentView != null && reMeasureContentView) {
+            contentView.measure(childWidthMeasureSpec, childHeightMeasureSpec);
+        }
     }
 
     void adjustContentViewMeasure(View target, int width, int height) {

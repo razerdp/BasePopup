@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.EditText;
 
-import butterknife.BindView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.model.common.CommonInputInfo;
@@ -21,9 +20,7 @@ import razerdp.util.animation.TranslationConfig;
  * @see CommonInputInfo
  */
 public class PopupInput extends BasePopupWindow {
-    @BindView(R.id.tv_send)
     DPTextView mTvSend;
-    @BindView(R.id.ed_input)
     EditText mEdInput;
 
     public PopupInput(Context context) {

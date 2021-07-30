@@ -8,8 +8,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatSeekBar;
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.R;
 import razerdp.demo.model.common.CommonBlurInfo;
 import razerdp.demo.utils.ButterKnifeUtil;
@@ -23,27 +21,16 @@ import razerdp.util.animation.TranslationConfig;
  * 模糊控制
  */
 public class PopupBlurDemoOption extends BaseOptionPopup<CommonBlurInfo> {
-    @BindView(R.id.tv_blur)
     TextView mTvBlur;
-    @BindView(R.id.progress_blur)
     AppCompatSeekBar mProgressBlur;
-    @BindView(R.id.tv_scale)
     TextView mTvScale;
-    @BindView(R.id.progress_scale)
     AppCompatSeekBar mProgressScale;
-    @BindView(R.id.check_blur)
     AppCompatCheckBox mCheckBlur;
-    @BindView(R.id.check_blur_anchor)
     AppCompatCheckBox mCheckBlurAnchor;
-    @BindView(R.id.tv_go)
     DPTextView mTvGo;
-    @BindView(R.id.tv_blur_in)
     TextView mTvBlurIn;
-    @BindView(R.id.progress_blur_in)
     AppCompatSeekBar mProgressBlurIn;
-    @BindView(R.id.tv_blur_out)
     TextView mTvBlurOut;
-    @BindView(R.id.progress_blur_out)
     AppCompatSeekBar mProgressBlurOut;
 
 
@@ -152,7 +139,6 @@ public class PopupBlurDemoOption extends BaseOptionPopup<CommonBlurInfo> {
     }
 
 
-    @OnClick(R.id.tv_go)
     void ok() {
         mInfo.scaled = scaled;
         mInfo.blurRadius = blurRadius;

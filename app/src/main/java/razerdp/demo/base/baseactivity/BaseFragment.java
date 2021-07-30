@@ -8,14 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
 import razerdp.demo.base.interfaces.ClearMemoryObject;
 import razerdp.demo.utils.StringUtil;
@@ -34,11 +32,10 @@ public abstract class BaseFragment extends Fragment
     protected final String TAG = getClass().getSimpleName();
 
     private Context mContext;
-    protected View mRootView;
+    protected ViewBinding mViewBinding;
     protected TitleBarView mTitleBar;
     protected StatusBarViewPlaceHolder mStatusBarHolder;
     protected final State mState = new State();
-    private Unbinder mUnbinder;
     private Dialog mLoadingDialog;
 
 
@@ -64,18 +61,17 @@ public abstract class BaseFragment extends Fragment
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (mRootView == null) {
+        if (mViewBinding == null) {
             PopupLog.d("openFragment", "当前打开fragment： " + PopupLog.wrapLocation(this.getClass(), 1));
-            mRootView = inflater.inflate(contentViewLayoutId(), container, false);
-            mUnbinder = ButterKnife.bind(this, mRootView);
-            initTitleBarAndEmptyView(mRootView);
-            onInitViews(mRootView);
+            mViewBinding = onCreateViewBinding(inflater);
+            View rootView =mViewBinding.getRoot();
+            initTitleBarAndEmptyView(rootView);
+            onInitViews(rootView);
             onAfterInitViews();
         }
         mState.handleShow();
         mState.state |= State.FLAG_INIT;
-        return mRootView;
-
+        return mViewBinding.getRoot();
     }
 
 
@@ -89,8 +85,7 @@ public abstract class BaseFragment extends Fragment
     }
 
     //region abstract
-    @LayoutRes
-    public abstract int contentViewLayoutId();
+    public abstract ViewBinding onCreateViewBinding(LayoutInflater layoutInflater);
 
     protected abstract void onInitViews(View mRootView);
 
@@ -194,18 +189,15 @@ public abstract class BaseFragment extends Fragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mUnbinder != null) {
-            mUnbinder.unbind();
-            mUnbinder = null;
-        }
+        mViewBinding=null;
         mContext = null;
-        mRootView = null;
+        mViewBinding = null;
     }
 
     //endregion
 
-    public final View getRootView() {
-        return mRootView;
+    public final View getViewBinding() {
+        return mViewBinding.getRoot();
     }
 
     //region titlebar

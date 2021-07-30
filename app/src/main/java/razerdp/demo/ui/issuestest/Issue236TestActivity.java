@@ -2,13 +2,13 @@ package razerdp.demo.ui.issuestest;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-import razerdp.basepopup.R;
+import androidx.viewbinding.ViewBinding;
+import razerdp.basepopup.databinding.ActivityIssue236Binding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.popup.issue.PopupIssue236;
 import razerdp.demo.widget.DPTextView;
@@ -19,7 +19,6 @@ import razerdp.demo.widget.DPTextView;
  * https://github.com/razerdp/BasePopup/issues/236
  */
 public class Issue236TestActivity extends BaseActivity {
-    @BindView(R.id.tv_show)
     DPTextView mTvShow;
     PopupIssue236 mPopupIssue236;
 
@@ -29,9 +28,10 @@ public class Issue236TestActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_issue_236;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityIssue236Binding.inflate(layoutInflater);
     }
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -71,7 +71,6 @@ public class Issue236TestActivity extends BaseActivity {
         });
     }
 
-    @OnClick(R.id.tv_show)
     void show(View v) {
         if (mPopupIssue236 == null) {
             mPopupIssue236 = new PopupIssue236(this);

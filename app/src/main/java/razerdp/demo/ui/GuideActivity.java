@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.PictureDrawable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,8 +17,9 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
+import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ActivityGuideBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.base.imageloader.GlideApp;
 import razerdp.demo.base.imageloader.SvgSoftwareLayerSetter;
@@ -43,13 +45,9 @@ public class GuideActivity extends BaseActivity {
             .append("BasePopup的依赖")
             .append("更多")
             .build();
-    @BindView(R.id.tv_feature)
     TextView tvFeature;
-    @BindView(R.id.tv_dependence)
     TextView tvDependence;
-    @BindView(R.id.layout_dependence_release)
     LinearLayout layoutDependenceRelease;
-    @BindView(R.id.layout_dependence_candy)
     LinearLayout layoutDependenceCandy;
 
     @Override
@@ -58,8 +56,8 @@ public class GuideActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_guide;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityGuideBinding.inflate(layoutInflater);
     }
 
     @Override
@@ -197,11 +195,8 @@ public class GuideActivity extends BaseActivity {
 
     static class InnerViewHolder extends FillViewUtil.FillViewHolder<DependenceInfo> {
 
-        @BindView(R.id.tv_desc)
         TextView tvDesc;
-        @BindView(R.id.iv_version)
         ImageView ivVersion;
-        @BindView(R.id.tv_dependence)
         TextView tvDependence;
 
         InnerViewHolder(View itemView) {

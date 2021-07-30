@@ -11,8 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatSeekBar;
 
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.R;
 import razerdp.demo.model.common.CommonBackgroundAlignInfo;
 import razerdp.demo.utils.UIHelper;
@@ -25,43 +23,24 @@ import razerdp.util.animation.TranslationConfig;
  */
 public class PopupAlignBackgroundOption extends BaseOptionPopup<CommonBackgroundAlignInfo> {
 
-    @BindView(R.id.check_left)
     AppCompatCheckBox mCheckLeft;
-    @BindView(R.id.check_top)
     AppCompatCheckBox mCheckTop;
-    @BindView(R.id.check_right)
     AppCompatCheckBox mCheckRight;
-    @BindView(R.id.check_bottom)
     AppCompatCheckBox mCheckBottom;
-    @BindView(R.id.check_alignbackground)
     AppCompatCheckBox mCheckAlignbackground;
-    @BindView(R.id.check_blur)
     AppCompatCheckBox mCheckBlur;
-    @BindView(R.id.tv_go)
     DPTextView mTvGo;
-    @BindView(R.id.check_sync_duration)
     AppCompatCheckBox mCheckSyncDuration;
-    @BindView(R.id.tv_mask_offsetx)
     TextView mTvMaskOffsetx;
-    @BindView(R.id.progress_offsetx)
     AppCompatSeekBar mProgressOffsetx;
-    @BindView(R.id.tv_mask_offsety)
     TextView mTvMaskOffsety;
-    @BindView(R.id.progress_offsety)
     AppCompatSeekBar mProgressOffsety;
-    @BindView(R.id.layout_select_show)
     LinearLayout mLayoutSelectShow;
-    @BindView(R.id.tv_mask_anim_show)
     TextView mTvMaskAnimShow;
-    @BindView(R.id.layout_select_dismiss)
     LinearLayout mLayoutSelectDismiss;
-    @BindView(R.id.tv_mask_anim_dismiss)
     TextView mTvMaskAnimDismiss;
-    @BindView(R.id.check_overlay_mask)
     AppCompatCheckBox mCheckOverlayMask;
-    @BindView(R.id.tv_content_duration)
     TextView mTvContentDuration;
-    @BindView(R.id.progress_content_duration)
     AppCompatSeekBar mProgressContentDuration;
 
     PopupSelectShowAnimate popupSelectShowAnimate;
@@ -150,7 +129,6 @@ public class PopupAlignBackgroundOption extends BaseOptionPopup<CommonBackground
     }
 
 
-    @OnClick(R.id.tv_go)
     void ok() {
         int gravity = Gravity.NO_GRAVITY;
         if (mCheckLeft.isChecked()) gravity |= Gravity.LEFT;
@@ -170,7 +148,6 @@ public class PopupAlignBackgroundOption extends BaseOptionPopup<CommonBackground
         dismiss();
     }
 
-    @OnClick(R.id.layout_select_show)
     void selectShow() {
         if (popupSelectShowAnimate == null) {
             popupSelectShowAnimate = new PopupSelectShowAnimate(getContext());
@@ -185,7 +162,6 @@ public class PopupAlignBackgroundOption extends BaseOptionPopup<CommonBackground
         popupSelectShowAnimate.showPopupWindow();
     }
 
-    @OnClick(R.id.layout_select_dismiss)
     void selectDismiss() {
         if (popupSelectDismissAnimate == null) {
             popupSelectDismissAnimate = new PopupSelectDismissAnimate(getContext());

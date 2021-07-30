@@ -5,16 +5,13 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.CompoundButton;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.R;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.OnItemClickListener;
@@ -32,17 +29,11 @@ import razerdp.demo.widget.decoration.SpaceOption;
  * Description：slide相关的配置
  */
 public class PopupSlideOption extends BaseOptionPopup<CommonSlideInfo> {
-    @BindView(R.id.rv_content)
     RecyclerView rvContent;
-    @BindView(R.id.check_anchor)
     AppCompatCheckBox anchorCheck;
-    @BindView(R.id.check_blur)
     AppCompatCheckBox blurCheck;
-    @BindView(R.id.check_horizontal_align_to_side)
     AppCompatCheckBox horizontalGravitySideMode;
-    @BindView(R.id.check_vertical_align_to_side)
     AppCompatCheckBox verticalGravitySideMode;
-    @BindView(R.id.tv_go)
     DPTextView tvGo;
 
     SimpleRecyclerViewAdapter<Info> mAdapter;
@@ -76,7 +67,6 @@ public class PopupSlideOption extends BaseOptionPopup<CommonSlideInfo> {
     }
 
 
-    @OnClick(R.id.tv_go)
     void apply() {
         int gravity = Gravity.NO_GRAVITY;
         for (Info data : mAdapter.getDatas()) {
@@ -93,7 +83,6 @@ public class PopupSlideOption extends BaseOptionPopup<CommonSlideInfo> {
     }
 
     static class InnerViewHolder extends BaseSimpleRecyclerViewHolder<Info> {
-        @BindView(R.id.check_box)
         AppCompatCheckBox checkBox;
 
         public InnerViewHolder(@NonNull View itemView) {

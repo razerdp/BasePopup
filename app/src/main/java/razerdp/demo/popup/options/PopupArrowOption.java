@@ -12,8 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.R;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.OnItemClickListener;
@@ -31,13 +29,9 @@ import razerdp.demo.widget.decoration.SpaceOption;
  * Description：slide相关的配置
  */
 public class PopupArrowOption extends BaseOptionPopup<CommonArrowInfo> {
-    @BindView(R.id.rv_content)
     RecyclerView rvContent;
-    @BindView(R.id.check_blur)
     AppCompatCheckBox blurCheck;
-    @BindView(R.id.check_align_to_side)
     AppCompatCheckBox gravitySideMode;
-    @BindView(R.id.tv_go)
     DPTextView tvGo;
 
     SimpleRecyclerViewAdapter<Info> mAdapter;
@@ -70,7 +64,6 @@ public class PopupArrowOption extends BaseOptionPopup<CommonArrowInfo> {
     }
 
 
-    @OnClick(R.id.tv_go)
     void apply() {
         int gravity = Gravity.NO_GRAVITY;
         for (Info data : mAdapter.getDatas()) {
@@ -85,7 +78,6 @@ public class PopupArrowOption extends BaseOptionPopup<CommonArrowInfo> {
     }
 
     static class InnerViewHolder extends BaseSimpleRecyclerViewHolder<Info> {
-        @BindView(R.id.check_box)
         AppCompatCheckBox checkBox;
 
         public InnerViewHolder(@NonNull View itemView) {

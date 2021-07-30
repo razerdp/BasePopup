@@ -13,8 +13,6 @@ import java.util.Random;
 
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatSeekBar;
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.R;
 import razerdp.demo.model.common.CommonBackgroundInfo;
 import razerdp.demo.utils.ColorUtil;
@@ -29,33 +27,19 @@ import razerdp.util.animation.TranslationConfig;
  * Created by 大灯泡 on 2019/9/20.
  */
 public class PopupBackgroundOption extends BaseOptionPopup<CommonBackgroundInfo> {
-    @BindView(R.id.tv_alpha)
     TextView mTvAlpha;
-    @BindView(R.id.progress_alpha)
     AppCompatSeekBar mProgressAlpha;
-    @BindView(R.id.tv_refresh_color)
     DPTextView mTvRefreshColor;
-    @BindView(R.id.view_color_1)
     SquareFrameLayout mViewColor1;
-    @BindView(R.id.view_color_2)
     SquareFrameLayout mViewColor2;
-    @BindView(R.id.view_color_3)
     SquareFrameLayout mViewColor3;
-    @BindView(R.id.view_color_4)
     SquareFrameLayout mViewColor4;
-    @BindView(R.id.view_color_5)
     SquareFrameLayout mViewColor5;
-    @BindView(R.id.view_color_6)
     SquareFrameLayout mViewColor6;
-    @BindView(R.id.view_color_7)
     SquareFrameLayout mViewColor7;
-    @BindView(R.id.check_nobackground)
     AppCompatCheckBox mCheckNobackground;
-    @BindView(R.id.check_pic_background)
     AppCompatCheckBox mCheckPicBackground;
-    @BindView(R.id.check_blur)
     AppCompatCheckBox mCheckBlur;
-    @BindView(R.id.tv_go)
     DPTextView mTvGo;
 
     View[] colorViews;
@@ -130,7 +114,6 @@ public class PopupBackgroundOption extends BaseOptionPopup<CommonBackgroundInfo>
         });
     }
 
-    @OnClick(R.id.tv_refresh_color)
     void randomColors() {
         for (int i = 0; i < colorViews.length; i++) {
             ColorDrawable drawable = ToolUtil.cast(colorViews[i].getBackground(),
@@ -166,7 +149,6 @@ public class PopupBackgroundOption extends BaseOptionPopup<CommonBackgroundInfo>
         return 0xff000000 | random.nextInt(0x00ffffff);
     }
 
-    @OnClick(R.id.tv_go)
     void ok() {
         mInfo.background = selectedBackground;
         mInfo.blur = mCheckBlur.isChecked();

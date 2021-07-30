@@ -2,6 +2,7 @@ package razerdp.demo.ui;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,8 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
+import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ActivityApiListBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
@@ -38,9 +40,7 @@ public class ApiListActivity extends BaseActivity {
             .append("部分Api列表")
             .append("部分ApiDemo")
             .build();
-    @BindView(R.id.rv_content)
     RecyclerView mRvContent;
-    @BindView(R.id.tv_tips)
     TextView tvTips;
 
     private static final List<ApiInfo> sApiInfos;
@@ -69,8 +69,8 @@ public class ApiListActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_api_list;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityApiListBinding.inflate(layoutInflater);
     }
 
     @Override

@@ -2,18 +2,18 @@ package razerdp.demo.ui;
 
 import android.content.Intent;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ActivityCommonUsageBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.base.baseadapter.BaseMultiRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.MultiRecyclerViewAdapter;
@@ -66,9 +66,7 @@ public class CommonUsageActivity extends BaseActivity {
             .append("输入法适配")
             .append("更多")
             .build();
-    @BindView(R.id.rv_content)
     DPRecyclerView rvContent;
-    @BindView(R.id.tv_any_position)
     TextView tvAnyPos;
 
     MultiRecyclerViewAdapter mAdapter;
@@ -80,8 +78,8 @@ public class CommonUsageActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_common_usage;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityCommonUsageBinding.inflate(layoutInflater);
     }
 
     @Override
@@ -154,7 +152,6 @@ public class CommonUsageActivity extends BaseActivity {
 
     static class InnerTitleViewHolder extends BaseMultiRecyclerViewHolder<DemoCommonUsageTitle> {
 
-        @BindView(R.id.tv_title)
         TextView tvTitle;
 
         public InnerTitleViewHolder(@NonNull View itemView) {
@@ -176,13 +173,9 @@ public class CommonUsageActivity extends BaseActivity {
 
     static class InnerItemViewHolder extends BaseMultiRecyclerViewHolder<DemoCommonUsageInfo> {
 
-        @BindView(R.id.tv_fun)
         TextView tvFun;
-        @BindView(R.id.divider)
         View divider;
-        @BindView(R.id.tv_option)
         DPTextView tvOption;
-        @BindView(R.id.tv_source)
         DPTextView tvSource;
 
         public InnerItemViewHolder(@NonNull View itemView) {
@@ -202,12 +195,10 @@ public class CommonUsageActivity extends BaseActivity {
             tvOption.setText(TextUtils.isEmpty(data.option) ? "配置" : data.option);
         }
 
-        @OnClick(R.id.tv_option)
         void showOption(View v) {
             getData().toOption(v);
         }
 
-        @OnClick(R.id.tv_source)
         void showSource(View v) {
             getData().toSource(v);
         }

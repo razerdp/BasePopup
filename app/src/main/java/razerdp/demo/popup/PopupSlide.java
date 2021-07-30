@@ -4,8 +4,6 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.utils.ButterKnifeUtil;
@@ -18,11 +16,8 @@ import razerdp.demo.utils.UIHelper;
  */
 public class PopupSlide extends BasePopupWindow {
 
-    @BindView(R.id.tv_item_1)
     TextView tvItem1;
-    @BindView(R.id.tv_item_2)
     TextView tvItem2;
-    @BindView(R.id.tv_item_3)
     TextView tvItem3;
 
     public PopupSlide(Context context) {
@@ -34,7 +29,6 @@ public class PopupSlide extends BasePopupWindow {
         ButterKnifeUtil.bind(this, contentView);
     }
 
-    @OnClick({R.id.tv_item_1, R.id.tv_item_2, R.id.tv_item_3})
     void click(View v) {
         UIHelper.toast(((TextView) v).getText().toString());
     }

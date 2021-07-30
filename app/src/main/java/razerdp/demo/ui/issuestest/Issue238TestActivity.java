@@ -2,12 +2,12 @@ package razerdp.demo.ui.issuestest;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.appcompat.widget.AppCompatCheckBox;
-import butterknife.BindView;
-import butterknife.OnClick;
-import razerdp.basepopup.R;
+import androidx.viewbinding.ViewBinding;
+import razerdp.basepopup.databinding.ActivityIssue238Binding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.popup.issue.PopupIssue238;
 import razerdp.demo.widget.DPTextView;
@@ -16,9 +16,7 @@ import razerdp.demo.widget.DPTextView;
  * Created by 大灯泡 on 2020/2/26.
  */
 public class Issue238TestActivity extends BaseActivity {
-    @BindView(R.id.tv_show)
     DPTextView mTvShow;
-    @BindView(R.id.check_edittext)
     AppCompatCheckBox mCheckEdittext;
 
     PopupIssue238 mPopupIssue238;
@@ -31,8 +29,8 @@ public class Issue238TestActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_issue_238;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityIssue238Binding.inflate(layoutInflater);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -41,7 +39,6 @@ public class Issue238TestActivity extends BaseActivity {
 
     }
 
-    @OnClick(R.id.tv_show)
     void show(View v) {
         boolean withEditText = mCheckEdittext.isChecked();
         if (withEditText) {

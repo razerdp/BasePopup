@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import butterknife.BindView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.utils.ButterKnifeUtil;
@@ -21,9 +20,7 @@ import razerdp.util.animation.AnimationHelper;
  * Created by 大灯泡 on 2020/5/6.
  */
 public class PopupArrow extends BasePopupWindow {
-    @BindView(R.id.iv_arrow)
     ImageView mIvArrow;
-    @BindView(R.id.tv_desc)
     TextView mTvDesc;
 
     public PopupArrow(Context context) {

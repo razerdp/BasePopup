@@ -2,17 +2,18 @@ package razerdp.demo.popup;
 
 import android.content.Intent;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 
-import butterknife.BindView;
-import razerdp.basepopup.R;
+import androidx.viewbinding.ViewBinding;
+import razerdp.basepopup.BasePopupWindow;
+import razerdp.basepopup.databinding.ActivityMyTestBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 
 /**
  * Created by 大灯泡 on 2021/7/27.
  */
 public class MyTestActivity extends BaseActivity {
-    @BindView(R.id.layout_test)
     View test;
 
     @Override
@@ -21,8 +22,8 @@ public class MyTestActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_my_test;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityMyTestBinding.inflate(layoutInflater);
     }
 
     @Override
@@ -30,7 +31,11 @@ public class MyTestActivity extends BaseActivity {
         test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DemoPopup(self()).setPopupGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL).showPopupWindow(view);
+                BasePopupWindow popup = new DemoPopup(self()).setWidth(BasePopupWindow.MATCH_PARENT).setHeight(
+                        BasePopupWindow.WRAP_CONTENT).setPopupGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                ((DemoPopup) popup).setText("本弹窗高度350dp\n显示在AnchorView下方");
+                popup.setFitSize(true);
+                popup.showPopupWindow(view);
             }
         });
     }

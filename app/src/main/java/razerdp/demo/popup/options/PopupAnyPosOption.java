@@ -1,11 +1,8 @@
 package razerdp.demo.popup.options;
 
 import android.content.Context;
-import android.view.View;
 
 import androidx.appcompat.widget.AppCompatCheckBox;
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.R;
 import razerdp.demo.model.common.CommonAnyPosInfo;
 import razerdp.demo.widget.DPTextView;
@@ -16,11 +13,8 @@ import razerdp.demo.widget.DPTextView;
  * @see CommonAnyPosInfo
  */
 public class PopupAnyPosOption extends BaseOptionPopup<CommonAnyPosInfo> {
-    @BindView(R.id.check_outside_touch)
     AppCompatCheckBox mCheckOutSideTouch;
-    @BindView(R.id.check_blur)
     AppCompatCheckBox mCheckBlur;
-    @BindView(R.id.tv_go)
     DPTextView mTvGo;
 
     public PopupAnyPosOption(Context context) {
@@ -30,7 +24,6 @@ public class PopupAnyPosOption extends BaseOptionPopup<CommonAnyPosInfo> {
 
 
 
-    @OnClick(R.id.tv_go)
     void ok() {
         mInfo.outSideTouchable = mCheckOutSideTouch.isChecked();
         mInfo.blur = mCheckBlur.isChecked();

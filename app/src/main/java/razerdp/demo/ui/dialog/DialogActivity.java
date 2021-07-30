@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -12,12 +13,11 @@ import android.widget.Space;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-
-import butterknife.BindView;
-import butterknife.OnClick;
+import androidx.viewbinding.ViewBinding;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ActivityDialogDemoBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.demo.utils.RomUtils;
@@ -29,17 +29,11 @@ import razerdp.demo.widget.DPTextView;
  * Description：
  */
 public class DialogActivity extends BaseActivity {
-    @BindView(R.id.tv_desc)
     TextView tvDesc;
-    @BindView(R.id.view_empty)
     Space viewEmpty;
-    @BindView(R.id.show_dialog)
     DPTextView showDialog;
-    @BindView(R.id.show_popup)
     DPTextView showPopup;
-    @BindView(R.id.rtl_root)
     LinearLayout rtlRoot;
-    @BindView(R.id.show_application_dialog)
     DPTextView showApplicationDialog;
 
     DemoPopup demoPopup;
@@ -53,8 +47,8 @@ public class DialogActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_dialog_demo;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityDialogDemoBinding.inflate(layoutInflater);
     }
 
     @Override
@@ -62,7 +56,6 @@ public class DialogActivity extends BaseActivity {
 
     }
 
-    @OnClick(R.id.show_popup)
     void showPopup() {
         if (demoPopup == null) {
             demoPopup = new DemoPopup(this);
@@ -70,7 +63,6 @@ public class DialogActivity extends BaseActivity {
         demoPopup.showPopupWindow();
     }
 
-    @OnClick(R.id.show_dialog)
     void showDialog() {
         if (testDialog == null) {
             testDialog = new TestDialog(this);
@@ -78,7 +70,6 @@ public class DialogActivity extends BaseActivity {
         testDialog.show();
     }
 
-    @OnClick(R.id.show_application_dialog)
     @AfterPermissionGranted(1001)
     void showGlobalDialog() {
         if (globalDialog == null) {

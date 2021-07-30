@@ -3,13 +3,14 @@ package razerdp.demo.ui.issuestest;
 import android.content.Context;
 import android.content.Intent;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 
-import butterknife.BindView;
-import butterknife.OnClick;
+import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ActivityIssue277Binding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.widget.DPTextView;
 import razerdp.util.animation.AnimationHelper;
@@ -22,7 +23,6 @@ import razerdp.util.animation.TranslationConfig;
  * https://github.com/razerdp/BasePopup/issues/277#issuecomment-658724674
  */
 public class Issue277TestActivity extends BaseActivity {
-    @BindView(R.id.showPopBt)
     DPTextView mShowPopBt;
 
     @Override
@@ -31,8 +31,8 @@ public class Issue277TestActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_issue_277;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityIssue277Binding.inflate(layoutInflater);
     }
 
     @Override
@@ -41,7 +41,6 @@ public class Issue277TestActivity extends BaseActivity {
     }
 
 
-    @OnClick(R.id.showPopBt)
     public void onViewClicked() {
         new Issue277Popup(this).showPopupWindow();
     }

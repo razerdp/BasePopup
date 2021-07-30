@@ -3,11 +3,11 @@ package razerdp.demo.ui.issuestest;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-import razerdp.basepopup.R;
+import androidx.viewbinding.ViewBinding;
+import razerdp.basepopup.databinding.ActivityIssue242Binding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.services.DelayDemoService;
 import razerdp.demo.utils.UIHelper;
@@ -20,7 +20,6 @@ import razerdp.demo.widget.DPTextView;
  * https://github.com/razerdp/BasePopup/issues/242
  */
 public class Issue242TestActivity extends BaseActivity {
-    @BindView(R.id.tv_show)
     DPTextView mTvShow;
 
 
@@ -30,8 +29,8 @@ public class Issue242TestActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_issue_242;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityIssue242Binding.inflate(layoutInflater);
     }
 
     @Override
@@ -40,7 +39,6 @@ public class Issue242TestActivity extends BaseActivity {
     }
 
 
-    @OnClick(R.id.tv_show)
     void show() {
         UIHelper.toast("切换到后台，并start service，5s后回到该activity");
         Intent intent = new Intent(this, DelayDemoService.class);

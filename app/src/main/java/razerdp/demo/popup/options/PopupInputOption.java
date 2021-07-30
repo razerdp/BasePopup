@@ -11,8 +11,6 @@ import java.util.List;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.base.baseadapter.OnItemClickListener;
@@ -29,23 +27,14 @@ import razerdp.util.animation.TranslationConfig;
  * Created by 大灯泡 on 2019/9/22.
  */
 public class PopupInputOption extends BaseOptionPopup<CommonInputInfo> {
-    @BindView(R.id.check_align_to_root)
     AppCompatCheckBox mCheckAlignToRoot;
-    @BindView(R.id.check_align_to_view)
     AppCompatCheckBox mCheckAlignToView;
-    @BindView(R.id.check_align_animate)
     AppCompatCheckBox mCheckAlignAnimate;
-    @BindView(R.id.check_ajust_input)
     AppCompatCheckBox mCheckAjustInput;
-    @BindView(R.id.check_auto_open)
     AppCompatCheckBox mCheckAutoOpen;
-    @BindView(R.id.check_ignore)
     AppCompatCheckBox mCheckIgnore;
-    @BindView(R.id.check_force)
     AppCompatCheckBox mCheckForce;
-    @BindView(R.id.tv_go)
     DPTextView mTvGo;
-    @BindView(R.id.rv_content)
     RecyclerView rvContent;
 
     SimpleRecyclerViewAdapter<PopupSlideOption.Info> mAdapter;
@@ -94,7 +83,6 @@ public class PopupInputOption extends BaseOptionPopup<CommonInputInfo> {
                 .toDismiss();
     }
 
-    @OnClick(R.id.tv_go)
     void ok() {
         int keyboardFlag = 0;
         if (mCheckAlignAnimate.isChecked()) {

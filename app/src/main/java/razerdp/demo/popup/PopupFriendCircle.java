@@ -13,8 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.model.friendcircle.FriendCircleInfo;
@@ -30,11 +28,11 @@ import razerdp.demo.utils.rx.RxHelper;
  */
 public class PopupFriendCircle extends BasePopupWindow {
 
-    @BindView(R.id.iv_star)
+//    @BindView(R.id.iv_star)
     ImageView ivStar;
-    @BindView(R.id.layout_star)
+//    @BindView(R.id.layout_star)
     LinearLayout layoutStar;
-    @BindView(R.id.tv_star)
+//    @BindView(R.id.tv_star)
     TextView tvStar;
 
     FriendCircleInfo info;
@@ -107,7 +105,6 @@ public class PopupFriendCircle extends BasePopupWindow {
         return this;
     }
 
-    @OnClick(R.id.layout_star)
     void onStarClick() {
         info.started = !info.started;
 

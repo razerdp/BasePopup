@@ -16,8 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import butterknife.BindView;
-import butterknife.OnClick;
+import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.demo.ui.apidemo.ApiDemoActivity;
@@ -31,17 +30,11 @@ import razerdp.demo.widget.DPTextView;
  * 构造器api
  */
 public class ConstructorApiFragment extends ApiDemoFragment {
-    @BindView(R.id.tv_api)
     TextView mTvApi;
-    @BindView(R.id.tv_context)
     DPTextView mTvContext;
-    @BindView(R.id.tv_dialog)
     DPTextView mTvDialog;
-    @BindView(R.id.tv_dialogfragment)
     DPTextView mTvDialogFragment;
-    @BindView(R.id.tv_content)
     TextView mTvContent;
-    @BindView(R.id.tv_tips)
     TextView mTvTips;
 
     int index = 0;
@@ -53,8 +46,9 @@ public class ConstructorApiFragment extends ApiDemoFragment {
 
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.api_demo_constructor;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+//        return R.layout.api_demo_constructor;
+        return null;
     }
 
     @Override
@@ -111,7 +105,6 @@ public class ConstructorApiFragment extends ApiDemoFragment {
         }
     }
 
-    @OnClick(R.id.tv_context)
     void onContextPopupClick() {
         curPopup.showPopupWindow();
         if (index == 1) {
@@ -123,7 +116,6 @@ public class ConstructorApiFragment extends ApiDemoFragment {
         }
     }
 
-    @OnClick(R.id.tv_dialog)
     void onDialogPopupClick() {
         mTestDialog.show();
         if (index == 2) {
@@ -133,7 +125,6 @@ public class ConstructorApiFragment extends ApiDemoFragment {
         }
     }
 
-    @OnClick(R.id.tv_dialogfragment)
     void onDialogFragmentPopupClick() {
         mTestDialogFragment.show(getChildFragmentManager(), getClass().toString());
         if (index == 1) {

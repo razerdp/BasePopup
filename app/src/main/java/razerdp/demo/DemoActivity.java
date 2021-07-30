@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.PictureDrawable;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,15 +22,16 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import butterknife.BindView;
-import butterknife.OnClick;
+import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ActivityDemoBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.base.imageloader.GlideApp;
 import razerdp.demo.base.imageloader.SvgSoftwareLayerSetter;
 import razerdp.demo.model.DemoMainItem;
+import razerdp.demo.popup.MyTestActivity;
 import razerdp.demo.popup.update.PopupUpdate;
 import razerdp.demo.ui.ActivityLauncher;
 import razerdp.demo.ui.ApiListActivity;
@@ -46,7 +48,6 @@ import razerdp.demo.widget.DPTextView;
 
 public class DemoActivity extends BaseActivity {
 
-    @BindView(R.id.rv_content)
     DPRecyclerView rvContent;
 
     SimpleRecyclerViewAdapter<DemoMainItem> mAdapter;
@@ -59,8 +60,8 @@ public class DemoActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_demo;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityDemoBinding.inflate(layoutInflater);
     }
 
     @Override
@@ -188,21 +189,16 @@ public class DemoActivity extends BaseActivity {
 
     void onHeaderClick() {
         UIHelper.toast("感谢您的支持，您的star和issue是我维护BasePopup最大的动力");
-//        ActivityLauncher.start(this, MyTestActivity.class);
+        ActivityLauncher.start(this, MyTestActivity.class);
     }
 
 
     static class InnerViewHolder extends BaseSimpleRecyclerViewHolder<DemoMainItem> {
 
-        @BindView(R.id.tv_tag)
         TextView tvTag;
-        @BindView(R.id.tv_title)
         TextView tvTitle;
-        @BindView(R.id.tv_desc)
         TextView tvDesc;
-        @BindView(R.id.divider)
         View divider;
-        @BindView(R.id.tv_go)
         DPTextView tvGo;
 
         public InnerViewHolder(@NonNull View itemView) {
@@ -223,7 +219,6 @@ public class DemoActivity extends BaseActivity {
             tvDesc.setText(data.desc);
         }
 
-        @OnClick(R.id.tv_go)
         void toTarget() {
             ActivityLauncher.start(getContext(), getData().toClass);
         }

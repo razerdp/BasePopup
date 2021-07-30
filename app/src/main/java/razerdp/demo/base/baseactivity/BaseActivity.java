@@ -10,23 +10,21 @@ import android.os.Parcelable;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Pair;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.viewbinding.ViewBinding;
 import pub.devrel.easypermissions.EasyPermissions;
 import razerdp.basepopup.R;
 import razerdp.demo.base.StatusBarHelper;
@@ -54,8 +52,6 @@ public abstract class BaseActivity<T extends BaseActivity.IntentData>
     protected StatusBarViewPlaceHolder mStatusBarHolder;
     protected final State mState = new State();
     private Dialog mLoadingDialog;
-    private Unbinder mUnbinder;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,9 +62,7 @@ public abstract class BaseActivity<T extends BaseActivity.IntentData>
         onHandleIntent(getIntent());
         mStatusBarConfig = new StatusBarConfig();
         onApplyStatusBarConfig(mStatusBarConfig);
-        if (contentViewLayoutId() != 0) {
-            setContentView(contentViewLayoutId());
-        }
+        setContentView(onCreateViewBinding(getLayoutInflater()).getRoot());
     }
 
     @Override
@@ -91,9 +85,7 @@ public abstract class BaseActivity<T extends BaseActivity.IntentData>
 
     protected abstract void onHandleIntent(Intent intent);
 
-    @LayoutRes
-    public abstract int contentViewLayoutId();
-
+    public abstract ViewBinding onCreateViewBinding(LayoutInflater layoutInflater);
 
     protected abstract void onInitView(View decorView);
 
@@ -142,9 +134,6 @@ public abstract class BaseActivity<T extends BaseActivity.IntentData>
 
     //region ===============================views===============================
     protected void onAfterInitContentView() {
-        if (mUnbinder == null) {
-            mUnbinder = ButterKnife.bind(this);
-        }
         onInitStatusBar();
         this.mTitleBar = findViewById(R.id.title_bar_view);
         this.mStatusBarHolder = findViewById(R.id.statusbar_placeholder);
@@ -358,10 +347,6 @@ public abstract class BaseActivity<T extends BaseActivity.IntentData>
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mUnbinder != null) {
-            mUnbinder.unbind();
-            mUnbinder = null;
-        }
     }
 
     @Override

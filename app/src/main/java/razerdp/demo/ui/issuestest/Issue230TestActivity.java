@@ -1,11 +1,11 @@
 package razerdp.demo.ui.issuestest;
 
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-import razerdp.basepopup.R;
+import androidx.viewbinding.ViewBinding;
+import razerdp.basepopup.databinding.ActivityIssue230Binding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.popup.issue.PopupIssue230;
 import razerdp.demo.widget.DPTextView;
@@ -16,7 +16,6 @@ import razerdp.demo.widget.DPTextView;
  * https://github.com/razerdp/BasePopup/issues/230
  */
 public class Issue230TestActivity extends BaseActivity {
-    @BindView(R.id.tv_show)
     DPTextView mTvShow;
 
     @Override
@@ -25,8 +24,8 @@ public class Issue230TestActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_issue_230;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityIssue230Binding.inflate(layoutInflater);
     }
 
     @Override
@@ -34,7 +33,6 @@ public class Issue230TestActivity extends BaseActivity {
 
     }
 
-    @OnClick(R.id.tv_show)
     void show() {
         new PopupIssue230(this).showPopupWindow();
     }

@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.TextView;
 
-import butterknife.BindView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.utils.ButterKnifeUtil;
@@ -19,11 +18,8 @@ import razerdp.util.animation.TranslationConfig;
  * Description：测试update方法
  */
 public class PopupUpdateTest extends BasePopupWindow {
-    @BindView(R.id.tv_change_view)
     TextView tvChangeView;
-    @BindView(R.id.tv_change_size)
     TextView tvChangeSize;
-    @BindView(R.id.tv_update)
     TextView tvUpdate;
 
     OnTvChangeViewClickCallback cb;

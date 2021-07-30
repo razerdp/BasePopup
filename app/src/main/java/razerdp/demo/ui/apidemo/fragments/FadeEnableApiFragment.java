@@ -1,10 +1,10 @@
 package razerdp.demo.ui.apidemo.fragments;
 
+import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import butterknife.OnClick;
-import razerdp.basepopup.R;
+import androidx.viewbinding.ViewBinding;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.demo.ui.apidemo.ApiDemoActivity;
 import razerdp.demo.ui.apidemo.ApiDemoFragment;
@@ -18,8 +18,9 @@ public class FadeEnableApiFragment extends ApiDemoFragment {
     boolean fadeEnable = true;
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.api_demo_fade_enable;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+//        return R.layout.api_demo_fade_enable;
+        return null;
     }
 
     @Override
@@ -40,7 +41,6 @@ public class FadeEnableApiFragment extends ApiDemoFragment {
     }
 
 
-    @OnClick(R.id.tv_test)
     void show() {
         if (mDemoPopup == null) {
             mDemoPopup = new DemoPopup(this);

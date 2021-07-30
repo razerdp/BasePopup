@@ -1,6 +1,7 @@
 package razerdp.demo.ui;
 
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -8,8 +9,8 @@ import android.widget.LinearLayout;
 
 import com.just.agentweb.AgentWeb;
 
-import butterknife.BindView;
-import razerdp.basepopup.R;
+import androidx.viewbinding.ViewBinding;
+import razerdp.basepopup.databinding.ActivityUpdateLogBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.utils.DescBuilder;
 
@@ -20,7 +21,6 @@ public class UpdateLogActivity extends BaseActivity {
     public static final String DESC = DescBuilder.get()
             .append("更新日志")
             .build();
-    @BindView(R.id.web_view_container)
     FrameLayout mWebViewContainer;
     AgentWeb mAgentWeb;
 
@@ -30,8 +30,8 @@ public class UpdateLogActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_update_log;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityUpdateLogBinding.inflate(layoutInflater);
     }
 
     @Override

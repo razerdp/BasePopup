@@ -3,19 +3,20 @@ package razerdp.demo.ui.photobrowser;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.SharedElementCallback;
 import androidx.core.view.ViewCompat;
-
-import java.util.List;
-import java.util.Map;
-
-import butterknife.BindView;
+import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ActivityImageBrowserBinding;
 import razerdp.demo.base.TestData;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.utils.ToolUtil;
@@ -35,11 +36,8 @@ import razerdp.demo.widget.viewpager.IndicatorContainer;
 public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data> {
 
 
-    @BindView(R.id.view_background)
     View viewBackground;
-    @BindView(R.id.view_pager)
     HackyViewPager viewPager;
-    @BindView(R.id.view_indicator)
     IndicatorContainer viewIndicator;
     InnerAdapter mAdapter;
     Data data;
@@ -62,8 +60,8 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_image_browser;
+    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityImageBrowserBinding.inflate(layoutInflater);
     }
 
     @Override

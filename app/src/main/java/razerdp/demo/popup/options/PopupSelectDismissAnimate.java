@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.demo.utils.ButterKnifeUtil;
@@ -34,9 +32,7 @@ import razerdp.util.animation.TranslationConfig;
 public class PopupSelectDismissAnimate extends BasePopupWindow {
 
 
-    @BindView(R.id.layout_animation)
     FlowLayout layoutAnimation;
-    @BindView(R.id.tv_go)
     DPTextView tvGo;
 
     OnSelectedResultListener mListener;
@@ -213,7 +209,6 @@ public class PopupSelectDismissAnimate extends BasePopupWindow {
         return scaleAnimation;
     }
 
-    @OnClick(R.id.tv_go)
     void ok() {
         Info animation = null;
 
