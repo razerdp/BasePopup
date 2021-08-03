@@ -6,15 +6,13 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.RadioGroup;
 
 import org.jetbrains.annotations.NotNull;
 
 import androidx.annotation.NonNull;
-import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
 import razerdp.basepopup.databinding.ActivityMirrorBinding;
-import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.demo.utils.DescBuilder;
 import razerdp.demo.utils.UIHelper;
@@ -26,14 +24,12 @@ import razerdp.util.animation.AnimationHelper;
  * <p>
  * Description：
  */
-public class AutoMirrorActivity extends BaseActivity {
+public class AutoMirrorActivity extends BaseBindingActivity<ActivityMirrorBinding> {
     public static final String DESC = DescBuilder.get()
             .append("自动镜像定位")
             .build();
 
     int gravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
-    RadioGroup rdGroup;
-    View show;
 
     DemoPopup demoPopup;
 
@@ -43,14 +39,13 @@ public class AutoMirrorActivity extends BaseActivity {
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
-//        return R.layout.activity_mirror;
+    public ActivityMirrorBinding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityMirrorBinding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
-        rdGroup.setOnCheckedChangeListener((group, checkedId) -> {
+        mBinding.rdGroup.setOnCheckedChangeListener((group, checkedId) -> {
             switch (checkedId) {
                 case R.id.rd_top:
                     gravity = Gravity.TOP;
@@ -68,7 +63,7 @@ public class AutoMirrorActivity extends BaseActivity {
             }
             gravity |= Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL;
         });
-        show.setOnTouchListener(new View.OnTouchListener() {
+        mBinding.tvShow.setOnTouchListener(new View.OnTouchListener() {
             float x, y;
             boolean isInLongClick;
 
@@ -108,18 +103,18 @@ public class AutoMirrorActivity extends BaseActivity {
                 return false;
             }
         });
-        show.setOnClickListener(new View.OnClickListener() {
+        mBinding.tvShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (demoPopup == null) {
                     demoPopup = new DemoPopup(v.getContext());
                     demoPopup.setAutoMirrorEnable(true);
                     demoPopup.setShowAnimation(AnimationHelper.asAnimation()
-                            .withAlpha(AlphaConfig.IN)
-                            .toShow());
+                                                       .withAlpha(AlphaConfig.IN)
+                                                       .toShow());
                     demoPopup.setDismissAnimation(AnimationHelper.asAnimation()
-                            .withAlpha(AlphaConfig.OUT)
-                            .toDismiss());
+                                                          .withAlpha(AlphaConfig.OUT)
+                                                          .toDismiss());
                     demoPopup.setLayoutListener(layoutListener);
                 }
                 demoPopup.setPopupGravity(gravity);
@@ -162,7 +157,9 @@ public class AutoMirrorActivity extends BaseActivity {
 //            originGravity &= ~Gravity.CENTER_VERTICAL;
 
             if (gravity != originGravity) {
-                UIHelper.toast(String.format("%s方位置不足，已经调整显示到%s方", gravityStr(originGravity), gravityStr(gravity)));
+                UIHelper.toast(String.format("%s方位置不足，已经调整显示到%s方",
+                                             gravityStr(originGravity),
+                                             gravityStr(gravity)));
             }
         }
     };

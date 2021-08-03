@@ -22,10 +22,11 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ActivityApiDemoBinding;
 import razerdp.basepopup.databinding.ActivityDemoBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.base.imageloader.GlideApp;
@@ -42,13 +43,10 @@ import razerdp.demo.ui.issuestest.home.IssueHomeActivity;
 import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.UIHelper;
 import razerdp.demo.utils.ViewUtil;
-import razerdp.demo.widget.DPRecyclerView;
 import razerdp.demo.widget.DPTextView;
 
 
-public class DemoActivity extends BaseActivity {
-
-    DPRecyclerView rvContent;
+public class DemoActivity extends BaseBindingActivity<ActivityDemoBinding> {
 
     SimpleRecyclerViewAdapter<DemoMainItem> mAdapter;
 
@@ -60,30 +58,35 @@ public class DemoActivity extends BaseActivity {
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityDemoBinding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityDemoBinding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
-
-        rvContent.setLayoutManager(new LinearLayoutManager(this));
-        View header = ViewUtil.inflate(this, R.layout.item_main_demo_header, rvContent, false);
+        mBinding.rvContent.setLayoutManager(new LinearLayoutManager(this));
+        View header = ViewUtil.inflate(this,
+                                       R.layout.item_main_demo_header,
+                                       mBinding.rvContent,
+                                       false);
         header.setOnClickListener(v -> onHeaderClick());
-        rvContent.addHeaderView(header);
-        rvContent.addHeaderView(genVersionHeader());
+        mBinding.rvContent.addHeaderView(header);
+        mBinding.rvContent.addHeaderView(genVersionHeader());
         mAdapter = new SimpleRecyclerViewAdapter<>(this, generateItem());
         mAdapter.setHolder(InnerViewHolder.class);
         mAdapter.setOnItemClickListener((v, position, data) -> ActivityLauncher.start(self(),
-                data.toClass));
-        rvContent.setAdapter(mAdapter);
+                                                                                      data.toClass));
+        mBinding.rvContent.setAdapter(mAdapter);
 
         checkForUpdate();
 
     }
 
     private View genVersionHeader() {
-        View header = ViewUtil.inflate(this, R.layout.item_main_demo_version, rvContent, false);
+        View header = ViewUtil.inflate(this,
+                                       R.layout.item_main_demo_version,
+                                       mBinding.rvContent,
+                                       false);
         ImageView release = header.findViewById(R.id.iv_release);
         GlideApp.with(release)
                 .as(PictureDrawable.class)
@@ -113,18 +116,18 @@ public class DemoActivity extends BaseActivity {
         List<DemoMainItem> result = new ArrayList<>();
         result.add(new DemoMainItem(GuideActivity.class, "简介", GuideActivity.DESC, null));
         result.add(new DemoMainItem(CommonUsageActivity.class,
-                "快速入门",
-                CommonUsageActivity.DESC,
-                "入门推荐"));
+                                    "快速入门",
+                                    CommonUsageActivity.DESC,
+                                    "入门推荐"));
         result.add(new DemoMainItem(ApiListActivity.class, "Api列表", ApiListActivity.DESC, "Api"));
         result.add(new DemoMainItem(IssueHomeActivity.class,
-                "Issue测试Demo",
-                IssueHomeActivity.DESC,
-                "issue"));
+                                    "Issue测试Demo",
+                                    IssueHomeActivity.DESC,
+                                    "issue"));
         result.add(new DemoMainItem(UpdateLogActivity.class,
-                "历史更新",
-                UpdateLogActivity.DESC,
-                "ChangeLog"));
+                                    "历史更新",
+                                    UpdateLogActivity.DESC,
+                                    "ChangeLog"));
         return result;
     }
 

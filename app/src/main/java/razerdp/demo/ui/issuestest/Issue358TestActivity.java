@@ -19,6 +19,7 @@ import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.basepopup.databinding.ActivityIssue358Binding;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.utils.ViewUtil;
@@ -32,9 +33,7 @@ import razerdp.util.animation.ScaleConfig;
  * <p>
  * https://github.com/razerdp/BasePopup/issues/358
  */
-public class Issue358TestActivity extends BaseActivity {
-    DPTextView mShowPopBt;
-
+public class Issue358TestActivity extends BaseBindingActivity<ActivityIssue358Binding> {
     Issue358Popup issue358Popup;
 
     @Override
@@ -43,13 +42,13 @@ public class Issue358TestActivity extends BaseActivity {
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityIssue358Binding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityIssue358Binding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
-
+        mBinding.showPopBt.setOnClickListener(v -> onViewClicked());
     }
 
 
@@ -74,7 +73,8 @@ public class Issue358TestActivity extends BaseActivity {
             for (int i = 0; i < 100; i++) {
                 data.add(i);
             }
-            SimpleRecyclerViewAdapter<Integer> adapter = new SimpleRecyclerViewAdapter<>(context, data);
+            SimpleRecyclerViewAdapter<Integer> adapter = new SimpleRecyclerViewAdapter<>(context,
+                                                                                         data);
             adapter.setHolder(Holder.class).outher(this);
             rvContent.setAdapter(adapter);
         }
@@ -116,7 +116,8 @@ public class Issue358TestActivity extends BaseActivity {
                     @Override
                     public void onFocusChange(View v, boolean hasFocus) {
                         if (hasFocus) {
-                            setKeyboardAdaptionMode(v, FLAG_KEYBOARD_ALIGN_TO_VIEW | FLAG_KEYBOARD_ANIMATE_ALIGN);
+                            setKeyboardAdaptionMode(v,
+                                                    FLAG_KEYBOARD_ALIGN_TO_VIEW | FLAG_KEYBOARD_ANIMATE_ALIGN);
                             if (KeyboardUtils.isOpen()) {
                                 updateKeyboardAlign();
                             } else {

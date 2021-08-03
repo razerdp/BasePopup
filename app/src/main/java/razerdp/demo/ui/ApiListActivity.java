@@ -12,11 +12,9 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
 import razerdp.basepopup.databinding.ActivityApiListBinding;
-import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.model.api.ApiInfo;
@@ -35,13 +33,11 @@ import razerdp.demo.utils.UIHelper;
  * <p>
  * api列表
  */
-public class ApiListActivity extends BaseActivity {
+public class ApiListActivity extends BaseBindingActivity<ActivityApiListBinding> {
     public static final String DESC = DescBuilder.get()
             .append("部分Api列表")
             .append("部分ApiDemo")
             .build();
-    RecyclerView mRvContent;
-    TextView tvTips;
 
     private static final List<ApiInfo> sApiInfos;
 
@@ -69,7 +65,7 @@ public class ApiListActivity extends BaseActivity {
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityApiListBinding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityApiListBinding.inflate(layoutInflater);
     }
 
@@ -80,19 +76,19 @@ public class ApiListActivity extends BaseActivity {
                 .setTextColorRes(R.color.common_red_light)
                 .setTextStyle(Typeface.DEFAULT_BOLD)
                 .setSpanClickListener(v -> ToolUtil.openInSystemBroswer(self(), "https://www.yuque.com/razerdp/basepopup/api"))
-                .into(tvTips);
+                .into(mBinding.tvTips);
         SimpleRecyclerViewAdapter<ApiInfo> adapter = new SimpleRecyclerViewAdapter<>(this, sApiInfos);
         adapter.setHolder(InnerViewHolder.class);
-        mRvContent.setLayoutManager(new LinearLayoutManager(this));
+        mBinding.rvContent.setLayoutManager(new LinearLayoutManager(this));
         DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         divider.setDrawable(UIHelper.getDrawable(R.drawable.divider));
-        mRvContent.addItemDecoration(divider);
+        mBinding.rvContent.addItemDecoration(divider);
         adapter.setOnItemClickListener((v, position, data) -> {
             if (data.getFragmentClass() != null) {
                 ActivityLauncher.start(self(), ApiDemoActivity.class, new ApiDemoActivity.Data(data));
             }
         });
-        mRvContent.setAdapter(adapter);
+        mBinding.rvContent.setAdapter(adapter);
 
     }
 

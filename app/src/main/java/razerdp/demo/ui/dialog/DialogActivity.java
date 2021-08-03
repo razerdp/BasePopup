@@ -8,34 +8,23 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
-import android.widget.Space;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.viewbinding.ViewBinding;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 import razerdp.basepopup.R;
 import razerdp.basepopup.databinding.ActivityDialogDemoBinding;
-import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.demo.utils.RomUtils;
-import razerdp.demo.widget.DPTextView;
 
 /**
  * Created by 大灯泡 on 2020/8/17
  * <p>
  * Description：
  */
-public class DialogActivity extends BaseActivity {
-    TextView tvDesc;
-    Space viewEmpty;
-    DPTextView showDialog;
-    DPTextView showPopup;
-    LinearLayout rtlRoot;
-    DPTextView showApplicationDialog;
-
+public class DialogActivity extends BaseBindingActivity<ActivityDialogDemoBinding> {
     DemoPopup demoPopup;
     TestDialog testDialog;
     TestDialog globalDialog;
@@ -47,7 +36,7 @@ public class DialogActivity extends BaseActivity {
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityDialogDemoBinding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityDialogDemoBinding.inflate(layoutInflater);
     }
 

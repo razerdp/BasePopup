@@ -7,7 +7,6 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
 import razerdp.basepopup.databinding.ActivityApiDemoBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
@@ -20,7 +19,7 @@ import static razerdp.demo.ui.apidemo.ApiDemoActivity.Data;
 /**
  * Created by 大灯泡 on 2020/4/4.
  */
-public class ApiDemoActivity extends BaseActivity<Data> {
+public class ApiDemoActivity extends BaseActivity<Data,ActivityApiDemoBinding> {
 
     ApiDemoFragment mApiDemoFragment;
     SimpleSelectorPopup mSelectorPopup;
@@ -31,7 +30,7 @@ public class ApiDemoActivity extends BaseActivity<Data> {
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityApiDemoBinding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityApiDemoBinding.inflate(layoutInflater);
     }
 

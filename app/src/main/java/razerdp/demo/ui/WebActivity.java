@@ -22,8 +22,7 @@ import static razerdp.demo.ui.WebActivity.Data;
 /**
  * Created by 大灯泡 on 2019/9/23.
  */
-public class WebActivity extends BaseActivity<Data> {
-    FrameLayout mWebViewContainer;
+public class WebActivity extends BaseActivity<Data, ActivityWebBinding> {
     AgentWeb mAgentWeb;
 
     Data data;
@@ -34,7 +33,7 @@ public class WebActivity extends BaseActivity<Data> {
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityWebBinding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityWebBinding.inflate(layoutInflater);
     }
 
@@ -45,7 +44,7 @@ public class WebActivity extends BaseActivity<Data> {
             return;
         }
         mAgentWeb = AgentWeb.with(this)
-                .setAgentWebParent(mWebViewContainer,
+                .setAgentWebParent(mBinding.webViewContainer,
                                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                                                  ViewGroup.LayoutParams.MATCH_PARENT))
                 .useDefaultIndicator()

@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.SharedElementCallback;
 import androidx.core.view.ViewCompat;
-import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
 import razerdp.basepopup.databinding.ActivityImageBrowserBinding;
 import razerdp.demo.base.TestData;
@@ -24,21 +23,15 @@ import razerdp.demo.utils.UIHelper;
 import razerdp.demo.utils.ViewUtil;
 import razerdp.demo.widget.bigimageviewer.view.ImageLoadCallback;
 import razerdp.demo.widget.bigimageviewer.view.ImageViewer;
+import razerdp.demo.widget.mBinding.viewPager.HackymBinding.viewPager;
 import razerdp.demo.widget.viewpager.BaseCachedViewPagerAdapter;
-import razerdp.demo.widget.viewpager.HackyViewPager;
-import razerdp.demo.widget.viewpager.IndicatorContainer;
 
 /**
  * Created by 大灯泡 on 2019/8/22
  * <p>
  * Description：图片浏览
  */
-public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data> {
-
-
-    View viewBackground;
-    HackyViewPager viewPager;
-    IndicatorContainer viewIndicator;
+public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data,ActivityImageBrowserBinding> {
     InnerAdapter mAdapter;
     Data data;
 
@@ -60,7 +53,7 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityImageBrowserBinding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityImageBrowserBinding.inflate(layoutInflater);
     }
 
@@ -69,9 +62,9 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
         supportPostponeEnterTransition();
         isLoaded = false;
         mAdapter = new InnerAdapter();
-        viewPager.setAdapter(mAdapter);
-        viewIndicator.attachViewPager(viewPager);
-        viewPager.setCurrentItem(Math.max(data.startPosition, 0));
+        mBinding.viewPager.setAdapter(mAdapter);
+        mBinding.viewIndicator.attachViewPager().viewPager(mBinding.viewPager);
+        mBinding.viewPager.setCurrentItem(Math.max(data.startPosition, 0));
 
         ActivityCompat.setEnterSharedElementCallback(this, new SharedElementCallback() {
             @Override
@@ -86,7 +79,7 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
             @Override
             public void onSharedElementStart(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
                 super.onSharedElementStart(sharedElementNames, sharedElements, sharedElementSnapshots);
-                viewBackground.animate().alpha(1f).start();
+                mBinding.viewBackground.animate().alpha(1f).start();
             }
         });
     }
@@ -101,7 +94,7 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
 
     @Override
     public void supportFinishAfterTransition() {
-        setResult(RESULT_OK, PhotoBrowserProcessor.setIndex(viewPager == null ? data.startPosition : viewPager
+        setResult(RESULT_OK, PhotoBrowserProcessor.setIndex(mBinding.viewPager == null ? data.startPosition : mBinding.viewPager
                 .getCurrentItem()));
         super.supportFinishAfterTransition();
     }

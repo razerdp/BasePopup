@@ -38,13 +38,14 @@ import razerdp.demo.widget.dialog.LoadingDialog;
 import razerdp.util.KeyboardUtils;
 import razerdp.util.log.PopupLog;
 
-public abstract class BaseActivity<T extends BaseActivity.IntentData>
+public abstract class BaseActivity<T extends BaseActivity.IntentData,VB extends ViewBinding>
         extends AppCompatActivity
         implements ClearMemoryObject, TitleBarView.OnTitleBarClickCallback {
 
     protected final String TAG = getClass().getSimpleName();
     public static final String INTENT_DATA = "INTENT_DATA";
     protected T mActivityData;
+    protected VB mBinding;
 
 
     private StatusBarConfig mStatusBarConfig;
@@ -62,7 +63,8 @@ public abstract class BaseActivity<T extends BaseActivity.IntentData>
         onHandleIntent(getIntent());
         mStatusBarConfig = new StatusBarConfig();
         onApplyStatusBarConfig(mStatusBarConfig);
-        setContentView(onCreateViewBinding(getLayoutInflater()).getRoot());
+        mBinding = onCreateViewBinding(getLayoutInflater());
+        setContentView(mBinding.getRoot());
     }
 
     @Override
@@ -85,7 +87,7 @@ public abstract class BaseActivity<T extends BaseActivity.IntentData>
 
     protected abstract void onHandleIntent(Intent intent);
 
-    public abstract ViewBinding onCreateViewBinding(LayoutInflater layoutInflater);
+    public abstract VB onCreateViewBinding(LayoutInflater layoutInflater);
 
     protected abstract void onInitView(View decorView);
 

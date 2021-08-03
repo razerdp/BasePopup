@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.databinding.ActivityShowoncreateBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.popup.PopupShowOnCreate;
 import razerdp.demo.ui.ActivityLauncher;
 import razerdp.util.log.PopupLog;
@@ -19,12 +20,8 @@ import razerdp.util.log.PopupLog;
 /**
  * Created by 大灯泡 on 2020/2/3.
  */
-public class ShowOnCreateActivity extends BaseActivity {
-    TextView mTvDesc;
-    Button mBtnOpenOwn;
-    Button mBtnShowPopup;
+public class ShowOnCreateActivity extends BaseBindingActivity<ActivityShowoncreateBinding> {
     PopupShowOnCreate popupShowOnCreate;
-    ScrollView mViewScroller;
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -55,21 +52,19 @@ public class ShowOnCreateActivity extends BaseActivity {
         PopupLog.e(TAG, decor.getWindowToken());
         popupShowOnCreate = new PopupShowOnCreate(this);
         popupShowOnCreate.setOnErrorPrintListener(msg -> {
-            if (mTvDesc == null) return;
-            mTvDesc.append("\n");
-            mTvDesc.append(msg);
-            mViewScroller.post(() -> {
-                if (mViewScroller != null) {
-                    mViewScroller.fullScroll(View.FOCUS_DOWN);
-                }
+            mBinding.tvDesc.append("\n");
+            mBinding.tvDesc.append(msg);
+            mBinding.viewScroller.post(() -> {
+                mBinding.viewScroller.fullScroll(View.FOCUS_DOWN);
             });
         });
         popupShowOnCreate.showPopupWindow();
-
+        mBinding.btnOpenOwn.setOnClickListener(v -> openSelf());
+        mBinding.btnShowPopup.setOnClickListener(v -> reShow());
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityShowoncreateBinding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityShowoncreateBinding.inflate(layoutInflater);
     }
 

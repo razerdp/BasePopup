@@ -15,6 +15,7 @@ import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
 import razerdp.basepopup.databinding.ActivityCommonUsageBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.base.baseadapter.BaseMultiRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.MultiRecyclerViewAdapter;
 import razerdp.demo.base.baseadapter.MultiType;
@@ -57,7 +58,7 @@ import razerdp.demo.widget.decoration.SpaceOption;
  * <p>
  * Description：常见例子
  */
-public class CommonUsageActivity extends BaseActivity {
+public class CommonUsageActivity extends BaseBindingActivity<ActivityCommonUsageBinding> {
     public static final String DESC = DescBuilder.get()
             .append("常见样式的弹窗")
             .append("朋友圈评论，跟随朋友圈滑动更新")
@@ -66,9 +67,6 @@ public class CommonUsageActivity extends BaseActivity {
             .append("输入法适配")
             .append("更多")
             .build();
-    DPRecyclerView rvContent;
-    TextView tvAnyPos;
-
     MultiRecyclerViewAdapter mAdapter;
 
 
@@ -78,7 +76,7 @@ public class CommonUsageActivity extends BaseActivity {
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityCommonUsageBinding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityCommonUsageBinding.inflate(layoutInflater);
     }
 
@@ -91,8 +89,8 @@ public class CommonUsageActivity extends BaseActivity {
                 return mAdapter.getItemViewType(position) == 0 ? 2 : 1;
             }
         });
-        rvContent.setLayoutManager(gridLayoutManager);
-        rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(UIHelper.DP8)
+        mBinding.rvContent.setLayoutManager(gridLayoutManager);
+        mBinding.rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(UIHelper.DP8)
                                                                    .build()));
         mAdapter = new MultiRecyclerViewAdapter(this, createItem());
         mAdapter.appendHolder(InnerTitleViewHolder.class, 0)
@@ -101,7 +99,7 @@ public class CommonUsageActivity extends BaseActivity {
             @Override
             public void onItemClick(View v, int position, Object data) {
                 if (data instanceof CommonAnyPosInfo) {
-                    ((CommonAnyPosInfo) data).toShow(tvAnyPos);
+                    ((CommonAnyPosInfo) data).toShow(mBinding.tvAnyPosition);
                     return;
                 }
                 if (data instanceof DemoCommonUsageInfo) {
@@ -109,7 +107,7 @@ public class CommonUsageActivity extends BaseActivity {
                 }
             }
         });
-        rvContent.setAdapter(mAdapter);
+        mBinding.rvContent.setAdapter(mAdapter);
 
     }
 

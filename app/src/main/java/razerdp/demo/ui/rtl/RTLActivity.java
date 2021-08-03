@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.databinding.ActivityRtlDemoBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.util.PopupUtils;
 
@@ -18,11 +19,8 @@ import static android.view.Gravity.START;
  * Created by 大灯泡 on 2020/7/11.
  * rtl demo activity
  */
-public class RTLActivity extends BaseActivity {
-
+public class RTLActivity extends BaseBindingActivity<ActivityRtlDemoBinding> {
     DemoPopup mDemoPopup;
-
-    View rootView;
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -30,12 +28,14 @@ public class RTLActivity extends BaseActivity {
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityRtlDemoBinding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityRtlDemoBinding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
+        mBinding.tvLeftTop.setOnClickListener(this::leftTopClick);
+        mBinding.tvRightTop.setOnClickListener(this::rightTopClick);
 
     }
 
@@ -50,7 +50,7 @@ public class RTLActivity extends BaseActivity {
     void showPopup(View v, int gravity) {
         if (mDemoPopup == null) {
             mDemoPopup = new DemoPopup(this);
-            mDemoPopup.setLayoutDirection(rootView.getLayoutDirection());
+            mDemoPopup.setLayoutDirection(mBinding.rtlRoot.getLayoutDirection());
         }
         mDemoPopup.setPopupGravity(Gravity.BOTTOM | gravity);
         mDemoPopup.setText("当前BasePopup的Gravity：\n" + PopupUtils.gravityToString(mDemoPopup.getPopupGravity()));

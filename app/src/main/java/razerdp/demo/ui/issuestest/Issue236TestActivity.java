@@ -7,9 +7,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
-import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.databinding.ActivityIssue236Binding;
-import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.popup.issue.PopupIssue236;
 import razerdp.demo.widget.DPTextView;
 
@@ -18,8 +17,7 @@ import razerdp.demo.widget.DPTextView;
  * <p>
  * https://github.com/razerdp/BasePopup/issues/236
  */
-public class Issue236TestActivity extends BaseActivity {
-    DPTextView mTvShow;
+public class Issue236TestActivity extends BaseBindingActivity<ActivityIssue236Binding> {
     PopupIssue236 mPopupIssue236;
 
     @Override
@@ -28,7 +26,7 @@ public class Issue236TestActivity extends BaseActivity {
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityIssue236Binding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityIssue236Binding.inflate(layoutInflater);
     }
 
@@ -37,7 +35,8 @@ public class Issue236TestActivity extends BaseActivity {
     @Override
     protected void onInitView(View decorView) {
         final ViewConfiguration configuration = ViewConfiguration.get(this);
-        mTvShow.setOnTouchListener(new View.OnTouchListener() {
+        mBinding.tvShow.setOnClickListener(v -> show(v));
+        mBinding.tvShow.setOnTouchListener(new View.OnTouchListener() {
             float x, y;
             boolean onMove;
 

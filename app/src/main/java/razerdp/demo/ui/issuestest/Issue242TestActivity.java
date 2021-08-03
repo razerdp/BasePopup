@@ -9,6 +9,7 @@ import android.view.View;
 import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.databinding.ActivityIssue242Binding;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.services.DelayDemoService;
 import razerdp.demo.utils.UIHelper;
 import razerdp.demo.utils.rx.RxHelper;
@@ -19,9 +20,7 @@ import razerdp.demo.widget.DPTextView;
  * <p>
  * https://github.com/razerdp/BasePopup/issues/242
  */
-public class Issue242TestActivity extends BaseActivity {
-    DPTextView mTvShow;
-
+public class Issue242TestActivity extends BaseBindingActivity<ActivityIssue242Binding> {
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -29,13 +28,13 @@ public class Issue242TestActivity extends BaseActivity {
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityIssue242Binding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityIssue242Binding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
-
+        mBinding.tvShow.setOnClickListener(v -> show());
     }
 
 

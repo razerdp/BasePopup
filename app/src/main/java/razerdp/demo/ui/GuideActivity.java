@@ -21,6 +21,7 @@ import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
 import razerdp.basepopup.databinding.ActivityGuideBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.base.imageloader.GlideApp;
 import razerdp.demo.base.imageloader.SvgSoftwareLayerSetter;
 import razerdp.demo.model.DependenceInfo;
@@ -35,7 +36,7 @@ import razerdp.demo.utils.UIHelper;
  * <p>
  * Description：
  */
-public class GuideActivity extends BaseActivity {
+public class GuideActivity extends BaseBindingActivity<ActivityGuideBinding> {
     private static final String FORMAT = "• %s\n";
     private static final String FORMAT2 = "• %s\n\n";
 
@@ -45,10 +46,6 @@ public class GuideActivity extends BaseActivity {
             .append("BasePopup的依赖")
             .append("更多")
             .build();
-    TextView tvFeature;
-    TextView tvDependence;
-    LinearLayout layoutDependenceRelease;
-    LinearLayout layoutDependenceCandy;
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -56,7 +53,7 @@ public class GuideActivity extends BaseActivity {
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityGuideBinding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityGuideBinding.inflate(layoutInflater);
     }
 
@@ -137,7 +134,7 @@ public class GuideActivity extends BaseActivity {
                 .setSpanClickListener(v -> {
                     //QuickPopupBuilder
                 })
-                .into(tvFeature);
+                .into(mBinding.tvFeature);
 
     }
 
@@ -159,7 +156,7 @@ public class GuideActivity extends BaseActivity {
                 .append("自2.2.2版本开始，BasePopup将完全迁移至AndroidX，不再提供扩展组件了，BasePopup建议您尽早迁移到AndroidX")
                 .setTextColor(Color.RED)
                 .setTextStyle(Typeface.DEFAULT_BOLD)
-                .into(tvDependence);
+                .into(mBinding.tvDependence);
 
         appendReleaseDependence();
         appendCandyDependence();
@@ -171,7 +168,7 @@ public class GuideActivity extends BaseActivity {
         infos.add(new DependenceInfo("https://img.shields.io/maven-central/v/io.github.razerdp/BasePopup",
                 "基础库（必选）",
                 "implementation 'io.github.razerdp:BasePopup:{$latestVersion}'"));
-        FillViewUtil.fillView(infos, layoutDependenceRelease, R.layout.item_guide_denpendence, fillViewsListener);
+        FillViewUtil.fillView(infos, mBinding.layoutDependenceRelease, R.layout.item_guide_denpendence, fillViewsListener);
     }
 
     private void appendCandyDependence() {
@@ -179,7 +176,7 @@ public class GuideActivity extends BaseActivity {
         infos.add(new DependenceInfo("https://img.shields.io/nexus/s/io.github.razerdp/BasePopup?server=https%3A%2F%2Fs01.oss.sonatype.org%2F",
                 "基础库（必选）",
                 "implementation 'io.github.razerdp:BasePopup_Candy:{$latestVersion}'"));
-        FillViewUtil.fillView(infos, layoutDependenceCandy, R.layout.item_guide_denpendence, fillViewsListener);
+        FillViewUtil.fillView(infos, mBinding.layoutDependenceCandy, R.layout.item_guide_denpendence, fillViewsListener);
     }
 
     private FillViewUtil.OnFillViewsListener<DependenceInfo, InnerViewHolder> fillViewsListener = new FillViewUtil.OnFillViewsListener<DependenceInfo, InnerViewHolder>() {

@@ -12,16 +12,16 @@ import com.just.agentweb.AgentWeb;
 import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.databinding.ActivityUpdateLogBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.utils.DescBuilder;
 
 /**
  * Created by 大灯泡 on 2019/9/23.
  */
-public class UpdateLogActivity extends BaseActivity {
+public class UpdateLogActivity extends BaseBindingActivity<ActivityUpdateLogBinding> {
     public static final String DESC = DescBuilder.get()
             .append("更新日志")
             .build();
-    FrameLayout mWebViewContainer;
     AgentWeb mAgentWeb;
 
     @Override
@@ -30,14 +30,16 @@ public class UpdateLogActivity extends BaseActivity {
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityUpdateLogBinding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityUpdateLogBinding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
         mAgentWeb = AgentWeb.with(this)
-                .setAgentWebParent(mWebViewContainer, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+                .setAgentWebParent(mBinding.webViewContainer,
+                                   new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                                                 ViewGroup.LayoutParams.MATCH_PARENT))
                 .useDefaultIndicator()
                 .createAgentWeb()
                 .ready()

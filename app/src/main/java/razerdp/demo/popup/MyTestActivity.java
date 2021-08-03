@@ -9,12 +9,12 @@ import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.databinding.ActivityMyTestBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 
 /**
  * Created by 大灯泡 on 2021/7/27.
  */
-public class MyTestActivity extends BaseActivity {
-    View test;
+public class MyTestActivity extends BaseBindingActivity<ActivityMyTestBinding> {
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -22,13 +22,13 @@ public class MyTestActivity extends BaseActivity {
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityMyTestBinding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityMyTestBinding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
-        test.setOnClickListener(new View.OnClickListener() {
+        mBinding.tvTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 BasePopupWindow popup = new DemoPopup(self()).setWidth(BasePopupWindow.MATCH_PARENT).setHeight(

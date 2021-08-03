@@ -12,6 +12,7 @@ import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.basepopup.databinding.ActivityIssue277Binding;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.widget.DPTextView;
 import razerdp.util.animation.AnimationHelper;
 import razerdp.util.animation.Direction;
@@ -22,21 +23,20 @@ import razerdp.util.animation.TranslationConfig;
  * <p>
  * https://github.com/razerdp/BasePopup/issues/277#issuecomment-658724674
  */
-public class Issue277TestActivity extends BaseActivity {
-    DPTextView mShowPopBt;
-
+public class Issue277TestActivity extends BaseBindingActivity<ActivityIssue277Binding> {
     @Override
     protected void onHandleIntent(Intent intent) {
 
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityIssue277Binding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityIssue277Binding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
+        mBinding.showPopBt.setOnClickListener(v -> onViewClicked());
 
     }
 

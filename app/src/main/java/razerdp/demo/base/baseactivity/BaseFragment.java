@@ -27,12 +27,12 @@ import razerdp.util.log.PopupLog;
  * <p>
  * Description：
  */
-public abstract class BaseFragment extends Fragment
+public abstract class BaseFragment<VB extends ViewBinding> extends Fragment
         implements ClearMemoryObject, TitleBarView.OnTitleBarClickCallback {
     protected final String TAG = getClass().getSimpleName();
 
     private Context mContext;
-    protected ViewBinding mViewBinding;
+    protected VB mViewBinding;
     protected TitleBarView mTitleBar;
     protected StatusBarViewPlaceHolder mStatusBarHolder;
     protected final State mState = new State();
@@ -85,7 +85,7 @@ public abstract class BaseFragment extends Fragment
     }
 
     //region abstract
-    public abstract ViewBinding onCreateViewBinding(LayoutInflater layoutInflater);
+    public abstract VB onCreateViewBinding(LayoutInflater layoutInflater);
 
     protected abstract void onInitViews(View mRootView);
 

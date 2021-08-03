@@ -15,6 +15,7 @@ import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
 import razerdp.basepopup.databinding.ActivityIssueBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.base.imageloader.ImageLoaderManager;
@@ -35,12 +36,10 @@ import razerdp.demo.widget.FlowLayout;
 /**
  * Created by 大灯泡 on 2019/9/22.
  */
-public class IssueHomeActivity extends BaseActivity {
+public class IssueHomeActivity extends BaseBindingActivity<ActivityIssueBinding> {
     public static final String DESC = DescBuilder.get()
             .append("关于Issue部分问题的测试Demo")
             .build();
-    DPRecyclerView rvContent;
-
     SimpleRecyclerViewAdapter<IssueInfo> mAdapter;
     PhotoBrowserProcessor mPhotoBrowserProcessor;
 
@@ -50,17 +49,17 @@ public class IssueHomeActivity extends BaseActivity {
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityIssueBinding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityIssueBinding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
-        rvContent.setLayoutManager(new LinearLayoutManager(this));
+        mBinding.rvContent.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new SimpleRecyclerViewAdapter<>(this, IssueHelper.addIssues(new ArrayList<>()));
         mAdapter.setHolder(InnerViewHolder.class)
                 .outher(this);
-        rvContent.setAdapter(mAdapter);
+        mBinding.rvContent.setAdapter(mAdapter);
     }
 
 
@@ -107,10 +106,13 @@ public class IssueHomeActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     if (mPhotoBrowserProcessor == null) {
-                        mPhotoBrowserProcessor = PhotoBrowserProcessor.with(new PhotoBrowserImpl(data))
+                        mPhotoBrowserProcessor = PhotoBrowserProcessor.with(new PhotoBrowserImpl(
+                                data))
                                 .setExitViewProvider((from, exitPosition) -> {
-                                    InnerPicViewHolder holder = ToolUtil.cast(FillViewUtil.getHolder(mLayoutPic
-                                            .getChildAt(exitPosition)), InnerPicViewHolder.class);
+                                    InnerPicViewHolder holder = ToolUtil.cast(FillViewUtil.getHolder(
+                                            mLayoutPic
+                                                    .getChildAt(exitPosition)),
+                                                                              InnerPicViewHolder.class);
                                     return holder == null ? null : holder.ivIssuePreview;
                                 });
                     }
@@ -118,7 +120,8 @@ public class IssueHomeActivity extends BaseActivity {
                             .setPhotos(PhotoBrowserImpl.fromList(getData().pics, null))
                             .fromView((ImageView) v)
                             .setStartPosition(position)
-                            .start(ToolUtil.cast(ActivityUtil.getActivity(v.getContext()), ComponentActivity.class));
+                            .start(ToolUtil.cast(ActivityUtil.getActivity(v.getContext()),
+                                                 ComponentActivity.class));
                 }
             });
             return holder;

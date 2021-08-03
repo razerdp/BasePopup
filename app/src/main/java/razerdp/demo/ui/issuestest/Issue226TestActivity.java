@@ -9,6 +9,7 @@ import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.databinding.ActivityIssue226Binding;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.popup.PopupInput;
 import razerdp.demo.widget.DPTextView;
 
@@ -17,9 +18,7 @@ import razerdp.demo.widget.DPTextView;
  * <p>
  * Description：https://github.com/razerdp/BasePopup/issues/226
  */
-public class Issue226TestActivity extends BaseActivity {
-    AppCompatCheckBox checkForceAdjust;
-    DPTextView tvShow;
+public class Issue226TestActivity extends BaseBindingActivity<ActivityIssue226Binding> {
 
     PopupInput popupInput;
 
@@ -29,13 +28,13 @@ public class Issue226TestActivity extends BaseActivity {
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityIssue226Binding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityIssue226Binding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
-
+        mBinding.tvShow.setOnClickListener(v -> show());
     }
 
     void show() {
@@ -44,7 +43,7 @@ public class Issue226TestActivity extends BaseActivity {
         }
         int flag = BasePopupWindow.FLAG_KEYBOARD_ALIGN_TO_ROOT | BasePopupWindow.FLAG_KEYBOARD_ANIMATE_ALIGN;
 
-        if (checkForceAdjust.isChecked()) {
+        if (mBinding.checkForceAdjust.isChecked()) {
             flag |= BasePopupWindow.FLAG_KEYBOARD_FORCE_ADJUST;
         }
         popupInput.setKeyboardAdaptive(true)

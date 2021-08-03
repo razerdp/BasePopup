@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.databinding.ActivityRotateBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.model.common.CommonSlideInfo;
 import razerdp.demo.utils.DescBuilder;
 
@@ -16,13 +17,10 @@ import razerdp.demo.utils.DescBuilder;
  * <p>
  * Description：
  */
-public class ScreenRotateActivity extends BaseActivity {
+public class ScreenRotateActivity extends BaseBindingActivity<ActivityRotateBinding> {
     public static final String DESC = DescBuilder.get()
             .append("测试屏幕旋转")
             .build();
-    TextView tvShow;
-    TextView tvSetting;
-
     CommonSlideInfo info;
 
     @Override
@@ -31,15 +29,15 @@ public class ScreenRotateActivity extends BaseActivity {
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityRotateBinding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityRotateBinding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
         info = new CommonSlideInfo();
-        tvShow.setOnClickListener(v -> info.toShow(v));
-        tvSetting.setOnClickListener(v -> info.toOption(v));
+        mBinding.tvShow.setOnClickListener(v -> info.toShow(v));
+        mBinding.tvSetting.setOnClickListener(v -> info.toOption(v));
     }
 
 }

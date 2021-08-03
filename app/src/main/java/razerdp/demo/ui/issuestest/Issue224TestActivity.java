@@ -11,6 +11,7 @@ import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.databinding.ActivityIssue224Binding;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.popup.issue.PopupIssue224;
 import razerdp.demo.utils.StringUtil;
 import razerdp.demo.widget.DPTextView;
@@ -18,12 +19,7 @@ import razerdp.demo.widget.DPTextView;
 /**
  * Created by 大灯泡 on 2020/4/6.
  */
-public class Issue224TestActivity extends BaseActivity {
-    DPTextView mTvShow;
-    EditText mEdNum;
-    LinearLayout testLayout;
-    AppCompatCheckBox mCheckFitSize;
-
+public class Issue224TestActivity extends BaseBindingActivity<ActivityIssue224Binding> {
     PopupIssue224 mPopupIssue224;
 
 
@@ -33,12 +29,13 @@ public class Issue224TestActivity extends BaseActivity {
     }
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+    public ActivityIssue224Binding onCreateViewBinding(LayoutInflater layoutInflater) {
         return ActivityIssue224Binding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
+        mBinding.tvShow.setOnClickListener(v -> show());
 
     }
 
@@ -49,15 +46,15 @@ public class Issue224TestActivity extends BaseActivity {
                     .setBackground(0)
                     .setOutSideDismiss(false)
                     .setOutSideTouchable(true)
-                    .linkTo(testLayout);
+                    .linkTo(mBinding.layoutTestContainer);
             mPopupIssue224.getPopupWindow().setFocusable(false);
         }
 
-        int value = StringUtil.toInt(mEdNum.getText().toString().trim());
+        int value = StringUtil.toInt(mBinding.edNum.getText().toString().trim());
         mPopupIssue224.setItemCount(value);
-        mPopupIssue224.setFitSize(mCheckFitSize.isChecked());
+        mPopupIssue224.setFitSize(mBinding.checkFitSize.isChecked());
         if (!mPopupIssue224.isShowing() && value > 0) {
-            mPopupIssue224.showPopupWindow(testLayout);
+            mPopupIssue224.showPopupWindow(mBinding.layoutTestContainer);
         }
     }
 

@@ -5,6 +5,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.viewbinding.ViewBinding;
+import razerdp.basepopup.databinding.ApiDemoFadeEnableBinding;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.demo.ui.apidemo.ApiDemoActivity;
 import razerdp.demo.ui.apidemo.ApiDemoFragment;
@@ -13,19 +14,18 @@ import razerdp.demo.ui.apidemo.ApiDemoFragment;
  * Created by 大灯泡 on 2020/4/4.
  * fadeenable
  */
-public class FadeEnableApiFragment extends ApiDemoFragment {
+public class FadeEnableApiFragment extends ApiDemoFragment<ApiDemoFadeEnableBinding> {
     DemoPopup mDemoPopup;
     boolean fadeEnable = true;
 
     @Override
-    public ViewBinding onCreateViewBinding(LayoutInflater layoutInflater) {
-//        return R.layout.api_demo_fade_enable;
-        return null;
+    public ApiDemoFadeEnableBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ApiDemoFadeEnableBinding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitViews(View mRootView) {
-
+        mViewBinding.tvTest.setOnClickListener(v -> this.show());
     }
 
     @Override
