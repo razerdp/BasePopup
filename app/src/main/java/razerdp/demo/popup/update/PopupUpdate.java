@@ -27,6 +27,8 @@ public class PopupUpdate extends BasePopupWindow {
         setOutSideDismiss(false);
         setBackPressEnable(false);
         setBlurBackgroundEnable(true);
+        mBinding.tvUpdate.setOnClickListener(v -> download());
+        mBinding.tvIgnore.setOnClickListener(v -> ignore());
     }
 
     @Override
@@ -37,9 +39,9 @@ public class PopupUpdate extends BasePopupWindow {
 
     @Override
     protected Animation onCreateShowAnimation() {
-       return AnimationHelper.asAnimation()
-               .withAlpha(AlphaConfig.IN)
-               .toShow();
+        return AnimationHelper.asAnimation()
+                .withAlpha(AlphaConfig.IN)
+                .toShow();
     }
 
     @Override
@@ -66,7 +68,7 @@ public class PopupUpdate extends BasePopupWindow {
         PgyUpdateManager.downLoadApk(mAppBean.getDownloadURL());
     }
 
-    public void reset(){
+    public void reset() {
         if (mBinding.layoutController.getVisibility() != View.VISIBLE) {
             mBinding.layoutController.setVisibility(View.VISIBLE);
             mBinding.progress.setProgress(0);
