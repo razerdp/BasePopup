@@ -64,7 +64,7 @@ public class DemoPopup extends BasePopupWindow {
         return this;
     }
 
-    public TextView getTextView(){
+    public TextView getTextView() {
         return mBinding.tvDesc;
     }
 
