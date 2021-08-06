@@ -3,15 +3,13 @@ package razerdp.demo.popup.update;
 import android.content.Context;
 import android.view.View;
 import android.view.animation.Animation;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.pgyersdk.update.PgyUpdateManager;
 import com.pgyersdk.update.javabean.AppBean;
 
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.demo.widget.DPTextView;
+import razerdp.basepopup.databinding.PopupUpdateBinding;
 import razerdp.util.animation.AlphaConfig;
 import razerdp.util.animation.AnimationHelper;
 
@@ -19,12 +17,7 @@ import razerdp.util.animation.AnimationHelper;
  * Created by 大灯泡 on 2020/3/4.
  */
 public class PopupUpdate extends BasePopupWindow {
-    TextView mTvTitle;
-    TextView mTvContent;
-    DPTextView mTvIgnore;
-    DPTextView mTvUpdate;
-    View controller;
-    ProgressBar mProgressBar;
+    PopupUpdateBinding mBinding;
 
     AppBean mAppBean;
 
@@ -38,7 +31,7 @@ public class PopupUpdate extends BasePopupWindow {
 
     @Override
     public void onViewCreated(View contentView) {
-        super.onViewCreated(contentView);
+        mBinding = PopupUpdateBinding.bind(contentView);
     }
 
 
@@ -59,8 +52,8 @@ public class PopupUpdate extends BasePopupWindow {
     public void showPopupWindow(AppBean appBean) {
         if (appBean == null) return;
         this.mAppBean = appBean;
-        mTvTitle.setText(String.format("发现新版本：【%s】", appBean.getVersionName()));
-        mTvContent.setText(appBean.getReleaseNote());
+        mBinding.tvTitle.setText(String.format("发现新版本：【%s】", appBean.getVersionName()));
+        mBinding.tvContent.setText(appBean.getReleaseNote());
         showPopupWindow();
     }
 
@@ -74,31 +67,31 @@ public class PopupUpdate extends BasePopupWindow {
     }
 
     public void reset(){
-        if (controller.getVisibility() != View.VISIBLE) {
-            controller.setVisibility(View.VISIBLE);
-            mProgressBar.setProgress(0);
-            mProgressBar.setVisibility(View.GONE);
+        if (mBinding.layoutController.getVisibility() != View.VISIBLE) {
+            mBinding.layoutController.setVisibility(View.VISIBLE);
+            mBinding.progress.setProgress(0);
+            mBinding.progress.setVisibility(View.GONE);
         }
-        mTvUpdate.setText("立即升级");
+        mBinding.tvUpdate.setText("立即升级");
     }
 
     public void onProgress(int progress) {
-        if (controller.getVisibility() == View.VISIBLE) {
-            controller.setVisibility(View.GONE);
-            mProgressBar.setProgress(0);
-            mProgressBar.setVisibility(View.VISIBLE);
+        if (mBinding.layoutController.getVisibility() == View.VISIBLE) {
+            mBinding.layoutController.setVisibility(View.GONE);
+            mBinding.progress.setProgress(0);
+            mBinding.progress.setVisibility(View.VISIBLE);
         }
 
-        mProgressBar.setProgress(progress);
+        mBinding.progress.setProgress(progress);
     }
 
     public void onError() {
-        if (controller.getVisibility() != View.VISIBLE) {
-            controller.setVisibility(View.VISIBLE);
-            mProgressBar.setProgress(0);
-            mProgressBar.setVisibility(View.GONE);
+        if (mBinding.layoutController.getVisibility() != View.VISIBLE) {
+            mBinding.layoutController.setVisibility(View.VISIBLE);
+            mBinding.progress.setProgress(0);
+            mBinding.progress.setVisibility(View.GONE);
         }
-        mTvUpdate.setText("重新下载");
+        mBinding.tvUpdate.setText("重新下载");
     }
 
 }
