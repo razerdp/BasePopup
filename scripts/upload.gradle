@@ -34,7 +34,7 @@ def getSnapshotRepositoryUrl() {
 afterEvaluate {
     publishing {
         publications {
-            mavenBasepopup(MavenPublication) {
+            publishBasePopup(MavenPublication) {
                 from components.release
 
                 groupId = rootProject.ext.group
@@ -67,24 +67,21 @@ afterEvaluate {
                         }
                     }
                 }
-//                pom.withXml {
-//                    asNode().dependencies.'*'.each {
-//                        if (it.scope.text() == 'test') {
-//                            it.delete
-//                        }
-//                    }
-//                }
             }
         }
         repositories {
             maven {
                 url = isReleaseBuild() ? getReleaseRepositoryUrl() : getSnapshotRepositoryUrl()
+                credentials {
+                    username = getLocalProperty('ossrhUsername')
+                    password = getLocalProperty('ossrhPassword')
+                }
             }
         }
     }
 
     signing {
-        sign publishing.publications.mavenBasepopup
+        sign publishing.publications.publishBasePopup
     }
 
     task androidJavadocs(type: Javadoc) {
@@ -101,12 +98,14 @@ afterEvaluate {
         archiveClassifier.set('sources')
         from android.sourceSets.main.java.sourceFiles
     }
+
     allprojects {
         tasks.withType(Javadoc) {
             options {
                 encoding "UTF-8"
                 charSet 'UTF-8'
                 author true
+                failOnError false
                 version true
                 links "https://developer.android.google.cn/reference/"
             }

@@ -133,6 +133,10 @@ BasePopup配备完善的文档，详情请看。
 * **【Snapshot】3.1.8-SNAPSHOT**
     * 2021/07/28
         * 优化margin的measure和layout逻辑。[issue#429](https://github.com/razerdp/BasePopup/issues/429)
+    * 2021/08/06
+        * 添加`onSizeChange(int oldW, int oldH, int newW, int newH)`回调
+        * demo修改至ViewBinding
+        * 增加宽高限定Demo
 
 
 <br>
