@@ -3,12 +3,11 @@ package razerdp.demo.popup.issue;
 import android.content.Context;
 import android.view.View;
 import android.view.animation.Animation;
-import android.widget.EditText;
 
-import androidx.annotation.Nullable;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.demo.utils.ButterKnifeUtil;
+import razerdp.basepopup.databinding.PopupIssue238Binding;
+import razerdp.basepopup.databinding.PopupIssue238WithEdittextBinding;
 import razerdp.demo.utils.UIHelper;
 import razerdp.util.animation.AnimationHelper;
 import razerdp.util.animation.TranslationConfig;
@@ -17,10 +16,9 @@ import razerdp.util.animation.TranslationConfig;
  * Created by 大灯泡 on 2020/02/26.
  */
 public class PopupIssue238 extends BasePopupWindow {
+    PopupIssue238WithEdittextBinding mWithEdittextBinding;
+    PopupIssue238Binding mBinding;
     private boolean isEdit;
-
-    @Nullable
-    EditText edInput;
 
     public PopupIssue238(Context context, boolean isEdit) {
         super(context);
@@ -30,13 +28,12 @@ public class PopupIssue238 extends BasePopupWindow {
 
     @Override
     public void onViewCreated(View contentView) {
-        ButterKnifeUtil.bind(this, contentView);
-        contentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UIHelper.toast("点击ContentView");
-            }
-        });
+        if (isEdit) {
+            mWithEdittextBinding = PopupIssue238WithEdittextBinding.bind(contentView);
+        } else {
+            mBinding = PopupIssue238Binding.bind(contentView);
+        }
+        contentView.setOnClickListener(v -> UIHelper.toast("点击ContentView"));
         if (isEdit) {
             setAutoShowKeyboard(true);
             setKeyboardAdaptive(true);

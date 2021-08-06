@@ -12,16 +12,14 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import razerdp.basepopup.BasePopupFlag;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.PopupOptionControlBarBinding;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.OnItemClickListener;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.model.common.CommonBarControllerInfo;
-import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.UIHelper;
-import razerdp.demo.widget.DPTextView;
 import razerdp.demo.widget.decoration.GridItemDecoration;
 import razerdp.demo.widget.decoration.SpaceOption;
 import razerdp.util.animation.AnimationHelper;
@@ -33,19 +31,9 @@ import razerdp.util.animation.TranslationConfig;
  * Description：Bar控制相关的配置
  */
 public class PopupBarControllerOption extends BaseOptionPopup<CommonBarControllerInfo> {
-
+    PopupOptionControlBarBinding mBinding;
     SimpleRecyclerViewAdapter<Info> mAdapter;
 
-    RecyclerView rvContent;
-    DPTextView tvGo;
-    AppCompatCheckBox checkOverlayStatus;
-    AppCompatCheckBox checkStatusMask;
-    AppCompatCheckBox checkStatusContent;
-    AppCompatCheckBox checkOverlayNav;
-    AppCompatCheckBox checkNavMask;
-    AppCompatCheckBox checkNavContent;
-    AppCompatCheckBox checkMatchHorizontal;
-    AppCompatCheckBox checkMatchVertical;
 
     public PopupBarControllerOption(Context context) {
         super(context);
@@ -62,10 +50,11 @@ public class PopupBarControllerOption extends BaseOptionPopup<CommonBarControlle
 
         mAdapter = new SimpleRecyclerViewAdapter<>(context, infos);
         mAdapter.setHolder(InnerViewHolder.class);
-        rvContent.setLayoutManager(new GridLayoutManager(context, 2));
-        rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(UIHelper.DP12)
-                .build()));
-        rvContent.setItemAnimator(null);
+        mBinding.rvContent.setLayoutManager(new GridLayoutManager(context, 2));
+        mBinding.rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(
+                UIHelper.DP12)
+                                                                            .build()));
+        mBinding.rvContent.setItemAnimator(null);
         mAdapter.setOnItemClickListener(new OnItemClickListener<Info>() {
             @Override
             public void onItemClick(View v, int position, Info data) {
@@ -73,9 +62,14 @@ public class PopupBarControllerOption extends BaseOptionPopup<CommonBarControlle
                 mAdapter.notifyItemChanged(position);
             }
         });
-        rvContent.setAdapter(mAdapter);
+        mBinding.rvContent.setAdapter(mAdapter);
+        mBinding.tvGo.setOnClickListener(v -> apply());
     }
 
+    @Override
+    public void onViewCreated(@NonNull View contentView) {
+        mBinding = PopupOptionControlBarBinding.bind(contentView);
+    }
 
     @Override
     protected Animation onCreateShowAnimation() {
@@ -99,24 +93,24 @@ public class PopupBarControllerOption extends BaseOptionPopup<CommonBarControlle
             }
         }
         mInfo.gravity = gravity;
-        mInfo.matchHorizontal = checkMatchHorizontal.isChecked();
-        mInfo.matchVertical = checkMatchVertical.isChecked();
-        mInfo.overlayStatusbar = checkOverlayStatus.isChecked();
-        mInfo.overlayNavigationBar = checkOverlayNav.isChecked();
+        mInfo.matchHorizontal = mBinding.checkMatchHorizontal.isChecked();
+        mInfo.matchVertical = mBinding.checkMatchVertical.isChecked();
+        mInfo.overlayStatusbar = mBinding.checkOverlayStatus.isChecked();
+        mInfo.overlayNavigationBar = mBinding.checkOverlayNav.isChecked();
 
         int mode = 0;
-        if (checkStatusMask.isChecked()) {
+        if (mBinding.checkStatusMask.isChecked()) {
             mode |= BasePopupFlag.OVERLAY_MASK;
         }
-        if (checkStatusContent.isChecked()) {
+        if (mBinding.checkStatusContent.isChecked()) {
             mode |= BasePopupFlag.OVERLAY_CONTENT;
         }
         mInfo.overlayStatusbarMode = mode;
         mode = 0;
-        if (checkNavMask.isChecked()) {
+        if (mBinding.checkNavMask.isChecked()) {
             mode |= BasePopupFlag.OVERLAY_MASK;
         }
-        if (checkNavContent.isChecked()) {
+        if (mBinding.checkNavContent.isChecked()) {
             mode |= BasePopupFlag.OVERLAY_CONTENT;
         }
         mInfo.overlayNavigationBarMode = mode;
@@ -128,7 +122,7 @@ public class PopupBarControllerOption extends BaseOptionPopup<CommonBarControlle
 
         public InnerViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnifeUtil.bind(this, itemView);
+            checkBox = findViewById(R.id.check_box);
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

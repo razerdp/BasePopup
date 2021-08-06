@@ -42,6 +42,9 @@ public class DialogActivity extends BaseBindingActivity<ActivityDialogDemoBindin
 
     @Override
     protected void onInitView(View decorView) {
+        mBinding.showPopup.setOnClickListener(v -> showPopup());
+        mBinding.showDialog.setOnClickListener(v -> showDialog());
+        mBinding.showApplicationDialog.setOnClickListener(v -> showGlobalDialog());
 
     }
 

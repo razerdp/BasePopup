@@ -14,16 +14,14 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.basepopup.databinding.ActivityIssue358Binding;
-import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.basepopup.databinding.PopupIssue358Binding;
 import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.utils.ViewUtil;
-import razerdp.demo.widget.DPTextView;
 import razerdp.util.KeyboardUtils;
 import razerdp.util.animation.AnimationHelper;
 import razerdp.util.animation.ScaleConfig;
@@ -61,14 +59,13 @@ public class Issue358TestActivity extends BaseBindingActivity<ActivityIssue358Bi
 
     static class Issue358Popup extends BasePopupWindow {
 
-        RecyclerView rvContent;
-        LinearLayout container;
+        PopupIssue358Binding mBinding;
 
         public Issue358Popup(Context context) {
             super(context);
             setContentView(R.layout.popup_issue_358);
             setKeyboardAdaptive(true);
-            rvContent.setLayoutManager(new LinearLayoutManager(context));
+            mBinding.rvContent.setLayoutManager(new LinearLayoutManager(context));
             List<Integer> data = new ArrayList<>();
             for (int i = 0; i < 100; i++) {
                 data.add(i);
@@ -76,13 +73,13 @@ public class Issue358TestActivity extends BaseBindingActivity<ActivityIssue358Bi
             SimpleRecyclerViewAdapter<Integer> adapter = new SimpleRecyclerViewAdapter<>(context,
                                                                                          data);
             adapter.setHolder(Holder.class).outher(this);
-            rvContent.setAdapter(adapter);
+            mBinding.rvContent.setAdapter(adapter);
         }
 
 
         @Override
         public void onViewCreated(@NonNull View contentView) {
-            super.onViewCreated(contentView);
+            mBinding = PopupIssue358Binding.bind(contentView);
         }
 
         @Override

@@ -63,7 +63,7 @@ public class FullScreenActivity extends BaseBindingActivity<ActivityFullScreenBi
         if (mDemoPopup == null) {
             mDemoPopup = new DemoPopup(this);
             mDemoPopup.setText("FullScreenTest");
-            mDemoPopup.mTvDesc.setOnClickListener(new View.OnClickListener() {
+            mDemoPopup.getTextView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ActivityLauncher.start(v.getContext(), FriendCircleActivity.class);

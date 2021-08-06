@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.demo.utils.ButterKnifeUtil;
+import razerdp.basepopup.databinding.PopupSlideBinding;
 import razerdp.demo.utils.UIHelper;
 
 /**
@@ -15,18 +15,17 @@ import razerdp.demo.utils.UIHelper;
  * Description：{@link razerdp.demo.model.common.CommonSlideInfo}
  */
 public class PopupSlide extends BasePopupWindow {
-
-    TextView tvItem1;
-    TextView tvItem2;
-    TextView tvItem3;
+    PopupSlideBinding mBinding;
 
     public PopupSlide(Context context) {
         super(context);
         setContentView(R.layout.popup_slide);
+        setViewClickListener(this::click, mBinding.tvItem1, mBinding.tvItem2, mBinding.tvItem3);
     }
+
     @Override
     public void onViewCreated(View contentView) {
-        ButterKnifeUtil.bind(this, contentView);
+        mBinding = PopupSlideBinding.bind(contentView);
     }
 
     void click(View v) {

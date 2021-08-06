@@ -3,13 +3,12 @@ package razerdp.demo.popup;
 import android.content.Context;
 import android.view.View;
 import android.view.animation.Animation;
-import android.widget.TextView;
 
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.PopupSourceBinding;
 import razerdp.demo.ui.ActivityLauncher;
 import razerdp.demo.ui.WebActivity;
-import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.util.animation.AnimationHelper;
 import razerdp.util.animation.TranslationConfig;
 
@@ -19,22 +18,19 @@ import razerdp.util.animation.TranslationConfig;
  * Description：{@link razerdp.demo.model.common.CommonSlideInfo}
  */
 public class PopupSource extends BasePopupWindow {
-
-    TextView tvTitle;
-    TextView tvJava;
-    TextView tvRes;
+    PopupSourceBinding mBinding;
 
 
     public PopupSource(Context context, String name, String javaUrl, String resUrl) {
         super(context);
         setContentView(R.layout.popup_source);
-        tvTitle.setText(name);
-        tvJava.setOnClickListener(v -> {
+        mBinding.tvTitle.setText(name);
+        mBinding.tvItem1.setOnClickListener(v -> {
             ActivityLauncher.start(context, WebActivity.class, new WebActivity.Data().setTitle(name)
                     .setUrl(javaUrl));
             dismiss();
         });
-        tvRes.setOnClickListener(v -> {
+        mBinding.tvItem2.setOnClickListener(v -> {
             ActivityLauncher.start(context, WebActivity.class, new WebActivity.Data().setTitle(name)
                     .setUrl(resUrl));
             dismiss();
@@ -43,7 +39,7 @@ public class PopupSource extends BasePopupWindow {
 
     @Override
     public void onViewCreated(View contentView) {
-        ButterKnifeUtil.bind(this, contentView);
+        mBinding = PopupSourceBinding.bind(contentView);
     }
 
     @Override

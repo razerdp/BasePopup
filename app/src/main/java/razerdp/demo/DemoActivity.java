@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -23,9 +22,8 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import razerdp.basepopup.R;
-import razerdp.basepopup.databinding.ActivityApiDemoBinding;
 import razerdp.basepopup.databinding.ActivityDemoBinding;
-import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.basepopup.databinding.ItemMainDemoBinding;
 import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
@@ -40,10 +38,8 @@ import razerdp.demo.ui.CommonUsageActivity;
 import razerdp.demo.ui.GuideActivity;
 import razerdp.demo.ui.UpdateLogActivity;
 import razerdp.demo.ui.issuestest.home.IssueHomeActivity;
-import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.UIHelper;
 import razerdp.demo.utils.ViewUtil;
-import razerdp.demo.widget.DPTextView;
 
 
 public class DemoActivity extends BaseBindingActivity<ActivityDemoBinding> {
@@ -197,16 +193,12 @@ public class DemoActivity extends BaseBindingActivity<ActivityDemoBinding> {
 
 
     static class InnerViewHolder extends BaseSimpleRecyclerViewHolder<DemoMainItem> {
-
-        TextView tvTag;
-        TextView tvTitle;
-        TextView tvDesc;
-        View divider;
-        DPTextView tvGo;
+        ItemMainDemoBinding mBinding;
 
         public InnerViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnifeUtil.bind(this, itemView);
+            mBinding =ItemMainDemoBinding.bind(itemView);
+            mBinding.tvGo.setOnClickListener(v -> toTarget());
         }
 
         @Override
@@ -216,10 +208,10 @@ public class DemoActivity extends BaseBindingActivity<ActivityDemoBinding> {
 
         @Override
         public void onBindData(DemoMainItem data, int position) {
-            tvTag.setVisibility(TextUtils.isEmpty(data.tag) ? View.INVISIBLE : View.VISIBLE);
-            tvTag.setText(data.tag);
-            tvTitle.setText(data.title);
-            tvDesc.setText(data.desc);
+            mBinding.tvTag.setVisibility(TextUtils.isEmpty(data.tag) ? View.INVISIBLE : View.VISIBLE);
+            mBinding.tvTag.setText(data.tag);
+            mBinding.tvTitle.setText(data.title);
+            mBinding.tvDesc.setText(data.desc);
         }
 
         void toTarget() {

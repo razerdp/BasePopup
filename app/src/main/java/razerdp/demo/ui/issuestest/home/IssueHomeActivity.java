@@ -11,10 +11,8 @@ import java.util.ArrayList;
 import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
 import razerdp.basepopup.databinding.ActivityIssueBinding;
-import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
@@ -24,12 +22,10 @@ import razerdp.demo.ui.ActivityLauncher;
 import razerdp.demo.ui.photobrowser.PhotoBrowserImpl;
 import razerdp.demo.ui.photobrowser.PhotoBrowserProcessor;
 import razerdp.demo.utils.ActivityUtil;
-import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.DescBuilder;
 import razerdp.demo.utils.FillViewUtil;
 import razerdp.demo.utils.ToolUtil;
 import razerdp.demo.utils.UIHelper;
-import razerdp.demo.widget.DPRecyclerView;
 import razerdp.demo.widget.DPTextView;
 import razerdp.demo.widget.FlowLayout;
 
@@ -76,7 +72,16 @@ public class IssueHomeActivity extends BaseBindingActivity<ActivityIssueBinding>
 
         public InnerViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnifeUtil.bind(this, itemView);
+            ivState =  findViewById(R.id.iv_state);
+            mTvIssue =  findViewById(R.id.tv_issue);
+            mTvTitle =  findViewById(R.id.tv_title);
+            mTvDesc =  findViewById(R.id.tv_desc);
+            mLayoutPic =  findViewById(R.id.layout_pic);
+            mDivider =  findViewById(R.id.divider);
+            mTvToWeb =  findViewById(R.id.tv_to_web);
+            mTvGo =  findViewById(R.id.tv_go);
+            mTvToWeb.setOnClickListener(v -> toWeb());
+            mTvGo.setOnClickListener(v -> toTarget());
         }
 
         @Override

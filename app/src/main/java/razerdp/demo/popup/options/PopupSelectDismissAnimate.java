@@ -13,12 +13,10 @@ import java.util.List;
 import androidx.annotation.Nullable;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.demo.utils.ButterKnifeUtil;
+import razerdp.basepopup.databinding.PopupSelectAnimateBinding;
 import razerdp.demo.utils.FillViewUtil;
 import razerdp.demo.utils.ToolUtil;
 import razerdp.demo.utils.UIHelper;
-import razerdp.demo.widget.DPTextView;
-import razerdp.demo.widget.FlowLayout;
 import razerdp.util.animation.AlphaConfig;
 import razerdp.util.animation.AnimationHelper;
 import razerdp.util.animation.ScaleConfig;
@@ -32,8 +30,7 @@ import razerdp.util.animation.TranslationConfig;
 public class PopupSelectDismissAnimate extends BasePopupWindow {
 
 
-    FlowLayout layoutAnimation;
-    DPTextView tvGo;
+    PopupSelectAnimateBinding mBinding;
 
     OnSelectedResultListener mListener;
 
@@ -44,12 +41,16 @@ public class PopupSelectDismissAnimate extends BasePopupWindow {
         setContentView(R.layout.popup_select_animate);
         setMaxHeight(UIHelper.getScreenHeight() >> 1);
         generateAnimation();
-        FillViewUtil.fillView(animations, layoutAnimation, R.layout.item_popup_animate, creator);
+        FillViewUtil.fillView(animations,
+                              mBinding.layoutAnimation,
+                              R.layout.item_popup_animate,
+                              creator);
+        mBinding.tvGo.setOnClickListener(v -> ok());
     }
 
     @Override
     public void onViewCreated(View contentView) {
-        ButterKnifeUtil.bind(this, contentView);
+        mBinding = PopupSelectAnimateBinding.bind(contentView);
     }
 
     private void generateAnimation() {
@@ -237,9 +238,9 @@ public class PopupSelectDismissAnimate extends BasePopupWindow {
                 }
             }
         }
-        final int childCount = layoutAnimation.getChildCount();
+        final int childCount = mBinding.layoutAnimation.getChildCount();
         for (int i = 0; i < childCount; i++) {
-            View v = layoutAnimation.getChildAt(i);
+            View v = mBinding.layoutAnimation.getChildAt(i);
             InnerViewHolder holder = ToolUtil.cast(FillViewUtil.getHolder(v),
                                                    InnerViewHolder.class);
             if (holder != null) {

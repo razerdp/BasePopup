@@ -17,15 +17,12 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
 import razerdp.basepopup.databinding.ActivityGuideBinding;
-import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.base.imageloader.GlideApp;
 import razerdp.demo.base.imageloader.SvgSoftwareLayerSetter;
 import razerdp.demo.model.DependenceInfo;
-import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.DescBuilder;
 import razerdp.demo.utils.FillViewUtil;
 import razerdp.demo.utils.SpanUtil;
@@ -198,7 +195,9 @@ public class GuideActivity extends BaseBindingActivity<ActivityGuideBinding> {
 
         InnerViewHolder(View itemView) {
             super(itemView);
-            ButterKnifeUtil.bind(this, itemView);
+            tvDesc =  findViewById(R.id.tv_desc);
+            ivVersion =  findViewById(R.id.iv_version);
+            tvDependence = findViewById(R.id.tv_dependence);
         }
 
         @Override

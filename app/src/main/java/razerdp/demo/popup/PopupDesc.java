@@ -4,12 +4,10 @@ import android.content.Context;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.OvershootInterpolator;
-import android.widget.TextView;
 
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.demo.utils.ButterKnifeUtil;
-import razerdp.demo.widget.DPTextView;
+import razerdp.basepopup.databinding.PopupDescriptionBinding;
 import razerdp.util.animation.AnimationHelper;
 import razerdp.util.animation.ScaleConfig;
 
@@ -18,22 +16,18 @@ import razerdp.util.animation.ScaleConfig;
  * 描述专用
  */
 public class PopupDesc extends BasePopupWindow {
-//    @BindView(R.id.tv_title)
-    TextView mTvTitle;
-//    @BindView(R.id.tv_desc)
-    TextView mTvDesc;
-//    @BindView(R.id.tv_ok)
-    DPTextView mTvOk;
+    PopupDescriptionBinding mBinding;
 
     public PopupDesc(Context context) {
         super(context);
         setContentView(R.layout.popup_description);
         setClipChildren(false);
+        mBinding.tvOk.setOnClickListener(v -> dismiss());
     }
 
     @Override
     public void onViewCreated(View contentView) {
-        ButterKnifeUtil.bind(this, contentView);
+        mBinding = PopupDescriptionBinding.bind(contentView);
     }
 
     @Override
@@ -52,17 +46,13 @@ public class PopupDesc extends BasePopupWindow {
 
 
     public PopupDesc setTitle(CharSequence title) {
-        mTvTitle.setText(title);
+        mBinding.tvTitle.setText(title);
         return this;
     }
 
     public PopupDesc setDesc(CharSequence desc) {
-        mTvDesc.setText(desc);
+        mBinding.tvDesc.setText(desc);
         return this;
     }
 
-    @Override
-    public void dismiss() {
-        super.dismiss();
-    }
 }

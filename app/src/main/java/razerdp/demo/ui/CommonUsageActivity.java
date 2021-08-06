@@ -11,10 +11,8 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
 import razerdp.basepopup.databinding.ActivityCommonUsageBinding;
-import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.base.baseadapter.BaseMultiRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.MultiRecyclerViewAdapter;
@@ -43,12 +41,11 @@ import razerdp.demo.model.common.CommonRTLInfo;
 import razerdp.demo.model.common.CommonSlideInfo;
 import razerdp.demo.model.common.CommonUpdateInfo;
 import razerdp.demo.model.common.ScreenRotateActivityInfo;
+import razerdp.demo.model.common.WidthAndHeightLimitInfo;
 import razerdp.demo.model.lifecycle.ShowInServiceInfo;
 import razerdp.demo.model.lifecycle.ShowOnCreateInfo;
-import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.DescBuilder;
 import razerdp.demo.utils.UIHelper;
-import razerdp.demo.widget.DPRecyclerView;
 import razerdp.demo.widget.DPTextView;
 import razerdp.demo.widget.decoration.GridItemDecoration;
 import razerdp.demo.widget.decoration.SpaceOption;
@@ -124,6 +121,8 @@ public class CommonUsageActivity extends BaseBindingActivity<ActivityCommonUsage
         result.add(new CommonControllerInfo());
         result.add(new CommonBarControllerInfo());
         result.add(new CommonPriorityInfo());
+        result.add(new DemoCommonUsageTitle("宽高限定"));
+        result.add(new WidthAndHeightLimitInfo());
         result.add(new DemoCommonUsageTitle("动画相关"));
         result.add(new CommonAnimateInfo());
         result.add(new DemoCommonUsageTitle("背景相关"));
@@ -154,7 +153,7 @@ public class CommonUsageActivity extends BaseBindingActivity<ActivityCommonUsage
 
         public InnerTitleViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnifeUtil.bind(this, itemView);
+            tvTitle =  findViewById(R.id.tv_title);
         }
 
         @Override
@@ -178,7 +177,12 @@ public class CommonUsageActivity extends BaseBindingActivity<ActivityCommonUsage
 
         public InnerItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnifeUtil.bind(this, itemView);
+            tvFun =  findViewById(R.id.tv_fun);
+            divider =  findViewById(R.id.divider);
+            tvOption =  findViewById(R.id.tv_option);
+            tvSource =  findViewById(R.id.tv_source);
+            tvOption.setOnClickListener(this::showOption);
+            tvSource.setOnClickListener(this::showSource);
         }
 
         @Override

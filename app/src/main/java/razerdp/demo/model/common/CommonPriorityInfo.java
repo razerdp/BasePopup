@@ -33,7 +33,7 @@ public class CommonPriorityInfo extends DemoCommonUsageInfo {
         if (mDemoPopup1 == null) {
             mDemoPopup1 = new DemoPopup(v.getContext());
             mDemoPopup1.getContentView().setBackgroundColor(Color.RED);
-            mDemoPopup1.mTvDesc.setTextColor(Color.WHITE);
+            mDemoPopup1.getTextView().setTextColor(Color.WHITE);
             mDemoPopup1.setText("点我展示弹窗2");
             mDemoPopup1.getContentView().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -48,7 +48,7 @@ public class CommonPriorityInfo extends DemoCommonUsageInfo {
     void showDemo2(Context context) {
         if (mDemoPopup2 == null) {
             mDemoPopup2 = new DemoPopup(context);
-            mDemoPopup2.mTvDesc.setTextColor(Color.WHITE);
+            mDemoPopup2.getTextView().setTextColor(Color.WHITE);
             mDemoPopup2.setText("弹窗2");
             mDemoPopup2.getContentView().setBackgroundColor(Color.BLUE);
         }

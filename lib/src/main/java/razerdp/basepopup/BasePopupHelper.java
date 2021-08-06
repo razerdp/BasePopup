@@ -908,6 +908,12 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         }
     }
 
+    void onSizeChange(int oldW, int oldH, int newW, int newH) {
+        if (mPopupWindow != null) {
+            mPopupWindow.onSizeChange(oldW, oldH, newW, newH);
+        }
+    }
+
     private void prepareShow() {
         showFlag |= BasePopupHelper.STATUS_START_SHOWING;
         if (mGlobalLayoutListener == null) {

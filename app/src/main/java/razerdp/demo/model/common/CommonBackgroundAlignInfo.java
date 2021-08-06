@@ -39,7 +39,7 @@ public class CommonBackgroundAlignInfo extends DemoCommonUsageInfo {
     public void toShow(View v) {
         if (mDemoPopup == null) {
             mDemoPopup = new DemoPopup(v.getContext()).setText("背景蒙层控制\n点我弹出新的DemoPopup");
-            mDemoPopup.mTvDesc.setOnClickListener(new View.OnClickListener() {
+            mDemoPopup.getTextView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     new DemoPopup(v.getContext()).setOverlayMask(overlayMask).showPopupWindow();

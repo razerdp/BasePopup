@@ -3,7 +3,6 @@ package razerdp.demo.popup.options;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.CompoundButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,15 +10,13 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.PopupOptionArrowBinding;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.OnItemClickListener;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.model.common.CommonArrowInfo;
-import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.UIHelper;
-import razerdp.demo.widget.DPTextView;
 import razerdp.demo.widget.decoration.GridItemDecoration;
 import razerdp.demo.widget.decoration.SpaceOption;
 
@@ -29,11 +26,7 @@ import razerdp.demo.widget.decoration.SpaceOption;
  * Description：slide相关的配置
  */
 public class PopupArrowOption extends BaseOptionPopup<CommonArrowInfo> {
-    RecyclerView rvContent;
-    AppCompatCheckBox blurCheck;
-    AppCompatCheckBox gravitySideMode;
-    DPTextView tvGo;
-
+    PopupOptionArrowBinding mBinding;
     SimpleRecyclerViewAdapter<Info> mAdapter;
 
     public PopupArrowOption(Context context) {
@@ -50,9 +43,10 @@ public class PopupArrowOption extends BaseOptionPopup<CommonArrowInfo> {
 
         mAdapter = new SimpleRecyclerViewAdapter<>(context, infos);
         mAdapter.setHolder(InnerViewHolder.class);
-        rvContent.setLayoutManager(new GridLayoutManager(context, 2));
-        rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(UIHelper.DP12).build()));
-        rvContent.setItemAnimator(null);
+        mBinding.rvContent.setLayoutManager(new GridLayoutManager(context, 2));
+        mBinding.rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(
+                UIHelper.DP12).build()));
+        mBinding.rvContent.setItemAnimator(null);
         mAdapter.setOnItemClickListener(new OnItemClickListener<Info>() {
             @Override
             public void onItemClick(View v, int position, Info data) {
@@ -60,9 +54,14 @@ public class PopupArrowOption extends BaseOptionPopup<CommonArrowInfo> {
                 mAdapter.notifyItemChanged(position);
             }
         });
-        rvContent.setAdapter(mAdapter);
+        mBinding.rvContent.setAdapter(mAdapter);
+        mBinding.tvGo.setOnClickListener(v -> apply());
     }
 
+    @Override
+    public void onViewCreated(@NonNull View contentView) {
+        mBinding = PopupOptionArrowBinding.bind(contentView);
+    }
 
     void apply() {
         int gravity = Gravity.NO_GRAVITY;
@@ -72,8 +71,8 @@ public class PopupArrowOption extends BaseOptionPopup<CommonArrowInfo> {
             }
         }
         mInfo.gravity = gravity;
-        mInfo.blur = blurCheck.isChecked();
-        mInfo.gravityMode = gravitySideMode.isChecked() ? GravityMode.ALIGN_TO_ANCHOR_SIDE : GravityMode.RELATIVE_TO_ANCHOR;
+        mInfo.blur = mBinding.checkBlur.isChecked();
+        mInfo.gravityMode = mBinding.checkAlignToSide.isChecked() ? GravityMode.ALIGN_TO_ANCHOR_SIDE : GravityMode.RELATIVE_TO_ANCHOR;
         dismiss();
     }
 
@@ -82,13 +81,8 @@ public class PopupArrowOption extends BaseOptionPopup<CommonArrowInfo> {
 
         public InnerViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnifeUtil.bind(this, itemView);
-            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    getData().checked = isChecked;
-                }
-            });
+            checkBox = findViewById(R.id.check_box);
+            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> getData().checked = isChecked);
         }
 
         @Override

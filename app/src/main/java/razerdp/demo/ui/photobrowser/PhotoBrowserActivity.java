@@ -23,7 +23,6 @@ import razerdp.demo.utils.UIHelper;
 import razerdp.demo.utils.ViewUtil;
 import razerdp.demo.widget.bigimageviewer.view.ImageLoadCallback;
 import razerdp.demo.widget.bigimageviewer.view.ImageViewer;
-import razerdp.demo.widget.mBinding.viewPager.HackymBinding.viewPager;
 import razerdp.demo.widget.viewpager.BaseCachedViewPagerAdapter;
 
 /**
@@ -63,7 +62,7 @@ public class PhotoBrowserActivity extends BaseActivity<PhotoBrowserActivity.Data
         isLoaded = false;
         mAdapter = new InnerAdapter();
         mBinding.viewPager.setAdapter(mAdapter);
-        mBinding.viewIndicator.attachViewPager().viewPager(mBinding.viewPager);
+        mBinding.viewIndicator.attachViewPager(mBinding.viewPager);
         mBinding.viewPager.setCurrentItem(Math.max(data.startPosition, 0));
 
         ActivityCompat.setEnterSharedElementCallback(this, new SharedElementCallback() {

@@ -4,15 +4,11 @@ import android.content.Context;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
-import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.appcompat.widget.AppCompatSeekBar;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.PopupOptionBlurBinding;
 import razerdp.demo.model.common.CommonBlurInfo;
-import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.NumberFormatUtil;
-import razerdp.demo.widget.DPTextView;
 import razerdp.util.animation.AnimationHelper;
 import razerdp.util.animation.TranslationConfig;
 
@@ -21,18 +17,7 @@ import razerdp.util.animation.TranslationConfig;
  * 模糊控制
  */
 public class PopupBlurDemoOption extends BaseOptionPopup<CommonBlurInfo> {
-    TextView mTvBlur;
-    AppCompatSeekBar mProgressBlur;
-    TextView mTvScale;
-    AppCompatSeekBar mProgressScale;
-    AppCompatCheckBox mCheckBlur;
-    AppCompatCheckBox mCheckBlurAnchor;
-    DPTextView mTvGo;
-    TextView mTvBlurIn;
-    AppCompatSeekBar mProgressBlurIn;
-    TextView mTvBlurOut;
-    AppCompatSeekBar mProgressBlurOut;
-
+    PopupOptionBlurBinding mBinding;
 
     float scaled = 0.15f;
     float blurRadius = 10;
@@ -46,12 +31,13 @@ public class PopupBlurDemoOption extends BaseOptionPopup<CommonBlurInfo> {
     }
 
     private void init() {
-        mProgressBlur.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mBinding.tvGo.setOnClickListener(v -> ok());
+        mBinding.progressBlur.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 blurRadius = progress;
-                mTvBlur.setText(String.format("模糊度：%s%%",
-                                              NumberFormatUtil.format2(((float) progress / seekBar.getMax()) * 100)));
+                mBinding.tvBlur.setText(String.format("模糊度：%s%%",
+                                                      NumberFormatUtil.format2(((float) progress / seekBar.getMax()) * 100)));
             }
 
             @Override
@@ -64,11 +50,12 @@ public class PopupBlurDemoOption extends BaseOptionPopup<CommonBlurInfo> {
 
             }
         });
-        mProgressScale.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mBinding.progressScale.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 scaled = (float) progress / seekBar.getMax();
-                mTvScale.setText(String.format("预缩放系数：%s", NumberFormatUtil.format2(scaled)));
+                mBinding.tvScale.setText(String.format("预缩放系数：%s",
+                                                       NumberFormatUtil.format2(scaled)));
             }
 
             @Override
@@ -81,11 +68,11 @@ public class PopupBlurDemoOption extends BaseOptionPopup<CommonBlurInfo> {
 
             }
         });
-        mProgressBlurIn.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mBinding.progressBlurIn.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 blurInTime = progress;
-                mTvBlurIn.setText(String.format("淡入时间：%sms", String.valueOf(progress)));
+                mBinding.tvBlurIn.setText(String.format("淡入时间：%sms", String.valueOf(progress)));
             }
 
             @Override
@@ -98,11 +85,11 @@ public class PopupBlurDemoOption extends BaseOptionPopup<CommonBlurInfo> {
 
             }
         });
-        mProgressBlurOut.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mBinding.progressBlurOut.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 blurOutTime = progress;
-                mTvBlurOut.setText(String.format("淡出时间：%sms", String.valueOf(progress)));
+                mBinding.tvBlurOut.setText(String.format("淡出时间：%sms", String.valueOf(progress)));
             }
 
             @Override
@@ -134,8 +121,7 @@ public class PopupBlurDemoOption extends BaseOptionPopup<CommonBlurInfo> {
 
     @Override
     public void onViewCreated(View contentView) {
-        super.onViewCreated(contentView);
-        ButterKnifeUtil.bind(this, contentView);
+        mBinding = PopupOptionBlurBinding.bind(contentView);
     }
 
 
@@ -144,8 +130,8 @@ public class PopupBlurDemoOption extends BaseOptionPopup<CommonBlurInfo> {
         mInfo.blurRadius = blurRadius;
         mInfo.blurInTime = blurInTime;
         mInfo.blurOutTime = blurOutTime;
-        mInfo.blurEnable = mCheckBlur.isChecked();
-        mInfo.blurAnchorView = mCheckBlurAnchor.isChecked();
+        mInfo.blurEnable = mBinding.checkBlur.isChecked();
+        mInfo.blurAnchorView = mBinding.checkBlurAnchor.isChecked();
         dismiss();
     }
 }

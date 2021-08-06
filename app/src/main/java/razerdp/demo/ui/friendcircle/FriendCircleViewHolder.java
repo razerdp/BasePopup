@@ -21,7 +21,6 @@ import razerdp.demo.popup.PopupFriendCircle;
 import razerdp.demo.ui.photobrowser.PhotoBrowserImpl;
 import razerdp.demo.ui.photobrowser.PhotoBrowserProcessor;
 import razerdp.demo.utils.ActivityUtil;
-import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.ToolUtil;
 import razerdp.demo.utils.UIHelper;
 import razerdp.demo.widget.DPImageView;
@@ -48,9 +47,14 @@ public class FriendCircleViewHolder extends BaseSimpleRecyclerViewHolder<FriendC
 
     public FriendCircleViewHolder(@NonNull View itemView) {
         super(itemView);
-        ButterKnifeUtil.bind(this, itemView);
+        ivAvatar =  findViewById(R.id.iv_avatar);
+        tvNick =  findViewById(R.id.tv_nick);
+        tvContent =  findViewById(R.id.tv_content);
+        rvBox =  findViewById(R.id.rv_box);
+        ivComment =  findViewById(R.id.iv_comment);
         manager = new NineGridLayoutManager(UIHelper.dip2px(8));
         rvBox.setLayoutManager(manager);
+        ivComment.setOnClickListener(this::showPopup);
     }
 
     @Override

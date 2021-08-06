@@ -26,7 +26,6 @@ import razerdp.util.PopupUiUtils;
  * popupwindow的decorview代理，这里统筹位置、蒙层、事件等
  */
 final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKeyboardChangeListener, BasePopupEvent.EventObserver, ClearMemoryObject {
-    private static final String TAG = "PopupDecorViewProxy";
     //蒙层
     private PopupMaskLayout mMaskLayout;
     private int childBottomMargin;
@@ -34,6 +33,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     BasePopupHelper mHelper;
     private View mTarget;
     private Rect popupRect = new Rect();
+    private Rect lastPopupRect = new Rect();
     private Rect anchorRect = new Rect();
     private Rect contentRect = new Rect();
     private Rect contentBounds = new Rect();
@@ -43,7 +43,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     private int childLeftMargin;
     private int childTopMargin;
     private int childRightMargin;
-    private boolean reMeasure;
 
     private int[] location = new int[2];
     private Rect lastKeyboardBounds = new Rect();
@@ -179,13 +178,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         return wp;
     }
 
-
-    @Override
-    public void requestLayout() {
-        reMeasure = true;
-        super.requestLayout();
-    }
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         final int childCount = getChildCount();
@@ -247,8 +239,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
     /**
      * measure contentview
-     * 1. 有可能此时contentview已经measure过，根据reMeasure决定是否使用原size
-     * 2. 由于target的layoutparam实际上是windowmanager#layoutparams，不包含margin的问题，但我们需要考虑margin的问题
+     * 由于target的layoutparam实际上是windowmanager#layoutparams，不包含margin的问题，但我们需要考虑margin的问题
      */
     private void measureWrappedDecorView(View mTarget, int widthMeasureSpec, int heightMeasureSpec) {
         if (mTarget == null || mTarget.getVisibility() == GONE) return;
@@ -257,6 +248,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         final int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
         final int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
 
+        boolean reMeasureContentView = mHelper.isFitsizable();
+
+        // 根据parent决定child大小
         int childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec, 0, lp.width);
         int childHeightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, 0, lp.height);
 
@@ -265,11 +259,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         int widthMode = MeasureSpec.getMode(childWidthMeasureSpec);
         int heightMode = MeasureSpec.getMode(childHeightMeasureSpec);
 
-        if (reMeasure) {
-            widthSize = Math.max(mTarget.getMeasuredWidth(), widthSize);
-            heightSize = Math.max(mTarget.getMeasuredHeight(), heightSize);
-        }
-        boolean reMeasureContentView = mHelper.isFitsizable();
         int gravity = mHelper.getPopupGravity();
 
         //针对关联anchorView和对齐模式的测量（如果允许resize）
@@ -347,8 +336,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
 
         if (mHelper.getMinWidth() > 0 && widthSize < mHelper.getMinWidth()) {
-            // 父控件小于最小宽度，意味着content也小于，此时除了设置父控件最小宽度外，也要设置子控件
-            adjustContentViewMeasure(mTarget, mHelper.getMinWidth(), 0);
             widthSize = mHelper.getMinWidth();
             widthMode = MeasureSpec.EXACTLY;
             reMeasureContentView = true;
@@ -360,8 +347,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
 
         if (mHelper.getMinHeight() > 0 && heightSize < mHelper.getMinHeight()) {
-            // 父控件小于最小高度，意味着content也小于，此时除了设置父控件最小高度外，也要设置子控件
-            adjustContentViewMeasure(mTarget, 0, mHelper.getMinHeight());
             heightSize = mHelper.getMinHeight();
             heightMode = MeasureSpec.EXACTLY;
             reMeasureContentView = true;
@@ -379,22 +364,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         View contentView = mTarget.findViewById(mHelper.contentRootId);
         if (contentView != null && reMeasureContentView) {
             contentView.measure(childWidthMeasureSpec, childHeightMeasureSpec);
-        }
-    }
-
-    void adjustContentViewMeasure(View target, int width, int height) {
-        if (target == null) return;
-        View contentView = mTarget.findViewById(mHelper.contentRootId);
-        if (contentView != null) {
-            LayoutParams p = contentView.getLayoutParams();
-            if (p != null) {
-                if (width != 0) {
-                    p.width = width;
-                }
-                if (height != 0) {
-                    p.height = height;
-                }
-            }
         }
     }
 
@@ -668,7 +637,13 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                     popupRect.set(contentRect);
                     mHelper.onPopupLayout(popupRect, anchorRect);
                 }
-                reMeasure = false;
+                if (!lastPopupRect.equals(contentRect)) {
+                    mHelper.onSizeChange(lastPopupRect.width(),
+                                         lastPopupRect.height(),
+                                         contentRect.width(),
+                                         contentRect.height());
+                    lastPopupRect.set(contentRect);
+                }
             }
         }
     }

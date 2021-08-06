@@ -2,12 +2,10 @@ package razerdp.demo.popup.options;
 
 import android.content.Context;
 import android.view.Gravity;
-import android.view.View;
 import android.view.animation.Animation;
 
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.demo.model.DemoCommonUsageInfo;
-import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.util.animation.AnimationHelper;
 import razerdp.util.animation.TranslationConfig;
 
@@ -20,11 +18,6 @@ public abstract class BaseOptionPopup<T extends DemoCommonUsageInfo> extends Bas
     public BaseOptionPopup(Context context) {
         super(context);
         setPopupGravity(Gravity.BOTTOM);
-    }
-
-    @Override
-    public void onViewCreated(View contentView) {
-        ButterKnifeUtil.bind(this, contentView);
     }
 
     @Override

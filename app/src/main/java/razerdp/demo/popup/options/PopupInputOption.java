@@ -8,16 +8,15 @@ import android.view.animation.Animation;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.PopupOptionInputBinding;
 import razerdp.demo.base.baseadapter.OnItemClickListener;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.model.common.CommonInputInfo;
 import razerdp.demo.utils.UIHelper;
-import razerdp.demo.widget.DPTextView;
 import razerdp.demo.widget.decoration.GridItemDecoration;
 import razerdp.demo.widget.decoration.SpaceOption;
 import razerdp.util.animation.AnimationHelper;
@@ -27,15 +26,7 @@ import razerdp.util.animation.TranslationConfig;
  * Created by 大灯泡 on 2019/9/22.
  */
 public class PopupInputOption extends BaseOptionPopup<CommonInputInfo> {
-    AppCompatCheckBox mCheckAlignToRoot;
-    AppCompatCheckBox mCheckAlignToView;
-    AppCompatCheckBox mCheckAlignAnimate;
-    AppCompatCheckBox mCheckAjustInput;
-    AppCompatCheckBox mCheckAutoOpen;
-    AppCompatCheckBox mCheckIgnore;
-    AppCompatCheckBox mCheckForce;
-    DPTextView mTvGo;
-    RecyclerView rvContent;
+    PopupOptionInputBinding mBinding;
 
     SimpleRecyclerViewAdapter<PopupSlideOption.Info> mAdapter;
 
@@ -48,14 +39,16 @@ public class PopupInputOption extends BaseOptionPopup<CommonInputInfo> {
         infos.add(new PopupSlideOption.Info(Gravity.RIGHT, "Gravity.RIGHT"));
         infos.add(new PopupSlideOption.Info(Gravity.BOTTOM, "Gravity.BOTTOM", true));
         infos.add(new PopupSlideOption.Info(Gravity.CENTER_VERTICAL, "Gravity.CENTER_VERTICAL"));
-        infos.add(new PopupSlideOption.Info(Gravity.CENTER_HORIZONTAL, "Gravity.CENTER_HORIZONTAL"));
+        infos.add(new PopupSlideOption.Info(Gravity.CENTER_HORIZONTAL,
+                                            "Gravity.CENTER_HORIZONTAL"));
         infos.add(new PopupSlideOption.Info(Gravity.CENTER, "Gravity.CENTER"));
         mAdapter = new SimpleRecyclerViewAdapter<>(context, infos);
         mAdapter.setHolder(PopupSlideOption.InnerViewHolder.class);
-        rvContent.setLayoutManager(new GridLayoutManager(context, 2));
-        rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(UIHelper.DP12)
-                                                                   .build()));
-        rvContent.setItemAnimator(null);
+        mBinding.rvContent.setLayoutManager(new GridLayoutManager(context, 2));
+        mBinding.rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(
+                UIHelper.DP12)
+                                                                            .build()));
+        mBinding.rvContent.setItemAnimator(null);
         mAdapter.setOnItemClickListener(new OnItemClickListener<PopupSlideOption.Info>() {
             @Override
             public void onItemClick(View v, int position, PopupSlideOption.Info data) {
@@ -63,10 +56,14 @@ public class PopupInputOption extends BaseOptionPopup<CommonInputInfo> {
                 mAdapter.notifyItemChanged(position);
             }
         });
-        rvContent.setAdapter(mAdapter);
-
+        mBinding.rvContent.setAdapter(mAdapter);
+        mBinding.tvGo.setOnClickListener(v -> ok());
     }
 
+    @Override
+    public void onViewCreated(@NonNull View contentView) {
+        mBinding = PopupOptionInputBinding.bind(contentView);
+    }
 
     @Override
     protected Animation onCreateShowAnimation() {
@@ -85,24 +82,24 @@ public class PopupInputOption extends BaseOptionPopup<CommonInputInfo> {
 
     void ok() {
         int keyboardFlag = 0;
-        if (mCheckAlignAnimate.isChecked()) {
+        if (mBinding.checkAlignAnimate.isChecked()) {
             keyboardFlag |= BasePopupWindow.FLAG_KEYBOARD_ANIMATE_ALIGN;
         }
-        if (mCheckAlignToRoot.isChecked()) {
+        if (mBinding.checkAlignToRoot.isChecked()) {
             keyboardFlag |= BasePopupWindow.FLAG_KEYBOARD_ALIGN_TO_ROOT;
         }
-        if (mCheckAlignToView.isChecked()) {
+        if (mBinding.checkAlignToView.isChecked()) {
             keyboardFlag |= BasePopupWindow.FLAG_KEYBOARD_ALIGN_TO_VIEW;
         }
-        if (mCheckForce.isChecked()) {
+        if (mBinding.checkForce.isChecked()) {
             keyboardFlag |= BasePopupWindow.FLAG_KEYBOARD_FORCE_ADJUST;
         }
-        if (mCheckIgnore.isChecked()){
+        if (mBinding.checkIgnore.isChecked()) {
             keyboardFlag |= BasePopupWindow.FLAG_KEYBOARD_IGNORE_OVER;
         }
         mInfo.keyboardFlag = keyboardFlag;
-        mInfo.adjust = mCheckAjustInput.isChecked();
-        mInfo.autoOpen = mCheckAutoOpen.isChecked();
+        mInfo.adjust = mBinding.checkAjustInput.isChecked();
+        mInfo.autoOpen = mBinding.checkAutoOpen.isChecked();
         int gravity = Gravity.NO_GRAVITY;
         for (PopupSlideOption.Info data : mAdapter.getDatas()) {
             if (data.checked) {

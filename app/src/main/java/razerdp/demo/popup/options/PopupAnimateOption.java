@@ -1,15 +1,14 @@
 package razerdp.demo.popup.options;
 
 import android.content.Context;
+import android.view.View;
 import android.view.animation.Animation;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatCheckBox;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.PopupOptionAnimateBinding;
 import razerdp.demo.model.common.CommonAnimateInfo;
-import razerdp.demo.widget.DPTextView;
 
 /**
  * Created by 大灯泡 on 2019/9/20
@@ -17,13 +16,7 @@ import razerdp.demo.widget.DPTextView;
  * Description：{@link CommonAnimateInfo}
  */
 public class PopupAnimateOption extends BaseOptionPopup<CommonAnimateInfo> {
-    TextView tvShow;
-    LinearLayout layoutSelectShow;
-    TextView tvDismiss;
-    LinearLayout layoutSelectDismiss;
-    AppCompatCheckBox checkClipchildren;
-    AppCompatCheckBox checkBlur;
-    DPTextView tvGo;
+    PopupOptionAnimateBinding mBinding;
 
 
     PopupSelectShowAnimate popupSelectShowAnimate;
@@ -39,12 +32,17 @@ public class PopupAnimateOption extends BaseOptionPopup<CommonAnimateInfo> {
     public PopupAnimateOption(Context context) {
         super(context);
         setContentView(R.layout.popup_option_animate);
-        checkClipchildren.setChecked(true);
+        mBinding.checkClipchildren.setChecked(true);
         setAutoMirrorEnable(true);
+        mBinding.tvShow.setOnClickListener(v -> selectShow());
+        mBinding.tvDismiss.setOnClickListener(v -> selectDismiss());
+        mBinding.tvGo.setOnClickListener(v -> ok());
     }
 
-
-
+    @Override
+    public void onViewCreated(@NonNull View contentView) {
+        mBinding = PopupOptionAnimateBinding.bind(contentView);
+    }
 
     void selectShow() {
         if (popupSelectShowAnimate == null) {
@@ -54,7 +52,7 @@ public class PopupAnimateOption extends BaseOptionPopup<CommonAnimateInfo> {
                 public void onSelected(@Nullable String name, @Nullable Animation animation) {
                     showName = name;
                     showAnimation = animation;
-                    tvShow.setText(name);
+                    mBinding.tvShow.setText(name);
                 }
             });
         }
@@ -69,7 +67,7 @@ public class PopupAnimateOption extends BaseOptionPopup<CommonAnimateInfo> {
                 public void onSelected(@Nullable String name, @Nullable Animation animation) {
                     dissName = name;
                     dismissAnimation = animation;
-                    tvDismiss.setText(name);
+                    mBinding.tvDismiss.setText(name);
                 }
             });
         }
@@ -78,8 +76,8 @@ public class PopupAnimateOption extends BaseOptionPopup<CommonAnimateInfo> {
 
     @Override
     public void showPopupWindow() {
-        tvShow.setText(showName);
-        tvDismiss.setText(dissName);
+        mBinding.tvShow.setText(showName);
+        mBinding.tvDismiss.setText(dissName);
         super.showPopupWindow();
     }
 
@@ -87,8 +85,8 @@ public class PopupAnimateOption extends BaseOptionPopup<CommonAnimateInfo> {
         if (mInfo != null) {
             mInfo.showAnimation = showAnimation;
             mInfo.dismissAnimation = dismissAnimation;
-            mInfo.blur = checkBlur.isChecked();
-            mInfo.clip = checkClipchildren.isChecked();
+            mInfo.blur = mBinding.checkBlur.isChecked();
+            mInfo.clip = mBinding.checkClipchildren.isChecked();
         }
         dismiss();
     }
