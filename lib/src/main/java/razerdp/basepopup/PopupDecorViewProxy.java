@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Message;
 import android.util.LayoutDirection;
@@ -38,7 +37,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
     private Rect contentRect = new Rect();
     private Rect contentBounds = new Rect();
     private Rect touchableRect = new Rect();
-    private Rect touchableRectOnNoKeyboard = new Rect();
 
     private int childLeftMargin;
     private int childTopMargin;
@@ -57,7 +55,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
     Rect keyboardBoundsCache;
     boolean keyboardVisibleCache = false;
-    Point lastKeyboardOffset = new Point();
 
     private PopupDecorViewProxy(Context context) {
         super(context);
@@ -613,14 +610,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                         }
                     }
                 }
-                //可点击区域
-                touchableRect.set(contentRect);
-                touchableRect.left += childLeftMargin;
-                touchableRect.top += childTopMargin;
-                touchableRect.right -= childRightMargin;
-                touchableRect.bottom -= childBottomMargin;
-                touchableRectOnNoKeyboard.set(touchableRect);
-                touchableRect.offset(lastKeyboardOffset.x, lastKeyboardOffset.y);
 
                 child.layout(contentRect.left,
                              contentRect.top,
@@ -681,8 +670,11 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
         int x = (int) ev.getX();
         int y = (int) ev.getY();
-        if (!touchableRect.contains(x, y)) {
-            return mMaskLayout.dispatchTouchEvent(ev);
+        if (mTarget != null) {
+            mTarget.getGlobalVisibleRect(touchableRect);
+            if (!touchableRect.contains(x, y)) {
+                return mMaskLayout.dispatchTouchEvent(ev);
+            }
         }
         return super.dispatchTouchEvent(ev);
     }
@@ -871,13 +863,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
 
         if (isVisible) {
-            touchableRectOnNoKeyboard.set(touchableRect);
-            lastKeyboardOffset.set(offsetX, offsetY);
-            touchableRect.offset(offsetX, offsetY);
             lastKeyboardBounds.set(keyboardBounds);
         } else {
-            lastKeyboardOffset.set(offsetX, offsetY);
-            touchableRect.set(touchableRectOnNoKeyboard);
             lastKeyboardBounds.setEmpty();
         }
     }
