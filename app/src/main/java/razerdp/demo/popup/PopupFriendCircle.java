@@ -9,16 +9,11 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.PopupFriendCircleCommentBinding;
 import razerdp.demo.model.friendcircle.FriendCircleInfo;
-import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.ViewUtil;
 import razerdp.demo.utils.rx.RxCall;
 import razerdp.demo.utils.rx.RxHelper;
@@ -29,13 +24,8 @@ import razerdp.demo.utils.rx.RxHelper;
  * Description：朋友圈
  */
 public class PopupFriendCircle extends BasePopupWindow {
+    PopupFriendCircleCommentBinding mBinding;
 
-    @BindView(R.id.iv_star)
-    ImageView ivStar;
-    @BindView(R.id.layout_star)
-    LinearLayout layoutStar;
-    @BindView(R.id.tv_star)
-    TextView tvStar;
 
     FriendCircleInfo info;
     ValueAnimator valueAnimator;
@@ -47,13 +37,14 @@ public class PopupFriendCircle extends BasePopupWindow {
     public PopupFriendCircle(Context context) {
         super(context);
         setContentView(R.layout.popup_friend_circle_comment);
-        ViewUtil.setViewPivotRatio(ivStar, 0.5f, 0.5f);
+        ViewUtil.setViewPivotRatio(mBinding.ivStar, 0.5f, 0.5f);
         setBackgroundColor(0);
+        mBinding.tvStar.setOnClickListener(v -> onStarClick());
     }
 
     @Override
     public void onViewCreated(View contentView) {
-        ButterKnifeUtil.bind(this, contentView);
+        mBinding = PopupFriendCircleCommentBinding.bind(contentView);
     }
 
 
@@ -74,13 +65,13 @@ public class PopupFriendCircle extends BasePopupWindow {
     @Override
     protected Animation onCreateShowAnimation() {
         Animation animation = new TranslateAnimation(Animation.RELATIVE_TO_PARENT,
-                1f,
-                Animation.RELATIVE_TO_PARENT,
-                0,
-                Animation.RELATIVE_TO_PARENT,
-                0,
-                Animation.RELATIVE_TO_PARENT,
-                0);
+                                                     1f,
+                                                     Animation.RELATIVE_TO_PARENT,
+                                                     0,
+                                                     Animation.RELATIVE_TO_PARENT,
+                                                     0,
+                                                     Animation.RELATIVE_TO_PARENT,
+                                                     0);
         animation.setInterpolator(new DecelerateInterpolator());
         animation.setDuration(350);
         return animation;
@@ -89,13 +80,13 @@ public class PopupFriendCircle extends BasePopupWindow {
     @Override
     protected Animation onCreateDismissAnimation() {
         Animation animation = new TranslateAnimation(Animation.RELATIVE_TO_PARENT,
-                0f,
-                Animation.RELATIVE_TO_PARENT,
-                1f,
-                Animation.RELATIVE_TO_PARENT,
-                0,
-                Animation.RELATIVE_TO_PARENT,
-                0);
+                                                     0f,
+                                                     Animation.RELATIVE_TO_PARENT,
+                                                     1f,
+                                                     Animation.RELATIVE_TO_PARENT,
+                                                     0,
+                                                     Animation.RELATIVE_TO_PARENT,
+                                                     0);
         animation.setInterpolator(new DecelerateInterpolator());
         animation.setDuration(350);
         return animation;
@@ -103,11 +94,10 @@ public class PopupFriendCircle extends BasePopupWindow {
 
     public PopupFriendCircle setInfo(FriendCircleInfo info) {
         this.info = info;
-        tvStar.setText(info.started ? "取消" : "赞");
+        mBinding.tvStar.setText(info.started ? "取消" : "赞");
         return this;
     }
 
-    @OnClick(R.id.layout_star)
     void onStarClick() {
         info.started = !info.started;
 
@@ -119,8 +109,8 @@ public class PopupFriendCircle extends BasePopupWindow {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     float scale = (float) animation.getAnimatedValue();
-                    ivStar.setScaleX(scale);
-                    ivStar.setScaleY(scale);
+                    mBinding.tvStar.setScaleX(scale);
+                    mBinding.tvStar.setScaleY(scale);
                 }
             });
             valueAnimator.addListener(new AnimatorListenerAdapter() {

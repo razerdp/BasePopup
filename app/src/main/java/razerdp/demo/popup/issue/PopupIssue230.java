@@ -4,22 +4,18 @@ import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
-import android.widget.Button;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ItemPopup230Binding;
+import razerdp.basepopup.databinding.PopupIssue230Binding;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
-import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.RandomUtil;
 import razerdp.demo.utils.UIHelper;
 import razerdp.util.animation.AnimationHelper;
@@ -29,9 +25,7 @@ import razerdp.util.animation.ScaleConfig;
  * Created by 大灯泡 on 2019/10/9.
  */
 public class PopupIssue230 extends BasePopupWindow {
-
-    @BindView(R.id.rv_content)
-    RecyclerView mRvContent;
+    PopupIssue230Binding mBinding;
 
     SimpleRecyclerViewAdapter<String> mAdapter;
 
@@ -49,13 +43,13 @@ public class PopupIssue230 extends BasePopupWindow {
         mAdapter = new SimpleRecyclerViewAdapter<>(context, data);
         mAdapter.setHolder(InnerViewHolder.class)
                 .outher(this);
-        mRvContent.setLayoutManager(new LinearLayoutManager(context));
-        mRvContent.setAdapter(mAdapter);
+        mBinding.rvContent.setLayoutManager(new LinearLayoutManager(context));
+        mBinding.rvContent.setAdapter(mAdapter);
     }
 
     @Override
     public void onViewCreated(View contentView) {
-        ButterKnifeUtil.bind(this, contentView);
+        mBinding = PopupIssue230Binding.bind(contentView);
     }
 
 
@@ -78,15 +72,12 @@ public class PopupIssue230 extends BasePopupWindow {
     }
 
     class InnerViewHolder extends BaseSimpleRecyclerViewHolder<String> {
-
-        @BindView(R.id.tv_content)
-        TextView mTvContent;
-        @BindView(R.id.btn_del)
-        Button mBtnDel;
+        ItemPopup230Binding mBinding;
 
         public InnerViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnifeUtil.bind(this, itemView);
+            mBinding = ItemPopup230Binding.bind(itemView);
+            mBinding.btnDel.setOnClickListener(v -> del());
         }
 
         @Override
@@ -96,10 +87,9 @@ public class PopupIssue230 extends BasePopupWindow {
 
         @Override
         public void onBindData(String data, int position) {
-            mTvContent.setText(data);
+            mBinding.tvContent.setText(data);
         }
 
-        @OnClick(R.id.btn_del)
         void del() {
             delItem(getData());
         }

@@ -2,28 +2,26 @@ package razerdp.demo.ui.issuestest;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.basepopup.databinding.ActivityIssue358Binding;
+import razerdp.basepopup.databinding.PopupIssue358Binding;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.utils.ViewUtil;
-import razerdp.demo.widget.DPTextView;
 import razerdp.util.KeyboardUtils;
 import razerdp.util.animation.AnimationHelper;
 import razerdp.util.animation.ScaleConfig;
@@ -33,10 +31,7 @@ import razerdp.util.animation.ScaleConfig;
  * <p>
  * https://github.com/razerdp/BasePopup/issues/358
  */
-public class Issue358TestActivity extends BaseActivity {
-    @BindView(R.id.showPopBt)
-    DPTextView mShowPopBt;
-
+public class Issue358TestActivity extends BaseBindingActivity<ActivityIssue358Binding> {
     Issue358Popup issue358Popup;
 
     @Override
@@ -45,17 +40,16 @@ public class Issue358TestActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_issue_358;
+    public ActivityIssue358Binding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityIssue358Binding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
-
+        mBinding.showPopBt.setOnClickListener(v -> onViewClicked());
     }
 
 
-    @OnClick(R.id.showPopBt)
     public void onViewClicked() {
         if (issue358Popup == null) {
             issue358Popup = new Issue358Popup(this);
@@ -65,30 +59,27 @@ public class Issue358TestActivity extends BaseActivity {
 
     static class Issue358Popup extends BasePopupWindow {
 
-        @BindView(R.id.rv_content)
-        RecyclerView rvContent;
-        @BindView(R.id.container)
-        LinearLayout container;
+        PopupIssue358Binding mBinding;
 
         public Issue358Popup(Context context) {
             super(context);
             setContentView(R.layout.popup_issue_358);
-
-            rvContent.setLayoutManager(new LinearLayoutManager(context));
+            setKeyboardAdaptive(true);
+            mBinding.rvContent.setLayoutManager(new LinearLayoutManager(context));
             List<Integer> data = new ArrayList<>();
             for (int i = 0; i < 100; i++) {
                 data.add(i);
             }
-            SimpleRecyclerViewAdapter<Integer> adapter = new SimpleRecyclerViewAdapter<>(context, data);
+            SimpleRecyclerViewAdapter<Integer> adapter = new SimpleRecyclerViewAdapter<>(context,
+                                                                                         data);
             adapter.setHolder(Holder.class).outher(this);
-            rvContent.setAdapter(adapter);
+            mBinding.rvContent.setAdapter(adapter);
         }
 
 
         @Override
         public void onViewCreated(@NonNull View contentView) {
-            super.onViewCreated(contentView);
-            ButterKnife.bind(this, contentView);
+            mBinding = PopupIssue358Binding.bind(contentView);
         }
 
         @Override
@@ -122,7 +113,8 @@ public class Issue358TestActivity extends BaseActivity {
                     @Override
                     public void onFocusChange(View v, boolean hasFocus) {
                         if (hasFocus) {
-                            setAdjustInputMode(v, FLAG_KEYBOARD_ALIGN_TO_VIEW | FLAG_KEYBOARD_ANIMATE_ALIGN);
+                            setKeyboardAdaptionMode(v,
+                                                    FLAG_KEYBOARD_ALIGN_TO_VIEW | FLAG_KEYBOARD_ANIMATE_ALIGN);
                             if (KeyboardUtils.isOpen()) {
                                 updateKeyboardAlign();
                             } else {

@@ -9,12 +9,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.1'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.4.30"
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.android.tools.build:gradle:7.0.0'
     }
 }
 
@@ -38,8 +33,8 @@ ext {
     minSdkVersion = 19
     minLibSdkVersion = 16
     targetSdkVersion = 30
-    versionCode = 310
-    versionName = '3.1.4'
+    versionCode = 319
+    versionName = '3.1.8'
 
     candy = false
     group = 'io.github.razerdp'

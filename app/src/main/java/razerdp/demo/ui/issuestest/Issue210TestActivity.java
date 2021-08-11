@@ -1,14 +1,15 @@
 package razerdp.demo.ui.issuestest;
 
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatCheckBox;
-import butterknife.BindView;
-import butterknife.OnClick;
-import razerdp.basepopup.R;
+import androidx.viewbinding.ViewBinding;
+import razerdp.basepopup.databinding.ActivityIssue210Binding;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.popup.issue.PopupIssue210;
 
 /**
@@ -16,12 +17,7 @@ import razerdp.demo.popup.issue.PopupIssue210;
  * <p>
  * 针对Issue：https://github.com/razerdp/BasePopup/issues/210
  */
-public class Issue210TestActivity extends BaseActivity {
-    @BindView(R.id.tv_bar)
-    TextView mTvBar;
-    @BindView(R.id.check_outside_touch)
-    AppCompatCheckBox mCheckOutsideTouch;
-
+public class Issue210TestActivity extends BaseBindingActivity<ActivityIssue210Binding> {
     PopupIssue210 mPopupIssue210;
 
     @Override
@@ -30,21 +26,21 @@ public class Issue210TestActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_issue_210;
+    public ActivityIssue210Binding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityIssue210Binding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
+        mBinding.tvBar.setOnClickListener(v -> show(v));
 
     }
 
-    @OnClick(R.id.tv_bar)
     void show(View v) {
         if (mPopupIssue210 == null) {
             mPopupIssue210 = new PopupIssue210(this);
         }
-        mPopupIssue210.setOutSideTouchable(mCheckOutsideTouch.isChecked());
+        mPopupIssue210.setOutSideTouchable(mBinding.checkOutsideTouch.isChecked());
         mPopupIssue210.showPopupWindow(v);
     }
 

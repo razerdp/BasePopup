@@ -8,14 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ComponentActivity;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
+import androidx.annotation.NonNull;
+import androidx.core.app.ComponentActivity;
 import razerdp.basepopup.R;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.imageloader.ImageLoaderManager;
@@ -24,7 +21,6 @@ import razerdp.demo.popup.PopupFriendCircle;
 import razerdp.demo.ui.photobrowser.PhotoBrowserImpl;
 import razerdp.demo.ui.photobrowser.PhotoBrowserProcessor;
 import razerdp.demo.utils.ActivityUtil;
-import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.ToolUtil;
 import razerdp.demo.utils.UIHelper;
 import razerdp.demo.widget.DPImageView;
@@ -37,15 +33,10 @@ import razerdp.demo.widget.recyclerviewbox.layoutmanager.NineGridLayoutManager;
  * Description：
  */
 public class FriendCircleViewHolder extends BaseSimpleRecyclerViewHolder<FriendCircleInfo> {
-    @BindView(R.id.iv_avatar)
     DPImageView ivAvatar;
-    @BindView(R.id.tv_nick)
     TextView tvNick;
-    @BindView(R.id.tv_content)
     TextView tvContent;
-    @BindView(R.id.rv_box)
     RecyclerViewBox rvBox;
-    @BindView(R.id.iv_comment)
     ImageView ivComment;
 
     NineGridLayoutManager manager;
@@ -56,9 +47,14 @@ public class FriendCircleViewHolder extends BaseSimpleRecyclerViewHolder<FriendC
 
     public FriendCircleViewHolder(@NonNull View itemView) {
         super(itemView);
-        ButterKnifeUtil.bind(this, itemView);
+        ivAvatar =  findViewById(R.id.iv_avatar);
+        tvNick =  findViewById(R.id.tv_nick);
+        tvContent =  findViewById(R.id.tv_content);
+        rvBox =  findViewById(R.id.rv_box);
+        ivComment =  findViewById(R.id.iv_comment);
         manager = new NineGridLayoutManager(UIHelper.dip2px(8));
         rvBox.setLayoutManager(manager);
+        ivComment.setOnClickListener(this::showPopup);
     }
 
     @Override
@@ -81,7 +77,6 @@ public class FriendCircleViewHolder extends BaseSimpleRecyclerViewHolder<FriendC
         }
     }
 
-    @OnClick(R.id.iv_comment)
     void showPopup(View v) {
         if (popupFriendCircle == null) {
             popupFriendCircle = new PopupFriendCircle(getContext());

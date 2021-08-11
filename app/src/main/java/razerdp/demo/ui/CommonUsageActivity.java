@@ -2,19 +2,18 @@ package razerdp.demo.ui;
 
 import android.content.Intent;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import razerdp.basepopup.R;
-import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.basepopup.databinding.ActivityCommonUsageBinding;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.base.baseadapter.BaseMultiRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.MultiRecyclerViewAdapter;
 import razerdp.demo.base.baseadapter.MultiType;
@@ -37,16 +36,16 @@ import razerdp.demo.model.common.CommonFriendCircleInfo;
 import razerdp.demo.model.common.CommonFullScreenActivityInfo;
 import razerdp.demo.model.common.CommonGestureNavInfo;
 import razerdp.demo.model.common.CommonInputInfo;
+import razerdp.demo.model.common.CommonPriorityInfo;
 import razerdp.demo.model.common.CommonRTLInfo;
 import razerdp.demo.model.common.CommonSlideInfo;
 import razerdp.demo.model.common.CommonUpdateInfo;
 import razerdp.demo.model.common.ScreenRotateActivityInfo;
+import razerdp.demo.model.common.WidthAndHeightLimitInfo;
 import razerdp.demo.model.lifecycle.ShowInServiceInfo;
 import razerdp.demo.model.lifecycle.ShowOnCreateInfo;
-import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.DescBuilder;
 import razerdp.demo.utils.UIHelper;
-import razerdp.demo.widget.DPRecyclerView;
 import razerdp.demo.widget.DPTextView;
 import razerdp.demo.widget.decoration.GridItemDecoration;
 import razerdp.demo.widget.decoration.SpaceOption;
@@ -56,7 +55,7 @@ import razerdp.demo.widget.decoration.SpaceOption;
  * <p>
  * Description：常见例子
  */
-public class CommonUsageActivity extends BaseActivity {
+public class CommonUsageActivity extends BaseBindingActivity<ActivityCommonUsageBinding> {
     public static final String DESC = DescBuilder.get()
             .append("常见样式的弹窗")
             .append("朋友圈评论，跟随朋友圈滑动更新")
@@ -65,11 +64,6 @@ public class CommonUsageActivity extends BaseActivity {
             .append("输入法适配")
             .append("更多")
             .build();
-    @BindView(R.id.rv_content)
-    DPRecyclerView rvContent;
-    @BindView(R.id.tv_any_position)
-    TextView tvAnyPos;
-
     MultiRecyclerViewAdapter mAdapter;
 
 
@@ -79,8 +73,8 @@ public class CommonUsageActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_common_usage;
+    public ActivityCommonUsageBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityCommonUsageBinding.inflate(layoutInflater);
     }
 
     @Override
@@ -92,9 +86,9 @@ public class CommonUsageActivity extends BaseActivity {
                 return mAdapter.getItemViewType(position) == 0 ? 2 : 1;
             }
         });
-        rvContent.setLayoutManager(gridLayoutManager);
-        rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(UIHelper.DP8)
-                .build()));
+        mBinding.rvContent.setLayoutManager(gridLayoutManager);
+        mBinding.rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(UIHelper.DP8)
+                                                                   .build()));
         mAdapter = new MultiRecyclerViewAdapter(this, createItem());
         mAdapter.appendHolder(InnerTitleViewHolder.class, 0)
                 .appendHolder(InnerItemViewHolder.class, 1);
@@ -102,7 +96,7 @@ public class CommonUsageActivity extends BaseActivity {
             @Override
             public void onItemClick(View v, int position, Object data) {
                 if (data instanceof CommonAnyPosInfo) {
-                    ((CommonAnyPosInfo) data).toShow(tvAnyPos);
+                    ((CommonAnyPosInfo) data).toShow(mBinding.tvAnyPosition);
                     return;
                 }
                 if (data instanceof DemoCommonUsageInfo) {
@@ -110,7 +104,7 @@ public class CommonUsageActivity extends BaseActivity {
                 }
             }
         });
-        rvContent.setAdapter(mAdapter);
+        mBinding.rvContent.setAdapter(mAdapter);
 
     }
 
@@ -126,6 +120,9 @@ public class CommonUsageActivity extends BaseActivity {
         result.add(new DemoCommonUsageTitle("PopupWindow控制相关"));
         result.add(new CommonControllerInfo());
         result.add(new CommonBarControllerInfo());
+        result.add(new CommonPriorityInfo());
+        result.add(new DemoCommonUsageTitle("宽高限定"));
+        result.add(new WidthAndHeightLimitInfo());
         result.add(new DemoCommonUsageTitle("动画相关"));
         result.add(new CommonAnimateInfo());
         result.add(new DemoCommonUsageTitle("背景相关"));
@@ -152,12 +149,11 @@ public class CommonUsageActivity extends BaseActivity {
 
     static class InnerTitleViewHolder extends BaseMultiRecyclerViewHolder<DemoCommonUsageTitle> {
 
-        @BindView(R.id.tv_title)
         TextView tvTitle;
 
         public InnerTitleViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnifeUtil.bind(this, itemView);
+            tvTitle =  findViewById(R.id.tv_title);
         }
 
         @Override
@@ -174,18 +170,19 @@ public class CommonUsageActivity extends BaseActivity {
 
     static class InnerItemViewHolder extends BaseMultiRecyclerViewHolder<DemoCommonUsageInfo> {
 
-        @BindView(R.id.tv_fun)
         TextView tvFun;
-        @BindView(R.id.divider)
         View divider;
-        @BindView(R.id.tv_option)
         DPTextView tvOption;
-        @BindView(R.id.tv_source)
         DPTextView tvSource;
 
         public InnerItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnifeUtil.bind(this, itemView);
+            tvFun =  findViewById(R.id.tv_fun);
+            divider =  findViewById(R.id.divider);
+            tvOption =  findViewById(R.id.tv_option);
+            tvSource =  findViewById(R.id.tv_source);
+            tvOption.setOnClickListener(this::showOption);
+            tvSource.setOnClickListener(this::showSource);
         }
 
         @Override
@@ -200,12 +197,10 @@ public class CommonUsageActivity extends BaseActivity {
             tvOption.setText(TextUtils.isEmpty(data.option) ? "配置" : data.option);
         }
 
-        @OnClick(R.id.tv_option)
         void showOption(View v) {
             getData().toOption(v);
         }
 
-        @OnClick(R.id.tv_source)
         void showSource(View v) {
             getData().toSource(v);
         }

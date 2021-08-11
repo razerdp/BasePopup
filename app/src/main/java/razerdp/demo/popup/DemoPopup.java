@@ -3,27 +3,24 @@ package razerdp.demo.popup;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Rect;
+import android.service.autofill.TextValueSanitizer;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
-import butterknife.BindView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
-import razerdp.demo.utils.ButterKnifeUtil;
+import razerdp.basepopup.databinding.PopupDemoBinding;
 import razerdp.util.animation.AnimationHelper;
-import razerdp.util.animation.ScaleConfig;
 import razerdp.util.animation.TranslationConfig;
 
 /**
  * Created by 大灯泡 on 2019/9/20.
  */
 public class DemoPopup extends BasePopupWindow {
-    @BindView(R.id.tv_desc)
-    public TextView mTvDesc;
+    PopupDemoBinding mBinding;
 
     OnPopupLayoutListener layoutListener;
 
@@ -44,27 +41,31 @@ public class DemoPopup extends BasePopupWindow {
 
     @Override
     public void onViewCreated(View contentView) {
-        ButterKnifeUtil.bind(this, contentView);
+        mBinding = PopupDemoBinding.bind(contentView);
     }
 
     @Override
     protected Animation onCreateShowAnimation() {
         return AnimationHelper.asAnimation()
-                .withTranslation(TranslationConfig.FROM_BOTTOM)
+                .withTranslation(TranslationConfig.FROM_TOP)
                 .toShow();
     }
 
     @Override
     protected Animation onCreateDismissAnimation() {
         return AnimationHelper.asAnimation()
-                .withScale(ScaleConfig.CENTER)
+                .withTranslation(TranslationConfig.TO_TOP)
                 .toDismiss();
     }
 
 
     public DemoPopup setText(CharSequence text) {
-        mTvDesc.setText(text);
+        mBinding.tvDesc.setText(text);
         return this;
+    }
+
+    public TextView getTextView() {
+        return mBinding.tvDesc;
     }
 
     public DemoPopup setLayoutListener(OnPopupLayoutListener layoutListener) {

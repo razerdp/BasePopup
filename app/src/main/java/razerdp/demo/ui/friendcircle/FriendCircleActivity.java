@@ -1,17 +1,18 @@
 package razerdp.demo.ui.friendcircle;
 
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import razerdp.basepopup.R;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.viewbinding.ViewBinding;
+import razerdp.basepopup.databinding.ActivityFriendCircleBinding;
 import razerdp.demo.base.TestData;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.base.interfaces.ExtSimpleCallback;
 import razerdp.demo.model.friendcircle.FriendCircleInfo;
@@ -24,9 +25,7 @@ import razerdp.demo.widget.DPRecyclerView;
  * <p>
  * Description：朋友圈
  */
-public class FriendCircleActivity extends BaseActivity {
-    @BindView(R.id.rv_content)
-    DPRecyclerView rvContent;
+public class FriendCircleActivity extends BaseBindingActivity<ActivityFriendCircleBinding> {
 
     PopupCircleOption popupCircleOption;
 
@@ -36,17 +35,17 @@ public class FriendCircleActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_friend_circle;
+    public ActivityFriendCircleBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityFriendCircleBinding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
         SimpleRecyclerViewAdapter<FriendCircleInfo> adapter = new SimpleRecyclerViewAdapter<>(this);
         adapter.setHolder(FriendCircleViewHolder.class);
-        rvContent.setLayoutManager(new LinearLayoutManager(this));
-        rvContent.setItemAnimator(null);
-        rvContent.setAdapter(adapter);
+        mBinding.rvContent.setLayoutManager(new LinearLayoutManager(this));
+        mBinding.rvContent.setItemAnimator(null);
+        mBinding.rvContent.setAdapter(adapter);
         fetchData(adapter);
     }
 

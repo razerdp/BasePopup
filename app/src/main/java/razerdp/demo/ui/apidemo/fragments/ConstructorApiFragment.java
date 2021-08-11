@@ -16,9 +16,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import butterknife.BindView;
-import butterknife.OnClick;
+import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ApiDemoConstructorBinding;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.demo.ui.apidemo.ApiDemoActivity;
 import razerdp.demo.ui.apidemo.ApiDemoFragment;
@@ -30,20 +30,7 @@ import razerdp.demo.widget.DPTextView;
  * Created by 大灯泡 on 2020/4/4.
  * 构造器api
  */
-public class ConstructorApiFragment extends ApiDemoFragment {
-    @BindView(R.id.tv_api)
-    TextView mTvApi;
-    @BindView(R.id.tv_context)
-    DPTextView mTvContext;
-    @BindView(R.id.tv_dialog)
-    DPTextView mTvDialog;
-    @BindView(R.id.tv_dialogfragment)
-    DPTextView mTvDialogFragment;
-    @BindView(R.id.tv_content)
-    TextView mTvContent;
-    @BindView(R.id.tv_tips)
-    TextView mTvTips;
-
+public class ConstructorApiFragment extends ApiDemoFragment<ApiDemoConstructorBinding> {
     int index = 0;
     DemoPopup curPopup;
     TestDialog mTestDialog;
@@ -53,8 +40,8 @@ public class ConstructorApiFragment extends ApiDemoFragment {
 
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.api_demo_constructor;
+    public ApiDemoConstructorBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ApiDemoConstructorBinding.inflate(layoutInflater);
     }
 
     @Override
@@ -64,6 +51,9 @@ public class ConstructorApiFragment extends ApiDemoFragment {
         mTestDialog.setOnClickListener(v -> curPopup.showPopupWindow());
         mTestDialogFragment = new TestDialogFragment();
         mTestDialogFragment.setOnClickListener(v -> curPopup.showPopupWindow());
+        mViewBinding.tvContext.setOnClickListener(v -> onContextPopupClick());
+        mViewBinding.tvDialog.setOnClickListener(v -> onDialogPopupClick());
+        mViewBinding.tvDialogfragment.setOnClickListener(v -> onDialogFragmentPopupClick());
         onSettingPopupSelected("BasePopupWindow(Context context)", 0);
     }
 
@@ -78,19 +68,19 @@ public class ConstructorApiFragment extends ApiDemoFragment {
 
     @Override
     protected void onSettingPopupSelected(String selected, int index) {
-        mTvApi.setText(selected);
+        mViewBinding.tvApi.setText(selected);
         this.index = index;
         curPopup = mDemoPopupSparseArray.get(index);
         boolean needPut = curPopup == null;
         switch (index) {
             case 0:
-                mTvContent.setText(R.string.api_constructor_context);
+                mViewBinding.tvContent.setText(R.string.api_constructor_context);
                 if (curPopup == null) {
                     curPopup = new DemoPopup(getContext());
                 }
                 break;
             case 1:
-                mTvContent.setText(R.string.api_constructor_dialog);
+                mViewBinding.tvContent.setText(R.string.api_constructor_dialog);
                 if (curPopup == null) {
                     curPopup = new DemoPopup(mTestDialog);
                 }
@@ -100,7 +90,7 @@ public class ConstructorApiFragment extends ApiDemoFragment {
                         .append("【注意】：DialogFragment在getDialog()!=null的情况下，会获取其Dialog的WindowToken。")
                         .setTextStyle(Typeface.DEFAULT_BOLD)
                         .setTextColorRes(R.color.common_red_light)
-                        .into(mTvContent);
+                        .into(mViewBinding.tvContent);
                 if (curPopup == null) {
                     curPopup = new DemoPopup(mTestDialogFragment);
                 }
@@ -111,35 +101,34 @@ public class ConstructorApiFragment extends ApiDemoFragment {
         }
     }
 
-    @OnClick(R.id.tv_context)
     void onContextPopupClick() {
         curPopup.showPopupWindow();
         if (index == 1) {
-            mTvTips.setText("此时Popup依附于Dialog，在Activity的Window中无法弹窗，待Dialog显示时会弹出");
+            mViewBinding.tvTips.setText("此时Popup依附于Dialog，在Activity的Window中无法弹窗，待Dialog显示时会弹出");
         } else if (index == 2) {
-            mTvTips.setText("此时Popup依附于DialogFragment，由于DialogFragment在显示的时候才能获取到WindowToken，此时无法弹出");
+            mViewBinding.tvTips.setText(
+                    "此时Popup依附于DialogFragment，由于DialogFragment在显示的时候才能获取到WindowToken，此时无法弹出");
         } else {
-            mTvTips.setText(null);
+            mViewBinding.tvTips.setText(null);
         }
     }
 
-    @OnClick(R.id.tv_dialog)
     void onDialogPopupClick() {
         mTestDialog.show();
         if (index == 2) {
-            mTvTips.setText("此时Popup依附于DialogFragment，由于DialogFragment在显示的时候才能获取到WindowToken，此时无法弹出");
+            mViewBinding.tvTips.setText(
+                    "此时Popup依附于DialogFragment，由于DialogFragment在显示的时候才能获取到WindowToken，此时无法弹出");
         } else {
-            mTvTips.setText(null);
+            mViewBinding.tvTips.setText(null);
         }
     }
 
-    @OnClick(R.id.tv_dialogfragment)
     void onDialogFragmentPopupClick() {
         mTestDialogFragment.show(getChildFragmentManager(), getClass().toString());
         if (index == 1) {
-            mTvTips.setText("此时Popup依附于Dialog，在Activity的Window中无法弹窗，待Dialog显示时会弹出");
+            mViewBinding.tvTips.setText("此时Popup依附于Dialog，在Activity的Window中无法弹窗，待Dialog显示时会弹出");
         } else {
-            mTvTips.setText(null);
+            mViewBinding.tvTips.setText(null);
         }
     }
 
@@ -183,7 +172,9 @@ public class ConstructorApiFragment extends ApiDemoFragment {
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View contentView = inflater.inflate(R.layout.dialog_fragment_api_constructor, container, false);
+            View contentView = inflater.inflate(R.layout.dialog_fragment_api_constructor,
+                                                container,
+                                                false);
             View tvShow = contentView.findViewById(R.id.tv_show);
             tvShow.setOnClickListener(v -> {
                 if (mOnClickListener != null) {

@@ -1,20 +1,19 @@
 package razerdp.demo.ui.issuestest.home;
 
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
-import java.util.ArrayList;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.R;
-import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.basepopup.databinding.ActivityIssueBinding;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.base.imageloader.ImageLoaderManager;
@@ -23,25 +22,20 @@ import razerdp.demo.ui.ActivityLauncher;
 import razerdp.demo.ui.photobrowser.PhotoBrowserImpl;
 import razerdp.demo.ui.photobrowser.PhotoBrowserProcessor;
 import razerdp.demo.utils.ActivityUtil;
-import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.DescBuilder;
 import razerdp.demo.utils.FillViewUtil;
 import razerdp.demo.utils.ToolUtil;
 import razerdp.demo.utils.UIHelper;
-import razerdp.demo.widget.DPRecyclerView;
 import razerdp.demo.widget.DPTextView;
 import razerdp.demo.widget.FlowLayout;
 
 /**
  * Created by 大灯泡 on 2019/9/22.
  */
-public class IssueHomeActivity extends BaseActivity {
+public class IssueHomeActivity extends BaseBindingActivity<ActivityIssueBinding> {
     public static final String DESC = DescBuilder.get()
             .append("关于Issue部分问题的测试Demo")
             .build();
-    @BindView(R.id.rv_content)
-    DPRecyclerView rvContent;
-
     SimpleRecyclerViewAdapter<IssueInfo> mAdapter;
     PhotoBrowserProcessor mPhotoBrowserProcessor;
 
@@ -51,42 +45,43 @@ public class IssueHomeActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_issue;
+    public ActivityIssueBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityIssueBinding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
-        rvContent.setLayoutManager(new LinearLayoutManager(this));
+        mBinding.rvContent.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new SimpleRecyclerViewAdapter<>(this, IssueHelper.addIssues(new ArrayList<>()));
         mAdapter.setHolder(InnerViewHolder.class)
                 .outher(this);
-        rvContent.setAdapter(mAdapter);
+        mBinding.rvContent.setAdapter(mAdapter);
     }
 
 
     class InnerViewHolder extends BaseSimpleRecyclerViewHolder<IssueInfo> {
 
-        @BindView(R.id.tv_issue)
         TextView mTvIssue;
-        @BindView(R.id.tv_title)
         TextView mTvTitle;
-        @BindView(R.id.tv_desc)
         TextView mTvDesc;
-        @BindView(R.id.layout_pic)
         FlowLayout mLayoutPic;
-        @BindView(R.id.divider)
         View mDivider;
-        @BindView(R.id.tv_to_web)
         DPTextView mTvToWeb;
-        @BindView(R.id.tv_go)
         DPTextView mTvGo;
-        @BindView(R.id.iv_state)
         ImageView ivState;
 
         public InnerViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnifeUtil.bind(this, itemView);
+            ivState =  findViewById(R.id.iv_state);
+            mTvIssue =  findViewById(R.id.tv_issue);
+            mTvTitle =  findViewById(R.id.tv_title);
+            mTvDesc =  findViewById(R.id.tv_desc);
+            mLayoutPic =  findViewById(R.id.layout_pic);
+            mDivider =  findViewById(R.id.divider);
+            mTvToWeb =  findViewById(R.id.tv_to_web);
+            mTvGo =  findViewById(R.id.tv_go);
+            mTvToWeb.setOnClickListener(v -> toWeb());
+            mTvGo.setOnClickListener(v -> toTarget());
         }
 
         @Override
@@ -116,10 +111,13 @@ public class IssueHomeActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     if (mPhotoBrowserProcessor == null) {
-                        mPhotoBrowserProcessor = PhotoBrowserProcessor.with(new PhotoBrowserImpl(data))
+                        mPhotoBrowserProcessor = PhotoBrowserProcessor.with(new PhotoBrowserImpl(
+                                data))
                                 .setExitViewProvider((from, exitPosition) -> {
-                                    InnerPicViewHolder holder = ToolUtil.cast(FillViewUtil.getHolder(mLayoutPic
-                                            .getChildAt(exitPosition)), InnerPicViewHolder.class);
+                                    InnerPicViewHolder holder = ToolUtil.cast(FillViewUtil.getHolder(
+                                            mLayoutPic
+                                                    .getChildAt(exitPosition)),
+                                                                              InnerPicViewHolder.class);
                                     return holder == null ? null : holder.ivIssuePreview;
                                 });
                     }
@@ -127,7 +125,8 @@ public class IssueHomeActivity extends BaseActivity {
                             .setPhotos(PhotoBrowserImpl.fromList(getData().pics, null))
                             .fromView((ImageView) v)
                             .setStartPosition(position)
-                            .start(ToolUtil.cast(ActivityUtil.getActivity(v.getContext()), ComponentActivity.class));
+                            .start(ToolUtil.cast(ActivityUtil.getActivity(v.getContext()),
+                                                 ComponentActivity.class));
                 }
             });
             return holder;
@@ -148,12 +147,10 @@ public class IssueHomeActivity extends BaseActivity {
             }
         }
 
-        @OnClick(R.id.tv_to_web)
         void toWeb() {
             ToolUtil.openInSystemBroswer(getContext(), getData().url);
         }
 
-        @OnClick(R.id.tv_go)
         void toTarget() {
             ActivityLauncher.start(getContext(), getData().activityClass);
         }

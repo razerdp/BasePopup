@@ -1,12 +1,11 @@
 package razerdp.demo.ui.apidemo.fragments;
 
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ApiDemoOverStausbarBinding;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.demo.ui.apidemo.ApiDemoActivity;
 import razerdp.demo.ui.apidemo.ApiDemoFragment;
@@ -15,26 +14,24 @@ import razerdp.demo.utils.SpanUtil;
 /**
  * Created by 大灯泡 on 2020/4/4.
  */
-public class OverStatusbarApiFragment extends ApiDemoFragment {
-    @BindView(R.id.tv_title)
-    TextView tvTitle;
-
+public class OverStatusbarApiFragment extends ApiDemoFragment<ApiDemoOverStausbarBinding> {
     DemoPopup mDemoPopup;
     boolean overStatusbar = true;
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.api_demo_over_stausbar;
+    public ApiDemoOverStausbarBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ApiDemoOverStausbarBinding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitViews(View mRootView) {
+        mViewBinding.tvTest.setOnClickListener(v -> this.show());
         SpanUtil.create("setOverlayStatusbar(boolean)\n\nsetPopupWindowFullScreen(boolean)")
                 .append("setPopupWindowFullScreen(boolean)")
                 .setTextSize(14)
                 .setTextColorRes(R.color.text_black2)
                 .setDeleteLine(true)
-                .into(tvTitle);
+                .into(mViewBinding.tvTitle);
 
     }
 
@@ -51,7 +48,6 @@ public class OverStatusbarApiFragment extends ApiDemoFragment {
     }
 
 
-    @OnClick(R.id.tv_test)
     void show() {
         if (mDemoPopup == null) {
             mDemoPopup = new DemoPopup(this);

@@ -4,12 +4,9 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.PictureDrawable;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -17,12 +14,12 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-import razerdp.basepopup.QuickPopupBuilder;
-import razerdp.basepopup.QuickPopupConfig;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import razerdp.basepopup.R;
-import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.basepopup.databinding.ActivityDemoBinding;
+import razerdp.basepopup.databinding.ItemMainDemoBinding;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.base.imageloader.GlideApp;
@@ -34,19 +31,11 @@ import razerdp.demo.ui.CommonUsageActivity;
 import razerdp.demo.ui.GuideActivity;
 import razerdp.demo.ui.UpdateLogActivity;
 import razerdp.demo.ui.issuestest.home.IssueHomeActivity;
-import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.UIHelper;
 import razerdp.demo.utils.ViewUtil;
-import razerdp.demo.widget.DPRecyclerView;
-import razerdp.demo.widget.DPTextView;
-import razerdp.util.animation.AnimationHelper;
-import razerdp.util.animation.ScaleConfig;
 
 
-public class DemoActivity extends BaseActivity {
-
-    @BindView(R.id.rv_content)
-    DPRecyclerView rvContent;
+public class DemoActivity extends BaseBindingActivity<ActivityDemoBinding> {
 
     SimpleRecyclerViewAdapter<DemoMainItem> mAdapter;
 
@@ -56,30 +45,33 @@ public class DemoActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_demo;
+    public ActivityDemoBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityDemoBinding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
-
-        rvContent.setLayoutManager(new LinearLayoutManager(this));
-        View header = ViewUtil.inflate(this, R.layout.item_main_demo_header, rvContent, false);
+        mBinding.rvContent.setLayoutManager(new LinearLayoutManager(this));
+        View header = ViewUtil.inflate(this,
+                                       R.layout.item_main_demo_header,
+                                       mBinding.rvContent,
+                                       false);
         header.setOnClickListener(v -> onHeaderClick());
-        rvContent.addHeaderView(header);
-        rvContent.addHeaderView(genVersionHeader());
+        mBinding.rvContent.addHeaderView(header);
+        mBinding.rvContent.addHeaderView(genVersionHeader());
         mAdapter = new SimpleRecyclerViewAdapter<>(this, generateItem());
         mAdapter.setHolder(InnerViewHolder.class);
         mAdapter.setOnItemClickListener((v, position, data) -> ActivityLauncher.start(self(),
                                                                                       data.toClass));
-        rvContent.setAdapter(mAdapter);
+        mBinding.rvContent.setAdapter(mAdapter);
 
-
-        showWjPopup();
     }
 
     private View genVersionHeader() {
-        View header = ViewUtil.inflate(this, R.layout.item_main_demo_version, rvContent, false);
+        View header = ViewUtil.inflate(this,
+                                       R.layout.item_main_demo_version,
+                                       mBinding.rvContent,
+                                       false);
         ImageView release = header.findViewById(R.id.iv_release);
         GlideApp.with(release)
                 .as(PictureDrawable.class)
@@ -124,43 +116,20 @@ public class DemoActivity extends BaseActivity {
         return result;
     }
 
-    void showWjPopup() {
-        QuickPopupBuilder.with(this)
-                .contentView(R.layout.popup_wj)
-                .config(new QuickPopupConfig()
-                                .withShowAnimation(AnimationHelper.asAnimation()
-                                                           .withScale(ScaleConfig.CENTER)
-                                                           .toShow())
-                                .withDismissAnimation(AnimationHelper.asAnimation()
-                                                              .withScale(ScaleConfig.CENTER)
-                                                              .toDismiss())
-                                .withClick(R.id.tv_go, null, true)
-                                .blurBackground(true)
-                                .outSideDismiss(false))
-                .show();
-    }
 
     void onHeaderClick() {
-        showWjPopup();
+        UIHelper.toast("感谢您的支持，您的star和issue是我维护BasePopup最大的动力");
+//        ActivityLauncher.start(this, MyTestActivity.class);
     }
 
 
     static class InnerViewHolder extends BaseSimpleRecyclerViewHolder<DemoMainItem> {
-
-        @BindView(R.id.tv_tag)
-        TextView tvTag;
-        @BindView(R.id.tv_title)
-        TextView tvTitle;
-        @BindView(R.id.tv_desc)
-        TextView tvDesc;
-        @BindView(R.id.divider)
-        View divider;
-        @BindView(R.id.tv_go)
-        DPTextView tvGo;
+        ItemMainDemoBinding mBinding;
 
         public InnerViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnifeUtil.bind(this, itemView);
+            mBinding =ItemMainDemoBinding.bind(itemView);
+            mBinding.tvGo.setOnClickListener(v -> toTarget());
         }
 
         @Override
@@ -170,13 +139,12 @@ public class DemoActivity extends BaseActivity {
 
         @Override
         public void onBindData(DemoMainItem data, int position) {
-            tvTag.setVisibility(TextUtils.isEmpty(data.tag) ? View.INVISIBLE : View.VISIBLE);
-            tvTag.setText(data.tag);
-            tvTitle.setText(data.title);
-            tvDesc.setText(data.desc);
+            mBinding.tvTag.setVisibility(TextUtils.isEmpty(data.tag) ? View.INVISIBLE : View.VISIBLE);
+            mBinding.tvTag.setText(data.tag);
+            mBinding.tvTitle.setText(data.title);
+            mBinding.tvDesc.setText(data.desc);
         }
 
-        @OnClick(R.id.tv_go)
         void toTarget() {
             ActivityLauncher.start(getContext(), getData().toClass);
         }

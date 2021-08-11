@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
+
+    <razerdp.demo.widget.TitleBarView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title_text="宽高限制" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="6dp">
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/check_min_width"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_padding"
+            android:text="设置最小宽度（px）"
+            android:textColor="@color/text_black2"
+            android:textSize="@dimen/text_small"
+            android:theme="@style/MyCheckBox" />
+
+        <EditText
+            android:id="@+id/ed_min_width"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/bg_comment_input"
+            android:hint="输入0等同于不设置"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="numberSigned"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingTop="8dp"
+            android:paddingRight="@dimen/default_padding"
+            android:paddingBottom="8dp"
+            android:textColor="@color/text_black1"
+            android:textColorHint="@color/text_black1_20"
+            android:textSize="@dimen/text_small" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="6dp">
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/check_min_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_padding"
+            android:text="设置最小高度（px）"
+            android:textColor="@color/text_black2"
+            android:textSize="@dimen/text_small"
+            android:theme="@style/MyCheckBox" />
+
+        <EditText
+            android:id="@+id/ed_min_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/bg_comment_input"
+            android:hint="输入0等同于不设置"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="numberSigned"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingTop="8dp"
+            android:paddingRight="@dimen/default_padding"
+            android:paddingBottom="8dp"
+            android:textColor="@color/text_black1"
+            android:textColorHint="@color/text_black1_20"
+            android:textSize="@dimen/text_small" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="6dp">
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/check_max_width"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_padding"
+            android:text="设置最大宽度（px）"
+            android:textColor="@color/text_black2"
+            android:textSize="@dimen/text_small"
+            android:theme="@style/MyCheckBox" />
+
+        <EditText
+            android:id="@+id/ed_max_width"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/bg_comment_input"
+            android:hint="输入0等同于不设置"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="numberSigned"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingTop="8dp"
+            android:paddingRight="@dimen/default_padding"
+            android:paddingBottom="8dp"
+            android:textColor="@color/text_black1"
+            android:textColorHint="@color/text_black1_20"
+            android:textSize="@dimen/text_small" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="6dp">
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/check_max_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_padding"
+            android:text="设置最大高度（px）"
+            android:textColor="@color/text_black2"
+            android:textSize="@dimen/text_small"
+            android:theme="@style/MyCheckBox" />
+
+        <EditText
+            android:id="@+id/ed_max_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/bg_comment_input"
+            android:hint="输入0等同于不设置"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="numberSigned"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingTop="8dp"
+            android:paddingRight="@dimen/default_padding"
+            android:paddingBottom="8dp"
+            android:textColor="@color/text_black1"
+            android:textColorHint="@color/text_black1_20"
+            android:textSize="@dimen/text_small" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="6dp">
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/check_width_as_anchor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_padding"
+            android:text="设置宽度跟随AnchorView"
+            android:textColor="@color/text_black2"
+            android:textSize="@dimen/text_small"
+            android:theme="@style/MyCheckBox" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/check_height_as_anchor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_padding"
+            android:text="设置高度跟随AnchorView"
+            android:textColor="@color/text_black2"
+            android:textSize="@dimen/text_small"
+            android:theme="@style/MyCheckBox" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/check_fit_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_padding"
+            android:text="设置是否允许根据剩余空间自动调整大小"
+            android:textColor="@color/text_black2"
+            android:textSize="@dimen/text_small"
+            android:theme="@style/MyCheckBox" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_show"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_round_white_8dp"
+        android:gravity="center"
+        android:padding="@dimen/default_padding"
+        android:text="弹窗"
+        android:textColor="@color/text_black2"
+        android:textSize="@dimen/text_large" />
+
+</LinearLayout>

@@ -2,14 +2,13 @@ package razerdp.demo.ui.issuestest;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-import razerdp.basepopup.R;
-import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.basepopup.databinding.ActivityIssue236Binding;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.popup.issue.PopupIssue236;
 import razerdp.demo.widget.DPTextView;
 
@@ -18,9 +17,7 @@ import razerdp.demo.widget.DPTextView;
  * <p>
  * https://github.com/razerdp/BasePopup/issues/236
  */
-public class Issue236TestActivity extends BaseActivity {
-    @BindView(R.id.tv_show)
-    DPTextView mTvShow;
+public class Issue236TestActivity extends BaseBindingActivity<ActivityIssue236Binding> {
     PopupIssue236 mPopupIssue236;
 
     @Override
@@ -29,15 +26,17 @@ public class Issue236TestActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_issue_236;
+    public ActivityIssue236Binding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityIssue236Binding.inflate(layoutInflater);
     }
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onInitView(View decorView) {
         final ViewConfiguration configuration = ViewConfiguration.get(this);
-        mTvShow.setOnTouchListener(new View.OnTouchListener() {
+        mBinding.tvShow.setOnClickListener(v -> show(v));
+        mBinding.tvShow.setOnTouchListener(new View.OnTouchListener() {
             float x, y;
             boolean onMove;
 
@@ -71,7 +70,6 @@ public class Issue236TestActivity extends BaseActivity {
         });
     }
 
-    @OnClick(R.id.tv_show)
     void show(View v) {
         if (mPopupIssue236 == null) {
             mPopupIssue236 = new PopupIssue236(this);

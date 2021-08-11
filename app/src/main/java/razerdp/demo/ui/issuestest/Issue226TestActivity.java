@@ -1,15 +1,15 @@
 package razerdp.demo.ui.issuestest;
 
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.appcompat.widget.AppCompatCheckBox;
-
-import butterknife.BindView;
-import butterknife.OnClick;
+import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.BasePopupWindow;
-import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ActivityIssue226Binding;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.popup.PopupInput;
 import razerdp.demo.widget.DPTextView;
 
@@ -18,11 +18,7 @@ import razerdp.demo.widget.DPTextView;
  * <p>
  * Description：https://github.com/razerdp/BasePopup/issues/226
  */
-public class Issue226TestActivity extends BaseActivity {
-    @BindView(R.id.check_force_adjust)
-    AppCompatCheckBox checkForceAdjust;
-    @BindView(R.id.tv_show)
-    DPTextView tvShow;
+public class Issue226TestActivity extends BaseBindingActivity<ActivityIssue226Binding> {
 
     PopupInput popupInput;
 
@@ -32,27 +28,26 @@ public class Issue226TestActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_issue_226;
+    public ActivityIssue226Binding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityIssue226Binding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
-
+        mBinding.tvShow.setOnClickListener(v -> show());
     }
 
-    @OnClick(R.id.tv_show)
     void show() {
         if (popupInput == null) {
             popupInput = new PopupInput(this);
         }
         int flag = BasePopupWindow.FLAG_KEYBOARD_ALIGN_TO_ROOT | BasePopupWindow.FLAG_KEYBOARD_ANIMATE_ALIGN;
 
-        if (checkForceAdjust.isChecked()) {
+        if (mBinding.checkForceAdjust.isChecked()) {
             flag |= BasePopupWindow.FLAG_KEYBOARD_FORCE_ADJUST;
         }
-        popupInput.setAdjustInputMethod(true)
-                .setAdjustInputMode(flag)
+        popupInput.setKeyboardAdaptive(true)
+                .setKeyboardAdaptionMode(flag)
                 .showPopupWindow();
     }
 

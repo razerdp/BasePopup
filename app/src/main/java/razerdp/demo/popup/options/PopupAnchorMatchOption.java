@@ -3,26 +3,20 @@ package razerdp.demo.popup.options;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.CompoundButton;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.recyclerview.widget.GridLayoutManager;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.PopupMatchBinding;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.OnItemClickListener;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
 import razerdp.demo.model.common.CommonAnchorMatchInfo;
-import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.UIHelper;
-import razerdp.demo.widget.DPTextView;
 import razerdp.demo.widget.decoration.GridItemDecoration;
 import razerdp.demo.widget.decoration.SpaceOption;
 
@@ -32,15 +26,7 @@ import razerdp.demo.widget.decoration.SpaceOption;
  * Description：slide相关的配置
  */
 public class PopupAnchorMatchOption extends BaseOptionPopup<CommonAnchorMatchInfo> {
-    @BindView(R.id.rv_content)
-    RecyclerView rvContent;
-    @BindView(R.id.check_width_match)
-    AppCompatCheckBox widthCheck;
-    @BindView(R.id.check_height_match)
-    AppCompatCheckBox heightCheck;
-    @BindView(R.id.tv_go)
-    DPTextView tvGo;
-
+    PopupMatchBinding mBinding;
     SimpleRecyclerViewAdapter<Info> mAdapter;
 
     public PopupAnchorMatchOption(Context context) {
@@ -58,9 +44,10 @@ public class PopupAnchorMatchOption extends BaseOptionPopup<CommonAnchorMatchInf
 
         mAdapter = new SimpleRecyclerViewAdapter<>(context, infos);
         mAdapter.setHolder(InnerViewHolder.class);
-        rvContent.setLayoutManager(new GridLayoutManager(context, 2));
-        rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(UIHelper.DP12).build()));
-        rvContent.setItemAnimator(null);
+        mBinding.rvContent.setLayoutManager(new GridLayoutManager(context, 2));
+        mBinding.rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(
+                UIHelper.DP12).build()));
+        mBinding.rvContent.setItemAnimator(null);
         mAdapter.setOnItemClickListener(new OnItemClickListener<Info>() {
             @Override
             public void onItemClick(View v, int position, Info data) {
@@ -68,11 +55,14 @@ public class PopupAnchorMatchOption extends BaseOptionPopup<CommonAnchorMatchInf
                 mAdapter.notifyItemChanged(position);
             }
         });
-        rvContent.setAdapter(mAdapter);
+        mBinding.rvContent.setAdapter(mAdapter);
     }
 
+    @Override
+    public void onViewCreated(@NonNull View contentView) {
+        mBinding = PopupMatchBinding.bind(contentView);
+    }
 
-    @OnClick(R.id.tv_go)
     void apply() {
         int gravity = Gravity.NO_GRAVITY;
         for (Info data : mAdapter.getDatas()) {
@@ -81,24 +71,18 @@ public class PopupAnchorMatchOption extends BaseOptionPopup<CommonAnchorMatchInf
             }
         }
         mInfo.gravity = gravity;
-        mInfo.widthMatch = widthCheck.isChecked();
-        mInfo.heightMatch = heightCheck.isChecked();
+        mInfo.widthMatch = mBinding.checkWidthMatch.isChecked();
+        mInfo.heightMatch = mBinding.checkHeightMatch.isChecked();
         dismiss();
     }
 
     static class InnerViewHolder extends BaseSimpleRecyclerViewHolder<Info> {
-        @BindView(R.id.check_box)
         AppCompatCheckBox checkBox;
 
         public InnerViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnifeUtil.bind(this, itemView);
-            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    getData().checked = isChecked;
-                }
-            });
+            checkBox = findViewById(R.id.check_box);
+            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> getData().checked = isChecked);
         }
 
         @Override

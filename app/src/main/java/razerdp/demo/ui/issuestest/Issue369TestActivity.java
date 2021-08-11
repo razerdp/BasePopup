@@ -2,32 +2,23 @@ package razerdp.demo.ui.issuestest;
 
 import android.content.Intent;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.PopupWindow;
 
-import androidx.appcompat.widget.AppCompatCheckBox;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 import razerdp.basepopup.R;
-import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.basepopup.databinding.ActivityIssue369Binding;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.demo.utils.UIHelper;
 import razerdp.demo.utils.ViewUtil;
-import razerdp.demo.widget.DPTextView;
 
 /**
  * Created by 大灯泡 on 2021/5/27.
  * <p>
  * https://github.com/razerdp/BasePopup/issues/369
  */
-public class Issue369TestActivity extends BaseActivity {
-    @BindView(R.id.showPopBt)
-    DPTextView mShowPopBt;
-    @BindView(R.id.show_system_popup)
-    DPTextView mShowSystemPopup;
-    @BindView(R.id.check_hidekeyboard)
-    AppCompatCheckBox check_hidekeyboard;
+public class Issue369TestActivity extends BaseBindingActivity<ActivityIssue369Binding> {
 
     DemoPopup demoPopup;
     PopupWindow systemPopup;
@@ -38,26 +29,25 @@ public class Issue369TestActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_issue_369;
+    public ActivityIssue369Binding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityIssue369Binding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
-
+        mBinding.showPopBt.setOnClickListener(v -> onViewClicked());
+        mBinding.showSystemPopup.setOnClickListener(v -> onSystemViewClicked(v));
     }
 
 
-    @OnClick(R.id.showPopBt)
     public void onViewClicked() {
         if (demoPopup == null) {
             demoPopup = new DemoPopup(this);
         }
-        demoPopup.hideKeyboardOnShow(check_hidekeyboard.isChecked());
+        demoPopup.hideKeyboardOnShow(mBinding.checkHidekeyboard.isChecked());
         demoPopup.showPopupWindow();
     }
 
-    @OnClick(R.id.show_system_popup)
     public void onSystemViewClicked(View v) {
         if (systemPopup == null) {
             systemPopup = new PopupWindow(this);

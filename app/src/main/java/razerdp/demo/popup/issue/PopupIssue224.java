@@ -11,13 +11,11 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.PopupIssue224Binding;
 import razerdp.demo.base.baseadapter.BaseSimpleRecyclerViewHolder;
 import razerdp.demo.base.baseadapter.SimpleRecyclerViewAdapter;
-import razerdp.demo.utils.ButterKnifeUtil;
 import razerdp.demo.utils.UIHelper;
 import razerdp.util.animation.AnimationHelper;
 import razerdp.util.animation.TranslationConfig;
@@ -26,8 +24,7 @@ import razerdp.util.animation.TranslationConfig;
  * Created by 大灯泡 on 2020/4/6.
  */
 public class PopupIssue224 extends BasePopupWindow {
-    @BindView(R.id.rv_content)
-    RecyclerView mRvContent;
+    PopupIssue224Binding mBinding;
 
     SimpleRecyclerViewAdapter<Integer> mAdapter;
     private List<Integer> mIntegers;
@@ -42,9 +39,9 @@ public class PopupIssue224 extends BasePopupWindow {
                                                                   DividerItemDecoration.VERTICAL);
         divider.setDrawable(UIHelper.getDrawable(R.drawable.divider));
         mAdapter.setOnItemClickListener((v, position, data) -> UIHelper.toast(String.valueOf(data)));
-        mRvContent.setLayoutManager(new LinearLayoutManager(context));
-        mRvContent.addItemDecoration(divider);
-        mRvContent.setAdapter(mAdapter);
+        mBinding.rvContent.setLayoutManager(new LinearLayoutManager(context));
+        mBinding.rvContent.addItemDecoration(divider);
+        mBinding.rvContent.setAdapter(mAdapter);
     }
 
 
@@ -64,7 +61,7 @@ public class PopupIssue224 extends BasePopupWindow {
 
     @Override
     public void onViewCreated(@NonNull View contentView) {
-        ButterKnifeUtil.bind(this, contentView);
+        mBinding = PopupIssue224Binding.bind(contentView);
     }
 
     public void setItemCount(int count) {
@@ -87,7 +84,7 @@ public class PopupIssue224 extends BasePopupWindow {
 
         @Override
         public void onBindData(Integer data, int position) {
-            tvContent.setText(String.format("Item：%s", String.valueOf(data)));
+            tvContent.setText(String.format("Item：%s", data));
         }
 
         @Override

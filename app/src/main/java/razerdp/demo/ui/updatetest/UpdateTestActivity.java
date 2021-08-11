@@ -1,12 +1,14 @@
 package razerdp.demo.ui.updatetest;
 
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import butterknife.BindView;
-import razerdp.basepopup.R;
+import androidx.viewbinding.ViewBinding;
+import razerdp.basepopup.databinding.ActivityUpdateTestBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.popup.PopupUpdateTest;
 import razerdp.demo.utils.RandomUtil;
 
@@ -15,10 +17,7 @@ import razerdp.demo.utils.RandomUtil;
  * <p>
  * Description：
  */
-public class UpdateTestActivity extends BaseActivity {
-    @BindView(R.id.tv_test)
-    TextView tvTest;
-
+public class UpdateTestActivity extends BaseBindingActivity<ActivityUpdateTestBinding> {
     PopupUpdateTest updateTest;
 
     int popupWidth;
@@ -30,13 +29,13 @@ public class UpdateTestActivity extends BaseActivity {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_update_test;
+    public ActivityUpdateTestBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityUpdateTestBinding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
-        tvTest.setOnClickListener(v -> {
+        mBinding.tvTest.setOnClickListener(v -> {
             if (updateTest == null) {
                 updateTest = new PopupUpdateTest(self());
                 updateTest.setOnTvChangeViewClickCallback(UpdateTestActivity.this::randomViewPosition);
@@ -45,15 +44,15 @@ public class UpdateTestActivity extends BaseActivity {
             }
             updateTest.showPopupWindow(v);
         });
-        tvTest.post(this::randomViewPosition);
+        mBinding.tvTest.post(this::randomViewPosition);
     }
 
     void randomViewPosition() {
         View decor = getWindow().getDecorView();
-        int x = RandomUtil.randomInt(0, decor.getWidth() - tvTest.getWidth());
-        int y = RandomUtil.randomInt(0, decor.getHeight() - tvTest.getHeight());
-        tvTest.setTranslationX(x);
-        tvTest.setTranslationY(y);
+        int x = RandomUtil.randomInt(0, decor.getWidth() - mBinding.tvTest.getWidth());
+        int y = RandomUtil.randomInt(0, decor.getHeight() - mBinding.tvTest.getHeight());
+        mBinding.tvTest.setTranslationX(x);
+        mBinding.tvTest.setTranslationY(y);
     }
 
     void randomViewSize() {

@@ -2,12 +2,14 @@ package razerdp.demo.ui.fullscreen;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 
-import butterknife.OnClick;
+import androidx.viewbinding.ViewBinding;
 import razerdp.basepopup.BasePopupUnsafe;
-import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ActivityFullScreenBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
+import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.demo.ui.ActivityLauncher;
 import razerdp.demo.ui.friendcircle.FriendCircleActivity;
@@ -15,7 +17,7 @@ import razerdp.demo.ui.friendcircle.FriendCircleActivity;
 /**
  * Created by 大灯泡 on 2020/5/17.
  */
-public class FullScreenActivity extends BaseActivity {
+public class FullScreenActivity extends BaseBindingActivity<ActivityFullScreenBinding> {
     DemoPopup mDemoPopup;
 
     @Override
@@ -23,22 +25,16 @@ public class FullScreenActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void onStartCreate(Bundle savedInstanceState) {
-        super.onStartCreate(savedInstanceState);
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-    }
 
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_full_screen;
+    public ActivityFullScreenBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityFullScreenBinding.inflate(layoutInflater);
     }
 
     @Override
     protected void onInitView(View decorView) {
+        mBinding.tvTest.setOnClickListener(v -> show());
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -63,12 +59,11 @@ public class FullScreenActivity extends BaseActivity {
         }
     }
 
-    @OnClick(R.id.tv_test)
     void show() {
         if (mDemoPopup == null) {
             mDemoPopup = new DemoPopup(this);
             mDemoPopup.setText("FullScreenTest");
-            mDemoPopup.mTvDesc.setOnClickListener(new View.OnClickListener() {
+            mDemoPopup.getTextView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ActivityLauncher.start(v.getContext(), FriendCircleActivity.class);

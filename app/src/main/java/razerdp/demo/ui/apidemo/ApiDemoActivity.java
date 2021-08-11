@@ -1,12 +1,14 @@
 package razerdp.demo.ui.apidemo;
 
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import razerdp.basepopup.R;
+import razerdp.basepopup.databinding.ActivityApiDemoBinding;
 import razerdp.demo.base.baseactivity.BaseActivity;
 import razerdp.demo.model.api.ApiInfo;
 import razerdp.demo.popup.common.SimpleSelectorPopup;
@@ -17,7 +19,7 @@ import static razerdp.demo.ui.apidemo.ApiDemoActivity.Data;
 /**
  * Created by 大灯泡 on 2020/4/4.
  */
-public class ApiDemoActivity extends BaseActivity<Data> {
+public class ApiDemoActivity extends BaseActivity<Data,ActivityApiDemoBinding> {
 
     ApiDemoFragment mApiDemoFragment;
     SimpleSelectorPopup mSelectorPopup;
@@ -28,8 +30,8 @@ public class ApiDemoActivity extends BaseActivity<Data> {
     }
 
     @Override
-    public int contentViewLayoutId() {
-        return R.layout.activity_api_demo;
+    public ActivityApiDemoBinding onCreateViewBinding(LayoutInflater layoutInflater) {
+        return ActivityApiDemoBinding.inflate(layoutInflater);
     }
 
     @Override
