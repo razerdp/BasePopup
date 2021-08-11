@@ -70,7 +70,7 @@ allprojects {
 
 // project dependencies
 dependencies {
-  implementation 'io.github.razerdp:BasePopup:3.1.7'
+  implementation 'io.github.razerdp:BasePopup:3.1.8'
 
   // for snapshot
   // implementation 'io.github.razerdp:BasePopup:3.1.8-SNAPSHOT'
@@ -84,19 +84,15 @@ dependencies {
 
 ### 注意事项
 
-  - **Release和Snapshot两个版本互相切换可能会导致Build失败，这时候您Clean一下Project即可**
-  - **3.0版本会对2.x版本升级上来的用户造成较大范围的改动，请您务必阅读升级提示**：[关于BasePopup 3.0的破坏性更新说明](./Update_3.0.md)
+  - Release和Snapshot两个版本互相切换可能会导致Build失败，这时候您Clean一下Project即可
+  - 3.0版本会对2.x版本升级上来的用户造成较大范围的改动，请您务必阅读升级提示：[关于BasePopup 3.0的破坏性更新说明](./Update_3.0.md)
 
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Snapshot】3.1.8-SNAPSHOT**
-    * 2021/07/28
-        * 优化margin的measure和layout逻辑。[issue#429](https://github.com/razerdp/BasePopup/issues/429)
-    * 2021/08/06
-        * 添加`onSizeChange(int oldW, int oldH, int newW, int newH)`回调
-        * demo修改至ViewBinding
-        * 增加宽高限定Demo
+* **【Release】3.1.8** (2021/08/11)
+    * 优化margin的measure和layout逻辑。[issue#429](https://github.com/razerdp/BasePopup/issues/429)
+    * 添加`onSizeChange(int oldW, int oldH, int newW, int newH)`回调
 
 ### 例子预览
 

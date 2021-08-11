@@ -48,100 +48,53 @@
 </div>
 
 ---
+### About
 
-### Guide
-
- - [Feature](#Feature)
- - [Precautions](#Precautions)
- - [Download](#Download)
- - [Document](#Document)
-   - [BasePopup manual](https://www.yuque.com/razerdp/basepopup)
- - [ChangeLog](#changelog-historical-update)
-   - [Historical update](https://www.yuque.com/razerdp/basepopup/uyrsxx)
- - [Preview](#Preview)
-   - [**Demo apk(pass:123)**](https://www.pgyer.com/basepopup)
-    <img src="./img/download.png"  width="256"/>
- - [QA](#QA)
- - [LICENSE](#license)
-
-<br>
-<br>
-
-### Feature
-
- - This library acts as a base class and does not interfere with your implementation, don't worry about being restricted by Api when implementing certain methods.
- - No need to worry about how to calculate offset for position control, just simply set [**Gravity**](https://www.yuque.com/razerdp/basepopup/qnu3qd), you can control your popups as you wish.
- - Whether [**Animation**](https://www.yuque.com/razerdp/basepopup/mg3bcw#onCreateShowAnimation) or [**Animator**](https://www.yuque.com/razerdp/basepopup/mg3bcw#onCreateShowAnimator), just write the animation as you normally would. You can complete the dynamic design of Popup, do not need xml, do not care about other compatibility issues.
- - Separation of background from content, support for [**background blurring**](https://www.yuque.com/razerdp/basepopup/udccdq#12bedc89),[**background color Settings**](https://www.yuque.com/razerdp/basepopup/gscx3g#aiRz7),or even [**change the background to your View**](https://www.yuque.com/razerdp/basepopup/gscx3g#e96cp),all of which can be done with a simple setup, with the subject isolated from the background, without worrying about the key event's issues.
- - BasePopup can help you to solve the problem of touch events in Popup. Pass-through, click-through and disappear or not are all just a matter of configuration.
- - PopupWindow automatically anchors the AnchorView, slide to follow it off screen. AnchorView disappears without complex logic setup, just by [**linkTo**](https://www.yuque.com/razerdp/basepopup/api) method by telling BasePopup to do it for you.
- - Simple PopupWindow doesn't want to create a new class and wants to have chain calls? No problem, [**QuickPopupBuilder**](https://www.yuque.com/razerdp/basepopup/ob329t) was created for this purpose, and believe that You'll love it more and more.
-
-<br>
-
-### Precautions
-
-  - **Please be sure to read this README carefully. Please check the changelog for each version upgrade, which can reduce unnecessary detours for you.**
-  - **Please pay attention on the dependence version, the Release version is a stable version, and Snapshot is a preview version.**
-    - Release version: Generally published to Release after repeated verification of the Snapshot version. If you have higher stability requirements, please use the Release version.
-    - Snapshot version: new features, issue fixes will be published  to the Snapshot version, Snapshot version is updated more frequently, but usually has new features, if you like to test new features and stability requirements are not high, please use the Snapshot version.
-    - **Switching between Release and Snapshot versions may cause Build to fail. At this time, you can clean Project.**
-
-<br>
+BasePopup is a popup library that wraps and improves on the system's PopupWindow. It is a basic library class with a high degree of freedom and a rich API that allows you to do a wide range of popups very easily within the framework of BasePopup.
 
 ### Download
 
-#### Gradle settings
-
-```
+```groovy
+// root gradle
 allprojects {
     repositories {
-        // release dependency repository (available by default configuration after 4.1)
+        // release依赖仓库（4.1后as默认配置有）
         mavenCentral()
 
-        // snapshot repository (configure this maven if you need snapshot dependencies)
+        // snapshot仓库（如果需要snapshot依赖，请配置该maven）
         maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots' }
     }
 }
+
+// project dependencies
+dependencies {
+  implementation 'io.github.razerdp:BasePopup:3.1.8'
+
+  // for snapshot
+  // implementation 'io.github.razerdp:BasePopup:3.1.8-SNAPSHOT'
+}
+
 ```
 
-#### Dependency
+### Documentation
 
-Please replace **{$latestVersion}** with the version shown in the Jcenter tab above.
+ - [**BasePopup手册**](https://www.yuque.com/razerdp/basepopup)
 
-**Since JCenter is no longer in service, starting with version 2.3, this library will be migrated to Maven with a new dependency groupId of [io.github.razerdp]**
+### Precautions
 
- - **Release：** `implementation 'io.github.razerdp:BasePopup:3.1.4'`
- - **Snapshot：** `implementation 'io.github.razerdp:BasePopup:3.1.7-SNAPSHOT'`
+  - Switching between Release and Snapshot versions may cause the Build to fail, so you can clean the Project.
+  - Version 3.0 will cause a large range of changes to users who have upgraded from version 2.x. Please be sure to read the upgrade instructions:[关于BasePopup 3.0的破坏性更新说明](./Update_3.0.md)
 
-<br>
 
-### Document
+### ChangeLog [(History ChangeLog)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/basepopup)
+* **【Release】3.1.8** (2021/08/11)
+    * Optimize margin's measure and layout logic.[issue#429](https://github.com/razerdp/BasePopup/issues/429)
+    * Add `onSizeChange(int oldW, int oldH, int newW, int newH)` callback.
 
-<br>
+### Demo
 
-### ChangeLog ([Historical update](https://www.yuque.com/razerdp/basepopup/uyrsxx))
-
-**Snapshot dev log see dev branch:** [**branch-dev**](https://github.com/razerdp/BasePopup/tree/dev)
-
-* **【Release】3.1.4** (2021/06/23)
-    * 【Optimise】
-        * Optimisation of BlurHelper, RenderScript using single instance
-        * Add `setOverlayMask(boolean)`: whether to allow mask overlays, default is no overlays. BasePopup with default background on the same page will not overlay the mask until the background is set.
-        * deprecated `setAutoLocatePopup`，please use `setAutoMirrorEnable` instead
-        * Add left and right automatic mirror positioning function, add demos
-    * 【Fixed Bug】
-        * Fix `onOutSideTouch` not being passed to the DecorView after intercepting the event [#393-comment](https://github.com/razerdp/BasePopup/issues/393#issuecomment-853687468)
-
-<br>
-
-### Preview
-
-<br>
-
-#### For more examples, please download Demo: [**Demo (pass:123)**](https://www.pgyer.com/basepopup)
+#### Demo Apk Download：[**apk download（pass:123）**](https://www.pgyer.com/basepopup)
 
 <img src="./img/download.png"  width="256"/>
 
@@ -152,19 +105,14 @@ Reference document(CN)：[**BasePopup manual**](https://www.yuque.com/razerdp/ba
 | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_1.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/new_demo_2.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_3.gif) |
 | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_4.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_5.gif) | ![](https://github.com/razerdp/Pics/blob/master/BasePopup/demo_6.gif) |
 
-<br>
-
-### QA
-
-Please refer to [**Basepopup manual: Frequently QA**](https://www.yuque.com/razerdp/basepopup/dgf6ry)
-
-<br>
-
 ### License
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frazerdp%2FBasePopup.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Frazerdp%2FBasePopup?ref=badge_large)
 
 [Apache-2.0](./LICENSE)
 
+
 <p align="center">
-  Visit Count（from 2020/08/21）<br>
-  <img src="https://profile-counter.glitch.me/razerdp-basepopup-en/count.svg" />
+  Visit Count（from 2020/08/19）<br>
+  <img src="https://profile-counter.glitch.me/razerdp-basepopup/count.svg" />
 </p>
