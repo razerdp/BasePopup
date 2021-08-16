@@ -622,10 +622,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                                                       contentRect.right,
                                                       contentRect.bottom);
                 }
-                if (isRelativeToAnchor) {
-                    popupRect.set(contentRect);
-                    mHelper.onPopupLayout(popupRect, anchorRect);
-                }
+                popupRect.set(contentRect);
+                mHelper.onPopupLayout(popupRect, anchorRect);
                 if (!lastPopupRect.equals(contentRect)) {
                     mHelper.onSizeChange(lastPopupRect.width(),
                                          lastPopupRect.height(),

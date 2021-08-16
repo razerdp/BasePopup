@@ -30,14 +30,15 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.WeakHashMap;
+
 import razerdp.blur.PopupBlurOption;
 import razerdp.library.R;
 import razerdp.util.KeyboardUtils;
@@ -509,7 +510,10 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     BasePopupHelper getAnchorLocation(View v) {
-        if (v == null) return this;
+        if (v == null) {
+            mAnchorViewBound.setEmpty();
+            return this;
+        }
         int[] location = new int[2];
         v.getLocationOnScreen(location);
         mAnchorViewBound.set(location[0],
