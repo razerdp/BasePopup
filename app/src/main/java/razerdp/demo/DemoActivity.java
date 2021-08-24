@@ -133,6 +133,12 @@ public class DemoActivity extends BaseBindingActivity<ActivityDemoBinding> {
         checkForUpdate();
     }
 
+    @Override
+    public void onTitleDoubleClick() {
+        super.onTitleDoubleClick();
+        ActivityLauncher.start(this, MyTestActivity.class);
+    }
+
     private void checkForUpdate() {
         new PgyUpdateManager.Builder()
                 .setUpdateManagerListener(new UpdateManagerListener() {
@@ -188,7 +194,6 @@ public class DemoActivity extends BaseBindingActivity<ActivityDemoBinding> {
 
     void onHeaderClick() {
         UIHelper.toast("感谢您的支持，您的star和issue是我维护BasePopup最大的动力");
-        ActivityLauncher.start(this, MyTestActivity.class);
     }
 
 
