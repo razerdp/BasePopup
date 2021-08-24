@@ -70,10 +70,10 @@ allprojects {
 
 // project dependencies 
 dependencies {
-  implementation 'io.github.razerdp:BasePopup:3.1.7'
+  implementation 'io.github.razerdp:BasePopup:3.1.8'
   
   // for snapshot
-  // implementation 'io.github.razerdp:BasePopup:3.1.8-SNAPSHOT'
+  // implementation 'io.github.razerdp:BasePopup:3.1.9-SNAPSHOT'
 }
 
 ```
@@ -90,13 +90,10 @@ dependencies {
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Snapshot】3.1.8-SNAPSHOT**
-    * 2021/07/28
-        * 优化margin的measure和layout逻辑。[issue#429](https://github.com/razerdp/BasePopup/issues/429)
-    * 2021/08/06
-        * 添加`onSizeChange(int oldW, int oldH, int newW, int newH)`回调
-        * demo修改至ViewBinding
-        * 增加宽高限定Demo
+* **【Snapshot】3.1.9-SNAPSHOT**
+    * 2021/08/24
+        * 修复measure问题，fixed [#435](https://github.com/razerdp/BasePopup/issues/435)
+        * 修复触摸事件分发判断错误的问题
 
 ### 例子预览
 
