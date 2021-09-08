@@ -131,14 +131,10 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 lp.width = wp.width;
                 lp.height = wp.height;
                 if (lp instanceof MarginLayoutParams) {
-                    if (lp.width == LayoutParams.MATCH_PARENT) {
-                        ((MarginLayoutParams) lp).leftMargin = childLeftMargin;
-                        ((MarginLayoutParams) lp).rightMargin = childRightMargin;
-                    }
-                    if (lp.height == LayoutParams.MATCH_PARENT) {
-                        ((MarginLayoutParams) lp).topMargin = childTopMargin;
-                        ((MarginLayoutParams) lp).bottomMargin = childBottomMargin;
-                    }
+                    ((MarginLayoutParams) lp).leftMargin = childLeftMargin;
+                    ((MarginLayoutParams) lp).rightMargin = childRightMargin;
+                    ((MarginLayoutParams) lp).topMargin = childTopMargin;
+                    ((MarginLayoutParams) lp).bottomMargin = childBottomMargin;
                 }
             }
 
@@ -246,8 +242,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         final int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
 
         // 根据parent决定child大小
-        int childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec, 0, lp.width);
-        int childHeightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, 0, lp.height);
+        int childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec, childLeftMargin + childRightMargin, lp.width);
+        int childHeightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, childTopMargin + childBottomMargin, lp.height);
 
         int widthSize = MeasureSpec.getSize(childWidthMeasureSpec);
         int heightSize = MeasureSpec.getSize(childHeightMeasureSpec);
@@ -280,16 +276,14 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 case Gravity.LEFT:
                     if (lp.width == LayoutParams.MATCH_PARENT) {
                         widthSize = rl;
-                    }
-                    if (mHelper.isFitsizable()) {
+                    } else {
                         widthSize = Math.min(widthSize, rl);
                     }
                     break;
                 case Gravity.RIGHT:
                     if (lp.width == LayoutParams.MATCH_PARENT) {
                         widthSize = rr;
-                    }
-                    if (mHelper.isFitsizable()) {
+                    } else {
                         widthSize = Math.min(widthSize, rr);
                     }
                     break;
@@ -301,16 +295,14 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 case Gravity.TOP:
                     if (lp.height == LayoutParams.MATCH_PARENT) {
                         heightSize = rt;
-                    }
-                    if (mHelper.isFitsizable()) {
+                    } else {
                         heightSize = Math.min(heightSize, rt);
                     }
                     break;
                 case Gravity.BOTTOM:
                     if (lp.height == LayoutParams.MATCH_PARENT) {
                         heightSize = rb;
-                    }
-                    if (mHelper.isFitsizable()) {
+                    } else {
                         heightSize = Math.min(heightSize, rb);
                     }
                     break;
@@ -422,9 +414,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 boolean isRelativeToAnchor = mHelper.isWithAnchor();
                 boolean isHorizontalAlignAnchorSlide = mHelper.horizontalGravityMode == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE;
                 boolean isVerticalAlignAnchorSlide = mHelper.verticalGravityMode == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE;
-                // 除了match_parent外，margin都是等同于offset
-                boolean useWidthMarginAsOffset = mHelper.getLayoutParams().width != LayoutParams.MATCH_PARENT;
-                boolean useHeightMarginAsOffset = mHelper.getLayoutParams().height != LayoutParams.MATCH_PARENT;
 
                 //不跟anchorView联系的情况下，gravity意味着在整个decorView中的方位
                 //如果跟anchorView联系，gravity意味着以anchorView为中心的方位
@@ -435,43 +424,28 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                     case Gravity.RIGHT:
                         if (isRelativeToAnchor) {
                             contentRect.left = isHorizontalAlignAnchorSlide ? anchorRect.right - width : anchorRect.right;
+                            offsetX += isHorizontalAlignAnchorSlide ? -childRightMargin : childLeftMargin;
                         } else {
                             contentRect.left = contentBounds.right - width;
-                        }
-                        if (useWidthMarginAsOffset) {
-                            if (isRelativeToAnchor && !isHorizontalAlignAnchorSlide) {
-                                // 在anchor右侧，只跟leftmargin相关
-                                offsetX += childLeftMargin;
-                            } else {
-                                offsetX -= childRightMargin;
-                            }
+                            offsetX += -childRightMargin;
                         }
                         break;
                     case Gravity.CENTER_HORIZONTAL:
                         if (isRelativeToAnchor) {
-                            contentRect.left = anchorRect.left;
-                            offsetX += anchorRect.centerX() - (contentRect.left + (width >> 1));
+                            contentRect.left = anchorRect.left + (anchorRect.centerX() - (contentRect.left + (width >> 1)));
                         } else {
                             contentRect.left = contentBounds.left + ((contentBounds.width() - width) >> 1);
                         }
-                        if (useWidthMarginAsOffset) {
-                            offsetX += childLeftMargin - childRightMargin;
-                        }
+                        offsetX += childLeftMargin - childRightMargin;
                         break;
                     case Gravity.LEFT:
                     default:
                         if (isRelativeToAnchor) {
                             contentRect.left = isHorizontalAlignAnchorSlide ? anchorRect.left : anchorRect.left - width;
+                            offsetX += isHorizontalAlignAnchorSlide ? childLeftMargin : -childRightMargin;
                         } else {
                             contentRect.left = contentBounds.left;
-                        }
-                        if (useWidthMarginAsOffset) {
-                            if (isRelativeToAnchor && !isHorizontalAlignAnchorSlide) {
-                                // 在anchor左侧，只跟rightmargin相关
-                                offsetX += -childRightMargin;
-                            } else {
-                                offsetX += childLeftMargin;
-                            }
+                            offsetX += childLeftMargin;
                         }
                         break;
                 }
@@ -480,43 +454,28 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                     case Gravity.TOP:
                         if (isRelativeToAnchor) {
                             contentRect.top = isVerticalAlignAnchorSlide ? anchorRect.top : anchorRect.top - height;
+                            offsetY += isVerticalAlignAnchorSlide ? childTopMargin : -childBottomMargin;
                         } else {
                             contentRect.top = contentBounds.top;
-                        }
-                        if (useHeightMarginAsOffset) {
-                            if (isRelativeToAnchor && !isVerticalAlignAnchorSlide) {
-                                // 在anchor上方，只跟bottommargin相关
-                                offsetY += -childBottomMargin;
-                            } else {
-                                offsetY += childTopMargin;
-                            }
+                            offsetY += childTopMargin;
                         }
                         break;
                     case Gravity.CENTER_VERTICAL:
                         if (isRelativeToAnchor) {
-                            contentRect.top = anchorRect.bottom;
-                            offsetY += anchorRect.centerY() - (contentRect.top + (height >> 1));
+                            contentRect.top = anchorRect.bottom + (anchorRect.centerY() - (contentRect.top + (height >> 1)));
                         } else {
                             contentRect.top = contentBounds.top + ((contentBounds.height() - height) >> 1);
                         }
-                        if (useHeightMarginAsOffset) {
-                            offsetY += childTopMargin - childBottomMargin;
-                        }
+                        offsetY += childTopMargin - childBottomMargin;
                         break;
                     case Gravity.BOTTOM:
                     default:
                         if (isRelativeToAnchor) {
                             contentRect.top = isVerticalAlignAnchorSlide ? anchorRect.bottom - height : anchorRect.bottom;
+                            offsetY += isVerticalAlignAnchorSlide ? -childBottomMargin : childTopMargin;
                         } else {
                             contentRect.top = contentBounds.bottom - height;
-                        }
-                        if (useHeightMarginAsOffset) {
-                            if (isRelativeToAnchor && !isVerticalAlignAnchorSlide) {
-                                // 在anchor下方，只跟topmargin相关
-                                offsetY += childTopMargin;
-                            } else {
-                                offsetY += -childBottomMargin;
-                            }
+                            offsetY += -childBottomMargin;
                         }
                         break;
                 }

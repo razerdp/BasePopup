@@ -41,7 +41,7 @@ public class MyTestActivity extends BaseBindingActivity<ActivityMyTestBinding> {
         mBinding.tvTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new TestPopup(view.getContext()).showPopupWindow();
+                new TestPopup(view.getContext()).showPopupWindow(view);
             }
         });
     }
@@ -60,9 +60,7 @@ public class MyTestActivity extends BaseBindingActivity<ActivityMyTestBinding> {
                 datas.add("item:" + i);
             }
             mRvTest.setAdapter(new TestAdapter(datas));
-
-            int screenHeight = UIHelper.getScreenHeight();
-            setMaxHeight((int) (screenHeight * 0.8));
+            setPopupGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
         }
     }
 

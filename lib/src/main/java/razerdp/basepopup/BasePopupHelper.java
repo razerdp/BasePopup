@@ -447,10 +447,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return (flag & WITH_ANCHOR) != 0;
     }
 
-    boolean isFitsizable() {
-        return (flag & FITSIZE) != 0;
-    }
-
     BasePopupHelper withAnchor(boolean showAsDropDown) {
         setFlag(WITH_ANCHOR, showAsDropDown);
         return this;
@@ -764,11 +760,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     int getMinHeight() {
         return minHeight;
-    }
-
-
-    boolean isResizeable() {
-        return (flag & FITSIZE) != 0;
     }
 
     public BasePopupHelper linkTo(View anchorView) {

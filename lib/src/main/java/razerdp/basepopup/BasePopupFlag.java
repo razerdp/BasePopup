@@ -29,7 +29,6 @@ public interface BasePopupFlag {
     int WITH_ANCHOR = 0x4 << CONTROL_SHIFT;//关联Anchor
     int AUTO_INPUT_METHOD = 0x8 << CONTROL_SHIFT;//自动弹出输入法
     int ALIGN_BACKGROUND = 0x10 << CONTROL_SHIFT;//对齐蒙层
-    int FITSIZE = 0x20 << CONTROL_SHIFT;//允许popup重设大小
 
     //quick popup config
     int QUICK_POPUP_CONFIG_SHIFT = 14;

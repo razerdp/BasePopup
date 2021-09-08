@@ -281,8 +281,8 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
         return this;
     }
 
+    @Deprecated
     public QuickPopupConfig fitSize(boolean keep) {
-        setFlag(FITSIZE, keep);
         return this;
     }
 

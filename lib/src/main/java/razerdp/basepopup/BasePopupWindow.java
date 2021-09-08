@@ -250,7 +250,6 @@ import static razerdp.basepopup.BasePopupFlag.AUTO_MIRROR;
 import static razerdp.basepopup.BasePopupFlag.BACKPRESS_ENABLE;
 import static razerdp.basepopup.BasePopupFlag.CLIP_CHILDREN;
 import static razerdp.basepopup.BasePopupFlag.FADE_ENABLE;
-import static razerdp.basepopup.BasePopupFlag.FITSIZE;
 import static razerdp.basepopup.BasePopupFlag.MODE_ADD;
 import static razerdp.basepopup.BasePopupFlag.MODE_REMOVE;
 import static razerdp.basepopup.BasePopupFlag.OUT_SIDE_DISMISS;
@@ -1984,8 +1983,8 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
     /**
      * 是否允许BasePopup自动调整大小
      */
+    @Deprecated
     public BasePopupWindow setFitSize(boolean canResize) {
-        mHelper.setFlag(FITSIZE, canResize);
         return this;
     }
 

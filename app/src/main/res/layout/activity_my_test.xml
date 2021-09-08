@@ -10,19 +10,14 @@
         android:layout_height="wrap_content"
         app:title_text="my test" />
 
-    <Space
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
     <TextView
         android:id="@+id/tv_test"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="300dp"
+        android:layout_marginTop="100dp"
         android:background="@color/white"
         android:gravity="center"
         android:padding="20dp"
-        android:text="本TextView距离底部300dp" />
+        android:text="本TextView距离底部100dp" />
 
 </LinearLayout>
