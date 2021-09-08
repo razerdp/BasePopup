@@ -507,7 +507,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     BasePopupHelper getAnchorLocation(View v) {
         if (v == null) {
-            mAnchorViewBound.setEmpty();
+            if (mShowMode != ShowMode.POSITION) {
+                mAnchorViewBound.setEmpty();
+            }
             return this;
         }
         int[] location = new int[2];

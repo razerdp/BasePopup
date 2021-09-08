@@ -432,7 +432,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                         break;
                     case Gravity.CENTER_HORIZONTAL:
                         if (isRelativeToAnchor) {
-                            contentRect.left = anchorRect.left + (anchorRect.centerX() - (contentRect.left + (width >> 1)));
+                            contentRect.left = anchorRect.left + (anchorRect.centerX() - (anchorRect.left + (width >> 1)));
                         } else {
                             contentRect.left = contentBounds.left + ((contentBounds.width() - width) >> 1);
                         }
@@ -462,7 +462,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                         break;
                     case Gravity.CENTER_VERTICAL:
                         if (isRelativeToAnchor) {
-                            contentRect.top = anchorRect.bottom + (anchorRect.centerY() - (contentRect.top + (height >> 1)));
+                            contentRect.top = anchorRect.bottom + (anchorRect.centerY() - (anchorRect.bottom + (height >> 1)));
                         } else {
                             contentRect.top = contentBounds.top + ((contentBounds.height() - height) >> 1);
                         }

@@ -33,7 +33,7 @@ ext {
     minSdkVersion = 19
     minLibSdkVersion = 16
     targetSdkVersion = 30
-    versionCode = 319
+    versionCode = 321
     versionName = '3.1.9-SNAPSHOT'
 
     candy = true

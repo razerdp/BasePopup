@@ -60,7 +60,7 @@ public class MyTestActivity extends BaseBindingActivity<ActivityMyTestBinding> {
                 datas.add("item:" + i);
             }
             mRvTest.setAdapter(new TestAdapter(datas));
-            setPopupGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
+            setPopupGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);
         }
     }
 
