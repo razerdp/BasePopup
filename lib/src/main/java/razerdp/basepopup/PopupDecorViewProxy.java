@@ -242,8 +242,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         final int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
 
         // 根据parent决定child大小
-        int childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec, childLeftMargin + childRightMargin, lp.width);
-        int childHeightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, childTopMargin + childBottomMargin, lp.height);
+        int childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec, 0, lp.width);
+        int childHeightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, 0, lp.height);
 
         int widthSize = MeasureSpec.getSize(childWidthMeasureSpec);
         int heightSize = MeasureSpec.getSize(childHeightMeasureSpec);
@@ -471,15 +471,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 }
 
                 switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
-                    case Gravity.TOP:
-                        if (isRelativeToAnchor) {
-                            contentRect.top = isVerticalAlignAnchorSlide ? anchorRect.top : anchorRect.top - height;
-                            offsetY += isVerticalAlignAnchorSlide ? childTopMargin : -childBottomMargin;
-                        } else {
-                            contentRect.top = contentBounds.top;
-                            offsetY += childTopMargin;
-                        }
-                        break;
                     case Gravity.CENTER_VERTICAL:
                         if (isRelativeToAnchor) {
                             contentRect.top = anchorRect.bottom + (anchorRect.centerY() - (anchorRect.bottom + (height >> 1)));
@@ -489,13 +480,22 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                         offsetY += childTopMargin - childBottomMargin;
                         break;
                     case Gravity.BOTTOM:
-                    default:
                         if (isRelativeToAnchor) {
                             contentRect.top = isVerticalAlignAnchorSlide ? anchorRect.bottom - height : anchorRect.bottom;
                             offsetY += isVerticalAlignAnchorSlide ? -childBottomMargin : childTopMargin;
                         } else {
                             contentRect.top = contentBounds.bottom - height;
                             offsetY += -childBottomMargin;
+                        }
+                        break;
+                    case Gravity.TOP:
+                    default:
+                        if (isRelativeToAnchor) {
+                            contentRect.top = isVerticalAlignAnchorSlide ? anchorRect.top : anchorRect.top - height;
+                            offsetY += isVerticalAlignAnchorSlide ? childTopMargin : -childBottomMargin;
+                        } else {
+                            contentRect.top = contentBounds.top;
+                            offsetY += childTopMargin;
                         }
                         break;
                 }

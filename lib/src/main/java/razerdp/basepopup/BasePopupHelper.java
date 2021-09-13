@@ -449,6 +449,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     BasePopupHelper withAnchor(boolean showAsDropDown) {
         setFlag(WITH_ANCHOR, showAsDropDown);
+        if (showAsDropDown && (popupGravity == Gravity.NO_GRAVITY || popupGravity == -1)) {
+            popupGravity = Gravity.BOTTOM;
+        }
         return this;
     }
 

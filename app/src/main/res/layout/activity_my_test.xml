@@ -10,14 +10,12 @@
         android:layout_height="wrap_content"
         app:title_text="my test" />
 
-    <TextView
-        android:id="@+id/tv_test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="500dp"
-        android:background="@color/white"
-        android:gravity="center"
-        android:padding="20dp"
-        android:text="test" />
+    <View
+        android:id="@+id/view_test"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:background="@color/common_red"/>
 
 </LinearLayout>

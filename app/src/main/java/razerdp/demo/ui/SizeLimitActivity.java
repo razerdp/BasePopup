@@ -95,7 +95,6 @@ public class SizeLimitActivity extends BaseBindingActivity<ActivitySizeLimitBind
             showWithAnchorView = true;
         }
         mPopup.setPopupGravity(gravity);
-        mPopup.setFitSize(mBinding.checkFitSize.isChecked());
         if (showWithAnchorView) {
             mPopup.showPopupWindow(v);
         } else {

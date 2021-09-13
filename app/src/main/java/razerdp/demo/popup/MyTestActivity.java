@@ -38,64 +38,11 @@ public class MyTestActivity extends BaseBindingActivity<ActivityMyTestBinding> {
 
     @Override
     protected void onInitView(View decorView) {
-        mBinding.tvTest.setOnClickListener(new View.OnClickListener() {
+        mBinding.viewTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new TestPopup(view.getContext()).showPopupWindow(view);
+                new DemoPopup(self()).showPopupWindow(view);
             }
         });
-    }
-
-    static class TestPopup extends BasePopupWindow {
-
-        private RecyclerView mRvTest;
-
-        public TestPopup(Context context) {
-            super(context);
-            setContentView(R.layout.popup_my_test);
-            mRvTest = findViewById(R.id.rv_test);
-            mRvTest.setLayoutManager(new LinearLayoutManager(context));
-            List<String> datas = new ArrayList<>();
-            for (int i = 0; i < 100; i++) {
-                datas.add("item:" + i);
-            }
-            mRvTest.setAdapter(new TestAdapter(datas));
-            setPopupGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);
-        }
-    }
-
-    static class TestAdapter extends RecyclerView.Adapter<TestAdapter.TestViewHolder> {
-        List<String> datas;
-
-        public TestAdapter(List<String> datas) {
-            this.datas = datas;
-        }
-
-        @NonNull
-        @Override
-        public TestAdapter.TestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new TestViewHolder(LayoutInflater.from(parent.getContext())
-                                              .inflate(android.R.layout.simple_list_item_1, parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull TestAdapter.TestViewHolder holder, int position) {
-            holder.tvText.setText(datas.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return datas.size();
-        }
-
-        class TestViewHolder extends RecyclerView.ViewHolder {
-            TextView tvText;
-
-            public TestViewHolder(@NonNull View itemView) {
-                super(itemView);
-                tvText = itemView.findViewById(android.R.id.text1);
-                tvText.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
-            }
-        }
     }
 }
