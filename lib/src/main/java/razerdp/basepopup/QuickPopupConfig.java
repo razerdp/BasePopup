@@ -70,11 +70,11 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
         //https://github.com/razerdp/BasePopup/issues/152
         return new QuickPopupConfig()
                 .withShowAnimation(AnimationHelper.asAnimation()
-                        .withScale(ScaleConfig.CENTER)
-                        .toShow())
+                                           .withScale(ScaleConfig.CENTER)
+                                           .toShow())
                 .withDismissAnimation(AnimationHelper.asAnimation()
-                        .withScale(ScaleConfig.CENTER)
-                        .toDismiss())
+                                              .withScale(ScaleConfig.CENTER)
+                                              .toDismiss())
                 .fadeInAndOut(Build.VERSION.SDK_INT != Build.VERSION_CODES.M);
     }
 
@@ -218,14 +218,6 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
         return this;
     }
 
-    /**
-     * @deprecated 请使用 {@link #outSideTouchable(boolean)}
-     */
-    @Deprecated
-    public QuickPopupConfig allowInterceptTouchEvent(boolean allowInterceptTouchEvent) {
-        setFlag(OUT_SIDE_TOUCHABLE, !allowInterceptTouchEvent);
-        return this;
-    }
 
     public QuickPopupConfig outSideTouchable(boolean outSideTouchable) {
         setFlag(OUT_SIDE_TOUCHABLE, outSideTouchable);
@@ -242,14 +234,6 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
         return this;
     }
 
-    /**
-     * @deprecated 请使用 {@link #outSideDismiss(boolean)}
-     */
-    @Deprecated
-    public QuickPopupConfig dismissOnOutSideTouch(boolean dismissOutSide) {
-        setFlag(OUT_SIDE_DISMISS, dismissOutSide);
-        return this;
-    }
 
     public QuickPopupConfig minWidth(int minWidth) {
         this.minWidth = minWidth;
@@ -278,11 +262,6 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
 
     public QuickPopupConfig fullScreen(boolean fullscreen) {
         setFlag(OVERLAY_STATUS_BAR, fullscreen);
-        return this;
-    }
-
-    @Deprecated
-    public QuickPopupConfig fitSize(boolean keep) {
         return this;
     }
 

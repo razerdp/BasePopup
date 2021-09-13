@@ -84,12 +84,6 @@ public class QuickPopupBuilder implements LifecycleObserver {
         return this;
     }
 
-    @Deprecated
-    public QuickPopupBuilder wrapContentMode() {
-        return width(ViewGroup.LayoutParams.WRAP_CONTENT)
-                .height(ViewGroup.LayoutParams.WRAP_CONTENT);
-    }
-
 
     public final QuickPopupConfig getConfig() {
         return mConfig;

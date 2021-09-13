@@ -341,6 +341,18 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(widthSize, widthMode);
         childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, heightMode);
 
+        View contentView = mTarget.findViewById(mHelper.contentRootId);
+        if (contentView != null) {
+            LayoutParams contentViewLayoutParams = contentView.getLayoutParams();
+            // 如果contentview的宽高都是固定值，那我们需要取最小值了（因为外层已经限定了大小）
+            if (contentViewLayoutParams.width > 0) {
+                contentViewLayoutParams.width = Math.min(contentViewLayoutParams.width, widthSize);
+            }
+            if (contentViewLayoutParams.height > 0) {
+                contentViewLayoutParams.height = Math.min(contentViewLayoutParams.height, heightSize);
+            }
+        }
+
         mTarget.measure(childWidthMeasureSpec, childHeightMeasureSpec);
     }
 
@@ -439,7 +451,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                         offsetX += childLeftMargin - childRightMargin;
                         break;
                     case Gravity.LEFT:
-                    default:
                         if (isRelativeToAnchor) {
                             contentRect.left = isHorizontalAlignAnchorSlide ? anchorRect.left : anchorRect.left - width;
                             offsetX += isHorizontalAlignAnchorSlide ? childLeftMargin : -childRightMargin;
@@ -447,6 +458,15 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                             contentRect.left = contentBounds.left;
                             offsetX += childLeftMargin;
                         }
+                        break;
+                    default:
+                        // 没设置水平方向的情况下，如果跟anchor关联，则应该左边缘对齐，而非显示在左边
+                        if (isRelativeToAnchor) {
+                            contentRect.left = anchorRect.left;
+                        } else {
+                            contentRect.left = contentBounds.left;
+                        }
+                        offsetX += childLeftMargin;
                         break;
                 }
 

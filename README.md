@@ -94,6 +94,11 @@ dependencies {
     * 2021/08/24
         * 修复measure问题，fixed [#435](https://github.com/razerdp/BasePopup/issues/435)
         * 修复触摸事件分发判断错误的问题
+    * 2021/09/13
+        * 统一margin逻辑，现在margin不再作为offset使用 [(#439)](https://github.com/razerdp/BasePopup/issues/439)
+        * 由于第一点的更新，因此去掉`setFitSize()`方法
+        * 清除所有标记过时的方法
+        * 修复因某次改动导致的默认关联AnchorView时，水平方向上显示在目标左边而不是对齐左边缘的问题
 
 ### 例子预览
 

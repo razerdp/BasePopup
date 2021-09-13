@@ -204,6 +204,16 @@
  */
 package razerdp.basepopup;
 
+import static razerdp.basepopup.BasePopupFlag.AUTO_INPUT_METHOD;
+import static razerdp.basepopup.BasePopupFlag.AUTO_MIRROR;
+import static razerdp.basepopup.BasePopupFlag.BACKPRESS_ENABLE;
+import static razerdp.basepopup.BasePopupFlag.CLIP_CHILDREN;
+import static razerdp.basepopup.BasePopupFlag.FADE_ENABLE;
+import static razerdp.basepopup.BasePopupFlag.MODE_ADD;
+import static razerdp.basepopup.BasePopupFlag.MODE_REMOVE;
+import static razerdp.basepopup.BasePopupFlag.OUT_SIDE_DISMISS;
+import static razerdp.basepopup.BasePopupFlag.OUT_SIDE_TOUCHABLE;
+
 import android.animation.Animator;
 import android.app.Activity;
 import android.app.Dialog;
@@ -244,16 +254,6 @@ import razerdp.util.KeyboardUtils;
 import razerdp.util.PopupUiUtils;
 import razerdp.util.PopupUtils;
 import razerdp.util.log.PopupLog;
-
-import static razerdp.basepopup.BasePopupFlag.AUTO_INPUT_METHOD;
-import static razerdp.basepopup.BasePopupFlag.AUTO_MIRROR;
-import static razerdp.basepopup.BasePopupFlag.BACKPRESS_ENABLE;
-import static razerdp.basepopup.BasePopupFlag.CLIP_CHILDREN;
-import static razerdp.basepopup.BasePopupFlag.FADE_ENABLE;
-import static razerdp.basepopup.BasePopupFlag.MODE_ADD;
-import static razerdp.basepopup.BasePopupFlag.MODE_REMOVE;
-import static razerdp.basepopup.BasePopupFlag.OUT_SIDE_DISMISS;
-import static razerdp.basepopup.BasePopupFlag.OUT_SIDE_TOUCHABLE;
 
 /**
  * <br>
@@ -905,11 +905,14 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
         return mAnchorDecorView;
     }
 
-    void dispatchOutSideEvent(MotionEvent event, boolean touchInMask, boolean isMaskPressed) {
-        boolean consumeEvent = onOutSideTouch(event, touchInMask, isMaskPressed);
+    void dispatchOutSideEvent(MotionEvent event, boolean touchInBackground, boolean isMaskPressed) {
+        boolean consumeEvent = onOutSideTouch(event, touchInBackground, isMaskPressed);
         if (mHelper.isOutSideTouchable()) {
             WindowManagerProxy proxy = mPopupWindowProxy.prevWindow();
             if (proxy == null) {
+                if (consumeEvent) {
+                    event.setAction(MotionEvent.ACTION_CANCEL);
+                }
                 if (mAnchorDecorView != null) {
                     mAnchorDecorView.getRootView().dispatchTouchEvent(event);
                 } else {
@@ -966,24 +969,6 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
      * PopupWindow是否需要自适应输入法，为输入法弹出让出区域
      * </p>
      *
-     * @param needAdjust <ul>
-     *                   <li>true for "SOFT_INPUT_ADJUST_RESIZE" mode</li>
-     *                   <li>false for "SOFT_INPUT_ADJUST_NOTHING" mode</li>
-     *                   </ul>
-     *                   <br>
-     * @deprecated 预计3.2版本删除
-     */
-    @Deprecated
-    public BasePopupWindow setAdjustInputMethod(boolean needAdjust) {
-        mHelper.mSoftInputMode = needAdjust ? WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE : WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED;
-        return this;
-    }
-
-    /**
-     * <p>
-     * PopupWindow是否需要自适应输入法，为输入法弹出让出区域
-     * </p>
-     *
      * @param adaptive <ul>
      *                 <li>true for "SOFT_INPUT_ADJUST_RESIZE" mode</li>
      *                 <li>false for "SOFT_INPUT_STATE_UNCHANGED" mode</li>
@@ -1007,56 +992,11 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
      *             <li>{@link BasePopupWindow#FLAG_KEYBOARD_ANIMATE_ALIGN}，键盘是否动画适配</li>
      *             <li>{@link BasePopupWindow#FLAG_KEYBOARD_FORCE_ADJUST}，是否强制适配输入法</li>
      *             </ul>
-     * @deprecated 预计3.2版本删除
-     */
-    @Deprecated
-    public BasePopupWindow setAdjustInputMode(int flag) {
-        return setAdjustInputMode(0, flag);
-    }
-
-    /**
-     * <p>
-     * 设置PopupWindow适配输入法的适配模式
-     * </p>
-     *
-     * @param flag <ul>
-     *             <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_ROOT}，键盘适配对齐到整个popup content view</li>
-     *             <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_VIEW}，键盘适配对齐到指定的view，需要传入viewid</li>
-     *             <li>{@link BasePopupWindow#FLAG_KEYBOARD_IGNORE_OVER}，键盘适配仅作用于无法完整显示的情况</li>
-     *             <li>{@link BasePopupWindow#FLAG_KEYBOARD_ANIMATE_ALIGN}，键盘是否动画适配</li>
-     *             <li>{@link BasePopupWindow#FLAG_KEYBOARD_FORCE_ADJUST}，是否强制适配输入法</li>
-     *             </ul>
      */
     public BasePopupWindow setKeyboardAdaptionMode(int mode) {
         return setKeyboardAdaptionMode(0, mode);
     }
 
-    /**
-     * <p>
-     * 设置PopupWindow适配输入法的适配模式
-     * </p>
-     *
-     * @param viewId keyboard对齐的View id
-     * @param flag   <ul>
-     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_ROOT}，键盘适配对齐到整个popup content view</li>
-     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_VIEW}，键盘适配对齐到指定的view，需要传入viewid</li>
-     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_IGNORE_OVER}，键盘适配仅作用于无法完整显示的情况</li>
-     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_ANIMATE_ALIGN}，键盘是否动画适配</li>
-     *               <li>{@link BasePopupWindow#FLAG_KEYBOARD_FORCE_ADJUST}，是否强制适配输入法</li>
-     *               </ul>
-     * @deprecated 预计3.2版本删除
-     */
-    @Deprecated
-    public BasePopupWindow setAdjustInputMode(int viewId, int flag) {
-        mHelper.keybaordAlignViewId = viewId;
-        mHelper.setFlag(FLAG_KEYBOARD_ALIGN_TO_ROOT
-                                | FLAG_KEYBOARD_ALIGN_TO_VIEW
-                                | FLAG_KEYBOARD_IGNORE_OVER
-                                | FLAG_KEYBOARD_ANIMATE_ALIGN
-                                | FLAG_KEYBOARD_FORCE_ADJUST, false);
-        mHelper.setFlag(flag, true);
-        return this;
-    }
 
     /**
      * <p>
@@ -1080,33 +1020,6 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
                                 | FLAG_KEYBOARD_ANIMATE_ALIGN
                                 | FLAG_KEYBOARD_FORCE_ADJUST, false);
         mHelper.setFlag(mode, true);
-        return this;
-    }
-
-    /**
-     * <p>
-     * 设置PopupWindow适配输入法的适配模式
-     * </p>
-     *
-     * @param alignTarget keyboard对齐的Vie
-     * @param flag        <ul>
-     *                    <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_ROOT}，键盘适配对齐到整个popup content view</li>
-     *                    <li>{@link BasePopupWindow#FLAG_KEYBOARD_ALIGN_TO_VIEW}，键盘适配对齐到指定的view，需要传入view，传入view的时候将会优先于传入viewid</li>
-     *                    <li>{@link BasePopupWindow#FLAG_KEYBOARD_IGNORE_OVER}，键盘适配仅作用于无法完整显示的情况</li>
-     *                    <li>{@link BasePopupWindow#FLAG_KEYBOARD_ANIMATE_ALIGN}，键盘是否动画适配</li>
-     *                    <li>{@link BasePopupWindow#FLAG_KEYBOARD_FORCE_ADJUST}，是否强制适配输入法</li>
-     *                    </ul>
-     * @deprecated 预计3.2版本删除
-     */
-    @Deprecated
-    public BasePopupWindow setAdjustInputMode(View alignTarget, int flag) {
-        mHelper.keybaordAlignView = alignTarget;
-        mHelper.setFlag(FLAG_KEYBOARD_ALIGN_TO_ROOT
-                                | FLAG_KEYBOARD_ALIGN_TO_VIEW
-                                | FLAG_KEYBOARD_IGNORE_OVER
-                                | FLAG_KEYBOARD_ANIMATE_ALIGN
-                                | FLAG_KEYBOARD_FORCE_ADJUST, false);
-        mHelper.setFlag(flag, true);
         return this;
     }
 
@@ -1136,18 +1049,6 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
         return this;
     }
 
-    /**
-     * <p>
-     * PopupWindow在展示的时候自动打开输入法
-     * </p>
-     *
-     * @deprecated 预计3.2版本删除
-     */
-    @Deprecated
-    public BasePopupWindow setAutoShowInputMethod(boolean autoShow) {
-        mHelper.setFlag(AUTO_INPUT_METHOD, autoShow);
-        return this;
-    }
 
     /**
      * <p>
@@ -1156,19 +1057,6 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
      */
     public BasePopupWindow setAutoShowKeyboard(boolean autoShow) {
         return setAutoShowKeyboard(null, autoShow);
-    }
-
-    /**
-     * <p>
-     * PopupWindow在展示的时候自动打开输入法，在传入参数时请务必传入{@link EditText}
-     * </p>
-     *
-     * @deprecated 预计3.2版本删除
-     */
-    @Deprecated
-    public BasePopupWindow setAutoShowInputMethod(EditText editText, boolean autoShow) {
-        mHelper.mAutoShowInputEdittext = editText;
-        return setAutoShowInputMethod(autoShow);
     }
 
     /**
@@ -1727,8 +1615,8 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
      * </ul>
      *
      * @param mode <ul><li>GravityMode.RELATIVE_TO_ANCHOR：该模式将会以Anchor作为参考点，表示Popup处于该Anchor的哪个位置</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
-     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 </ul>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <li>GravityMode.ALIGN_TO_ANCHOR_SIDE：该模式将会以Anchor作为参考点，表示Popup对齐Anchor的哪条边</li>
+     *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 </ul>
      */
     public BasePopupWindow setPopupGravity(GravityMode mode, int popupGravity) {
         mHelper.setPopupGravity(mode, popupGravity);
@@ -1757,11 +1645,6 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
     public BasePopupWindow setPopupGravityMode(GravityMode horizontalMode, GravityMode verticalMode) {
         mHelper.setPopupGravityMode(horizontalMode, verticalMode);
         return this;
-    }
-
-    @Deprecated
-    public boolean isAutoLocatePopup() {
-        return isAutoMirror();
     }
 
     public boolean isAutoMirror() {
@@ -1980,13 +1863,6 @@ public abstract class BasePopupWindow implements PopupWindow.OnDismissListener, 
         return this;
     }
 
-    /**
-     * 是否允许BasePopup自动调整大小
-     */
-    @Deprecated
-    public BasePopupWindow setFitSize(boolean canResize) {
-        return this;
-    }
 
     /**
      * 设置背景蒙层显示的动画，如果为空，则蒙层不显示动画，直接弹出
