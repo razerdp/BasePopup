@@ -1,5 +1,7 @@
 package razerdp.basepopup;
 
+import static razerdp.basepopup.BasePopupWindow.GravityMode;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -252,6 +254,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
         int gravity = mHelper.getPopupGravity();
 
+        final boolean isFitSizeable = mHelper.isFitsizable();
+
         //针对关联anchorView和对齐模式的测量（如果允许resize）
         if (mHelper.isWithAnchor()) {
             final Rect anchorRect = mHelper.getAnchorViewBound();
@@ -262,12 +266,12 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             int rr = parentWidth - anchorRect.right;
             int rb = parentHeight - anchorRect.bottom;
             //如果是对齐到anchor的边，则需要修正
-            if (mHelper.horizontalGravityMode == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE) {
+            if (mHelper.horizontalGravityMode == GravityMode.ALIGN_TO_ANCHOR_SIDE) {
                 rl = parentWidth - anchorRect.left;
                 rr = anchorRect.right;
             }
             //如果是对齐到anchor的边，则需要修正
-            if (mHelper.verticalGravityMode == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE) {
+            if (mHelper.verticalGravityMode == GravityMode.ALIGN_TO_ANCHOR_SIDE) {
                 rt = parentHeight - anchorRect.top;
                 rb = anchorRect.bottom;
             }
@@ -276,14 +280,14 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 case Gravity.LEFT:
                     if (lp.width == LayoutParams.MATCH_PARENT) {
                         widthSize = rl;
-                    } else {
+                    } else if (isFitSizeable) {
                         widthSize = Math.min(widthSize, rl);
                     }
                     break;
                 case Gravity.RIGHT:
                     if (lp.width == LayoutParams.MATCH_PARENT) {
                         widthSize = rr;
-                    } else {
+                    } else if (isFitSizeable) {
                         widthSize = Math.min(widthSize, rr);
                     }
                     break;
@@ -295,14 +299,14 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 case Gravity.TOP:
                     if (lp.height == LayoutParams.MATCH_PARENT) {
                         heightSize = rt;
-                    } else {
+                    } else if (isFitSizeable) {
                         heightSize = Math.min(heightSize, rt);
                     }
                     break;
                 case Gravity.BOTTOM:
                     if (lp.height == LayoutParams.MATCH_PARENT) {
                         heightSize = rb;
-                    } else {
+                    } else if (isFitSizeable) {
                         heightSize = Math.min(heightSize, rb);
                     }
                     break;
@@ -424,8 +428,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 anchorRect.set(mHelper.getAnchorViewBound());
                 anchorRect.offset(-location[0], -location[1]);
                 boolean isRelativeToAnchor = mHelper.isWithAnchor();
-                boolean isHorizontalAlignAnchorSlide = mHelper.horizontalGravityMode == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE;
-                boolean isVerticalAlignAnchorSlide = mHelper.verticalGravityMode == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE;
+                boolean isHorizontalAlignAnchorSlide = mHelper.horizontalGravityMode == GravityMode.ALIGN_TO_ANCHOR_SIDE;
+                boolean isVerticalAlignAnchorSlide = mHelper.verticalGravityMode == GravityMode.ALIGN_TO_ANCHOR_SIDE;
 
                 //不跟anchorView联系的情况下，gravity意味着在整个decorView中的方位
                 //如果跟anchorView联系，gravity意味着以anchorView为中心的方位

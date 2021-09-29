@@ -447,6 +447,10 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return (flag & WITH_ANCHOR) != 0;
     }
 
+    boolean isFitsizable() {
+        return (flag & FITSIZE) != 0;
+    }
+
     BasePopupHelper withAnchor(boolean showAsDropDown) {
         setFlag(WITH_ANCHOR, showAsDropDown);
         if (showAsDropDown && (popupGravity == Gravity.NO_GRAVITY || popupGravity == -1)) {
