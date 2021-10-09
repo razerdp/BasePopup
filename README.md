@@ -73,7 +73,7 @@ dependencies {
   implementation 'io.github.razerdp:BasePopup:3.1.8'
   
   // for snapshot
-  // implementation 'io.github.razerdp:BasePopup:3.1.9-SNAPSHOT'
+  // implementation 'io.github.razerdp:BasePopup:3.2.0-SNAPSHOT'
 }
 
 ```
