@@ -2,6 +2,7 @@ package razerdp.demo.popup.issue;
 
 import android.content.Context;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 
@@ -20,6 +21,7 @@ import razerdp.demo.utils.RandomUtil;
 import razerdp.demo.utils.UIHelper;
 import razerdp.util.animation.AnimationHelper;
 import razerdp.util.animation.ScaleConfig;
+import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2019/10/9.
@@ -37,7 +39,7 @@ public class PopupIssue230 extends BasePopupWindow {
         setMaxWidth(UIHelper.getScreenWidth() >> 1);
 
         List<String> data = new ArrayList<>();
-        for (int i = 0; i < RandomUtil.randomInt(5, 10); i++) {
+        for (int i = 0; i < 50; i++) {
             data.add("pos ： " + (i + 1));
         }
         mAdapter = new SimpleRecyclerViewAdapter<>(context, data);

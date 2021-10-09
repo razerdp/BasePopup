@@ -1,5 +1,6 @@
 package razerdp.demo.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,11 +31,12 @@ public class SizeLimitActivity extends BaseBindingActivity<ActivitySizeLimitBind
         return ActivitySizeLimitBinding.inflate(layoutInflater);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onInitView(View decorView) {
         mBinding.tvShow.setOnClickListener(this::showPopup);
         mBinding.tvShow.post(() -> mBinding.tvShow.setText(String.format(
-                "当前AnchorView宽高信息：\nw = %s \n h = %s\n长按拖动，点击弹窗",
+                "当前AnchorView宽高信息：\nw = %s \n h = %s\n长按拖动，点击弹窗（显示在Anchor下方）",
                 mBinding.tvShow.getWidth(),
                 mBinding.tvShow.getHeight())));
         final ViewConfiguration configuration = ViewConfiguration.get(this);
@@ -76,7 +78,7 @@ public class SizeLimitActivity extends BaseBindingActivity<ActivitySizeLimitBind
         if (mPopup == null) {
             mPopup = new PopupWidthHeightLimit(this);
         }
-        int gravity = Gravity.CENTER;
+        int gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
         int minWidth = StringUtil.toInt(mBinding.edMinWidth.getText().toString().trim());
         int minHeight = StringUtil.toInt(mBinding.edMinHeight.getText().toString().trim());
         int maxWidth = StringUtil.toInt(mBinding.edMaxWidth.getText().toString().trim());
@@ -87,18 +89,8 @@ public class SizeLimitActivity extends BaseBindingActivity<ActivitySizeLimitBind
         mPopup.setMaxHeight(mBinding.checkMaxHeight.isChecked() ? maxHeight : 0);
         mPopup.setWidthAsAnchorView(mBinding.checkWidthAsAnchor.isChecked());
         mPopup.setHeightAsAnchorView(mBinding.checkHeightAsAnchor.isChecked());
-        boolean showWithAnchorView = false;
-        if (mBinding.checkHeightAsAnchor.isChecked() ||
-                mBinding.checkWidthAsAnchor.isChecked() ||
-                mBinding.checkFitSize.isChecked()) {
-            gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
-            showWithAnchorView = true;
-        }
+        mPopup.setFitSize(mBinding.checkFitSize.isChecked());
         mPopup.setPopupGravity(gravity);
-        if (showWithAnchorView) {
-            mPopup.showPopupWindow(v);
-        } else {
-            mPopup.showPopupWindow();
-        }
+        mPopup.showPopupWindow(v);
     }
 }

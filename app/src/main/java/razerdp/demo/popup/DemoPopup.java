@@ -3,13 +3,13 @@ package razerdp.demo.popup;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Rect;
-import android.service.autofill.TextValueSanitizer;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.R;
 import razerdp.basepopup.databinding.PopupDemoBinding;

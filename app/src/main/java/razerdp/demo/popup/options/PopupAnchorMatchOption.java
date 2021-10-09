@@ -48,14 +48,12 @@ public class PopupAnchorMatchOption extends BaseOptionPopup<CommonAnchorMatchInf
         mBinding.rvContent.addItemDecoration(new GridItemDecoration(new SpaceOption.Builder().size(
                 UIHelper.DP12).build()));
         mBinding.rvContent.setItemAnimator(null);
-        mAdapter.setOnItemClickListener(new OnItemClickListener<Info>() {
-            @Override
-            public void onItemClick(View v, int position, Info data) {
-                data.checked = !data.checked;
-                mAdapter.notifyItemChanged(position);
-            }
+        mAdapter.setOnItemClickListener((v, position, data) -> {
+            data.checked = !data.checked;
+            mAdapter.notifyItemChanged(position);
         });
         mBinding.rvContent.setAdapter(mAdapter);
+        mBinding.tvGo.setOnClickListener(v -> apply());
     }
 
     @Override

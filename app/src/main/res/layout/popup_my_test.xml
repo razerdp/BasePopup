@@ -2,17 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_marginStart="32dp"
-    android:layout_marginTop="50dp"
-    android:layout_marginEnd="32dp"
-    android:layout_marginBottom="50dp"
-    android:background="@android:color/holo_red_dark">
+    android:layout_marginLeft="50dp"
+    android:layout_marginRight="50dp"
+    android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_test"
+    <View
+        android:id="@+id/view_test"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:overScrollMode="never" />
+        android:layout_height="300dp"
+        android:background="@color/common_red" />
 
 </LinearLayout>

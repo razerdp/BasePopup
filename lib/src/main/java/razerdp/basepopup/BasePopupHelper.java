@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -18,6 +19,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -35,6 +37,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -57,6 +60,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     BasePopupWindow mPopupWindow;
 
     WeakHashMap<Object, BasePopupEvent.EventObserver> eventObserverMap;
+
+    Map<Integer, Boolean> mFlagCacheMap;
+
 
     enum ShowMode {
         RELATIVE_TO_ANCHOR,
@@ -164,11 +170,13 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     int lastOverLayStatusBarMode, overlayStatusBarMode = DEFAULT_OVERLAY_STATUS_BAR_MODE;
     int lastOverlayNavigationBarMode, overlayNavigationBarMode = DEFAULT_OVERLAY_NAVIGATION_BAR_MODE;
 
+    boolean hideKeyboardOnDismiss = true;
 
     //unsafe
     BasePopupUnsafe.OnFitWindowManagerLayoutParamsCallback mOnFitWindowManagerLayoutParamsCallback;
 
     BasePopupHelper(BasePopupWindow popupWindow) {
+        mFlagCacheMap = new HashMap<>();
         mAnchorViewBound = new Rect();
         navigationBarBounds = new Rect();
         cutoutSafeRect = new Rect();
@@ -186,6 +194,18 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         this.mMaskViewDismissAnimation.setDuration(Resources.getSystem()
                                                            .getInteger(android.R.integer.config_shortAnimTime));
         isDefaultMaskViewDismissAnimation = true;
+    }
+
+    void cacheFlag(int flag, boolean onceCache) {
+        if (onceCache && mFlagCacheMap.containsKey(flag)) return;
+        mFlagCacheMap.put(flag, (this.flag & flag) != 0);
+    }
+
+    boolean restoreFlag(int flag, boolean defaultValue) {
+        if (mFlagCacheMap.containsKey(flag)) {
+            return mFlagCacheMap.remove(flag);
+        }
+        return defaultValue;
     }
 
     void observerEvent(Object who, BasePopupEvent.EventObserver observer) {
@@ -997,7 +1017,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     void forceDismiss() {
         if (mDismissAnimation != null) mDismissAnimation.cancel();
         if (mDismissAnimator != null) mDismissAnimator.cancel();
-        if (mPopupWindow != null) {
+        if (mPopupWindow != null && hideKeyboardOnDismiss) {
             KeyboardUtils.close(mPopupWindow.getContext());
         }
         if (dismissAnimationDelayRunnable != null) {
@@ -1022,6 +1042,10 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         }
         prepare(v, positionMode);
         mPopupWindow.mPopupWindowProxy.update();
+    }
+
+    void onConfigurationChanged(Configuration newConfig) {
+        update(mShowInfo == null ? null : mShowInfo.mAnchorView, mShowInfo == null ? false : mShowInfo.positionMode);
     }
 
     void dispatchOutSideEvent(MotionEvent event, boolean touchInMask, boolean isMaskPressed) {

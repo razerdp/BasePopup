@@ -57,6 +57,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
     Rect keyboardBoundsCache;
     boolean keyboardVisibleCache = false;
+    boolean touchDownInDecorView = false;
 
     private PopupDecorViewProxy(Context context) {
         super(context);
@@ -637,18 +638,26 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         if (mMaskLayout == null) {
             return super.dispatchTouchEvent(ev);
         }
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            touchDownInDecorView = touchInDecorView(ev);
+        }
+        if (touchDownInDecorView) {
+            return super.dispatchTouchEvent(ev);
+        } else {
+            return mMaskLayout.dispatchTouchEvent(ev);
+        }
+    }
+
+    boolean touchInDecorView(MotionEvent ev) {
+        if (mTarget == null) return false;
         int x = (int) ev.getX();
         int y = (int) ev.getY();
-        if (mTarget != null) {
-            View contentView = mTarget.findViewById(mHelper.contentRootId);
-            if (contentView != null) {
-                contentView.getGlobalVisibleRect(touchableRect);
-                if (!touchableRect.contains(x, y)) {
-                    return mMaskLayout.dispatchTouchEvent(ev);
-                }
-            }
+        View contentView = mTarget.findViewById(mHelper.contentRootId);
+        if (contentView != null) {
+            contentView.getGlobalVisibleRect(touchableRect);
+            return touchableRect.contains(x, y);
         }
-        return super.dispatchTouchEvent(ev);
+        return false;
     }
 
     @Override
@@ -716,7 +725,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         v.post(new Runnable() {
             @Override
             public void run() {
-                updateLayout();
+                if (mHelper != null) {
+                    mHelper.onConfigurationChanged(newConfig);
+                }
             }
         });
     }
