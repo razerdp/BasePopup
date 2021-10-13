@@ -3,13 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="50dp"
+    android:layout_marginTop="50dp"
     android:layout_marginRight="50dp"
     android:orientation="vertical">
 
     <View
         android:id="@+id/view_test"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="1500dp"
         android:background="@color/common_red" />
 
 </LinearLayout>

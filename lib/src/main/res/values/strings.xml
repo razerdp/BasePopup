@@ -9,5 +9,6 @@
     <string name="basepopup_has_been_shown">BasePopup已经显示了</string>
     <string name="basepopup_shown_successful">弹窗成功</string>
     <string name="basepopup_host">宿主（%s）</string>
+    <string name="basepopup_host_destroyed">宿主已经被销毁</string>
 
 </resources>

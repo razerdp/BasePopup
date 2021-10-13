@@ -1,21 +1,23 @@
 package razerdp.widget;
 
-import android.animation.Animator;
 import android.app.Dialog;
 import android.content.Context;
 import android.util.Pair;
 import android.view.View;
-import android.view.animation.Animation;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 import razerdp.basepopup.BasePopupFlag;
 import razerdp.basepopup.BasePopupWindow;
+import razerdp.basepopup.QuickPopupBuilder;
 import razerdp.basepopup.QuickPopupConfig;
+import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2018/8/23.
@@ -25,28 +27,33 @@ import razerdp.basepopup.QuickPopupConfig;
 public class QuickPopup extends BasePopupWindow {
 
     private QuickPopupConfig mConfig;
+    private QuickPopupBuilder mBuilder;
 
-    public QuickPopup(Fragment fragment, int width, int height, QuickPopupConfig config) {
-        super(fragment, width, height);
-        mConfig = config;
+
+    public QuickPopup(Fragment fragment, QuickPopupBuilder builder) {
+        super(fragment, builder.getWidth(), builder.getHeight());
+        mBuilder = builder;
+        mConfig = builder.getConfig();
         if (mConfig == null) {
             throw new NullPointerException("QuickPopupConfig must be not null!");
         }
         setContentView(mConfig.getContentViewLayoutid());
     }
 
-    public QuickPopup(Dialog dialog, int width, int height, QuickPopupConfig config) {
-        super(dialog, width, height);
-        mConfig = config;
+    public QuickPopup(Dialog dialog, QuickPopupBuilder builder) {
+        super(dialog, builder.getWidth(), builder.getHeight());
+        mBuilder = builder;
+        mConfig = builder.getConfig();
         if (mConfig == null) {
             throw new NullPointerException("QuickPopupConfig must be not null!");
         }
         setContentView(mConfig.getContentViewLayoutid());
     }
 
-    public QuickPopup(Context context, int width, int height, QuickPopupConfig config) {
-        super(context, width, height);
-        mConfig = config;
+    public QuickPopup(Context context, QuickPopupBuilder builder) {
+        super(context, builder.getWidth(), builder.getHeight());
+        mBuilder = builder;
+        mConfig = builder.getConfig();
         if (mConfig == null) {
             throw new NullPointerException("QuickPopupConfig must be not null!");
         }
@@ -66,39 +73,23 @@ public class QuickPopup extends BasePopupWindow {
         } else {
             setBlurBackgroundEnable((config.flag & BasePopupFlag.BLUR_BACKGROUND) != 0, config.getOnBlurOptionInitListener());
         }
-
         setPopupFadeEnable((config.flag & BasePopupFlag.FADE_ENABLE) != 0);
-
+        for (Map.Entry<String, Object> entry : config.getInvokeParams().entrySet()) {
+            String methodName = entry.getKey();
+            Method method = config.getMethod(methodName);
+            PopupLog.i(methodName,method);
+            if (method != null) {
+                try {
+                    method.invoke(this, entry.getValue());
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         applyClick();
 
-        setOffsetX(config.getOffsetX());
-        setOffsetY(config.getOffsetY());
-        setMaskOffsetX(config.getMaskOffsetX());
-        setMaskOffsetY(config.getMaskOffsetY());
-
-
-        setClipChildren((config.flag & BasePopupFlag.CLIP_CHILDREN) != 0);
-
-        setOutSideDismiss((config.flag & BasePopupFlag.OUT_SIDE_DISMISS) != 0);
-        setOutSideTouchable((config.flag & BasePopupFlag.OUT_SIDE_TOUCHABLE) != 0);
-        setBackPressEnable((config.flag & BasePopupFlag.BACKPRESS_ENABLE) != 0);
-        setPopupGravity(config.getGravity());
-        setAlignBackground((config.flag & BasePopupFlag.ALIGN_BACKGROUND) != 0);
-        setAlignBackgroundGravity(config.getAlignBackgroundGravity());
-        setAutoMirrorEnable((config.flag & BasePopupFlag.AUTO_MIRROR) != 0);
-        setOverlayStatusbar((config.flag & BasePopupFlag.OVERLAY_STATUS_BAR) != 0);
-        setOverlayNavigationBar((config.flag & BasePopupFlag.OVERLAY_NAVIGATION_BAR) != 0);
-        setOverlayStatusbarMode(config.getOverlayStatusBarMode());
-        setOverlayNavigationBarMode(config.getOverlayNavigationBarMode());
-        setOnDismissListener(config.getDismissListener());
-        setBackground(config.getBackground());
-        linkTo(config.getLinkedView());
-        setMinWidth(config.getMinWidth());
-        setMaxWidth(config.getMaxWidth());
-        setMinHeight(config.getMinHeight());
-        setMaxHeight(config.getMaxHeight());
-        setOnKeyboardChangeListener(config.getOnKeyboardChangeListener());
-        setKeyEventListener(config.getKeyEventListener());
     }
 
     private void applyClick() {
@@ -135,38 +126,11 @@ public class QuickPopup extends BasePopupWindow {
     }
 
     @Override
-    protected Animation onCreateShowAnimation() {
-        if (isConfigDestroyed()) return null;
-        return mConfig.getShowAnimation();
-    }
-
-    @Override
-    protected Animation onCreateDismissAnimation() {
-        if (isConfigDestroyed()) return null;
-        return mConfig.getDismissAnimation();
-    }
-
-    @Override
-    protected Animator onCreateDismissAnimator() {
-        if (isConfigDestroyed()) return null;
-        return mConfig.getDismissAnimator();
-    }
-
-    @Override
-    protected Animator onCreateShowAnimator() {
-        if (isConfigDestroyed()) return null;
-        return mConfig.getShowAnimator();
-    }
-
-    boolean isConfigDestroyed() {
-        return mConfig == null || mConfig.isDestroyed();
-    }
-
-    @Override
     public void onDestroy() {
-        if (mConfig != null) {
-            mConfig.clear(true);
+        if (mBuilder != null) {
+            mBuilder.clear(true);
         }
+        mBuilder = null;
         mConfig = null;
         super.onDestroy();
     }

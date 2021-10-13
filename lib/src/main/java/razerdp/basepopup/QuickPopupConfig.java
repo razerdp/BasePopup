@@ -5,65 +5,98 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Pair;
-import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
 
 import razerdp.blur.PopupBlurOption;
 import razerdp.util.KeyboardUtils;
 import razerdp.util.animation.AnimationHelper;
 import razerdp.util.animation.ScaleConfig;
+import razerdp.util.log.PopupLog;
+import razerdp.widget.QuickPopup;
 
 /**
  * Created by 大灯泡 on 2018/8/23.
  */
 public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
+    static final Map<String, Method> INVOKE_MAP = new HashMap<>();
+
+    static Class<?> getClass(Object obj) {
+        if (obj instanceof Integer) {
+            return int.class;
+        }
+        if (obj instanceof Boolean) {
+            return boolean.class;
+        }
+        if (obj instanceof Double) {
+            return double.class;
+        }
+        if (obj instanceof Float) {
+            return Float.class;
+        }
+        if (obj instanceof Long) {
+            return long.class;
+        }
+        if (obj instanceof Animation) {
+            return Animation.class;
+        }
+        if (obj instanceof Animator) {
+            return Animator.class;
+        }
+        if (obj instanceof Drawable) {
+            return Drawable.class;
+        }
+        return obj.getClass();
+    }
+
+    static boolean AppendInvokeMap(String name, Class<?> paramClass) {
+        if (INVOKE_MAP.containsKey(name)) {
+            return true;
+        }
+        Method m = FindMethod(name, paramClass);
+        if (m != null) {
+            INVOKE_MAP.put(name, m);
+            return true;
+        }
+        return false;
+    }
+
+    static Method FindMethod(String methodName, Class<?> parameterTypes) {
+        try {
+            return QuickPopup.class.getMethod(methodName, parameterTypes);
+        } catch (Exception e) {
+            PopupLog.e("not found", methodName, parameterTypes.getName());
+            return null;
+        }
+    }
+
+    void set(String name, Object obj) {
+        if (AppendInvokeMap(name, getClass(obj))) {
+            invokeParams.put(name, obj);
+        }
+    }
+
+    protected Map<String, Object> invokeParams;
+
     protected int contentViewLayoutid;
-
-    protected Animation mShowAnimation;
-    protected Animation mDismissAnimation;
-
-    protected Animator mShowAnimator;
-    protected Animator mDismissAnimator;
 
     public int flag = IDLE;
 
-    protected BasePopupWindow.OnDismissListener mDismissListener;
-    protected KeyboardUtils.OnKeyboardChangeListener mOnKeyboardChangeListener;
-    protected BasePopupWindow.KeyEventListener mKeyEventListener;
     protected BasePopupWindow.OnBlurOptionInitListener mOnBlurOptionInitListener;
     protected PopupBlurOption mPopupBlurOption;
-    protected int gravity = Gravity.CENTER;
-    protected int alignBackgroundGravity = Gravity.TOP;
-
-    protected int offsetX;
-    protected int offsetY;
-    protected int maskOffsetX;
-    protected int maskOffsetY;
-    protected int overlayStatusBarMode = BasePopupHelper.DEFAULT_OVERLAY_STATUS_BAR_MODE;
-    protected int overlayNavigationBarMode = BasePopupHelper.DEFAULT_OVERLAY_NAVIGATION_BAR_MODE;
-
-    protected int minWidth;
-    protected int maxWidth;
-    protected int minHeight;
-    protected int maxHeight;
-
-    protected Drawable background = new ColorDrawable(BasePopupWindow.DEFAULT_BACKGROUND_COLOR);
-
-    protected View mLinkedView;
-
     HashMap<Integer, Pair<View.OnClickListener, Boolean>> mListenersHolderMap;
-
     volatile boolean destroyed;
-
 
     public QuickPopupConfig() {
         //https://github.com/razerdp/BasePopup/issues/152
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
             flag &= ~FADE_ENABLE;
         }
+        invokeParams = new HashMap<>();
     }
 
     public static QuickPopupConfig generateDefault() {
@@ -79,27 +112,27 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
     }
 
     public QuickPopupConfig withShowAnimation(Animation showAnimation) {
-        mShowAnimation = showAnimation;
+        set("setShowAnimation", showAnimation);
         return this;
     }
 
     public QuickPopupConfig withDismissAnimation(Animation dismissAnimation) {
-        mDismissAnimation = dismissAnimation;
+        set("setDismissAnimation", dismissAnimation);
         return this;
     }
 
     public QuickPopupConfig withShowAnimator(Animator showAnimator) {
-        mShowAnimator = showAnimator;
+        set("setShowAnimator", showAnimator);
         return this;
     }
 
     public QuickPopupConfig withDismissAnimator(Animator dismissAnimator) {
-        mDismissAnimator = dismissAnimator;
+        set("setDismissAnimator", dismissAnimator);
         return this;
     }
 
     public QuickPopupConfig dismissListener(BasePopupWindow.OnDismissListener dismissListener) {
-        mDismissListener = dismissListener;
+        set("setOnDismissListener", dismissListener);
         return this;
     }
 
@@ -136,71 +169,63 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
     }
 
     public QuickPopupConfig offsetX(int offsetX) {
-        this.offsetX = offsetX;
+        set("setOffsetX", offsetX);
         return this;
     }
 
     public QuickPopupConfig maskOffsetX(int offsetX) {
-        this.maskOffsetX = offsetX;
+        set("setMaskOffsetX", offsetX);
         return this;
     }
 
 
     public QuickPopupConfig offsetY(int offsetY) {
-        this.offsetY = offsetY;
+        set("setOffsetY", offsetY);
         return this;
     }
 
     public QuickPopupConfig maskOffsetY(int offsetY) {
-        this.maskOffsetY = offsetY;
+        set("setMaskOffsetY", offsetY);
         return this;
     }
 
     public QuickPopupConfig overlayStatusbarMode(int mode) {
-        this.overlayStatusBarMode = mode;
+        set("setOverlayStatusbarMode", mode);
         return this;
     }
 
     public QuickPopupConfig overlayNavigationBarMode(int mode) {
-        this.overlayNavigationBarMode = mode;
+        set("setOverlayNavigationBarMode", mode);
         return this;
     }
 
     public QuickPopupConfig overlayStatusbar(boolean overlay) {
-        if (!overlay) {
-            this.flag &= ~BasePopupFlag.OVERLAY_STATUS_BAR;
-        } else {
-            this.flag |= BasePopupFlag.OVERLAY_STATUS_BAR;
-        }
+        set("setOverlayStatusbar", overlay);
         return this;
     }
 
     public QuickPopupConfig overlayNavigationBar(boolean overlay) {
-        if (!overlay) {
-            this.flag &= ~BasePopupFlag.OVERLAY_NAVIGATION_BAR;
-        } else {
-            this.flag |= BasePopupFlag.OVERLAY_NAVIGATION_BAR;
-        }
+        set("setOverlayNavigationBar", overlay);
         return this;
     }
 
     public QuickPopupConfig alignBackground(boolean alignBackground) {
-        setFlag(ALIGN_BACKGROUND, alignBackground);
+        set("setAlignBackground", alignBackground);
         return this;
     }
 
     public QuickPopupConfig alignBackgroundGravity(int gravity) {
-        this.alignBackgroundGravity = gravity;
+        set("setAlignBackgroundGravity", gravity);
         return this;
     }
 
-    public QuickPopupConfig autoLocated(boolean autoLocated) {
-        setFlag(AUTO_MIRROR, autoLocated);
+    public QuickPopupConfig autoMirrorEnable(boolean autoMirrorEnable) {
+        set("setAutoMirrorEnable", autoMirrorEnable);
         return this;
     }
 
     public QuickPopupConfig background(Drawable background) {
-        this.background = background;
+        set("setBackground", background);
         return this;
     }
 
@@ -209,23 +234,23 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
     }
 
     public QuickPopupConfig gravity(int gravity) {
-        this.gravity = gravity;
+        set("setPopupGravity", gravity);
         return this;
     }
 
     public QuickPopupConfig clipChildren(boolean clipChildren) {
-        setFlag(CLIP_CHILDREN, clipChildren);
+        set("setClipChildren", clipChildren);
         return this;
     }
 
 
     public QuickPopupConfig outSideTouchable(boolean outSideTouchable) {
-        setFlag(OUT_SIDE_TOUCHABLE, outSideTouchable);
+        set("setOutSideTouchable", outSideTouchable);
         return this;
     }
 
     public QuickPopupConfig linkTo(View linkedView) {
-        mLinkedView = linkedView;
+        set("linkTo", linkedView);
         return this;
     }
 
@@ -236,80 +261,61 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
 
 
     public QuickPopupConfig minWidth(int minWidth) {
-        this.minWidth = minWidth;
+        set("setMinWidth", minWidth);
         return this;
     }
 
     public QuickPopupConfig maxWidth(int maxWidth) {
-        this.maxWidth = maxWidth;
+        set("setMaxWidth", maxWidth);
         return this;
     }
 
     public QuickPopupConfig minHeight(int minHeight) {
-        this.minHeight = minHeight;
+        set("setMinHeight", minHeight);
         return this;
     }
 
     public QuickPopupConfig maxHeight(int maxHeight) {
-        this.maxHeight = maxHeight;
+        set("setMaxHeight", maxHeight);
         return this;
     }
 
     public QuickPopupConfig backpressEnable(boolean enable) {
-        setFlag(BACKPRESS_ENABLE, enable);
+        set("setBackPressEnable", enable);
         return this;
     }
-
-    public QuickPopupConfig fullScreen(boolean fullscreen) {
-        setFlag(OVERLAY_STATUS_BAR, fullscreen);
-        return this;
-    }
-
 
     public QuickPopupConfig outSideDismiss(boolean outsideDismiss) {
-        setFlag(OUT_SIDE_DISMISS, outsideDismiss);
+        set("setOutSideDismiss", outsideDismiss);
         return this;
     }
 
     public QuickPopupConfig keyEventListener(BasePopupWindow.KeyEventListener keyEventListener) {
-        this.mKeyEventListener = keyEventListener;
+        set("setKeyEventListener", keyEventListener);
         return this;
     }
 
     public QuickPopupConfig keyBoardChangeListener(KeyboardUtils.OnKeyboardChangeListener listener) {
-        this.mOnKeyboardChangeListener = listener;
+        set("setOnKeyboardChangeListener", listener);
         return this;
     }
     //-----------------------------------------getter-----------------------------------------
 
-    public Animation getShowAnimation() {
-        return mShowAnimation;
+
+    public Map<String, Object> getInvokeParams() {
+        return invokeParams;
     }
 
-    public Animation getDismissAnimation() {
-        return mDismissAnimation;
-    }
-
-    public Animator getShowAnimator() {
-        return mShowAnimator;
-    }
-
-    public Animator getDismissAnimator() {
-        return mDismissAnimator;
+    public Method getMethod(String name) {
+        if (INVOKE_MAP.containsKey(name)) {
+            return INVOKE_MAP.get(name);
+        }
+        return null;
     }
 
     public PopupBlurOption getPopupBlurOption() {
         return mPopupBlurOption;
     }
-
-    public int getOffsetX() {
-        return offsetX;
-    }
-
-    public int getOffsetY() {
-        return offsetY;
-    }
-
 
     public HashMap<Integer, Pair<View.OnClickListener, Boolean>> getListenersHolderMap() {
         return mListenersHolderMap;
@@ -319,44 +325,8 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
         return mOnBlurOptionInitListener;
     }
 
-    public int getAlignBackgroundGravity() {
-        return alignBackgroundGravity;
-    }
-
-    public BasePopupWindow.OnDismissListener getDismissListener() {
-        return mDismissListener;
-    }
-
-    public Drawable getBackground() {
-        return background;
-    }
-
-    public int getGravity() {
-        return gravity;
-    }
-
     public int getContentViewLayoutid() {
         return contentViewLayoutid;
-    }
-
-    public View getLinkedView() {
-        return mLinkedView;
-    }
-
-    public int getMinWidth() {
-        return minWidth;
-    }
-
-    public int getMaxWidth() {
-        return maxWidth;
-    }
-
-    public int getMinHeight() {
-        return minHeight;
-    }
-
-    public int getMaxHeight() {
-        return maxHeight;
     }
 
     private void setFlag(int flag, boolean added) {
@@ -365,30 +335,6 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
         } else {
             this.flag |= flag;
         }
-    }
-
-    public int getMaskOffsetX() {
-        return maskOffsetX;
-    }
-
-    public int getMaskOffsetY() {
-        return maskOffsetY;
-    }
-
-    public int getOverlayStatusBarMode() {
-        return overlayStatusBarMode;
-    }
-
-    public int getOverlayNavigationBarMode() {
-        return overlayNavigationBarMode;
-    }
-
-    public KeyboardUtils.OnKeyboardChangeListener getOnKeyboardChangeListener() {
-        return mOnKeyboardChangeListener;
-    }
-
-    public BasePopupWindow.KeyEventListener getKeyEventListener() {
-        return mKeyEventListener;
     }
 
     public boolean isDestroyed() {
@@ -401,19 +347,12 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
         if (mPopupBlurOption != null) {
             mPopupBlurOption.clear();
         }
-        mShowAnimation = null;
-        mDismissAnimation = null;
-        mShowAnimator = null;
-        mDismissAnimator = null;
-        mDismissListener = null;
         mOnBlurOptionInitListener = null;
-        background = null;
-        mLinkedView = null;
         if (mListenersHolderMap != null) {
             mListenersHolderMap.clear();
         }
-        mKeyEventListener = null;
-        mOnKeyboardChangeListener = null;
         mListenersHolderMap = null;
+        invokeParams.clear();
+        invokeParams = null;
     }
 }
