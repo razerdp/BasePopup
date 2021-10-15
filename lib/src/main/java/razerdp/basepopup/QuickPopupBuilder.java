@@ -1,18 +1,13 @@
 package razerdp.basepopup;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
-import android.view.ViewGroup;
-
-import java.lang.ref.WeakReference;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.OnLifecycleEvent;
+
+import razerdp.library.R;
+import razerdp.util.PopupUtils;
 import razerdp.widget.QuickPopup;
 
 /**
@@ -20,41 +15,18 @@ import razerdp.widget.QuickPopup;
  * <p>
  * 快速建立Popup的builder
  */
-public class QuickPopupBuilder implements LifecycleObserver {
+public class QuickPopupBuilder implements ClearMemoryObject {
+    private static final String TAG = "QuickPopupBuilder";
 
     private QuickPopupConfig mConfig;
-    private WeakReference<Object> ownerAnchorParent;
+    private Object popupHost;
 
     private int width = 0;
     private int height = 0;
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    void onDestroy() {
-        ownerAnchorParent = null;
-    }
-
     private QuickPopupBuilder(Object obj) {
-        ownerAnchorParent = new WeakReference<>(obj);
+        popupHost = obj;
         mConfig = QuickPopupConfig.generateDefault();
-        Activity activity = BasePopupHelper.findActivity(obj, false);
-        if (activity instanceof LifecycleOwner) {
-            ((LifecycleOwner) activity).getLifecycle().addObserver(this);
-        } else {
-            if (activity != null) {
-                activity.getWindow().getDecorView().addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-                    @Override
-                    public void onViewAttachedToWindow(View v) {
-
-                    }
-
-                    @Override
-                    public void onViewDetachedFromWindow(View v) {
-                        v.removeOnAttachStateChangeListener(this);
-                        onDestroy();
-                    }
-                });
-            }
-        }
     }
 
     public static QuickPopupBuilder with(Context context) {
@@ -84,15 +56,17 @@ public class QuickPopupBuilder implements LifecycleObserver {
         return this;
     }
 
-    @Deprecated
-    public QuickPopupBuilder wrapContentMode() {
-        return width(ViewGroup.LayoutParams.WRAP_CONTENT)
-                .height(ViewGroup.LayoutParams.WRAP_CONTENT);
-    }
-
 
     public final QuickPopupConfig getConfig() {
         return mConfig;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public QuickPopupBuilder config(QuickPopupConfig quickPopupConfig) {
@@ -105,17 +79,16 @@ public class QuickPopupBuilder implements LifecycleObserver {
     }
 
     public QuickPopup build() {
-        Object anchor = ownerAnchorParent == null ? null : ownerAnchorParent.get();
-        if (anchor instanceof Context) {
-            return new QuickPopup((Context) anchor, width, height, mConfig);
+        if (popupHost instanceof Context) {
+            return new QuickPopup((Context) popupHost, this);
         }
-        if (anchor instanceof Fragment) {
-            return new QuickPopup((Fragment) anchor, width, height, mConfig);
+        if (popupHost instanceof Fragment) {
+            return new QuickPopup((Fragment) popupHost, this);
         }
-        if (anchor instanceof Dialog) {
-            return new QuickPopup((Dialog) anchor, width, height, mConfig);
+        if (popupHost instanceof Dialog) {
+            return new QuickPopup((Dialog) popupHost, this);
         }
-        throw new NullPointerException("宿主已经被销毁");
+        throw new NullPointerException(PopupUtils.getString(R.string.basepopup_host_destroyed));
     }
 
     public QuickPopup show() {
@@ -132,5 +105,14 @@ public class QuickPopupBuilder implements LifecycleObserver {
         QuickPopup quickPopup = build();
         quickPopup.showPopupWindow(x, y);
         return quickPopup;
+    }
+
+    @Override
+    public void clear(boolean destroy) {
+        popupHost = null;
+        if (mConfig != null) {
+            mConfig.clear(destroy);
+        }
+        mConfig = null;
     }
 }

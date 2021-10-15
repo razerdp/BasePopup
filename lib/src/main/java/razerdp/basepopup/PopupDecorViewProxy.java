@@ -1,5 +1,7 @@
 package razerdp.basepopup;
 
+import static razerdp.basepopup.BasePopupWindow.GravityMode;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -55,6 +57,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
     Rect keyboardBoundsCache;
     boolean keyboardVisibleCache = false;
+    boolean touchDownInDecorView = false;
 
     private PopupDecorViewProxy(Context context) {
         super(context);
@@ -96,7 +99,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
 
         mTarget = target;
-        LayoutParams wp = setupViewSize(target, params);
+        LayoutParams wp = generateDecorViewLayoutParams(target, params);
         addView(target, wp);
     }
 
@@ -104,7 +107,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
      * 我们实际上操作的是被系统PopupWindow包裹的View
      * 我们要做的是将我们contentview的layoutparam重新设置到其parent中
      */
-    WindowManager.LayoutParams setupViewSize(View target, WindowManager.LayoutParams params) {
+    WindowManager.LayoutParams generateDecorViewLayoutParams(View target, WindowManager.LayoutParams params) {
         WindowManager.LayoutParams wp = new WindowManager.LayoutParams();
         wp.copyFrom(params);
         wp.x = 0;
@@ -128,17 +131,13 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             if (lp == null) {
                 lp = new FrameLayout.LayoutParams(mHelper.getLayoutParams());
             } else {
-                lp.width = mHelper.getLayoutParams().width;
-                lp.height = mHelper.getLayoutParams().height;
+                lp.width = wp.width;
+                lp.height = wp.height;
                 if (lp instanceof MarginLayoutParams) {
-                    if (lp.width == LayoutParams.MATCH_PARENT) {
-                        ((MarginLayoutParams) lp).leftMargin = childLeftMargin;
-                        ((MarginLayoutParams) lp).rightMargin = childRightMargin;
-                    }
-                    if (lp.height == LayoutParams.MATCH_PARENT) {
-                        ((MarginLayoutParams) lp).topMargin = mHelper.getLayoutParams().topMargin;
-                        ((MarginLayoutParams) lp).bottomMargin = mHelper.getLayoutParams().bottomMargin;
-                    }
+                    ((MarginLayoutParams) lp).leftMargin = childLeftMargin;
+                    ((MarginLayoutParams) lp).rightMargin = childRightMargin;
+                    ((MarginLayoutParams) lp).topMargin = childTopMargin;
+                    ((MarginLayoutParams) lp).bottomMargin = childBottomMargin;
                 }
             }
 
@@ -245,8 +244,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         final int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
         final int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
 
-        boolean reMeasureContentView = mHelper.isFitsizable();
-
         // 根据parent决定child大小
         int childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec, 0, lp.width);
         int childHeightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, 0, lp.height);
@@ -258,6 +255,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
         int gravity = mHelper.getPopupGravity();
 
+        final boolean isFitSizeable = mHelper.isFitsizable();
+
         //针对关联anchorView和对齐模式的测量（如果允许resize）
         if (mHelper.isWithAnchor()) {
             final Rect anchorRect = mHelper.getAnchorViewBound();
@@ -268,12 +267,12 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             int rr = parentWidth - anchorRect.right;
             int rb = parentHeight - anchorRect.bottom;
             //如果是对齐到anchor的边，则需要修正
-            if (mHelper.horizontalGravityMode == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE) {
+            if (mHelper.horizontalGravityMode == GravityMode.ALIGN_TO_ANCHOR_SIDE) {
                 rl = parentWidth - anchorRect.left;
                 rr = anchorRect.right;
             }
             //如果是对齐到anchor的边，则需要修正
-            if (mHelper.verticalGravityMode == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE) {
+            if (mHelper.verticalGravityMode == GravityMode.ALIGN_TO_ANCHOR_SIDE) {
                 rt = parentHeight - anchorRect.top;
                 rb = anchorRect.bottom;
             }
@@ -282,16 +281,14 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 case Gravity.LEFT:
                     if (lp.width == LayoutParams.MATCH_PARENT) {
                         widthSize = rl;
-                    }
-                    if (mHelper.isFitsizable()) {
+                    } else if (isFitSizeable) {
                         widthSize = Math.min(widthSize, rl);
                     }
                     break;
                 case Gravity.RIGHT:
                     if (lp.width == LayoutParams.MATCH_PARENT) {
                         widthSize = rr;
-                    }
-                    if (mHelper.isFitsizable()) {
+                    } else if (isFitSizeable) {
                         widthSize = Math.min(widthSize, rr);
                     }
                     break;
@@ -303,16 +300,14 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 case Gravity.TOP:
                     if (lp.height == LayoutParams.MATCH_PARENT) {
                         heightSize = rt;
-                    }
-                    if (mHelper.isFitsizable()) {
+                    } else if (isFitSizeable) {
                         heightSize = Math.min(heightSize, rt);
                     }
                     break;
                 case Gravity.BOTTOM:
                     if (lp.height == LayoutParams.MATCH_PARENT) {
                         heightSize = rb;
-                    }
-                    if (mHelper.isFitsizable()) {
+                    } else if (isFitSizeable) {
                         heightSize = Math.min(heightSize, rb);
                     }
                     break;
@@ -324,44 +319,46 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         //如果跟anchor对齐大小
         if (mHelper.isAlignAnchorWidth()) {
             widthSize = mHelper.getAnchorViewBound().width();
-            reMeasureContentView = true;
         }
 
         if (mHelper.isAlignAnchorHeight()) {
             heightSize = mHelper.getAnchorViewBound().height();
-            reMeasureContentView = true;
         }
 
         if (mHelper.getMinWidth() > 0 && widthSize < mHelper.getMinWidth()) {
             widthSize = mHelper.getMinWidth();
             widthMode = MeasureSpec.EXACTLY;
-            reMeasureContentView = true;
         }
 
         if (mHelper.getMaxWidth() > 0 && widthSize > mHelper.getMaxWidth()) {
             widthSize = mHelper.getMaxWidth();
-            reMeasureContentView = true;
         }
 
         if (mHelper.getMinHeight() > 0 && heightSize < mHelper.getMinHeight()) {
             heightSize = mHelper.getMinHeight();
             heightMode = MeasureSpec.EXACTLY;
-            reMeasureContentView = true;
         }
 
         if (mHelper.getMaxHeight() > 0 && heightSize > mHelper.getMaxHeight()) {
             heightSize = mHelper.getMaxHeight();
-            reMeasureContentView = true;
         }
 
         childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(widthSize, widthMode);
         childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, heightMode);
 
-        mTarget.measure(childWidthMeasureSpec, childHeightMeasureSpec);
         View contentView = mTarget.findViewById(mHelper.contentRootId);
-        if (contentView != null && reMeasureContentView) {
-            contentView.measure(childWidthMeasureSpec, childHeightMeasureSpec);
+        if (contentView != null) {
+            LayoutParams contentViewLayoutParams = contentView.getLayoutParams();
+            // 如果contentview的宽高都是固定值，那我们需要取最小值了（因为外层已经限定了大小）
+            if (contentViewLayoutParams.width > 0) {
+                contentViewLayoutParams.width = Math.min(contentViewLayoutParams.width, widthSize);
+            }
+            if (contentViewLayoutParams.height > 0) {
+                contentViewLayoutParams.height = Math.min(contentViewLayoutParams.height, heightSize);
+            }
         }
+
+        mTarget.measure(childWidthMeasureSpec, childHeightMeasureSpec);
     }
 
     @Override
@@ -377,18 +374,18 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             View child = getChildAt(i);
             if (child.getVisibility() == GONE) continue;
 
-            //不覆盖状态栏
-            if ((mHelper.overlayStatusBarMode & (child == mMaskLayout ? BasePopupFlag.OVERLAY_MASK : BasePopupFlag.OVERLAY_CONTENT)) == 0) {
-                t = t == 0 ? t + PopupUiUtils.getStatusBarHeight() : t;
-            } else {
-                t = 0;
-            }
+            //contentview显示的界限
+            contentBounds.set(l, t, r, b);
 
             int width = child.getMeasuredWidth();
             int height = child.getMeasuredHeight();
 
-            //contentview显示的界限，需要考虑navigationbar
-            contentBounds.set(l, t, r, b);
+            //状态栏判断
+            if ((mHelper.overlayStatusBarMode & (child == mMaskLayout ? BasePopupFlag.OVERLAY_MASK : BasePopupFlag.OVERLAY_CONTENT)) == 0) {
+                contentBounds.top = contentBounds.top == 0 ? contentBounds.top + PopupUiUtils.getStatusBarHeight() : contentBounds.top;
+            } else {
+                contentBounds.top = 0;
+            }
 
             //由于可以布局到navigationbar上，因此在layout的时候对于contentView需要减去navigationbar的高度
             //同时需要判断navigationbar的方向，在蛋疼的模拟器或者某些rom上，横屏的时候navigationbar能在左右
@@ -432,11 +429,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 anchorRect.set(mHelper.getAnchorViewBound());
                 anchorRect.offset(-location[0], -location[1]);
                 boolean isRelativeToAnchor = mHelper.isWithAnchor();
-                boolean isHorizontalAlignAnchorSlide = mHelper.horizontalGravityMode == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE;
-                boolean isVerticalAlignAnchorSlide = mHelper.verticalGravityMode == BasePopupWindow.GravityMode.ALIGN_TO_ANCHOR_SIDE;
-                // 除了match_parent外，margin都是等同于offset
-                boolean useWidthMarginAsOffset = mHelper.getLayoutParams().width != LayoutParams.MATCH_PARENT;
-                boolean useHeightMarginAsOffset = mHelper.getLayoutParams().height != LayoutParams.MATCH_PARENT;
+                boolean isHorizontalAlignAnchorSlide = mHelper.horizontalGravityMode == GravityMode.ALIGN_TO_ANCHOR_SIDE;
+                boolean isVerticalAlignAnchorSlide = mHelper.verticalGravityMode == GravityMode.ALIGN_TO_ANCHOR_SIDE;
 
                 //不跟anchorView联系的情况下，gravity意味着在整个decorView中的方位
                 //如果跟anchorView联系，gravity意味着以anchorView为中心的方位
@@ -447,88 +441,66 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                     case Gravity.RIGHT:
                         if (isRelativeToAnchor) {
                             contentRect.left = isHorizontalAlignAnchorSlide ? anchorRect.right - width : anchorRect.right;
+                            offsetX += isHorizontalAlignAnchorSlide ? -childRightMargin : childLeftMargin;
                         } else {
                             contentRect.left = contentBounds.right - width;
-                        }
-                        if (useWidthMarginAsOffset) {
-                            if (isRelativeToAnchor && !isHorizontalAlignAnchorSlide) {
-                                // 在anchor右侧，只跟leftmargin相关
-                                offsetX += childLeftMargin;
-                            } else {
-                                offsetX -= childRightMargin;
-                            }
+                            offsetX += -childRightMargin;
                         }
                         break;
                     case Gravity.CENTER_HORIZONTAL:
                         if (isRelativeToAnchor) {
-                            contentRect.left = anchorRect.left;
-                            offsetX += anchorRect.centerX() - (contentRect.left + (width >> 1));
+                            contentRect.left = anchorRect.left + (anchorRect.centerX() - (anchorRect.left + (width >> 1)));
                         } else {
                             contentRect.left = contentBounds.left + ((contentBounds.width() - width) >> 1);
                         }
-                        if (useWidthMarginAsOffset) {
-                            offsetX += childLeftMargin - childRightMargin;
-                        }
+                        offsetX += childLeftMargin - childRightMargin;
                         break;
                     case Gravity.LEFT:
-                    default:
                         if (isRelativeToAnchor) {
                             contentRect.left = isHorizontalAlignAnchorSlide ? anchorRect.left : anchorRect.left - width;
+                            offsetX += isHorizontalAlignAnchorSlide ? childLeftMargin : -childRightMargin;
+                        } else {
+                            contentRect.left = contentBounds.left;
+                            offsetX += childLeftMargin;
+                        }
+                        break;
+                    default:
+                        // 没设置水平方向的情况下，如果跟anchor关联，则应该左边缘对齐，而非显示在左边
+                        if (isRelativeToAnchor) {
+                            contentRect.left = anchorRect.left;
                         } else {
                             contentRect.left = contentBounds.left;
                         }
-                        if (useWidthMarginAsOffset) {
-                            if (isRelativeToAnchor && !isHorizontalAlignAnchorSlide) {
-                                // 在anchor左侧，只跟rightmargin相关
-                                offsetX += -childRightMargin;
-                            } else {
-                                offsetX += childLeftMargin;
-                            }
-                        }
+                        offsetX += childLeftMargin;
                         break;
                 }
 
                 switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
-                    case Gravity.TOP:
-                        if (isRelativeToAnchor) {
-                            contentRect.top = isVerticalAlignAnchorSlide ? anchorRect.top : anchorRect.top - height;
-                        } else {
-                            contentRect.top = contentBounds.top;
-                        }
-                        if (useHeightMarginAsOffset) {
-                            if (isRelativeToAnchor && !isVerticalAlignAnchorSlide) {
-                                // 在anchor上方，只跟bottommargin相关
-                                offsetY += -childBottomMargin;
-                            } else {
-                                offsetY += childTopMargin;
-                            }
-                        }
-                        break;
                     case Gravity.CENTER_VERTICAL:
                         if (isRelativeToAnchor) {
-                            contentRect.top = anchorRect.bottom;
-                            offsetY += anchorRect.centerY() - (contentRect.top + (height >> 1));
+                            contentRect.top = anchorRect.bottom + (anchorRect.centerY() - (anchorRect.bottom + (height >> 1)));
                         } else {
                             contentRect.top = contentBounds.top + ((contentBounds.height() - height) >> 1);
                         }
-                        if (useHeightMarginAsOffset) {
-                            offsetY += childTopMargin - childBottomMargin;
-                        }
+                        offsetY += childTopMargin - childBottomMargin;
                         break;
                     case Gravity.BOTTOM:
-                    default:
                         if (isRelativeToAnchor) {
                             contentRect.top = isVerticalAlignAnchorSlide ? anchorRect.bottom - height : anchorRect.bottom;
+                            offsetY += isVerticalAlignAnchorSlide ? -childBottomMargin : childTopMargin;
                         } else {
                             contentRect.top = contentBounds.bottom - height;
+                            offsetY += -childBottomMargin;
                         }
-                        if (useHeightMarginAsOffset) {
-                            if (isRelativeToAnchor && !isVerticalAlignAnchorSlide) {
-                                // 在anchor下方，只跟topmargin相关
-                                offsetY += childTopMargin;
-                            } else {
-                                offsetY += -childBottomMargin;
-                            }
+                        break;
+                    case Gravity.TOP:
+                    default:
+                        if (isRelativeToAnchor) {
+                            contentRect.top = isVerticalAlignAnchorSlide ? anchorRect.top : anchorRect.top - height;
+                            offsetY += isVerticalAlignAnchorSlide ? childTopMargin : -childBottomMargin;
+                        } else {
+                            contentRect.top = contentBounds.top;
+                            offsetY += childTopMargin;
                         }
                         break;
                 }
@@ -622,10 +594,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                                                       contentRect.right,
                                                       contentRect.bottom);
                 }
-                if (isRelativeToAnchor) {
-                    popupRect.set(contentRect);
-                    mHelper.onPopupLayout(popupRect, anchorRect);
-                }
+                popupRect.set(contentRect);
+                mHelper.onPopupLayout(popupRect, anchorRect);
                 if (!lastPopupRect.equals(contentRect)) {
                     mHelper.onSizeChange(lastPopupRect.width(),
                                          lastPopupRect.height(),
@@ -668,15 +638,26 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         if (mMaskLayout == null) {
             return super.dispatchTouchEvent(ev);
         }
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            touchDownInDecorView = touchInDecorView(ev);
+        }
+        if (touchDownInDecorView) {
+            return super.dispatchTouchEvent(ev);
+        } else {
+            return mMaskLayout.dispatchTouchEvent(ev);
+        }
+    }
+
+    boolean touchInDecorView(MotionEvent ev) {
+        if (mTarget == null) return false;
         int x = (int) ev.getX();
         int y = (int) ev.getY();
-        if (mTarget != null) {
-            mTarget.getGlobalVisibleRect(touchableRect);
-            if (!touchableRect.contains(x, y)) {
-                return mMaskLayout.dispatchTouchEvent(ev);
-            }
+        View contentView = mTarget.findViewById(mHelper.contentRootId);
+        if (contentView != null) {
+            contentView.getGlobalVisibleRect(touchableRect);
+            return touchableRect.contains(x, y);
         }
-        return super.dispatchTouchEvent(ev);
+        return false;
     }
 
     @Override
@@ -727,7 +708,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         if (mTarget != null) {
             WindowManager.LayoutParams lp = (WindowManager.LayoutParams) mTarget.getLayoutParams();
             if (lp.width != mHelper.getLayoutParams().width || lp.height != mHelper.getLayoutParams().height) {
-                setupViewSize(mTarget, (WindowManager.LayoutParams) mTarget.getLayoutParams());
+                generateDecorViewLayoutParams(mTarget, (WindowManager.LayoutParams) mTarget.getLayoutParams());
             }
             requestLayout();
         }
@@ -744,7 +725,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         v.post(new Runnable() {
             @Override
             public void run() {
-                updateLayout();
+                if (mHelper != null) {
+                    mHelper.onConfigurationChanged(newConfig);
+                }
             }
         });
     }

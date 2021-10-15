@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -30,14 +31,16 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.WeakHashMap;
+
 import razerdp.blur.PopupBlurOption;
 import razerdp.library.R;
 import razerdp.util.KeyboardUtils;
@@ -56,6 +59,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     BasePopupWindow mPopupWindow;
 
     WeakHashMap<Object, BasePopupEvent.EventObserver> eventObserverMap;
+
+    Map<Integer, Boolean> mFlagCacheMap;
+
 
     enum ShowMode {
         RELATIVE_TO_ANCHOR,
@@ -163,11 +169,13 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     int lastOverLayStatusBarMode, overlayStatusBarMode = DEFAULT_OVERLAY_STATUS_BAR_MODE;
     int lastOverlayNavigationBarMode, overlayNavigationBarMode = DEFAULT_OVERLAY_NAVIGATION_BAR_MODE;
 
+    boolean hideKeyboardOnDismiss = true;
 
     //unsafe
     BasePopupUnsafe.OnFitWindowManagerLayoutParamsCallback mOnFitWindowManagerLayoutParamsCallback;
 
     BasePopupHelper(BasePopupWindow popupWindow) {
+        mFlagCacheMap = new HashMap<>();
         mAnchorViewBound = new Rect();
         navigationBarBounds = new Rect();
         cutoutSafeRect = new Rect();
@@ -185,6 +193,18 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         this.mMaskViewDismissAnimation.setDuration(Resources.getSystem()
                                                            .getInteger(android.R.integer.config_shortAnimTime));
         isDefaultMaskViewDismissAnimation = true;
+    }
+
+    void cacheFlag(int flag, boolean onceCache) {
+        if (onceCache && mFlagCacheMap.containsKey(flag)) return;
+        mFlagCacheMap.put(flag, (this.flag & flag) != 0);
+    }
+
+    boolean restoreFlag(int flag, boolean defaultValue) {
+        if (mFlagCacheMap.containsKey(flag)) {
+            return mFlagCacheMap.remove(flag);
+        }
+        return defaultValue;
     }
 
     void observerEvent(Object who, BasePopupEvent.EventObserver observer) {
@@ -452,6 +472,9 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
 
     BasePopupHelper withAnchor(boolean showAsDropDown) {
         setFlag(WITH_ANCHOR, showAsDropDown);
+        if (showAsDropDown && (popupGravity == Gravity.NO_GRAVITY || popupGravity == -1)) {
+            popupGravity = Gravity.BOTTOM;
+        }
         return this;
     }
 
@@ -509,7 +532,12 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     BasePopupHelper getAnchorLocation(View v) {
-        if (v == null) return this;
+        if (v == null) {
+            if (mShowMode != ShowMode.POSITION) {
+                mAnchorViewBound.setEmpty();
+            }
+            return this;
+        }
         int[] location = new int[2];
         v.getLocationOnScreen(location);
         mAnchorViewBound.set(location[0],
@@ -762,11 +790,6 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         return minHeight;
     }
 
-
-    boolean isResizeable() {
-        return (flag & FITSIZE) != 0;
-    }
-
     public BasePopupHelper linkTo(View anchorView) {
         if (anchorView == null) {
             if (mLinkedViewLayoutChangeListenerWrapper != null) {
@@ -832,7 +855,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     void onDismiss() {
-        if (isAutoShowInputMethod()) {
+        if (isAutoShowInputMethod() && hideKeyboardOnDismiss) {
             KeyboardUtils.close(mPopupWindow.getContext());
         }
 
@@ -993,7 +1016,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     void forceDismiss() {
         if (mDismissAnimation != null) mDismissAnimation.cancel();
         if (mDismissAnimator != null) mDismissAnimator.cancel();
-        if (mPopupWindow != null) {
+        if (mPopupWindow != null && hideKeyboardOnDismiss) {
             KeyboardUtils.close(mPopupWindow.getContext());
         }
         if (dismissAnimationDelayRunnable != null) {
@@ -1018,6 +1041,10 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
         }
         prepare(v, positionMode);
         mPopupWindow.mPopupWindowProxy.update();
+    }
+
+    void onConfigurationChanged(Configuration newConfig) {
+        update(mShowInfo == null ? null : mShowInfo.mAnchorView, mShowInfo == null ? false : mShowInfo.positionMode);
     }
 
     void dispatchOutSideEvent(MotionEvent event, boolean touchInMask, boolean isMaskPressed) {

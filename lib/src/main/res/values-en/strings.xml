@@ -9,5 +9,6 @@
     <string name="basepopup_has_been_shown">BasePopup has been shown.</string>
     <string name="basepopup_shown_successful">Show successful</string>
     <string name="basepopup_host">popupwindow host (%s)</string>
+    <string name="basepopup_host_destroyed">The popupwindow\'s host has been destroyed</string>
 
 </resources>

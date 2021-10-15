@@ -54,7 +54,6 @@ public class Issue277TestActivity extends BaseBindingActivity<ActivityIssue277Bi
             setBlurBackgroundEnable(false);
             setOutSideDismiss(false);
             setOutSideTouchable(true);
-            setAdjustInputMode(R.id.feedbackTv, FLAG_KEYBOARD_ALIGN_TO_VIEW);
         }
 
 

@@ -52,7 +52,6 @@ public class Issue224TestActivity extends BaseBindingActivity<ActivityIssue224Bi
 
         int value = StringUtil.toInt(mBinding.edNum.getText().toString().trim());
         mPopupIssue224.setItemCount(value);
-        mPopupIssue224.setFitSize(mBinding.checkFitSize.isChecked());
         if (!mPopupIssue224.isShowing() && value > 0) {
             mPopupIssue224.showPopupWindow(mBinding.layoutTestContainer);
         }

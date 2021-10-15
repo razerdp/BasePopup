@@ -183,7 +183,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_padding"
-            android:text="设置是否允许根据剩余空间自动调整大小"
+            android:checked="true"
+            android:text="设置是否允许根据剩余空间自动调整大小（默认允许）"
             android:textColor="@color/text_black2"
             android:textSize="@dimen/text_small"
             android:theme="@style/MyCheckBox" />

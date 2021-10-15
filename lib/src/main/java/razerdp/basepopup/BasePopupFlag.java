@@ -66,6 +66,7 @@ public interface BasePopupFlag {
             | KEYBOARD_IGNORE_OVER_KEYBOARD
             | KEYBOARD_ANIMATE_ALIGN
             | SYNC_MASK_ANIMATION_DURATION
-            | TOUCHABLE;
+            | TOUCHABLE
+            | FITSIZE;
 
 }
