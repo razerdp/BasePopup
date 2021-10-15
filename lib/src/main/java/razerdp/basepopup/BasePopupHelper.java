@@ -19,7 +19,6 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -856,7 +855,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     }
 
     void onDismiss() {
-        if (isAutoShowInputMethod()) {
+        if (isAutoShowInputMethod() && hideKeyboardOnDismiss) {
             KeyboardUtils.close(mPopupWindow.getContext());
         }
 

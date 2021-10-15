@@ -17,7 +17,6 @@ import razerdp.basepopup.BasePopupFlag;
 import razerdp.basepopup.BasePopupWindow;
 import razerdp.basepopup.QuickPopupBuilder;
 import razerdp.basepopup.QuickPopupConfig;
-import razerdp.util.log.PopupLog;
 
 /**
  * Created by 大灯泡 on 2018/8/23.
@@ -77,7 +76,6 @@ public class QuickPopup extends BasePopupWindow {
         for (Map.Entry<String, Object> entry : config.getInvokeParams().entrySet()) {
             String methodName = entry.getKey();
             Method method = config.getMethod(methodName);
-            PopupLog.i(methodName,method);
             if (method != null) {
                 try {
                     method.invoke(this, entry.getValue());
