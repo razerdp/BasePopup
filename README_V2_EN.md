@@ -58,10 +58,10 @@ BasePopup is a popup library that wraps and improves on the system's PopupWindow
 // root gradle
 allprojects {
     repositories {
-        // release依赖仓库（4.1后as默认配置有）
+        // release dependency repository (available after 4.1 as default configuration)
         mavenCentral()
 
-        // snapshot仓库（如果需要snapshot依赖，请配置该maven）
+        // snapshot repository (if you need snapshot dependency, please configure this maven)
         maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots' }
     }
 }
@@ -78,7 +78,7 @@ dependencies {
 
 ### Documentation
 
- - [**BasePopup手册**](https://www.yuque.com/razerdp/basepopup)
+ - [**BasePopup Manuals**](https://www.yuque.com/razerdp/basepopup)
 
 ### Precautions
 
@@ -88,9 +88,24 @@ dependencies {
 
 ### ChangeLog [(History ChangeLog)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Release】3.1.8** (2021/08/11)
-    * Optimize margin's measure and layout logic.[issue#429](https://github.com/razerdp/BasePopup/issues/429)
-    * Add `onSizeChange(int oldW, int oldH, int newW, int newH)` callback.
+* **[Release] 3.2.0** (2021/10/15)
+    * After two months, we have made a series of optimizations to BasePopup after taking in user feedback. After a period of testing, it has stabilized, so we officially release version 3.2.0, welcome to update and download.
+    * [Optimization]
+        * To address the historical problems, we have unified the role of the root layout margin under match_parent and wrap_content this time, now the role is consistent with the system, used as margin instead of offset.
+        * The default value of `setFitSize()` method is now True, which means BasePopup will resize by default to meet the display when there is not enough space, if you don't want BasePopup to resize automatically, please set this method to False.
+            * Automatically turn off fitSize when setting mirroring and cache the original value
+        * Add new Api to QuickPopup, and modify the implementation of QuickPopupConfig to make the code more refreshing and neat.
+    * [Bug fix]
+        * Fix measure issue: [#435](https://github.com/razerdp/BasePopup/issues/435)
+        * Fix the problem of displaying on the left side of the target horizontally instead of aligning the left edge when AnchorView is associated by default.
+        * Fix the problem of update error when rotating the screen.
+        * Fix the problem of event distribution: [#443](https://github.com/razerdp/BasePopup/issues/443)
+    * [New features
+        * Add the function of not hiding the keyboard when dismiss: `hideKeyboardOnDismiss(boolean)`
+    * [Other]
+        * Clear all marker obsolete methods
+
+Translated with www.DeepL.com/Translator (free version)
 
 ### Demo
 

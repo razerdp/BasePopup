@@ -70,7 +70,7 @@ allprojects {
 
 // project dependencies
 dependencies {
-  implementation 'io.github.razerdp:BasePopup:3.1.8'
+  implementation 'io.github.razerdp:BasePopup:3.2.0'
 
   // for snapshot
   // implementation 'io.github.razerdp:BasePopup:3.2.0-SNAPSHOT'
@@ -90,23 +90,22 @@ dependencies {
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Release】3.1.8** (2021/08/11)
-    * 优化margin的measure和layout逻辑。[issue#429](https://github.com/razerdp/BasePopup/issues/429)
-    * 添加`onSizeChange(int oldW, int oldH, int newW, int newH)`回调
-* **【Snapshot】3.2.0-SNAPSHOT**
-    * 2021/08/24
-        * 修复measure问题，fixed [#435](https://github.com/razerdp/BasePopup/issues/435)
-        * 修复触摸事件分发判断错误的问题
-    * 2021/09/13
-        * 统一margin逻辑，现在margin不再作为offset使用 [(#439)](https://github.com/razerdp/BasePopup/issues/439)
-        * 由于第一点的更新，因此去掉`setFitSize()`方法
-        * 清除所有标记过时的方法
-        * 修复因某次改动导致的默认关联AnchorView时，水平方向上显示在目标左边而不是对齐左边缘的问题
-    * 2021/10/09
+* **【Release】3.2.0** (2021/10/15)
+    * 时隔两个月，在吸纳了用户反馈的意见后，我们对BasePopup进行了一系列的优化，经过一段时间的测试，已经趋于稳定，因此我们正式发布3.2.0版本，欢迎更新下载。
+    * 【优化】
+        * 针对历史遗留问题，我们这次统一了match_parent和wrap_content下根布局margin的作用，现在该作用跟系统一致，用作margin而非offset。
+        * 现在`setFitSize()`方法缺省值为True，即BasePopup会在空间不足时默认调整大小以满足显示，如果您不希望BasePopup自动调整大小，请设置该方法为False。
+            * 设置镜像时自动关闭fitSize并缓存原来的值
+        * QuickPopup添加新增Api，同时修改QuickPopupConfig的实现，使代码更为清爽整洁。
+    * 【Bug修复】
+        * 修复measure问题：[#435](https://github.com/razerdp/BasePopup/issues/435)
+        * 修复默认关联AnchorView时，水平方向上显示在目标左边而不是对齐左边缘的问题
         * 修复旋转屏幕时update错误的问题
-        * 修复事件分发问题 [#443](https://github.com/razerdp/BasePopup/issues/443)
-        * 增加dismiss时不隐藏键盘的功能
-        * 设置镜像时自动关闭fitSize并缓存原来的值
+        * 修复事件分发问题：[#443](https://github.com/razerdp/BasePopup/issues/443)
+    * 【新增功能】
+        * 增加dismiss时不隐藏键盘的功能：`hideKeyboardOnDismiss(boolean)`
+    * 【其他】
+        * 清除所有标记过时的方法
 
 ### 例子预览
 
