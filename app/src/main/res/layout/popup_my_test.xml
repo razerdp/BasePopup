@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="50dp"
-    android:layout_marginTop="50dp"
-    android:layout_marginRight="50dp"
+    android:layout_height="150dp"
+    android:layout_margin="40dp"
+    android:background="@color/color_838FA6"
+    android:layout_gravity="center"
     android:orientation="vertical">
 
-    <View
+    <ImageView
         android:id="@+id/view_test"
         android:layout_width="match_parent"
-        android:layout_height="1500dp"
-        android:background="@color/common_red" />
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/alipay" />
 
 </LinearLayout>
