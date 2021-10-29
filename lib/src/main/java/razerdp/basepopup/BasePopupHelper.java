@@ -72,7 +72,7 @@ final class BasePopupHelper implements KeyboardUtils.OnKeyboardChangeListener, B
     static final long DEFAULT_KEYBOARD_SHOW_DELAY = 350;
     static final int DEFAULT_OVERLAY_STATUS_BAR_MODE = OVERLAY_MASK | OVERLAY_CONTENT;
     static final int DEFAULT_OVERLAY_NAVIGATION_BAR_MODE = OVERLAY_MASK;
-    private static final int CONTENT_VIEW_ID = R.id.base_popup_content_root;
+    static final int CONTENT_VIEW_ID = R.id.base_popup_content_root;
 
     static final int STATUS_START_SHOWING = 0x1;
     static final int STATUS_START_DISMISS = 0x2;
