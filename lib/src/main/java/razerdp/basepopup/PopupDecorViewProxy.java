@@ -1,5 +1,7 @@
 package razerdp.basepopup;
 
+import static razerdp.basepopup.BasePopupWindow.GravityMode;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -18,8 +20,6 @@ import android.widget.FrameLayout;
 
 import razerdp.util.KeyboardUtils;
 import razerdp.util.PopupUiUtils;
-
-import static razerdp.basepopup.BasePopupWindow.GravityMode;
 
 /**
  * Created by 大灯泡 on 2017/12/25.
@@ -99,7 +99,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         }
 
         mTarget = target;
-        addView(target, generateDecorViewLayoutParams(target, params));
+        LayoutParams wp = generateDecorViewLayoutParams(target, params);
+        addView(target, wp);
     }
 
     /**
@@ -111,9 +112,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         wp.copyFrom(params);
         wp.x = 0;
         wp.y = 0;
-        wp.width = LayoutParams.MATCH_PARENT;
-        wp.height = LayoutParams.MATCH_PARENT;
         View contentView = target.findViewById(mHelper.contentRootId);
+        wp.width = mHelper.getLayoutParams().width;
+        wp.height = mHelper.getLayoutParams().height;
         childLeftMargin = mHelper.getLayoutParams().leftMargin;
         childTopMargin = mHelper.getLayoutParams().topMargin;
         childRightMargin = mHelper.getLayoutParams().rightMargin;
@@ -129,10 +130,9 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             LayoutParams lp = contentView.getLayoutParams();
             if (lp == null) {
                 lp = new FrameLayout.LayoutParams(mHelper.getLayoutParams());
-                contentView.setLayoutParams(lp);
             } else {
-                lp.width = mHelper.getLayoutParams().width;
-                lp.height = mHelper.getLayoutParams().height;
+                lp.width = wp.width;
+                lp.height = wp.height;
                 if (lp instanceof MarginLayoutParams) {
                     ((MarginLayoutParams) lp).leftMargin = childLeftMargin;
                     ((MarginLayoutParams) lp).rightMargin = childRightMargin;
@@ -147,11 +147,12 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 LayoutParams p = parent.getLayoutParams();
                 if (p == null) {
                     p = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-                    parent.setLayoutParams(p);
                 } else {
                     p.width = p.height = LayoutParams.MATCH_PARENT;
                 }
+                parent.setLayoutParams(p);
             }
+            contentView.setLayoutParams(lp);
 
             //fixed #238  https://github.com/razerdp/BasePopup/issues/238
             if (contentView.isFocusable()) {
@@ -178,19 +179,18 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
-            measureChild(child,
-                         adjustWidthMeasureSpec(widthMeasureSpec, BasePopupFlag.OVERLAY_MASK),
-                         adjustHeightMeasureSpec(heightMeasureSpec,
-                                                 BasePopupFlag.OVERLAY_MASK));
-            if (child == mTarget) {
-                View contentView = child.findViewById(mHelper.contentRootId);
-                if (contentView != null) {
-                    measureWrappedDecorView(contentView,
-                                            adjustWidthMeasureSpec(widthMeasureSpec,
-                                                                   BasePopupFlag.OVERLAY_CONTENT),
-                                            adjustHeightMeasureSpec(heightMeasureSpec,
-                                                                    BasePopupFlag.OVERLAY_CONTENT));
-                }
+            //蒙层给最大值
+            if (child == mMaskLayout) {
+                measureChild(child,
+                             adjustWidthMeasureSpec(widthMeasureSpec, BasePopupFlag.OVERLAY_MASK),
+                             adjustHeightMeasureSpec(heightMeasureSpec,
+                                                     BasePopupFlag.OVERLAY_MASK));
+            } else {
+                measureWrappedDecorView(child,
+                                        adjustWidthMeasureSpec(widthMeasureSpec,
+                                                               BasePopupFlag.OVERLAY_CONTENT),
+                                        adjustHeightMeasureSpec(heightMeasureSpec,
+                                                                BasePopupFlag.OVERLAY_CONTENT));
             }
         }
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
@@ -319,12 +319,10 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         //如果跟anchor对齐大小
         if (mHelper.isAlignAnchorWidth()) {
             widthSize = mHelper.getAnchorViewBound().width();
-            widthMode = MeasureSpec.EXACTLY;
         }
 
         if (mHelper.isAlignAnchorHeight()) {
             heightSize = mHelper.getAnchorViewBound().height();
-            heightMode = MeasureSpec.EXACTLY;
         }
 
         if (mHelper.getMinWidth() > 0 && widthSize < mHelper.getMinWidth()) {
@@ -334,7 +332,6 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
         if (mHelper.getMaxWidth() > 0 && widthSize > mHelper.getMaxWidth()) {
             widthSize = mHelper.getMaxWidth();
-            widthMode = MeasureSpec.EXACTLY;
         }
 
         if (mHelper.getMinHeight() > 0 && heightSize < mHelper.getMinHeight()) {
@@ -344,11 +341,24 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
 
         if (mHelper.getMaxHeight() > 0 && heightSize > mHelper.getMaxHeight()) {
             heightSize = mHelper.getMaxHeight();
-            heightMode = MeasureSpec.EXACTLY;
         }
 
-        mTarget.measure(MeasureSpec.makeMeasureSpec(widthSize, widthMode),
-                        MeasureSpec.makeMeasureSpec(heightSize, heightMode));
+        childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(widthSize, widthMode);
+        childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, heightMode);
+
+        View contentView = mTarget.findViewById(mHelper.contentRootId);
+        if (contentView != null) {
+            LayoutParams contentViewLayoutParams = contentView.getLayoutParams();
+            // 如果contentview的宽高都是固定值，那我们需要取最小值了（因为外层已经限定了大小）
+            if (contentViewLayoutParams.width > 0) {
+                contentViewLayoutParams.width = Math.min(contentViewLayoutParams.width, widthSize);
+            }
+            if (contentViewLayoutParams.height > 0) {
+                contentViewLayoutParams.height = Math.min(contentViewLayoutParams.height, heightSize);
+            }
+        }
+
+        mTarget.measure(childWidthMeasureSpec, childHeightMeasureSpec);
     }
 
     @Override
@@ -367,6 +377,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             //contentview显示的界限
             contentBounds.set(l, t, r, b);
 
+            int width = child.getMeasuredWidth();
+            int height = child.getMeasuredHeight();
 
             //状态栏判断
             if ((mHelper.overlayStatusBarMode & (child == mMaskLayout ? BasePopupFlag.OVERLAY_MASK : BasePopupFlag.OVERLAY_CONTENT)) == 0) {
@@ -406,19 +418,14 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
             int offsetY = mHelper.getOffsetY();
 
             boolean delayLayoutMask = mHelper.isAlignBackground() && mHelper.getAlignBackgroundGravity() != Gravity.NO_GRAVITY;
-            contentBounds.offset(mHelper.maskOffsetX, mHelper.maskOffsetY);
-            child.layout(contentBounds.left,
-                         contentBounds.top,
-                         contentBounds.left + getMeasuredWidth(),
-                         contentBounds.top + getMeasuredHeight());
-            if (child == mTarget) {
-                View contentView = child.findViewById(mHelper.contentRootId);
-                if (contentView == null) {
-                    return;
-                }
-                int width = contentView.getMeasuredWidth();
-                int height = contentView.getMeasuredHeight();
 
+            if (child == mMaskLayout) {
+                contentBounds.offset(mHelper.maskOffsetX, mHelper.maskOffsetY);
+                child.layout(contentBounds.left,
+                             contentBounds.top,
+                             contentBounds.left + getMeasuredWidth(),
+                             contentBounds.top + getMeasuredHeight());
+            } else {
                 anchorRect.set(mHelper.getAnchorViewBound());
                 anchorRect.offset(-location[0], -location[1]);
                 boolean isRelativeToAnchor = mHelper.isWithAnchor();
@@ -575,10 +582,11 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                         }
                     }
                 }
-                contentView.layout(contentRect.left,
-                                   contentRect.top,
-                                   contentRect.right,
-                                   contentRect.bottom);
+
+                child.layout(contentRect.left,
+                             contentRect.top,
+                             contentRect.right,
+                             contentRect.bottom);
                 if (delayLayoutMask) {
                     mMaskLayout.handleAlignBackground(mHelper.getAlignBackgroundGravity(),
                                                       contentRect.left,
@@ -700,8 +708,7 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         if (mTarget != null) {
             WindowManager.LayoutParams lp = (WindowManager.LayoutParams) mTarget.getLayoutParams();
             if (lp.width != mHelper.getLayoutParams().width || lp.height != mHelper.getLayoutParams().height) {
-                generateDecorViewLayoutParams(mTarget,
-                                              (WindowManager.LayoutParams) mTarget.getLayoutParams());
+                generateDecorViewLayoutParams(mTarget, (WindowManager.LayoutParams) mTarget.getLayoutParams());
             }
             requestLayout();
         }
