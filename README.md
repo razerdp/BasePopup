@@ -33,8 +33,8 @@
                         </a>
         			</td>
         			<td align="center">
-        				<a href="https://img.shields.io/badge/Api-16%2B-green.svg">
-        					<img src="https://img.shields.io/badge/Api-16%2B-green.svg"/>
+        				<a href="https://img.shields.io/badge/Api-19%2B-green.svg">
+        					<img src="https://img.shields.io/badge/Api-19%2B-green.svg"/>
         				</a>
         			</td>
         			<td align="center">
@@ -73,7 +73,7 @@ dependencies {
   implementation 'io.github.razerdp:BasePopup:3.1.8'
   
   // for snapshot
-  // implementation 'io.github.razerdp:BasePopup:3.2.0-SNAPSHOT'
+  // implementation 'io.github.razerdp:BasePopup:3.2.1-SNAPSHOT'
 }
 
 ```
@@ -90,20 +90,9 @@ dependencies {
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Snapshot】3.2.0-SNAPSHOT**
-    * 2021/08/24
-        * 修复measure问题，fixed [#435](https://github.com/razerdp/BasePopup/issues/435)
-        * 修复触摸事件分发判断错误的问题
-    * 2021/09/13
-        * 统一margin逻辑，现在margin不再作为offset使用 [(#439)](https://github.com/razerdp/BasePopup/issues/439)
-        * 由于第一点的更新，因此去掉`setFitSize()`方法
-        * 清除所有标记过时的方法
-        * 修复因某次改动导致的默认关联AnchorView时，水平方向上显示在目标左边而不是对齐左边缘的问题
-    * 2021/10/09
-        * 修复旋转屏幕时update错误的问题
-        * 修复事件分发问题 [#443](https://github.com/razerdp/BasePopup/issues/443)
-        * 增加dismiss时不隐藏键盘的功能
-        * 设置镜像时自动关闭fitSize并缓存原来的值
+* **【Snapshot】3.2.1-SNAPSHOT**
+    * 2021/10/31
+        * 修复navigationbar不在DecorView层级下的判断问题（通过WindowInsets二次判断），fixed bug [#452](https://github.com/razerdp/BasePopup/issues/452)
 
 ### 例子预览
 

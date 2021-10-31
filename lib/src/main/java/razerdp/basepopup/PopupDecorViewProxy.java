@@ -1,7 +1,5 @@
 package razerdp.basepopup;
 
-import static razerdp.basepopup.BasePopupWindow.GravityMode;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -15,11 +13,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import razerdp.util.KeyboardUtils;
 import razerdp.util.PopupUiUtils;
+
+import static razerdp.basepopup.BasePopupWindow.GravityMode;
 
 /**
  * Created by 大灯泡 on 2017/12/25.
@@ -82,6 +83,14 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                         -1,
                         new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
                                                    LayoutParams.MATCH_PARENT));
+    }
+
+    @Override
+    public WindowInsets onApplyWindowInsets(WindowInsets insets) {
+        mHelper.refreshNavigationBarForWindowInsets(insets,
+                                                    getMeasuredWidth(),
+                                                    getMeasuredHeight());
+        return super.onApplyWindowInsets(insets);
     }
 
     public void wrapPopupDecorView(final View target, WindowManager.LayoutParams params) {
@@ -354,7 +363,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
                 contentViewLayoutParams.width = Math.min(contentViewLayoutParams.width, widthSize);
             }
             if (contentViewLayoutParams.height > 0) {
-                contentViewLayoutParams.height = Math.min(contentViewLayoutParams.height, heightSize);
+                contentViewLayoutParams.height = Math.min(contentViewLayoutParams.height,
+                                                          heightSize);
             }
         }
 
@@ -708,7 +718,8 @@ final class PopupDecorViewProxy extends ViewGroup implements KeyboardUtils.OnKey
         if (mTarget != null) {
             WindowManager.LayoutParams lp = (WindowManager.LayoutParams) mTarget.getLayoutParams();
             if (lp.width != mHelper.getLayoutParams().width || lp.height != mHelper.getLayoutParams().height) {
-                generateDecorViewLayoutParams(mTarget, (WindowManager.LayoutParams) mTarget.getLayoutParams());
+                generateDecorViewLayoutParams(mTarget,
+                                              (WindowManager.LayoutParams) mTarget.getLayoutParams());
             }
             requestLayout();
         }
