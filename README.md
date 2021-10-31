@@ -70,7 +70,7 @@ allprojects {
 
 // project dependencies 
 dependencies {
-  implementation 'io.github.razerdp:BasePopup:3.1.8'
+  implementation 'io.github.razerdp:BasePopup:3.2.0'
   
   // for snapshot
   // implementation 'io.github.razerdp:BasePopup:3.2.1-SNAPSHOT'
