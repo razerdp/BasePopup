@@ -14,6 +14,7 @@ import razerdp.demo.ui.issuestest.Issue242TestActivity;
 import razerdp.demo.ui.issuestest.Issue277TestActivity;
 import razerdp.demo.ui.issuestest.Issue358TestActivity;
 import razerdp.demo.ui.issuestest.Issue369TestActivity;
+import razerdp.demo.ui.issuestest.Issue474TestActivity;
 import razerdp.demo.utils.DescBuilder;
 import razerdp.demo.utils.StringUtil;
 
@@ -33,6 +34,7 @@ class IssueHelper {
         add_277(result);
         add_358(result);
         add_369(result);
+        add_474(result);
 
         sort(result);
 
@@ -45,6 +47,21 @@ class IssueHelper {
             int issue2 = StringUtil.toInt(o2.issue);
             return Integer.compare(issue, issue2);
         });
+    }
+
+    private static void add_474(List<IssueInfo> result) {
+        IssueInfo issue = new IssueInfo();
+        issue.setActivityClass(Issue474TestActivity.class)
+                .setIssue("474")
+                .setFixed(false)
+                .setTitle("oncreate中showpopup后立马dismiss,表现上popup无法dismiss")
+                .setDesc(DescBuilder.get()
+                        .append("系统版本：Android 9")
+                        .append("库版本：3.2.1-snap")
+                        .append("oncreate中showpopup后立马dismiss,表现上popup无法dismiss")
+                        .build());
+
+        result.add(issue);
     }
 
     private static void add_369(List<IssueInfo> result) {
