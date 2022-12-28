@@ -38,8 +38,7 @@ public class MyTestActivity extends BaseBindingActivity<ActivityMyTestBinding> {
         mBinding.viewTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                test();
-//                new TestPopup(self()).setMaxWidth(350).setPopupGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL).showPopupWindow(view);
+                new TestPopup(self()).showPopupWindow();
             }
         });
     }

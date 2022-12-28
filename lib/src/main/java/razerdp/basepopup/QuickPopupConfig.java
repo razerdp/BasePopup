@@ -8,6 +8,8 @@ import android.util.Pair;
 import android.view.View;
 import android.view.animation.Animation;
 
+import androidx.annotation.Keep;
+
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +24,7 @@ import razerdp.widget.QuickPopup;
 /**
  * Created by 大灯泡 on 2018/8/23.
  */
+@Keep
 public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
     static final Map<String, Method> INVOKE_MAP = new HashMap<>();
 
@@ -103,11 +106,11 @@ public class QuickPopupConfig implements BasePopupFlag, ClearMemoryObject {
         //https://github.com/razerdp/BasePopup/issues/152
         return new QuickPopupConfig()
                 .withShowAnimation(AnimationHelper.asAnimation()
-                                           .withScale(ScaleConfig.CENTER)
-                                           .toShow())
+                        .withScale(ScaleConfig.CENTER)
+                        .toShow())
                 .withDismissAnimation(AnimationHelper.asAnimation()
-                                              .withScale(ScaleConfig.CENTER)
-                                              .toDismiss())
+                        .withScale(ScaleConfig.CENTER)
+                        .toDismiss())
                 .fadeInAndOut(Build.VERSION.SDK_INT != Build.VERSION_CODES.M);
     }
 

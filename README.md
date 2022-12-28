@@ -73,7 +73,7 @@ allprojects {
 
 // project dependencies
 dependencies {
-  implementation 'io.github.razerdp:BasePopup:3.2.0'
+  implementation 'io.github.razerdp:BasePopup:3.2.1'
 
   // for snapshot
   // implementation 'io.github.razerdp:BasePopup:3.2.1-SNAPSHOT'
@@ -93,7 +93,7 @@ dependencies {
 
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
-* **【Release】3.2.0** (2021/10/15)
+* **【Release】3.2.1** (2022/12/29)
     * 时隔两个月，在吸纳了用户反馈的意见后，我们对BasePopup进行了一系列的优化，经过一段时间的测试，已经趋于稳定，因此我们正式发布3.2.0版本，欢迎更新下载。
     * 【优化】
         * 针对历史遗留问题，我们这次统一了match_parent和wrap_content下根布局margin的作用，现在该作用跟系统一致，用作margin而非offset。
