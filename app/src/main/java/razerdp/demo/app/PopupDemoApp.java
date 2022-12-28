@@ -3,6 +3,10 @@ package razerdp.demo.app;
 import android.content.Context;
 import android.text.TextUtils;
 
+import androidx.multidex.MultiDexApplication;
+
+import com.pgyersdk.crash.PgyCrashManager;
+
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,7 +14,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import androidx.multidex.MultiDexApplication;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import razerdp.basepopup.BasePopupFlag;
@@ -31,6 +34,7 @@ public class PopupDemoApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        PgyCrashManager.register();
         TestData.init();
         //检查popup flag
         new Thread(() -> {
