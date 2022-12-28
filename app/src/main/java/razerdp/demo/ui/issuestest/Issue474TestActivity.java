@@ -17,6 +17,7 @@ import razerdp.demo.base.baseactivity.BaseBindingActivity;
 import razerdp.demo.popup.DemoPopup;
 import razerdp.demo.utils.UIHelper;
 import razerdp.demo.utils.ViewUtil;
+import razerdp.demo.widget.dialog.BaseDialog;
 import razerdp.util.log.PopupLog;
 
 /**
@@ -51,7 +52,6 @@ public class Issue474TestActivity extends BaseBindingActivity<ActivityIssue474Bi
     }
 
     public void onViewClicked() {
-        PopupLog.i("11");
         if (demoPopup == null) {
             demoPopup = new DemoPopup(this);
         }

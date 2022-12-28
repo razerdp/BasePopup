@@ -44,14 +44,14 @@ public class PopupBlurOption {
             ViewParent parent = blurView.getParent();
             if (parent != null) {
                 isDecorView = TextUtils.equals(parent.getClass().getName(),
-                                               "com.android.internal.policy.DecorView");
+                        "com.android.internal.policy.DecorView");
             }
             if (!isDecorView) {
                 isDecorView = blurView.getId() == android.R.id.content;
             }
             if (!isDecorView) {
                 isDecorView = TextUtils.equals(blurView.getClass().getName(),
-                                               "com.android.internal.policy.DecorView");
+                        "com.android.internal.policy.DecorView");
             }
         }
         setFullScreen(isDecorView);
@@ -73,7 +73,7 @@ public class PopupBlurOption {
     }
 
     public float getBlurPreScaleRatio() {
-        return mBlurPreScaleRatio;
+        return mBlurPreScaleRatio < 0 ? DEFAULT_PRE_SCALE_RATIO : mBlurPreScaleRatio;
     }
 
     public PopupBlurOption setBlurPreScaleRatio(float blurPreScaleRatio) {

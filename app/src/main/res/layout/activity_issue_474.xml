@@ -31,7 +31,7 @@
         android:paddingTop="8dp"
         android:paddingRight="@dimen/default_padding"
         android:paddingBottom="8dp"
-        android:text="showPopUp"
+        android:text="弹窗并立即dismiss"
         android:textColor="@color/white"
         android:textSize="@dimen/text_normal"
         app:backgroundColor="@color/color_blue"
