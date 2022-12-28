@@ -3,23 +3,23 @@
 buildscript {
     repositories {
         maven { url "https://raw.githubusercontent.com/Pgyer/mvn_repo_pgyer/master" }
-        maven { url "https://maven.google.com" }
         maven { url "https://jitpack.io" }
-        jcenter()
         google()
+        mavenCentral()
+        jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.2'
+        classpath 'com.android.tools.build:gradle:7.3.1'
     }
 }
 
 allprojects {
     repositories {
         maven { url "https://raw.githubusercontent.com/Pgyer/mvn_repo_pgyer/master" }
-        maven { url "https://maven.google.com" }
         maven { url "https://jitpack.io" }
-        jcenter()
         google()
+        mavenCentral()
+        jcenter()
     }
 }
 
@@ -34,7 +34,7 @@ ext {
     minLibSdkVersion = 16
     targetSdkVersion = 30
     versionCode = 336
-    versionName = '3.2.1-SNAPSHOT'
+    versionName = '3.2.1'
 
     candy = false
     group = 'io.github.razerdp'

@@ -29,9 +29,6 @@ android {
         enabled = true
     }
 
-    lintOptions {
-        abortOnError false
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
@@ -42,6 +39,10 @@ android {
         preDexLibraries = true
         maxProcessCount = 4
     }
+    lint {
+        abortOnError false
+    }
+    namespace 'razerdp.basepopup'
 }
 
 dependencies {

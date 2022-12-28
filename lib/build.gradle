@@ -13,9 +13,10 @@ android {
             consumerProguardFiles 'proguard-rules.pro'
         }
     }
-    lintOptions {
+    lint {
         abortOnError false
     }
+    namespace 'razerdp.library'
 }
 
 dependencies {

@@ -94,21 +94,14 @@ dependencies {
 ### 更新日志 [(历史更新)](https://www.yuque.com/razerdp/basepopup/uyrsxx)
 
 * **【Release】3.2.1** (2022/12/29)
-    * 时隔两个月，在吸纳了用户反馈的意见后，我们对BasePopup进行了一系列的优化，经过一段时间的测试，已经趋于稳定，因此我们正式发布3.2.0版本，欢迎更新下载。
+    * 不知不觉，距离上次更新居然已经一年了，不是我弃坑了，实则是工作有点忙
+    * 另外作者我现在是在网易撸游戏了（嗯，已经撸了3年了），已经不是一个单纯的安卓程序员了，虽然还有关注并且迭代，但节奏肯定会慢下来不少
+    * 不过~我还是会坚持更新的-V-
     * 【优化】
-        * 针对历史遗留问题，我们这次统一了match_parent和wrap_content下根布局margin的作用，现在该作用跟系统一致，用作margin而非offset。
-        * 现在`setFitSize()`方法缺省值为True，即BasePopup会在空间不足时默认调整大小以满足显示，如果您不希望BasePopup自动调整大小，请设置该方法为False。
-            * 设置镜像时自动关闭fitSize并缓存原来的值
-        * QuickPopup添加新增Api，同时修改QuickPopupConfig的实现，使代码更为清爽整洁。
+        * 对BlurOption预缩放下限作出限制（如果模糊预缩放小于0，则返回默认值）
+        * QuickPopupConfig添加@keep [#462](https://github.com/razerdp/BasePopup/issues/462)
     * 【Bug修复】
-        * 修复measure问题：[#435](https://github.com/razerdp/BasePopup/issues/435)
-        * 修复默认关联AnchorView时，水平方向上显示在目标左边而不是对齐左边缘的问题
-        * 修复旋转屏幕时update错误的问题
-        * 修复事件分发问题：[#443](https://github.com/razerdp/BasePopup/issues/443)
-    * 【新增功能】
-        * 增加dismiss时不隐藏键盘的功能：`hideKeyboardOnDismiss(boolean)`
-    * 【其他】
-        * 清除所有标记过时的方法
+        * 修复navigationbar不在DecorView层级下的判断问题（通过WindowInsets二次判断），fixed bug [#452](https://github.com/razerdp/BasePopup/issues/452)
 
 ### 例子预览
 
