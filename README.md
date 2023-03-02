@@ -120,13 +120,6 @@ dependencies {
 
 <img src="https://github.com/razerdp/BasePopup/blob/master/img/alipay.png" alt="Logo图片似乎加载不出来" width="320"/>
 
-### 交流群
-
-为了保证微信群的质量（主要是远离斗图党和广告党），因此只有打赏了之后才能进群~
-
-【**打赏后请加微信小号：razerdp_s，并注明付款账号，定期核验后会通过**】
-
-(之前的小号因为换了手机导致无法登录了，如果您加了之前的小号且没有通过，请加新号)
 
 ### License
 
